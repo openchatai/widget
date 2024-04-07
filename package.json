@@ -1,0 +1,88 @@
+{
+  "name": "@openchatai/widget",
+  "private": false,
+  "version": "0.0.2",
+  "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "clean": "rm -rf ./dist ./dist-embed",
+    "build:embed": "tsc && vite build",
+    "build:lib": "vite build -c vite.lib.config.ts",
+    "build:lib:watch": "vite build -c vite.lib.config.ts --watch",
+    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    "build:libs": "pnpm build:lib && pnpm build:embed",
+    "prepublishOnly": "pnpm clean && pnpm build:lib && pnpm build:embed"
+  },
+  "peerDependencies": {
+    "react": "^18.x"
+  },
+  "devDependencies": {
+    "@radix-ui/react-popover": "^1.0.7",
+    "@radix-ui/react-slot": "^1.0.2",
+    "@tailwindcss/typography": "^0.5.10",
+    "@types/node": "^20.11.14",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/parser": "^6.17.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.17",
+    "axios": "^1.6.7",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.5",
+    "postcss": "^8.4.33",
+    "prettier": "^3.2.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-markdown": "^8.0.7",
+    "react-shadow": "^20.4.0",
+    "react-textarea-autosize": "^8.5.3",
+    "remark-gfm": "^3.0.1",
+    "socket.io-client": "^4.7.5",
+    "swr": "^2.2.4",
+    "tailwind-merge": "^1.14.0",
+    "tailwind-scrollbar": "^3.0.5",
+    "tailwindcss": "^3.4.1",
+    "tailwindcss-animate": "^1.0.7",
+    "timeago.js": "^4.0.2",
+    "typescript": "^5.3.3",
+    "vite": "^4.5.2",
+    "vite-plugin-dts": "^3.7.2",
+    "vite-tsconfig-paths": "^4.3.1"
+  },
+  "files": [
+    "dist",
+    "dist-embed"
+  ],
+  "bugs": {
+    "url": "https://github.com/openchatai/OpenCopilot/issues"
+  },
+  "author": {
+    "name": "openchatai",
+    "url": "https://github.com/openchatai"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs.js",
+      "import": "./dist/index.es.js",
+      "default": "./dist/index.es.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "dependencies": {
+    "@rjsf/core": "^5.17.1",
+    "@rjsf/utils": "^5.17.1",
+    "@rjsf/validator-ajv8": "^5.17.1",
+    "immer": "^10.0.3",
+    "lucide-react": "^0.294.0"
+  }
+}
