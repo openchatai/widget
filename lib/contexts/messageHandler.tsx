@@ -7,8 +7,6 @@ import type {
   MessageType,
   UserMessageType,
 } from "@lib/types";
-import { createSession } from "@lib/data/chat.ts";
-import { AxiosInstance } from "axios";
 
 function unsafe__decodeJSON<T extends Record<string, any>>(
   jsonString: string
@@ -268,8 +266,9 @@ export class ChatController {
     this.setLastServerMessageId(message);
   };
 
-  socketMessageRespHandler = (content: string) => {
-    if (content === "|im_end|") {
+  socketMessageRespHandler = (_data: { data: string }) => {
+    const { data } = _data;
+    if (data === "|im_end|") {
       this.settle();
       return;
     }
@@ -284,7 +283,7 @@ export class ChatController {
       this.settle();
     });
 
-    this.appendToCurrentBotMessage(content);
+    this.appendToCurrentBotMessage(data);
   };
 
   socketUiHandler = (msg: string) => {
