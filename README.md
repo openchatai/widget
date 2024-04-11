@@ -1,10 +1,17 @@
-# OpenCopilot widget
+# OpenCopilot Widget
 
-This is the widget for OpenCopilot: it's what your users will interact with.
+The OpenCopilot widget is a user-friendly interface for interacting with OpenCopilot.
 
-It's a simple React application that can be used in any webpage as a widget. To download the latest build of the widget, go to the actions tab in GitHub and download the latest build artifact.
+## Overview
 
-Please refer to the docs for more information on how to use the widget.
-[read more...](https://docs.opencopilot.so)
+The widget is a straightforward React application that serves as a versatile tool for integrating OpenCopilot functionality into any webpage. By incorporating this widget, users can seamlessly engage with OpenCopilot's features.
 
-<img width="394" alt="OpenCopilot widget" src="https://github.com/openchatai/OpenCopilot/assets/32633162/77b30faa-c59e-4a3a-821a-d14a61a49a65">
+## Installation
+
+To acquire the latest version of the widget, navigate to the Actions tab on GitHub and download the most recent build artifact.
+
+## Usage
+
+For detailed instructions on implementing and utilizing the widget, please consult the [documentation](https://docs.opencopilot.so).
+
+![OpenCopilot Widget](https://github.com/openchatai/OpenCopilot/assets/32633162/77b30faa-c59e-4a3a-821a-d14a61a49a65)
