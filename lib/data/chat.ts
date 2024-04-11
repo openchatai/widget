@@ -3,12 +3,16 @@ import axios, { AxiosInstance } from "axios";
 
 export function createAxiosInstance({
   apiUrl,
+  botToken,
 }: {
   apiUrl: string;
   botToken: string;
 }) {
   const instance = axios.create({
     baseURL: apiUrl,
+    headers: {
+      "X-Bot-Token": botToken,
+    },
   });
   return instance;
 }
@@ -70,4 +74,13 @@ export type ChatSession = {
 };
 export async function createSession(instance: AxiosInstance, botToken: string) {
   return instance.post<ChatSession>("/chat-session/" + botToken);
+}
+export type InitialData = {
+  logo: string;
+  faq: [];
+  initial_questions: string[];
+  history: [];
+};
+export async function getInitData(instance: AxiosInstance) {
+  return instance.get<InitialData>("/chat/init");
 }
