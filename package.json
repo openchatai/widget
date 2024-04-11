@@ -15,8 +15,9 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "build:libs": "pnpm build:lib && pnpm build:embed",
-    "prepublishOnly": "pnpm clean && pnpm build:lib && pnpm build:embed",
-    "start:dev": "vite"
+    "prepublishOnly": "pnpm clean && pnpm build",
+    "start:dev": "vite",
+    "build": "pnpm build:lib && pnpm build:embed"
   },
   "peerDependencies": {
     "react": "^18.x"
