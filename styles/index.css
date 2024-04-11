@@ -144,3 +144,9 @@ svg {
 .text-blur-out {
   animation: text-blur-out 1.2s cubic-bezier(0.55, 0.085, 0.68, 0.53) both;
 }
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
