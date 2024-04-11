@@ -1,7 +1,12 @@
 import TextareaAutosize from "react-textarea-autosize";
 import { AlertTriangle, RotateCcw, SendHorizonal } from "lucide-react";
 import { useRef, useState } from "react";
-import { useCanSend, useDocumentDirection, useSendMessage } from "@lib/hooks";
+import {
+  useCanSend,
+  useChatState,
+  useDocumentDirection,
+  useSendMessage,
+} from "@lib/hooks";
 import { VoiceRecorder } from "./VoiceRecorder";
 import {
   Dialog,
@@ -13,6 +18,7 @@ import {
 import { Button } from "./Button";
 import { useLang, useMessageHandler } from "@lib/contexts";
 import cn from "@lib/utils/cn";
+import { useInitialData } from "@lib/contexts/InitialDataProvider";
 
 function ResetButtonWithConfirmation() {
   const { __handler: mh } = useMessageHandler();
@@ -50,7 +56,27 @@ function ResetButtonWithConfirmation() {
     </Dialog>
   );
 }
-
+function SuggestedQuestionsRenderer() {
+  const { data } = useInitialData();
+  const { send } = useSendMessage();
+  const messages = useChatState();
+  const isEmpty = messages.messages.length === 0;
+  return !isEmpty ? null : (
+    <div className="flex items-center gap-1 overflow-auto pb-2">
+      {data.data?.initial_questions.map((question, index) => {
+        return (
+          <button
+            key={index}
+            onClick={() => send(question)}
+            className="font-normal text-sm whitespace-nowrap px-2 py-1 bg-accent rounded-lg"
+          >
+            {question}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
 export function ChatInputFooter() {
   const [input, setInput] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -74,6 +100,8 @@ export function ChatInputFooter() {
 
   return (
     <footer className="p-2 flex w-full flex-col gap-2">
+      <SuggestedQuestionsRenderer />
+
       <div
         className={cn(
           "w-full flex items-center transition-colors focus-within:ring-primary ring-[#334155]/60 justify-between ring-1 overflow-hidden gap-2 bg-accent p-2 rounded-2xl"

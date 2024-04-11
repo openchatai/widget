@@ -8,12 +8,6 @@ interface AxiosInstanceProps {
   axiosInstance: AxiosInstance;
 }
 
-function randomString(length = 10) {
-  return Math.random()
-    .toString(36)
-    .substring(2, length + 2);
-}
-
 const [useAxiosInstance, AxiosSafeProvider] =
   createSafeContext<AxiosInstanceProps>();
 

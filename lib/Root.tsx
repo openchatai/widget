@@ -11,6 +11,7 @@ import {
 import root from "react-shadow";
 import { get } from "@lib/utils/pkg";
 import css from "../styles/index.css?inline";
+import { InitialDataProvider } from "./contexts/InitialDataProvider";
 
 const version = get("version");
 
@@ -48,7 +49,9 @@ function Root({ children, options, containerProps }: RootProps) {
           <LanguageProvider>
             <WidgetState>
               <SocketProvider>
-                <MessageHandlerProvider>{children}</MessageHandlerProvider>
+                <InitialDataProvider>
+                  <MessageHandlerProvider>{children}</MessageHandlerProvider>
+                </InitialDataProvider>
               </SocketProvider>
             </WidgetState>
           </LanguageProvider>

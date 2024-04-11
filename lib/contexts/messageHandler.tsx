@@ -265,8 +265,28 @@ export class ChatController {
   socketChatVoteHandler = (message: string) => {
     this.setLastServerMessageId(message);
   };
+  // OLD
+  socketMessageRespHandler = (data: string) => {
+    if (data === "|im_end|") {
+      this.settle();
+      return;
+    }
 
-  socketMessageRespHandler = (_data: { data: string }) => {
+    if (this.select("conversationInfo")) {
+      this.setValueImmer((d) => {
+        d.conversationInfo = null;
+      });
+    }
+
+    this.startTimeout(() => {
+      this.settle();
+    });
+
+    this.appendToCurrentBotMessage(data);
+  };
+
+  // NEW
+  newSocketMessageRespHandler = (_data: { data: string }) => {
     const { data } = _data;
     if (data === "|im_end|") {
       this.settle();
