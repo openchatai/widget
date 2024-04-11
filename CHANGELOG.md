@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 0.0.3
+
+### Patch Changes
+
+- 2392700: fetch and display initial questions
+
 ## 0.0.2
 
 ### Patch Changes
