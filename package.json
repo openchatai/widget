@@ -8,14 +8,15 @@
   },
   "scripts": {
     "dev": "vite build --watch -c vite.lib.config.ts",
-    "clean": "rm -rf ./dist ./dist-embed",
+    "clean:dist": "rm -rf ./dist ./dist-embed",
+    "clean": "pnpm clean:dist && rm -rf node_modules",
     "build:embed": "tsc && vite build",
     "build:lib": "vite build -c vite.lib.config.ts",
     "build:lib:watch": "vite build -c vite.lib.config.ts --watch",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "build:libs": "pnpm build:lib && pnpm build:embed",
-    "prepublishOnly": "pnpm clean && pnpm build",
+    "prepublishOnly": "pnpm clean:dist && pnpm build",
     "start:dev": "vite",
     "build": "pnpm build:lib && pnpm build:embed"
   },
