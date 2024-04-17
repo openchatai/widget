@@ -22,6 +22,10 @@ export function useSendMessage() {
       const { data } = await createSession(axiosInstance, token);
       session = data;
       setChatSession(data);
+
+      socket.__socket.emit("join_session", {
+        "session_id": session.id
+      })
     }
     if (!session) {
       throw new Error("No session found");

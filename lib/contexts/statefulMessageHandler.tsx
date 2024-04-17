@@ -41,19 +41,19 @@ function MessageHandlerProvider(props: { children: React.ReactNode }) {
   const handler = useMemo(() => new ChatController(token), [token]);
   useEffect(() => {
     if (!chatSession) return;
-    __socket.on(chatSession.id, handler.newSocketMessageRespHandler);
-    __socket.on(`${chatSession.id}_info`, handler.socketChatInfoHandler);
-    __socket.on(`${chatSession.id}_vote`, handler.socketChatVoteHandler);
-    __socket.on(`${chatSession.id}_ui`, handler.socketUiHandler);
-    __socket.on(`${chatSession.id}_handoff`, (data) => {
+    __socket.on("message", handler.newSocketMessageRespHandler);
+    __socket.on("info", handler.socketChatInfoHandler);
+    __socket.on("vote", handler.socketChatVoteHandler);
+    __socket.on("ui", handler.socketUiHandler);
+    __socket.on("handoff", (data) => {
       handler.socketHandoffHandler(data, onHandoff);
     });
     return () => {
-      __socket.off(chatSession?.id, handler.newSocketMessageRespHandler);
-      __socket.off(`${chatSession?.id}_info`, handler.socketChatInfoHandler);
-      __socket.off(`${chatSession?.id}_vote`, handler.socketChatVoteHandler);
-      __socket.off(`${chatSession?.id}_ui`, handler.socketUiHandler);
-      __socket.off(`${chatSession?.id}_handoff`, (data) => {
+      __socket.off("message", handler.newSocketMessageRespHandler);
+      __socket.off("info", handler.socketChatInfoHandler);
+      __socket.off("vote", handler.socketChatVoteHandler);
+      __socket.off("ui", handler.socketUiHandler);
+      __socket.off("handoff", (data) => {
         handler.socketHandoffHandler(data, onHandoff);
       });
     };
