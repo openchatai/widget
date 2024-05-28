@@ -194,6 +194,15 @@ export class ChatController {
     // handle handoff
     const id = this.genId();
     this.setValueImmer((draft) => {
+      const lastMessage = draft.messages[draft.messages.length - 1];
+
+      if (
+        lastMessage &&
+        lastMessage.from === "bot" &&
+        lastMessage.type === "HANDOFF"
+      )
+        return;
+
       const message = {
         from: "bot",
         type: "HANDOFF",
