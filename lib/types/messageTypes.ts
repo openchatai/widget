@@ -18,6 +18,13 @@ export type UserMessageType = {
   bot_token: string;
   query_params: Record<string, string>;
   language?: string;
+  user?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    customData?: Record<string, string>;
+    avatarUrl?: string;
+  };
 };
 
 export type MessageType = UserMessageType | BotMessageType;
