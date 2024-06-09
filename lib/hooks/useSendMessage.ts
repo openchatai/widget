@@ -10,7 +10,7 @@ import { createSession } from "@lib/data";
 
 export function useSendMessage() {
   const { __handler, chatSession, setChatSession } = useMessageHandler();
-  const { headers, token, queryParams } = useConfigData();
+  const { headers, token, queryParams, user } = useConfigData();
   const { lang } = useLang();
   const socket = useSocket();
   const { messages } = useChatState();
@@ -37,6 +37,7 @@ export function useSendMessage() {
         content,
         bot_token: token,
         language: lang,
+        user: user,
       },
       socket.__socket,
       session?.id
