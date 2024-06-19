@@ -219,6 +219,20 @@ export class ChatController {
     const currentUserMessage = this.state.currentUserMessage;
 
     if (!currentUserMessage) {
+      // just append the message to the last message
+      const id = this.genId();
+      this.setValueImmer((draft) => {
+        draft.messages.push({
+          from: "bot",
+          id: id,
+          type: "TEXT",
+          responseFor: "EXTERNAL_MESSAGE" + id,
+          timestamp: this.getTimeStamp(),
+          data: {
+            message,
+          }
+        });
+      });
       return;
     }
 
@@ -318,34 +332,34 @@ export class ChatController {
   socketUiHandler = (msg: string) => {
     type ResponseObject =
       | {
-          type: "ui_form";
-          message_id: string; // => the user's message id
-          action: {
-            name: string;
-            description: string;
-            operation_id: string;
-            request_type: string;
-            payload: {
-              parameters: {
-                in: string;
-                name: string;
-                schema: {
-                  type: string;
-                };
-                required: boolean;
-                description: string;
-                value: string;
-              }[];
-              request_body: Record<string, unknown>;
-            };
-          };
-        }
-      | {
-          type: "ui_component";
-          message_id: string; // => the user's message id
-          request_response: Record<string, unknown>;
+        type: "ui_form";
+        message_id: string; // => the user's message id
+        action: {
           name: string;
+          description: string;
+          operation_id: string;
+          request_type: string;
+          payload: {
+            parameters: {
+              in: string;
+              name: string;
+              schema: {
+                type: string;
+              };
+              required: boolean;
+              description: string;
+              value: string;
+            }[];
+            request_body: Record<string, unknown>;
+          };
         };
+      }
+      | {
+        type: "ui_component";
+        message_id: string; // => the user's message id
+        request_response: Record<string, unknown>;
+        name: string;
+      };
     const parsedResponse = unsafe__decodeJSON(msg) as ResponseObject;
     this.setValueImmer((draft) => {
       let message: BotMessageType | null = null;
