@@ -23,7 +23,7 @@ export function useSendMessage() {
       session = data;
       setChatSession(data);
 
-      socket.__socket.emit("join_session", {
+      socket.__socket?.emit("join_session", {
         "session_id": session.id
       })
     }

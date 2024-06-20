@@ -170,7 +170,7 @@ export class ChatController {
 
   handleTextMessage = (
     message: Omit<UserMessageType, "from" | "id" | "timestamp" | "session_id">,
-    socket: Socket,
+    socket: Socket | null,
     sessionId: string
   ) => {
     this.setLastServerMessageId(null);
@@ -188,7 +188,7 @@ export class ChatController {
       draft.currentUserMessage = userMessage;
     });
 
-    socket.emit("send_chat", userMessage);
+    socket?.emit("send_chat", userMessage);
   };
 
   internalHandleHandoff = (payload: HandoffPayloadType) => {

@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 0.0.5
+
+### Patch Changes
+
+- 29c354a: same
+
 ## 0.0.4
 
 ### Patch Changes
