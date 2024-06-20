@@ -8,40 +8,41 @@ import type {
   UserMessageType,
 } from "@lib/types";
 
-function unsafe__decodeJSON<T extends Record<string, any>>(
-  jsonString: string
-): T | null {
+function decodeJSON<T extends Record<string, any>>(jsonString: string): T | null {
   try {
-    const parsed = JSON.parse(jsonString);
+    const parsed = JSON.parse(typeof jsonString === 'string' ? jsonString : JSON.stringify(jsonString));
     if (typeof parsed === "object" && parsed !== null) {
-      // Recursively parse nested JSON strings or arrays
       const parseNestedJSON = (obj: Record<string, any>) => {
-        Object.keys(obj).forEach((key) => {
-          const value = obj[key];
-          if (typeof value === "string") {
-            if (
-              (value.startsWith("{") && value.endsWith("}")) ||
-              (value.startsWith("[") && value.endsWith("]"))
-            ) {
-              try {
-                obj[key] = JSON.parse(value);
-              } catch (e) {
-                // Ignore errors for invalid JSON strings
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            const value = obj[key];
+            if (typeof value === "string") {
+              if ((value.startsWith("{") && value.endsWith("}")) || (value.startsWith("[") && value.endsWith("]"))) {
+                try {
+                  obj[key] = JSON.parse(value);
+                } catch (e) {
+                  console.error(`Failed to parse nested JSON for key "${key}": ${e}`);
+                }
               }
+            } else if (typeof value === "object" && value !== null) {
+              parseNestedJSON(value);
             }
-          } else if (typeof value === "object" && value !== null) {
-            parseNestedJSON(value);
           }
-        });
+        }
       };
+
       parseNestedJSON(parsed);
       return parsed as T;
     }
+
     return null;
   } catch (e) {
+    console.error(`Failed to parse JSON string: ${e}`);
     return null;
   }
 }
+
+
 
 export type State = {
   currentUserMessage: null | UserMessageType;
@@ -356,11 +357,12 @@ export class ChatController {
       }
       | {
         type: "ui_component";
-        message_id: string; // => the user's message id
+        incoming_message_id: string;
         request_response: Record<string, unknown>;
         name: string;
       };
-    const parsedResponse = unsafe__decodeJSON(msg) as ResponseObject;
+    const parsedResponse = decodeJSON(msg) as ResponseObject;
+    console.log("parsedResponse", parsedResponse);
     this.setValueImmer((draft) => {
       let message: BotMessageType | null = null;
       if (parsedResponse.type === "ui_form") {
@@ -380,11 +382,12 @@ export class ChatController {
           from: "bot",
           type: parsedResponse.name,
           id: this.genId(),
-          responseFor: parsedResponse.message_id,
+          responseFor: parsedResponse.incoming_message_id,
           timestamp: this.getTimeStamp(),
           data: parsedResponse.request_response ?? {},
         };
       }
+      console.log("message", message);
       if (message) {
         draft.messages.push(message);
       }

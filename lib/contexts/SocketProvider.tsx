@@ -12,7 +12,7 @@ type SocketState = {
 };
 
 type SocketContextData = {
-  __socket: Socket;
+  __socket: Socket | null;
   state: SocketState;
 };
 
@@ -107,7 +107,7 @@ function SocketProvider({ children }: { children: ReactNode }) {
   }, [socket, handleConnect, handleDisconnect, handleReconnectAttempt]);
 
   return (
-    <SocketSafeProvider value={{ __socket: socket!, state }}>
+    <SocketSafeProvider value={{ __socket: socket, state }}>
       {children}
     </SocketSafeProvider>
   );

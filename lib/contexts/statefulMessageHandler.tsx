@@ -41,19 +41,19 @@ function MessageHandlerProvider(props: { children: React.ReactNode }) {
   const handler = useMemo(() => new ChatController(token), [token]);
   useEffect(() => {
     if (!chatSession) return;
-    __socket.on("message", handler.socketMessageRespHandler);
-    __socket.on("info", handler.socketChatInfoHandler);
-    __socket.on("vote", handler.socketChatVoteHandler);
-    __socket.on("ui", handler.socketUiHandler);
-    __socket.on("handoff", (data) => {
+    __socket?.on("message", handler.socketMessageRespHandler);
+    __socket?.on("info", handler.socketChatInfoHandler);
+    __socket?.on("vote", handler.socketChatVoteHandler);
+    __socket?.on("ui", handler.socketUiHandler);
+    __socket?.on("handoff", (data) => {
       handler.socketHandoffHandler(data, onHandoff);
     });
     return () => {
-      __socket.off("message", handler.socketMessageRespHandler);
-      __socket.off("info", handler.socketChatInfoHandler);
-      __socket.off("vote", handler.socketChatVoteHandler);
-      __socket.off("ui", handler.socketUiHandler);
-      __socket.off("handoff", (data) => {
+      __socket?.off("message", handler.socketMessageRespHandler);
+      __socket?.off("info", handler.socketChatInfoHandler);
+      __socket?.off("vote", handler.socketChatVoteHandler);
+      __socket?.off("ui", handler.socketUiHandler);
+      __socket?.off("handoff", (data) => {
         handler.socketHandoffHandler(data, onHandoff);
       });
     };
