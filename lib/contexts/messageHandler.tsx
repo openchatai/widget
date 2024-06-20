@@ -8,20 +8,29 @@ import type {
   UserMessageType,
 } from "@lib/types";
 
-function decodeJSON<T extends Record<string, any>>(jsonString: string): T | null {
+function decodeJSON<T extends Record<string, any>>(
+  jsonString: string
+): T | null {
   try {
-    const parsed = JSON.parse(typeof jsonString === 'string' ? jsonString : JSON.stringify(jsonString));
+    const parsed = JSON.parse(
+      typeof jsonString === "string" ? jsonString : JSON.stringify(jsonString)
+    );
     if (typeof parsed === "object" && parsed !== null) {
       const parseNestedJSON = (obj: Record<string, any>) => {
         for (const key in obj) {
           if (Object.prototype.hasOwnProperty.call(obj, key)) {
             const value = obj[key];
             if (typeof value === "string") {
-              if ((value.startsWith("{") && value.endsWith("}")) || (value.startsWith("[") && value.endsWith("]"))) {
+              if (
+                (value.startsWith("{") && value.endsWith("}")) ||
+                (value.startsWith("[") && value.endsWith("]"))
+              ) {
                 try {
                   obj[key] = JSON.parse(value);
                 } catch (e) {
-                  console.error(`Failed to parse nested JSON for key "${key}": ${e}`);
+                  console.error(
+                    `Failed to parse nested JSON for key "${key}": ${e}`
+                  );
                 }
               }
             } else if (typeof value === "object" && value !== null) {
@@ -41,8 +50,6 @@ function decodeJSON<T extends Record<string, any>>(jsonString: string): T | null
     return null;
   }
 }
-
-
 
 export type State = {
   currentUserMessage: null | UserMessageType;
@@ -220,7 +227,7 @@ export class ChatController {
     const currentUserMessage = this.state.currentUserMessage;
 
     if (!currentUserMessage) {
-      // just append the message to the last message
+      // Just append the message to the last message
       const id = this.genId();
       this.setValueImmer((draft) => {
         draft.messages.push({
@@ -231,7 +238,7 @@ export class ChatController {
           timestamp: this.getTimeStamp(),
           data: {
             message,
-          }
+          },
         });
       });
       return;
@@ -333,34 +340,34 @@ export class ChatController {
   socketUiHandler = (msg: string) => {
     type ResponseObject =
       | {
-        type: "ui_form";
-        message_id: string; // => the user's message id
-        action: {
-          name: string;
-          description: string;
-          operation_id: string;
-          request_type: string;
-          payload: {
-            parameters: {
-              in: string;
-              name: string;
-              schema: {
-                type: string;
-              };
-              required: boolean;
-              description: string;
-              value: string;
-            }[];
-            request_body: Record<string, unknown>;
+          type: "ui_form";
+          message_id: string; // => the user's message id
+          action: {
+            name: string;
+            description: string;
+            operation_id: string;
+            request_type: string;
+            payload: {
+              parameters: {
+                in: string;
+                name: string;
+                schema: {
+                  type: string;
+                };
+                required: boolean;
+                description: string;
+                value: string;
+              }[];
+              request_body: Record<string, unknown>;
+            };
           };
-        };
-      }
+        }
       | {
-        type: "ui_component";
-        incoming_message_id: string;
-        request_response: Record<string, unknown>;
-        name: string;
-      };
+          type: "ui_component";
+          incoming_message_id: string;
+          request_response: Record<string, unknown>;
+          name: string;
+        };
     const parsedResponse = decodeJSON(msg) as ResponseObject;
     console.log("parsedResponse", parsedResponse);
     this.setValueImmer((draft) => {
