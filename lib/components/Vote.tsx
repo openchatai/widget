@@ -3,7 +3,7 @@ import { useDownvote, useUpvote } from "@lib/hooks";
 import cn from "@lib/utils/cn";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 
-const SIZE = 26;
+const SIZE = 18;
 
 export function Vote({ serverMessageId }: { serverMessageId: string }) {
   const [asyncUpvoteState, asyncUpvote] = useUpvote(serverMessageId);

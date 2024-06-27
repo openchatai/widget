@@ -26,10 +26,10 @@ export function Text({ id, data, serverId }: Props) {
             </ReactMarkdown>
           </div>
         </div>
-        {serverId &&
-          <Vote serverMessageId={serverId} />
-        }
       </div>
+      {serverId &&
+        <Vote serverMessageId={serverId} />
+      }
     </BotMessageWrapper>
   );
 }
