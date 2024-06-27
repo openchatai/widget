@@ -5,9 +5,9 @@ import { ThumbsDown, ThumbsUp } from "lucide-react";
 
 const SIZE = 26;
 
-export function Vote({ messageId }: { messageId: number }) {
-  const [asyncUpvoteState, asyncUpvote] = useUpvote(String(messageId));
-  const [asyncDownvoteState, asyncDownvote] = useDownvote(String(messageId));
+export function Vote({ serverMessageId }: { serverMessageId: string }) {
+  const [asyncUpvoteState, asyncUpvote] = useUpvote(serverMessageId);
+  const [asyncDownvoteState, asyncDownvote] = useDownvote(serverMessageId);
   const isUpvoted = !!asyncUpvoteState.value?.data.message;
   const isDownvoted = !!asyncDownvoteState.value?.data.message;
   const userVoted = isUpvoted || isDownvoted;

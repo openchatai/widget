@@ -293,8 +293,15 @@ export class ChatController {
     this.setConversationInfo(message);
   };
 
-  socketChatVoteHandler = (message: string) => {
-    this.setLastServerMessageId(message);
+  socketChatVoteHandler = (lastMessageId: number) => {
+    this.setValueImmer((draft) => {
+      // find latest response 
+      const latestResponse = draft.messages.filter((v) => v.from === 'bot').at(-1);
+      if (latestResponse) {
+        latestResponse.serverId = lastMessageId ? lastMessageId.toString() : undefined;
+      }
+    })
+
   };
   // OLD
   socketMessageRespHandler = (data: string) => {
@@ -340,34 +347,34 @@ export class ChatController {
   socketUiHandler = (msg: string) => {
     type ResponseObject =
       | {
-          type: "ui_form";
-          message_id: string; // => the user's message id
-          action: {
-            name: string;
-            description: string;
-            operation_id: string;
-            request_type: string;
-            payload: {
-              parameters: {
-                in: string;
-                name: string;
-                schema: {
-                  type: string;
-                };
-                required: boolean;
-                description: string;
-                value: string;
-              }[];
-              request_body: Record<string, unknown>;
-            };
-          };
-        }
-      | {
-          type: "ui_component";
-          incoming_message_id: string;
-          request_response: Record<string, unknown>;
+        type: "ui_form";
+        message_id: string; // => the user's message id
+        action: {
           name: string;
+          description: string;
+          operation_id: string;
+          request_type: string;
+          payload: {
+            parameters: {
+              in: string;
+              name: string;
+              schema: {
+                type: string;
+              };
+              required: boolean;
+              description: string;
+              value: string;
+            }[];
+            request_body: Record<string, unknown>;
+          };
         };
+      }
+      | {
+        type: "ui_component";
+        incoming_message_id: string;
+        request_response: Record<string, unknown>;
+        name: string;
+      };
     const parsedResponse = decodeJSON(msg) as ResponseObject;
     console.log("parsedResponse", parsedResponse);
     this.setValueImmer((draft) => {

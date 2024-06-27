@@ -4,6 +4,7 @@ export type BotMessageType<TData = Record<string, unknown>> = {
   id: string;
   data: TData;
   timestamp: string;
+  serverId?: string;
   responseFor: string; // id of the user message
   isFailed?: boolean;
 };
@@ -18,6 +19,7 @@ export type UserMessageType = {
   bot_token: string;
   query_params: Record<string, string>;
   language?: string;
+  serverId?: string;
   user?: {
     name?: string;
     email?: string;

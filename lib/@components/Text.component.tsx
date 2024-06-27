@@ -1,7 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { ComponentProps } from "@lib/types";
-import { BotMessageWrapper } from "@lib/components";
+import { BotMessageWrapper, Vote } from "@lib/components";
 
 type Props = ComponentProps<{
   message: string;
@@ -10,9 +10,9 @@ type Props = ComponentProps<{
 /**
  * The Basic Text component
  */
-export function Text({ id, data }: Props) {
+export function Text({ id, data, serverId }: Props) {
   const { message } = data;
-
+  console.log("serverId", serverId);
   return (
     <BotMessageWrapper id={id}>
       <div className="space-y-2 flex-1">
@@ -26,6 +26,9 @@ export function Text({ id, data }: Props) {
             </ReactMarkdown>
           </div>
         </div>
+        {serverId &&
+          <Vote serverMessageId={serverId} />
+        }
       </div>
     </BotMessageWrapper>
   );
