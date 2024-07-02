@@ -2,8 +2,8 @@ import { Socket, io } from "socket.io-client";
 import { ReactNode, useCallback, useEffect, useReducer, useState } from "react";
 import { useConfigData } from "./ConfigData";
 import { createSafeContext } from "./createSafeContext";
-import { useWidgetState } from "./WidgetState";
 import { produce } from "immer";
+import { useMessageHandler } from "./statefulMessageHandler";
 
 type SocketState = {
   state: "stale" | "connected" | "retrying" | "disconnected" | "error";
@@ -27,6 +27,8 @@ type ActionType =
   | {
     type: "DISCONNECTED";
     payload: string;
+  } | {
+    type: "CONNECTED_TO_SESSION"
   };
 
 function socketReducer(state: SocketState, action: ActionType) {
@@ -66,9 +68,12 @@ function SocketProvider({ children }: { children: ReactNode }) {
     }
   }, []);
   const { socketUrl } = useConfigData();
-  const [open] = useWidgetState();
+  const { chatSession } = useMessageHandler();
 
   const handleConnect = useCallback(() => {
+    if (chatSession) {
+      socket?.emit("join_session", { session_id: chatSession.id })
+    }
     dispatch({ type: "CONNECTED" });
   }, []);
 
@@ -79,6 +84,14 @@ function SocketProvider({ children }: { children: ReactNode }) {
   const handleReconnectAttempt = useCallback((attempt: number) => {
     dispatch({ type: "RECONNECT_ATTEMPT", payload: attempt });
   }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+    socket.on("joined_session", () => {
+      dispatch({ type: "CONNECTED_TO_SESSION" })
+    })
+    return () => { socket.off("joined_session") }
+  }, [])
 
   useEffect(() => {
     // Fired upon a successful connection.
