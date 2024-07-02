@@ -60,14 +60,13 @@ function SocketProvider({ children }: { children: ReactNode }) {
     if (socket) return;
     if (socketUrl) {
       setSocket(io(socketUrl, {
-        autoConnect: false,
         transports: ["websocket"],
+        forceNew: true,
       }));
     }
   }, []);
   const { socketUrl } = useConfigData();
   const [open] = useWidgetState();
-
 
   const handleConnect = useCallback(() => {
     dispatch({ type: "CONNECTED" });
@@ -80,17 +79,6 @@ function SocketProvider({ children }: { children: ReactNode }) {
   const handleReconnectAttempt = useCallback((attempt: number) => {
     dispatch({ type: "RECONNECT_ATTEMPT", payload: attempt });
   }, []);
-
-  useEffect(() => {
-    if (open) {
-      socket?.connect();
-    } else {
-      socket?.disconnect();
-    }
-    return () => {
-      socket?.disconnect();
-    };
-  }, [open, socket]);
 
   useEffect(() => {
     // Fired upon a successful connection.
