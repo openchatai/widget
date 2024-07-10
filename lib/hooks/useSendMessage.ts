@@ -3,16 +3,14 @@ import {
   useConfigData,
   useLang,
   useMessageHandler,
-  useSocket,
 } from "@lib/contexts";
 import { useChatState } from ".";
 import { createSession } from "@lib/data";
 
 export function useSendMessage() {
-  const { __handler, chatSession, setChatSession } = useMessageHandler();
+  const { __handler, chatSession, setChatSession, socket } = useMessageHandler();
   const { headers, token, queryParams, user } = useConfigData();
   const { lang } = useLang();
-  const socket = useSocket();
   const { messages } = useChatState();
   const { axiosInstance } = useAxiosInstance();
 
@@ -23,7 +21,7 @@ export function useSendMessage() {
       session = data;
       setChatSession(data);
 
-      socket.__socket?.emit("join_session", {
+      socket?.emit("join_session", {
         "session_id": session.id
       })
     }
@@ -39,7 +37,7 @@ export function useSendMessage() {
         language: lang,
         user: user,
       },
-      socket.__socket,
+      socket,
       session?.id
     );
   }

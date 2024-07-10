@@ -4,6 +4,5 @@ export * from "./ConfigData";
 export * from "./createSafeContext";
 export * from "./LocalesProvider";
 export * from "./messageHandler";
-export * from "./SocketProvider";
 export * from "./statefulMessageHandler";
 export * from "./WidgetState";

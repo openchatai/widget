@@ -5,7 +5,6 @@ import {
   ConfigDataContextType,
   LanguageProvider,
   MessageHandlerProvider,
-  SocketProvider,
   WidgetState,
 } from "@lib/contexts";
 import root from "react-shadow";
@@ -48,11 +47,11 @@ function Root({ children, options, containerProps }: RootProps) {
         <AxiosProvider>
           <LanguageProvider>
             <WidgetState>
-              <SocketProvider>
-                <InitialDataProvider>
-                  <MessageHandlerProvider>{children}</MessageHandlerProvider>
-                </InitialDataProvider>
-              </SocketProvider>
+              <InitialDataProvider>
+                <MessageHandlerProvider>
+                  {children}
+                </MessageHandlerProvider>
+              </InitialDataProvider>
             </WidgetState>
           </LanguageProvider>
         </AxiosProvider>
