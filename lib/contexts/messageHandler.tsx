@@ -376,7 +376,6 @@ export class ChatController {
         name: string;
       };
     const parsedResponse = decodeJSON(msg) as ResponseObject;
-    console.log("parsedResponse", parsedResponse);
     this.setValueImmer((draft) => {
       let message: BotMessageType | null = null;
       if (parsedResponse.type === "ui_form") {
@@ -401,7 +400,6 @@ export class ChatController {
           data: parsedResponse.request_response ?? {},
         };
       }
-      console.log("message", message);
       if (message) {
         draft.messages.push(message);
       }
