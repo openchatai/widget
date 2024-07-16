@@ -6,9 +6,9 @@ export function InitialBotMessage({ message }: { message: string }) {
 
   return (
     <BotMessageWrapper id={""}>
-      <div className="space-y-2 flex-1">
+      <div className="flex-1">
         <div className="w-fit">
-          <div dir="auto" className="text-sm p-2">{message}</div>
+          <div dir="auto" className="text-sm px-2 py-1">{message}</div>
         </div>
       </div>
     </BotMessageWrapper>

@@ -103,7 +103,7 @@ export function ChatInputFooter() {
 
       <div
         className={cn(
-          "w-full flex items-center transition-colors focus-within:ring-primary ring-[#334155]/60 justify-between ring-1 overflow-hidden gap-2 bg-accent p-2 rounded-2xl"
+          "w-full flex items-center transition-colors justify-between overflow-hidden gap-2 bg-accent p-2 rounded-xl"
         )}
       >
         <div className="flex-1">
@@ -121,7 +121,7 @@ export function ChatInputFooter() {
             rows={1}
             value={input}
             onChange={handleTextareaChange}
-            className=" w-full resize-none bg-transparent focus-visible:outline-none border-none focus:outline-none focus:border-none scrollbar-thin leading-tight whitespace-pre-wrap py-1.5 px-4 placeholder:align-middle overflow-auto outline-none text-accent2 text-[14px] placeholder:text-xs font-normal"
+            className=" w-full resize-none bg-transparent focus-visible:outline-none border-none focus:outline-none focus:border-none scrollbar-thin leading-tight whitespace-pre-wrap p-2 placeholder:align-middle overflow-auto outline-none text-accent2 text-sm placeholder:text-xs font-normal"
           />
         </div>
         <div

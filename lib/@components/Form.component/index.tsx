@@ -17,7 +17,7 @@ export function FormComponent(props: Props) {
     data: { schema, submitUrl, method },
   } = props;
   return (
-    <div className="space-y-2 flex-1">
+    <div className="flex-1">
       <div className="w-full">
         <div dir="auto" className="bg-accent w-full rounded-lg p-2">
           <Form

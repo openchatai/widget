@@ -11,7 +11,7 @@ export function Loading() {
 
   return (
     <BotMessageWrapper id="">
-      <div className="space-y-2 flex-1">
+      <div className="flex-1">
         <div className="w-fit">
           <div dir="auto" className="text-ellipsis text-xs">
             {conversationInfo}

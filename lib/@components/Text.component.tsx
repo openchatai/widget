@@ -14,7 +14,7 @@ export function Text({ id, data, serverId }: Props) {
   const { message } = data;
   return (
     <BotMessageWrapper id={id}>
-      <div className="space-y-2 flex-1">
+      <div className="flex-1">
         <div className="w-fit">
           <div dir="auto">
             <ReactMarkdown

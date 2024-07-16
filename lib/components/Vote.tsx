@@ -3,7 +3,7 @@ import { useDownvote, useUpvote } from "@lib/hooks";
 import cn from "@lib/utils/cn";
 import { ThumbsDown, ThumbsUp } from "lucide-react";
 
-const SIZE = 18;
+const SIZE = 16;
 
 export function Vote({ serverMessageId }: { serverMessageId: string }) {
   const [asyncUpvoteState, asyncUpvote] = useUpvote(serverMessageId);
@@ -15,7 +15,7 @@ export function Vote({ serverMessageId }: { serverMessageId: string }) {
   const { get } = useLang();
 
   return (
-    <div className="flex items-center justify-end gap-px [&>button]:p-1">
+    <div className="flex items-center gap-px [&>button]:p-1 mt-1">
       {userVoted ? (
         <span className="text-xs text-blur-out text-emerald-500">
           {get("thank-you")}
