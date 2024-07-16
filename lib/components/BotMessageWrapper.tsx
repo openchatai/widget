@@ -1,5 +1,4 @@
 import { useChatState } from "@lib/hooks";
-import { getLast } from "@lib/utils/utils";
 import { useConfigData } from "@lib/contexts";
 import { BotIcon } from "@lib/components";
 
@@ -11,23 +10,17 @@ export function BotMessageWrapper({
   id: string | number;
 }) {
   const { messages } = useChatState();
-  const isLast = getLast(messages.filter((m) => m.from === "bot"))?.id === id;
   const config = useConfigData();
 
   return (
-    <div className="p-2 group w-full shrink-0">
-      <div className="flex items-center gap-3 w-full" dir="auto">
-        <span className="mt-auto">
+    <div className="px-2 group w-full shrink-0">
+      <div className="flex flex-col gap-1 w-full" dir="auto">
+        <div className="flex items-center gap-1">
           <BotIcon />
-        </span>
+          <span className="text-tiny">{config?.bot?.name ?? "Bot"}</span>
+        </div>
         <div className="flex-1">{children}</div>
       </div>
-
-      {isLast && (
-        <div className="w-full ps-10 flex-nowrap flex items-center justify-between">
-          <span className="text-xs m-0">{config?.bot?.name ?? "Bot"}</span>
-        </div>
-      )}
     </div>
   );
 }

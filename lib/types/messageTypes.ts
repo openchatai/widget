@@ -1,8 +1,8 @@
 export type BotMessageType<TData = Record<string, unknown>> = {
   from: "bot";
+  data: TData;
   type: string;
   id: string;
-  data: TData;
   timestamp: string;
   serverId?: string;
   responseFor: string; // id of the user message

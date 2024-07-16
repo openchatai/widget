@@ -7,8 +7,8 @@ export function InitialBotMessage({ message }: { message: string }) {
   return (
     <BotMessageWrapper id={""}>
       <div className="space-y-2 flex-1">
-        <div className=" w-fit">
-          <div dir="auto">{message}</div>
+        <div className="w-fit">
+          <div dir="auto" className="text-sm p-2">{message}</div>
         </div>
       </div>
     </BotMessageWrapper>

@@ -18,7 +18,6 @@ import {
 import { Button } from "./Button";
 import { useLang, useMessageHandler } from "@lib/contexts";
 import cn from "@lib/utils/cn";
-import { useInitialData } from "@lib/contexts/InitialDataProvider";
 
 function ResetButtonWithConfirmation() {
   const { __handler: mh } = useMessageHandler();
@@ -57,13 +56,13 @@ function ResetButtonWithConfirmation() {
   );
 }
 function SuggestedQuestionsRenderer() {
-  const { data } = useInitialData();
+  const { initialData } = useMessageHandler();
   const { send } = useSendMessage();
   const messages = useChatState();
   const isEmpty = messages.messages.length === 0;
   return !isEmpty ? null : (
     <div className="flex items-center gap-1 overflow-auto pb-2">
-      {data.data?.initial_questions.map((question, index) => {
+      {initialData?.initial_questions.map((question, index) => {
         return (
           <button
             key={index}

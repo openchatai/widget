@@ -29,6 +29,11 @@ const config: Config = {
       gray,
       yellow,
     },
+    extend: {
+      fontSize: {
+        tiny: "0.625rem",
+      }
+    }
   },
   plugins: [
     require("tailwindcss-animate"),

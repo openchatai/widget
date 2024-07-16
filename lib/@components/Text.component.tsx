@@ -12,15 +12,14 @@ type Props = ComponentProps<{
  */
 export function Text({ id, data, serverId }: Props) {
   const { message } = data;
-  console.log("serverId", serverId);
   return (
     <BotMessageWrapper id={id}>
       <div className="space-y-2 flex-1">
-        <div className=" w-fit">
+        <div className="w-fit">
           <div dir="auto">
             <ReactMarkdown
               remarkPlugins={[remarkGfm]}
-              className="prose prose-slate font-medium text-sm prose-sm prose-h1:font-medium prose-h2:font-normal prose-headings:my-1 max-w-full"
+              className="prose prose-slate !text-sm prose-sm max-w-full"
             >
               {message}
             </ReactMarkdown>

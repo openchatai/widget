@@ -7,6 +7,50 @@ import type {
   MessageType,
   UserMessageType,
 } from "@lib/types";
+import { ChatMessage } from "@lib/data/chat.ts";
+
+export function historyToMessages(histo: ChatMessage[]): MessageType[] {
+  return histo.map(msg => {
+    if (msg.from_user) {
+      let userMessage: UserMessageType = {
+        from: "user",
+        id: msg.id.toString(),
+        timestamp: msg.created_at ?? "",
+        bot_token: msg.chatbot_id ?? "",
+        session_id: msg.session_id ?? "",
+        content: msg.message ?? "",
+        headers: {},
+        query_params: {},
+        serverId: msg.id.toString(),
+      }
+      return userMessage as MessageType
+    }
+    else {
+      let botMsg = {
+        from: "bot",
+        id: msg.id.toString(),
+        timestamp: msg.created_at ?? "",
+        serverId: msg.id?.toString(),
+        responseFor: null,
+        isFailed: false
+      };
+      if (msg.type === 'ui_component') {
+        Object.assign(botMsg, {
+        })
+      }
+      else if (msg.type === 'message') {
+        Object.assign(botMsg, {
+          type: "TEXT",
+          data: {
+            message: msg.message
+          }
+        })
+      }
+
+      return botMsg as unknown as MessageType
+    }
+  })
+}
 
 function decodeJSON<T extends Record<string, any>>(
   jsonString: string
@@ -323,6 +367,11 @@ export class ChatController {
     this.appendToCurrentBotMessage(data);
   };
 
+  loadInitialMessages = (messages: MessageType[]) => {
+    this.setValueImmer((draft) => {
+      draft.messages.unshift(...messages);
+    });
+  }
   // NEW
   newSocketMessageRespHandler = (_data: { data: string }) => {
     const { data } = _data;

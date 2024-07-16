@@ -14,7 +14,7 @@ export function UserAvatar() {
   }
 
   return (
-    <div className="rounded-lg shrink-0 bg-accent h-7 w-7 object-cover aspect-square border border-primary flex items-center justify-center">
+    <div className="rounded-lg shrink-0 bg-accent h-7 w-7 object-cover aspect-square border-primary flex items-center justify-center">
       <span className="text-xl text-primary fill-current">
         <UserIcon className="size-[1em]" />
       </span>

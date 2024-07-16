@@ -72,6 +72,23 @@ export type ChatSession = {
   updated_at: string;
   created_at: string;
 };
+export interface ChatMessage {
+  id: number;
+  chatbot_id: string | null;
+  session_id: string | null;
+  from_user: boolean | null;
+  message: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  debug_json: string | null;
+  api_called: boolean | null;
+  knowledgebase_called: boolean | null;
+  extra_params: object | null;
+  type: string | null;
+  agent_name: string | null;
+  agent_avatar: string | null;
+}
+
 export async function createSession(instance: AxiosInstance, botToken: string) {
   return instance.post<ChatSession>("/chat-session/" + botToken);
 }
@@ -79,8 +96,13 @@ export type InitialData = {
   logo: string;
   faq: [];
   initial_questions: string[];
-  history: [];
+  history: ChatMessage[];
 };
-export async function getInitData(instance: AxiosInstance) {
-  return instance.get<InitialData>("/chat/init");
+
+export async function getInitData(instance: AxiosInstance, sessionId?: string) {
+  return instance.get<InitialData>("/chat/init", {
+    headers: {
+      "X-Session-Id": sessionId
+    }
+  });
 }

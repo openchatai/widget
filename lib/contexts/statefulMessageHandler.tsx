@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
-import { ChatController } from "./messageHandler";
+import { ChatController, historyToMessages } from "./messageHandler";
 import { createSafeContext } from "./createSafeContext";
 import { useConfigData } from "./ConfigData";
 import { ComponentRegistry } from "./componentRegistry.ts";
-import { ChatSession } from "@lib/data/chat.ts";
+import { ChatSession, createSession, getInitData, InitialData } from "@lib/data/chat.ts";
 import { produce } from "immer";
 import { io, Socket } from "socket.io-client";
+import { useSyncedState } from '../hooks/useSyncedState.ts';
+import { useAxiosInstance } from "./axiosInstance.tsx";
+import useSWR from "swr";
+import { useLang } from "./LocalesProvider.tsx";
+import { useChatState } from "@lib/hooks/useChatState.ts";
 
 type SocketState = {
   state: "stale" | "connected" | "retrying" | "disconnected" | "error";
@@ -34,7 +39,10 @@ const [useMessageHandler, MessageHandlerSafeProvider] = createSafeContext<{
   chatSession: ChatSession | null;
   socketState: SocketState;
   socket: Socket | null;
-  setChatSession: (session: ChatSession) => ChatSession;
+  initialData: InitialData | null;
+  setChatSession: (session: ChatSession | null) => void;
+  clearSession: () => void;
+  recreateSession: () => void;
 }>();
 
 function getChatSession(): null | ChatSession {
@@ -58,20 +66,18 @@ function socketReducer(state: SocketState, action: ActionType) {
     }
   });
 }
+
 function MessageHandlerProvider(props: { children: React.ReactNode }) {
-  const { components, onHandoff, token } = useConfigData();
-
-  const [chatSession, $setChatSession] = useState<ChatSession | null>(
-    getChatSession
-  );
-
+  const { components, onHandoff, token, socketUrl } = useConfigData();
+  const { axiosInstance } = useAxiosInstance();
+  const [chatSession, setChatSession] = useSyncedState<ChatSession | null>(`SESSION:${token}`, getChatSession);
+  const [socket, setSocket] = useState<Socket | null>(null);
+  const handler = useMemo(() => new ChatController(token), [token, chatSession]);
   const [socketState, dispatch] = useReducer(socketReducer, {
     state: "stale",
     reason: null,
     reconnectAttempts: null,
   });
-
-  const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
     if (socket) return;
@@ -82,7 +88,28 @@ function MessageHandlerProvider(props: { children: React.ReactNode }) {
       }));
     }
   }, []);
-  const { socketUrl } = useConfigData();
+
+  const initialData = useSWR(["initialData", token, chatSession], async ([_, _t, s]) => {
+    const { data } = await getInitData(axiosInstance, s?.id);
+    return (
+      data ?? {
+        faq: [],
+        history: [],
+        initial_questions: [],
+        logo: "",
+      }
+    );
+  }, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateOnMount: true,
+    onSuccess(data, key, config) {
+      if (data) {
+        let msgs = historyToMessages(data.history);
+        handler.loadInitialMessages(msgs);
+      }
+    }
+  });
 
   const handleConnect = useCallback(() => {
     if (chatSession) {
@@ -94,6 +121,19 @@ function MessageHandlerProvider(props: { children: React.ReactNode }) {
   const handleDisconnect = useCallback((reason: string) => {
     dispatch({ type: "DISCONNECTED", payload: reason });
   }, []);
+
+  const clearSession = useCallback(() => {
+    socket?.emit("leave_session", chatSession?.id);
+    setChatSession(null);
+  }, []);
+
+  const recreateSession = useCallback(() => {
+    clearSession();
+    createSession(axiosInstance, token).then(({ data }) => {
+      setChatSession(data);
+      socket?.emit("join_session", { session_id: data.id });
+    });
+  }, [])
 
   const handleReconnectAttempt = useCallback((attempt: number) => {
     dispatch({ type: "RECONNECT_ATTEMPT", payload: attempt });
@@ -122,21 +162,11 @@ function MessageHandlerProvider(props: { children: React.ReactNode }) {
   }, [socket, handleConnect, handleDisconnect, handleReconnectAttempt]);
 
 
-  const setChatSession = useCallback(
-    (session: ChatSession) => {
-      $setChatSession(session);
-      sessionStorage.setItem("chatSession", JSON.stringify(session));
-      return session;
-    },
-    [$setChatSession]
-  );
-
   const __components = useMemo(
     () => new ComponentRegistry({ components }),
     [components]
   );
 
-  const handler = useMemo(() => new ChatController(token), [token]);
   useEffect(() => {
     if (!chatSession) return;
     socket?.on("message", handler.socketMessageRespHandler);
@@ -166,6 +196,9 @@ function MessageHandlerProvider(props: { children: React.ReactNode }) {
         setChatSession,
         socketState,
         socket,
+        initialData: initialData.data ?? null,
+        clearSession,
+        recreateSession,
       }}
       {...props}
     />
