@@ -70,7 +70,7 @@ function socketReducer(state: SocketState, action: ActionType) {
 function MessageHandlerProvider(props: { children: React.ReactNode }) {
   const { components, onHandoff, token, socketUrl } = useConfigData();
   const { axiosInstance } = useAxiosInstance();
-  const [chatSession, setChatSession] = useSyncedState<ChatSession | null>(`SESSION:${token}`, getChatSession);
+  const [chatSession, setChatSession] = useSyncedState<ChatSession | null>(`SESSION:${token}:${encodeURIComponent(socketUrl)}`, getChatSession);
   const [socket, setSocket] = useState<Socket | null>(null);
   const handler = useMemo(() => new ChatController(token), [token, chatSession]);
   const [socketState, dispatch] = useReducer(socketReducer, {
