@@ -8,7 +8,6 @@ import {
 import { useEffect, useRef } from "react";
 import { useChatState, useScrollToPercentage } from "@lib/hooks";
 import { useConfigData, useMessageHandler } from "@lib/contexts";
-import { Map } from "@lib/utils/map";
 
 export function ChatScreen() {
   const scrollElementRef = useRef(null);
@@ -37,26 +36,21 @@ export function ChatScreen() {
       >
         <div className="flex flex-1 w-full min-h-fit mt-auto flex-col py-2 max-h-full items-center gap-1 last:fade-in-right">
           {initialMessage && <InitialBotMessage message={initialMessage} />}
-
-          <Map
-            data={messages}
-            render={(message, index) => {
-              if (message.from === "bot") {
-                return (
-                  <BotMessage key={index} index={index} message={message} />
-                );
-              } else if (message.from === "user") {
-                return (
-                  <UserMessage
-                    key={index}
-                    id={message.id}
-                    content={message.content}
-                  />
-                );
-              }
-            }}
-          />
-
+          {messages.map((message, index) => {
+            if (message.from === "bot") {
+              return (
+                <BotMessage key={index} index={index} message={message} />
+              );
+            } else if (message.from === "user") {
+              return (
+                <UserMessage
+                  key={index}
+                  id={message.id}
+                  content={message.content}
+                />
+              );
+            }
+           })}
           {LoadingComponent && <LoadingComponent />}
         </div>
       </main>
