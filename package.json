@@ -20,7 +20,7 @@
     "build": "pnpm build:lib"
   },
   "peerDependencies": {
-    "react": "^18.x"
+    "react": "^18.3.1"
   },
   "devDependencies": {
     "@radix-ui/react-popover": "^1.0.7",
@@ -85,6 +85,6 @@
     "@rjsf/utils": "^5.17.1",
     "@rjsf/validator-ajv8": "^5.17.1",
     "immer": "^10.0.4",
-    "lucide-react": "^0.294.0"
+    "lucide-react": "^0.408.0"
   }
 }
