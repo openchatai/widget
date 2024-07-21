@@ -17,7 +17,7 @@
     "build:libs": "pnpm build:lib && pnpm build:embed",
     "prepublishOnly": "pnpm clean && pnpm build",
     "start:dev": "vite",
-    "build": "pnpm build:lib && pnpm build:embed"
+    "build": "pnpm build:lib"
   },
   "peerDependencies": {
     "react": "^18.x"
