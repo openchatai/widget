@@ -15,7 +15,7 @@ export function Vote({ serverMessageId }: { serverMessageId: string }) {
   const { get } = useLang();
 
   return (
-    <div className="flex items-center gap-px [&>button]:p-1 mt-1">
+    <div className="flex items-center justify-end gap-px [&>button]:p-1 mt-1">
       {userVoted ? (
         <span className="text-xs text-blur-out text-emerald-500">
           {get("thank-you")}
