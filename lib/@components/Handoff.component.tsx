@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ComponentProps, HandoffPayloadType } from "@lib/types";
 
-type Props = ComponentProps<HandoffPayloadType>;
+export type HandoffComponentProps = ComponentProps<HandoffPayloadType>;
 
-export function Handoff(props: Props) {
+export function HandoffComponent(_props: HandoffComponentProps) {
   return (
     <div className="w-full p-3">
       <button className="text-sm font-medium py-2 px-3 rounded-lg bg-primary text-white max-w-sm w-full">

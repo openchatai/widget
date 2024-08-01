@@ -1,23 +1,16 @@
-import { BotMessageWrapper } from "@lib/components";
-import { useChatState } from "@lib/hooks";
+import { Avatar, AvatarFallback } from "@lib/components/avatar";
 
-/**
- * The Basic Loading component
- */
-export function Loading() {
-  const { conversationInfo } = useChatState();
-
-  if (!conversationInfo) return null;
-
+export function BotLoadingComponent() {
   return (
-    <BotMessageWrapper id="">
-      <div className="flex-1">
-        <div className="w-fit">
-          <div dir="auto" className="text-ellipsis text-xs">
-            {conversationInfo}
-          </div>
-        </div>
+    <div className="flex flex-col items-end wfull gap-1">
+      <div className="flex items-center gap-1">
+        <Avatar className="animate-pulse bg-secondary animate-iteration-infinite animate-alternate">
+          <AvatarFallback />
+        </Avatar>
       </div>
-    </BotMessageWrapper>
+      <div className="w-1/2 min-w-2/3">
+        <div className="bg-secondary animate-alternate p6 rounded-lg animate-pulse animate-iteration-infinite" />
+      </div>
+    </div>
   );
 }

@@ -1,34 +1,15 @@
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import type { ComponentProps } from "@lib/types";
-import { BotMessageWrapper, Vote } from "@lib/components";
+import { ComponentProps } from "@lib/types";
 
-type Props = ComponentProps<{
-  message: string;
+export type DefaultTextComponentProps = ComponentProps<{
+    message: string
 }>;
 
-/**
- * The Basic Text component
- */
-export function Text({ id, data, serverId }: Props) {
-  const { message } = data;
-  return (
-    <BotMessageWrapper id={id}>
-      <div className="flex-1">
-        <div className="w-fit">
-          <div dir="auto">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              className="prose prose-slate !text-sm prose-sm max-w-full"
-            >
-              {message}
-            </ReactMarkdown>
-          </div>
-        </div>
-      </div>
-      {serverId &&
-        <Vote serverMessageId={serverId} />
-      }
-    </BotMessageWrapper>
-  );
+export function BotTextResponse({ data, id, responseFor, type }: DefaultTextComponentProps) {
+    return <p
+        data-type={type}
+        data-id={id}
+        data-response-for={responseFor}
+        className='leading-snug font-medium text-sm'>
+        {data.message}
+    </p>
 }

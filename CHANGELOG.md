@@ -1,25 +1,43 @@
 # @openchatai/widget
 
-## 0.0.5
+## 1.1.5
 
 ### Patch Changes
 
-- 29c354a: same
+- cffa8ea: export botMessage too
 
-## 0.0.4
-
-### Patch Changes
-
-- ced11a8: fix json parsing issue
-
-## 0.0.3
+## 1.1.4
 
 ### Patch Changes
 
-- 2392700: fetch and display initial questions
+- 479aeba: export botmessage wrapper
 
-## 0.0.2
+## 1.1.3
 
 ### Patch Changes
 
-- 6c1e279: create session only when there is no messages or no session
+- 26374f5: fix the other exports
+
+## 1.1.2
+
+### Patch Changes
+
+- 09319ae: fix the useChat export
+
+## 1.1.1
+
+### Patch Changes
+
+- 0c1edbe: handle agent response, partial message response
+
+## 1.1.0
+
+### Minor Changes
+
+- 103ebb7: new refreshed ui, no need to add data-chat on the container element to scope the styles
+
+## 1.0.0
+
+### Major Changes
+
+- fd99178: manage the widget from one hook, encapsulated logic.

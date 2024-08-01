@@ -1,5 +1,5 @@
-export type PromiseType<P extends Promise<any>> = P extends Promise<infer T>
+export type PromiseType<P extends Promise<unknown>> = P extends Promise<infer T>
   ? T
   : never;
 
-export type FunctionReturningPromise = (...args: any[]) => Promise<any>;
+export type FunctionReturningPromise = (...args: unknown[]) => Promise<unknown>;
