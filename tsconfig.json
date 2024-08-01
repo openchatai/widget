@@ -23,7 +23,7 @@
       "@lib/*": ["./lib/*"]
     }
   },
-  "include": ["src", "lib"],
+  "include": ["src", "lib", "lib.d.ts"],
   "exclude": ["node_modules", "dist", "build"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

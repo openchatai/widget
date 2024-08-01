@@ -1,19 +1,63 @@
-type Timestamp = Date | number;
+import { WidgetOptions } from "./options";
 
-export type BotResponse = {
-  id: string | number;
-  timestamp: Timestamp;
-  from: "bot";
-  type: "text";
-  response: {
-    text: string;
+export type UserMessageType = {
+  type: "FROM_USER";
+  id: string;
+  content: string;
+  timestamp: string;
+  session_id: string;
+  serverId?: string;
+  user?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+    customData?: Record<string, string>;
+    avatarUrl?: string;
   };
 };
-export type UserMessage = {
-  id: string | number;
-  timestamp: Timestamp;
-  from: "user";
-  content: string;
+
+export type SystemEventType = {
+  type: "SYSTEM_EVENT";
+  component: "SYSTEM_EVENT";
+  event: string;
+  id: string;
+  serverId: number | null;
 };
 
-export type Message = BotResponse | UserMessage;
+export type BotMessageType<TData = unknown> = {
+  id: string;
+  type: "FROM_BOT";
+  component: string;
+  responseFor: string | null;
+  data: TData;
+  bot?: WidgetOptions["bot"];
+  serverId: number | null;
+  agent?: {
+    name?: string;
+    is_ai: boolean;
+  };
+};
+
+export type AgentMessageType = {
+  id: string;
+  type: "FROM_AGENT";
+  component: "TEXT";
+  responseFor: string | null;
+  serverId: number | null;
+  content: string;
+  agent?: {
+    name?: string;
+    avatar?: string;
+    is_ai: boolean;
+  };
+};
+export type HandoffPayloadType = {
+  summary: string;
+  sentiment: "happy" | "angry" | "neutral";
+};
+
+export type MessageType =
+  | UserMessageType
+  | SystemEventType
+  | BotMessageType
+  | AgentMessageType;
