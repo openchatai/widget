@@ -7,7 +7,7 @@ import UnoCSS from "unocss/vite";
 import { externalizeDeps } from "vite-plugin-externalize-deps";
 
 export default defineConfig({
-  plugins: [dts(), tsconfigPaths(), externalizeDeps(), UnoCSS(), react()],
+  plugins: [tsconfigPaths(), dts(), externalizeDeps(), UnoCSS(), react()],
   server: {
     port: 3005,
   },
