@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.6
+
+### Patch Changes
+
+- 43efe75: decode json function to fix invalid json responses, added voting hooks
+
 ## 1.1.5
 
 ### Patch Changes

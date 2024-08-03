@@ -52,6 +52,7 @@ export function useAsyncFn<T extends FunctionReturningPromise>(
             (value) => {
                 isMounted() &&
                     callId === lastCallId.current &&
+                    // @ts-ignore
                     set({ value, loading: false });
 
                 return value;
