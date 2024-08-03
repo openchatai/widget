@@ -38,19 +38,6 @@ export type BotMessageType<TData = unknown> = {
   };
 };
 
-export type AgentMessageType = {
-  id: string;
-  type: "FROM_AGENT";
-  component: "TEXT";
-  responseFor: string | null;
-  serverId: number | null;
-  content: string;
-  agent?: {
-    name?: string;
-    avatar?: string;
-    is_ai: boolean;
-  };
-};
 export type HandoffPayloadType = {
   summary: string;
   sentiment: "happy" | "angry" | "neutral";
@@ -60,4 +47,3 @@ export type MessageType =
   | UserMessageType
   | SystemEventType
   | BotMessageType
-  | AgentMessageType;

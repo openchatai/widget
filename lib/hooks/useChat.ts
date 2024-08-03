@@ -20,6 +20,8 @@ import { useTimeoutState } from "../hooks/useTimeoutState";
 import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
+import { isUiElement, SocketMessageParams } from "./parse-structured-response";
+import { decodeJSON } from "@lib/utils/parseJson";
 
 function debug(...args: unknown[]) {
   const prefix = "[useChat]";
@@ -418,18 +420,13 @@ export function useChat({
       debug(incomingResponse);
       try {
         let message: MessageType | null = null;
+
         if (incomingResponse.type === "info") {
           return;
         }
 
-        if (
-          incomingResponse.type === "message" &&
-          typeof incomingResponse.value === "string"
-        ) {
-          if (
-            incomingResponse.value === "|im_end|" ||
-            !incomingResponse.value
-          ) {
+        if (incomingResponse.type === "message") {
+          if (incomingResponse.value === "|im_end|" || !incomingResponse.value) {
             return;
           }
 
@@ -444,10 +441,10 @@ export function useChat({
             serverId: incomingResponse.server_message_id ?? null,
             agent: incomingResponse.agent
           };
-          debug("[TEXT_MESSAGE]", message);
+
         }
 
-        if (incomingResponse.type === "vote") {
+        else if (incomingResponse.type === "vote") {
           if (
             incomingResponse.server_message_id &&
             incomingResponse.client_message_id
@@ -460,10 +457,10 @@ export function useChat({
               },
             });
           }
-        } else if (
-          incomingResponse.type === "handoff" &&
-          isHandOff(incomingResponse.value)
-        ) {
+        }
+
+        else if (
+          incomingResponse.type === "handoff") {
           const handoff = incomingResponse.value;
           const message: BotMessageType = {
             component: "HANDOFF",
@@ -473,27 +470,33 @@ export function useChat({
             id: incomingResponse.server_message_id?.toString() ?? genId(),
             responseFor: incomingResponse.client_message_id ?? null,
           };
+
           onHandoff?.(handoff);
           dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
           events.dispatchTypedEvent(
             "handoff",
             new CustomEvent("handoff", { detail: handoff })
           );
-        } else if (
+        }
+
+        else if (
           incomingResponse.type === "ui" &&
           isUiElement(incomingResponse.value)
         ) {
           const uiVal = incomingResponse.value;
+
           const message: BotMessageType = {
-            component: uiVal.name,
-            data: uiVal,
             type: "FROM_BOT",
-            serverId: incomingResponse.server_message_id ?? null,
-            id: incomingResponse.server_message_id?.toString() ?? genId(),
+            component: uiVal.name,
+            data: decodeJSON(JSON.stringify(uiVal)), // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
+            serverId: null,
+            id: genId(),
             responseFor: incomingResponse.client_message_id ?? null,
+            agent: incomingResponse.agent,
           };
           dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
         }
+
         if (message) {
           dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
           setInfo(null);
@@ -503,9 +506,10 @@ export function useChat({
             })
           );
         }
+
       } catch (error) {
         setHookState("error");
-        console.error(error);
+        debug(error);
       }
       setHookState("idle");
     },
@@ -552,73 +556,6 @@ export function useChat({
     hookState,
     settings,
     setSettings,
+    axiosInstance
   };
-}
-
-interface VotePayload {
-  type: "vote";
-  client_message_id: string;
-  server_message_id: number;
-  server_session_id: string;
-}
-
-interface MessagePayload {
-  agent: { name: string; is_ai: boolean };
-  client_message_id: string; // the user messageId
-  server_session_id: string;
-  server_message_id?: number;
-  type: "message";
-  value: string;
-}
-
-interface InfoPayload {
-  client_message_id: string;
-  server_session_id: string;
-  type: "info";
-  value: string;
-}
-
-export interface UiElement {
-  type: string;
-  request_response: unknown;
-  name: string;
-  message_id?: string;
-  content: string;
-  incoming_message_id: string;
-}
-
-type SocketMessageParams =
-  | InfoPayload
-  | MessagePayload
-  | VotePayload
-  | {
-    type: "handoff" | "ui";
-    value?: UiElement | HandoffPayloadType;
-    server_message_id?: number;
-    server_session_id?: string;
-    client_message_id?: string;
-    agent?: {
-      name: string;
-      is_ai: boolean;
-      profile_picture?: string | null;
-    };
-  };
-
-// Type guards
-function isUiElement(value: unknown): value is UiElement {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "type" in value &&
-    "request_response" in value
-  );
-}
-
-function isHandOff(value: unknown): value is HandoffPayloadType {
-  return (
-    typeof value === "object" &&
-    value !== null &&
-    "summary" in value &&
-    "sentiment" in value
-  );
 }

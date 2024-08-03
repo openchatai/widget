@@ -14,7 +14,8 @@
     "dev": "vite build --watch",
     "build": "vite build",
     "start:dev": "vite",
-    "build:embed": "vite build -c vite.embed.config.ts"
+    "build:embed": "vite build -c vite.embed.config.ts",
+    "test": "vitest"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",
@@ -55,7 +56,8 @@
     "vite": "^5.3.4",
     "vite-plugin-dts": "4.0.0-beta.1",
     "vite-plugin-externalize-deps": "^0.8.0",
-    "vite-tsconfig-paths": "^4.3.2"
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.3"
   },
   "files": [
     "dist",
