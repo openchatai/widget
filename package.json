@@ -15,7 +15,7 @@
     "build": "vite build",
     "start:dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",
-    "test": "vitest"
+    "test": "vitest run"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",
