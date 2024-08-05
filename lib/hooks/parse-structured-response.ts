@@ -3,8 +3,7 @@ import { HandoffPayloadType } from "@lib/types";
 export function isUiElement(value: unknown): value is UiElement {
     return (
         typeof value === "object" &&
-        value !== null &&
-        "request_response" in value
+        value !== null
     );
 }
 

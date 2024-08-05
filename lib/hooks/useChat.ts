@@ -115,7 +115,7 @@ function chatReducer(state: State, action: ActionType) {
       case "ADD_RESPONSE_MESSAGE": {
         // if the `responseFor`
         const msg = action.payload;
-        if (msg.type === "FROM_BOT") {
+        if (msg.type === "FROM_BOT" && msg.component === "TEXT") {
           const prevBotMessage = draft.messages.find(
             (_) => _.type === "FROM_BOT" && _.responseFor === msg.responseFor
           ) as BotMessageType<{ message: string }> | undefined;
@@ -237,13 +237,6 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
   return messages;
 }
 
-function queue<T>(f: (...args: T[]) => void) {
-  return (...args: T[]) => {
-    setTimeout(() => {
-      f(...args);
-    }, 0);
-  };
-}
 
 type HookState = "loading" | "error" | "idle";
 
@@ -423,42 +416,42 @@ export function useChat({
   }
 
   const handleIncomingMessage =
-    (incomingResponse: SocketMessageParams) => {
-      debug(incomingResponse);
+    (response: SocketMessageParams) => {
+      debug(response);
       try {
         let message: MessageType | null = null;
 
-        if (incomingResponse.type === "info") {
+        if (response.type === "info") {
           return;
         }
 
-        if (incomingResponse.type === "message") {
-          if (incomingResponse.value === "|im_end|" || !incomingResponse.value) {
+        if (response.type === "message") {
+          if (response.value === "|im_end|" || !response.value) {
             return;
           }
 
           message = {
             type: "FROM_BOT",
             component: "TEXT",
-            responseFor: incomingResponse.client_message_id ?? null,
-            id: incomingResponse.server_message_id?.toString() ?? genId(),
+            responseFor: response.client_message_id ?? null,
+            id: response.server_message_id?.toString() ?? genId(),
             data: {
-              message: incomingResponse.value,
+              message: response.value,
             },
-            serverId: incomingResponse.server_message_id ?? null,
-            agent: incomingResponse.agent
+            serverId: response.server_message_id ?? null,
+            agent: response.agent
           };
 
         }
 
-        else if (incomingResponse.type === "vote") {
+        else if (response.type === "vote") {
           if (
-            incomingResponse.server_message_id &&
-            incomingResponse.client_message_id
+            response.server_message_id &&
+            response.client_message_id
           ) {
             const payload = {
-              clientMessageId: incomingResponse.client_message_id,
-              ServerMessageId: incomingResponse.server_message_id,
+              clientMessageId: response.client_message_id,
+              ServerMessageId: response.server_message_id,
             }
             debug("vote", payload);
             dispatch({
@@ -469,15 +462,15 @@ export function useChat({
         }
 
         else if (
-          incomingResponse.type === "handoff") {
-          const handoff = incomingResponse.value;
+          response.type === "handoff") {
+          const handoff = response.value;
           const message: BotMessageType = {
             component: "HANDOFF",
             data: handoff,
             type: "FROM_BOT",
-            serverId: incomingResponse.server_message_id ?? null,
-            id: incomingResponse.server_message_id?.toString() ?? genId(),
-            responseFor: incomingResponse.client_message_id ?? null,
+            serverId: response.server_message_id ?? null,
+            id: response.server_message_id?.toString() ?? genId(),
+            responseFor: response.client_message_id ?? null,
           };
 
           onHandoff?.(handoff);
@@ -489,21 +482,20 @@ export function useChat({
         }
 
         else if (
-          incomingResponse.type === "ui" &&
-          isUiElement(incomingResponse.value)
+          response.type === "ui" &&
+          isUiElement(response.value)
         ) {
-          const uiVal = incomingResponse.value;
-
-          const message: BotMessageType = {
+          const uiVal = response.value;
+          message = {
             type: "FROM_BOT",
             component: uiVal.name,
             data: decodeJSON(JSON.stringify(uiVal)), // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
             serverId: null,
             id: genId(),
-            responseFor: incomingResponse.client_message_id ?? null,
-            agent: incomingResponse.agent,
+            responseFor: response.client_message_id ?? null,
+            agent: response.agent,
           };
-          dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+          debug("[ui]", message);
         }
 
         if (message) {
@@ -536,7 +528,7 @@ export function useChat({
   );
 
   useEffect(() => {
-    socket?.on("structured_message", queue(handleIncomingMessage));
+    socket?.on("structured_message", handleIncomingMessage);
     socket?.on("info", handleInfo);
     return () => {
       socket?.off("structured_message");
