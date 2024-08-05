@@ -11,5 +11,6 @@ initOpenScript({
     avatarUrl: "https://i.pravatar.cc/300",
     name: "John Doe",
   },
+  debug: true,
   organizationName: "Demo inc.",
 });
