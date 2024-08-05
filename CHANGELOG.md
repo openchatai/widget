@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.7
+
+### Patch Changes
+
+- d80f143: fix serverId, ui handling
+
 ## 1.1.6
 
 ### Patch Changes
