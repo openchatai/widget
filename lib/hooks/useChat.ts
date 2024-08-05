@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSyncedState } from "./useSyncState";
 import { produce } from "immer";
@@ -159,13 +160,17 @@ function chatReducer(state: State, action: ActionType) {
         break;
       }
       case "SET_SERVER_ID": {
+        // responseFor, serverId
         const { clientMessageId, ServerMessageId } = action.payload;
+
         const message = draft.messages.find(
-          (msg) => msg.id === clientMessageId
+          (msg) => msg.type === "FROM_BOT" && msg.responseFor === clientMessageId
         );
+
         if (message) {
           message.serverId = ServerMessageId;
         }
+
         break;
       }
       default:
@@ -291,6 +296,8 @@ export function useChat({
     messages: [],
   });
 
+  debug("[messages]", chatState.messages);
+
   const [hookState, setHookState] = useState<HookState>("idle");
 
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
@@ -415,7 +422,7 @@ export function useChat({
     }
   }
 
-  const handleIncomingMessage = useCallback(
+  const handleIncomingMessage =
     (incomingResponse: SocketMessageParams) => {
       debug(incomingResponse);
       try {
@@ -449,12 +456,14 @@ export function useChat({
             incomingResponse.server_message_id &&
             incomingResponse.client_message_id
           ) {
+            const payload = {
+              clientMessageId: incomingResponse.client_message_id,
+              ServerMessageId: incomingResponse.server_message_id,
+            }
+            debug("vote", payload);
             dispatch({
               type: "SET_SERVER_ID",
-              payload: {
-                clientMessageId: incomingResponse.client_message_id,
-                ServerMessageId: incomingResponse.server_message_id,
-              },
+              payload,
             });
           }
         }
@@ -512,9 +521,7 @@ export function useChat({
         debug(error);
       }
       setHookState("idle");
-    },
-    [events, onHandoff, setHookState, setInfo]
-  );
+    }
 
   const handleInfo = useCallback(
     (info: string) => {

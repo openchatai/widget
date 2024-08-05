@@ -3,7 +3,7 @@ import { initOpenScript } from "./index";
 const socketUrl = "http://localhost:8080";
 const apiUrl = "http://localhost:8080/backend";
 initOpenScript({
-  token: "aa9793f3a20c6bb95414577cd91933c3",
+  token: "b6faec7038aca8b8f5e33488aac73f3e",
   apiUrl: apiUrl,
   socketUrl: socketUrl,
   initialMessage: ["Hey man!", "How can we help you?"],
