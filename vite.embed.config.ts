@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
-import UnoCSS from "unocss/vite";
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths(), UnoCSS()],
+  plugins: [react(), tsconfigPaths()],
   build: {
+    assetsInlineLimit: 10 * 1024,
     rollupOptions: {
       input: "src/index.tsx",
       output: {

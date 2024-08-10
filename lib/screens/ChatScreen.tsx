@@ -31,7 +31,6 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@lib/components/dialog";
-
 import HeroImage from "../static/hero-image.png";
 
 function ChatFooter() {
