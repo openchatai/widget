@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.8
+
+### Patch Changes
+
+- ef7abb8: fix the CI
+
 ## 1.1.7
 
 ### Patch Changes
