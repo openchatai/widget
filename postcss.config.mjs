@@ -1,23 +1,12 @@
 // postcss.config.mjs
-import UnoCSS from '@unocss/postcss'
 import prefixer from 'postcss-prefix-selector'
-
-const removeEmptySelectors = () => {
-    return {
-        postcssPlugin: 'remove-unocss-comments',
-        Rule(rule) {
-            // remove the ruls if it contains #--unocss-layer-end, which is a comment added by unocss
-            // sometimes it won't be excatly #--unocss-layer-end, it may contain some other text
-            if (rule.selector.match(/#--unocss-layer-end/)) {
-                rule.remove();
-            }
-        }
-    };
-};
+import tailwindcss from 'tailwindcss'
+import autoprefixer from 'autoprefixer'
 
 export default {
     plugins: [
-        UnoCSS(),
+        tailwindcss(),
+        autoprefixer(),
         prefixer({
             prefix: `[data-chat-widget]`,
             transform: function (prefix, selector, prefixedSelector, filePath, rule) {
@@ -51,6 +40,5 @@ export default {
                 return prefixedSelector;
             }
         }),
-        removeEmptySelectors(),
     ],
 }

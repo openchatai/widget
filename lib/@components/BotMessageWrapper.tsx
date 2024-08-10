@@ -16,8 +16,8 @@ export function BotResponseWrapper({
             }} />
 
         </div>
-        <div className='wfit min-w-1/2'>
-            <div className='bg-primary p2.5 min-w-fit text-white rounded-lg'
+        <div className='w-fit min-w-[50%]'>
+            <div className='bg-primary p-2.5 min-w-fit text-white rounded-lg'
                 style={{
                     background: "white",
                     boxShadow: "0px 8px 12px rgba(0, 0, 0, 0.04)",

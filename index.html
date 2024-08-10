@@ -1,29 +1,49 @@
 <!doctype html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Openchat AI-Copilot</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
 
-  <body>
-    <style>
-      body {
-        font-family: "Noto Sans", sans-serif;
-      }
-    </style>
-    <main>
-      <h2>
-        Playground: here you can see how the widget behaves in different
-        contexts oh yeah let's go
-      </h2>
-    </main>
-    <script type="module" src="src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Openchat AI-Copilot</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+</head>
+
+<body>
+  <style>
+    body {
+      font-family: "Noto Sans", sans-serif;
+    }
+  </style>
+  <main>
+    <h2>
+      Playground: here you can see how the widget behaves in different
+      contexts oh yeah let's go
+    </h2>
+  </main>
+  <script type="module" src="src/index.tsx"></script>
+  <script>
+    const socketUrl = "http://localhost:8080";
+    const apiUrl = "http://localhost:8080/backend";
+
+    window.onload = () => {
+      initOpenScript({
+        token: "b6faec7038aca8b8f5e33488aac73f3e",
+        apiUrl: apiUrl,
+        socketUrl: socketUrl,
+        initialMessage: ["Hey man!", "How can we help you?"],
+        user: {
+          avatarUrl: "https://i.pravatar.cc/300",
+          name: "John Doe",
+        },
+        debug: true,
+        organizationName: "Demo inc.",
+      });
+    }
+
+  </script>
+</body>
+
 </html>

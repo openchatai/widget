@@ -3,11 +3,10 @@ import { resolve } from "path";
 import react from "@vitejs/plugin-react";
 import dts from "vite-plugin-dts";
 import tsconfigPaths from "vite-tsconfig-paths";
-import UnoCSS from "unocss/vite";
 import { externalizeDeps } from "vite-plugin-externalize-deps";
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), dts(), externalizeDeps(), UnoCSS(), react()],
+  plugins: [tsconfigPaths(), dts(), externalizeDeps(), react()],
   server: {
     port: 3005,
   },

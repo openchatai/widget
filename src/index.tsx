@@ -1,11 +1,13 @@
 import { WidgetRoot, WidgetOptions } from "@lib/index";
 import { WidgetPopover } from "@lib/widget";
 import { createRoot } from "react-dom/client";
+// @ts-ignore
+import styles from "../lib/index.css?inline"
 
 const defaultRootId = "opencopilot-root";
 
 export function initOpenScript(options: WidgetOptions, rootId?: string) {
-  
+
   let rootElement = document.getElementById(rootId ?? defaultRootId);
 
   if (!rootElement) {
@@ -13,13 +15,16 @@ export function initOpenScript(options: WidgetOptions, rootId?: string) {
     rootElement.id = rootId || defaultRootId;
     document.body.appendChild(rootElement);
   }
-  
+
   const root = createRoot(rootElement);
   if (root) {
     root.render(
       <WidgetRoot
         options={options}
       >
+        <style>
+          {styles}
+        </style>
         <WidgetPopover />
       </WidgetRoot>
     );

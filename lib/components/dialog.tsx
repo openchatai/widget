@@ -14,7 +14,7 @@ const [useDialogState, SafeProvider] = createSafeContext<{
   onOpenChange: (open: boolean) => void;
 }>();
 
-const noop = () => {};
+const noop = () => { };
 
 function Dialog({
   defaultOpen,
@@ -23,14 +23,14 @@ function Dialog({
   children,
 }: {
   children:
-    | React.ReactNode
-    | (({
-        open,
-        setOpen,
-      }: {
-        open: boolean;
-        setOpen: (open: boolean) => void;
-      }) => React.ReactNode);
+  | React.ReactNode
+  | (({
+    open,
+    setOpen,
+  }: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+  }) => React.ReactNode);
   defaultOpen?: boolean;
   open?: boolean; // controlled
   onOpenChange?: (open: boolean) => void; // controlled
@@ -70,7 +70,7 @@ const DialogBackDrop = React.forwardRef<
 >((props, ref) => {
   return (
     <div
-      className="absolute inset-0 z-24 flex-center bg-black/10 backdrop-blur-sm"
+      className="absolute inset-0 z-[24] flex items-center justify-center bg-black/10 backdrop-blur-sm"
       {...props}
       ref={ref}
     />

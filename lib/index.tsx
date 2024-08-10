@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import "uno.css";
+import "./index.css"
 export { Widget, WidgetRoot, WidgetPopover } from "./widget";
 export * from "./@components";
 export * from "./types";

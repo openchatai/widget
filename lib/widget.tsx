@@ -14,15 +14,14 @@ const vars = `
 [--secondary:0_0%_96%]
 [--primary-foreground:217_72%_18%]
 [--accent:0_0_22%]
+[--dark:0_0%_0%]
 `;
 
 export function WidgetPopover() {
   const [isClicked, setIsClicked] = useState(false);
-
   const handleClick = () => {
     setIsClicked(!isClicked);
   };
-
   return (
     <PopoverPrimitive.Root>
       <div style={{ display: "content" }} data-chat-widget>
@@ -33,7 +32,7 @@ export function WidgetPopover() {
           data-chat-widget
           align="end"
         >
-          <Widget className="max-h-[85dvh] w-sm z-[200] h-xl" />
+          <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px]" />
         </PopoverPrimitive.Content>
       </div>
       <div style={{ display: "content" }} data-chat-widget>
@@ -51,7 +50,7 @@ export function WidgetPopover() {
             )}
           >
             {!isClicked ? (
-              <MessageSquareDot className="size-6 transform scaleY-[-1]" />
+              <MessageSquareDot className="size-6 transform scale-y-[-1]" />
             ) : (
               <X className="size-6" />
             )}
