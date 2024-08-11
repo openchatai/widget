@@ -31,7 +31,9 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@lib/components/dialog";
-import HeroImage from "../static/hero-image.png";
+
+const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
+
 
 function ChatFooter() {
   const [input, setInput] = useState("");

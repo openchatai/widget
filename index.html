@@ -27,8 +27,7 @@
   <script>
     const socketUrl = "http://localhost:8080";
     const apiUrl = "http://localhost:8080/backend";
-
-    window.onload = () => {
+    window.addEventListener("DOMContentLoaded", () => {
       initOpenScript({
         token: "b6faec7038aca8b8f5e33488aac73f3e",
         apiUrl: apiUrl,
@@ -41,8 +40,7 @@
         debug: true,
         organizationName: "Demo inc.",
       });
-    }
-
+    });
   </script>
 </body>
 
