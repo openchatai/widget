@@ -16,6 +16,8 @@ function ChatProvider({
     apiUrl: config.apiUrl ?? "https://api-v2.opencopilot.so/backend",
     socketUrl: config.socketUrl ?? "https://api-v2.opencopilot.so",
     botToken: config.token,
+    headers: config.headers ?? {},
+    queryParams: config.queryParams ?? {},
   });
   return <SafeProvider value={chat}>{children}</SafeProvider>;
 }

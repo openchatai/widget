@@ -32,13 +32,13 @@ export function WidgetPopover() {
           data-chat-widget
           align="end"
         >
-          <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px]" />
+          <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px] font-inter" />
         </PopoverPrimitive.Content>
       </div>
       <div style={{ display: "content" }} data-chat-widget>
         <PopoverPrimitive.PopoverTrigger
           className={cn(
-            "bottom-2 right-4 z-[200] absolute p-3 rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
+            "bottom-2 right-4 z-[200] absolute p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
             vars
           )}
           onClick={handleClick}
@@ -71,12 +71,12 @@ export const Widget = forwardRef<
         {...props}
         ref={_ref}
         className={cn(
-          "rounded-xl size-full overflow-hidden isolate relative",
+          "rounded-xl size-full overflow-hidden isolate relative font-inter",
           vars,
           className
         )}
       >
-        <div className="size-full absolute antialiased">
+        <div className="size-full absolute antialiased font-inter">
           <ChatScreen />
         </div>
       </div>

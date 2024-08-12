@@ -41,6 +41,8 @@ type useChatOptions = {
     persistSession?: boolean;
     useSoundEffects?: boolean;
   };
+  headers: Record<string, string>;
+  queryParams: Record<string, string>;
 };
 
 export enum Events {
@@ -247,6 +249,8 @@ export function useChat({
   defaultHookSettings,
   onHandoff,
   onSessionDestroy,
+  headers,
+  queryParams,
 }: useChatOptions) {
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
@@ -328,12 +332,19 @@ export function useChat({
     socket?.emit("join_session", { session_id: session?.id });
   }, [session?.id, socket]);
 
+
+  const handleReconnect = useCallback(() => {
+    socket?.emit("join_session", { session_id: session?.id });
+  }, [socket])
+
   useEffect(() => {
     socket?.on("connect", handleConnect);
+    socket?.on("reconnect", handleReconnect);
     return () => {
       socket?.off("connect", handleConnect);
+      socket?.off("reconnect", handleReconnect);
     };
-  }, [handleConnect, socket]);
+  }, [handleConnect, socket, handleReconnect]);
 
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
@@ -386,7 +397,14 @@ export function useChat({
         bot_token: botToken,
         content: content.text,
         session_id: chatSession.id,
-        ...data,
+        headers: {
+          ...headers,
+          ...data.headers,
+        },
+        query_params: {
+          ...queryParams,
+          ...data.query_params,
+        }
       };
 
       dispatch({

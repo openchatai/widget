@@ -16,6 +16,9 @@ export default {
         dark: "hsl(var(--dark))",
       }
     },
+    fontFamily: {
+      inter: ['Inter', 'sans-serif'],
+    }
   },
   plugins: [],
 }
