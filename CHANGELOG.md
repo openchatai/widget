@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.9
+
+### Patch Changes
+
+- 88c4c73: fix the headers, queryParams passing, added font fot openUI
+
 ## 1.1.8
 
 ### Patch Changes
