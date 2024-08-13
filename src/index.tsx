@@ -6,7 +6,13 @@ import { WidgetOptions } from "../lib/types";
 
 const defaultRootId = "opencopilot-root";
 
+const IS_SERVER = typeof window === "undefined";
+
 export function initOpenScript(options: WidgetOptions, rootId?: string) {
+
+  if (IS_SERVER) {
+    return;
+  }
 
   let rootElement = document.getElementById(rootId ?? defaultRootId);
 

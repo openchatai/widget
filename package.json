@@ -23,8 +23,6 @@
     "react": "^18.3.1"
   },
   "devDependencies": {
-    "@radix-ui/react-popover": "^1.1.1",
-    "@radix-ui/react-slot": "^1.1.0",
     "@types/node": "^20.14.11",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
@@ -34,7 +32,6 @@
     "autoprefixer": "^10.4.19",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.1",
     "eslint": "^8.56.0",
     "tailwindcss": "^3.4.6",
     "eslint-plugin-react-hooks": "^4.6.2",
@@ -45,7 +42,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
-    "react-textarea-autosize": "^8.5.3",
     "remark-gfm": "^4.0.0",
     "socket.io-client": "^4.7.5",
     "swr": "^2.2.5",
@@ -84,6 +80,9 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "framer-motion": "^11.3.8",
+    "clsx": "^2.1.1",
+    "@radix-ui/react-popover": "^1.1.1",
+    "@radix-ui/react-slot": "^1.1.0",
     "immer": "^10.1.1",
     "lucide-react": "^0.412.0"
   }

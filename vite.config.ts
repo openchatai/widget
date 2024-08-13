@@ -20,9 +20,11 @@ export default defineConfig({
       fileName: (format) => `index.${format}.js`,
     },
     rollupOptions: {
+
       output: {
         preserveModules: false,
         exports: "named",
+        intro: `"use client"`
       },
     },
     outDir: "dist",
