@@ -252,6 +252,7 @@ export function useChat({
   headers,
   queryParams,
 }: useChatOptions) {
+
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
     {
@@ -260,15 +261,18 @@ export function useChat({
     },
     "local"
   );
+
   const axiosInstance = useAxiosInstance({
     apiUrl,
     botToken,
   });
+
   const [session, setSession] = useSyncedState<ChatSession>(
     SESSION_KEY(botToken),
     undefined,
     settings?.persistSession ? "local" : "memory"
   );
+
   const { socket, socketState } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
@@ -329,12 +333,16 @@ export function useChat({
   );
 
   const handleConnect = useCallback(() => {
-    socket?.emit("join_session", { session_id: session?.id });
+    if (session) {
+      socket?.emit("join_session", { session_id: session.id });
+    }
   }, [session?.id, socket]);
 
 
   const handleReconnect = useCallback(() => {
-    socket?.emit("join_session", { session_id: session?.id });
+    if (session) {
+      socket?.emit("join_session", { session_id: session.id });
+    }
   }, [socket])
 
   useEffect(() => {
@@ -397,15 +405,19 @@ export function useChat({
         bot_token: botToken,
         content: content.text,
         session_id: chatSession.id,
+
         headers: {
           ...headers,
           ...data.headers,
         },
+
         query_params: {
           ...queryParams,
           ...data.query_params,
         }
       };
+
+      debug("[send_message]", payload);
 
       dispatch({
         type: "APPEND_USER_MESSAGE",
@@ -507,7 +519,7 @@ export function useChat({
           message = {
             type: "FROM_BOT",
             component: uiVal.name,
-            data: decodeJSON(JSON.stringify(uiVal)), // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
+            data: uiVal.request_response, // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
             serverId: null,
             id: genId(),
             responseFor: response.client_message_id ?? null,
