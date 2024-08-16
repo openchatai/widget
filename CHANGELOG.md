@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.10
+
+### Patch Changes
+
+- 14b0aee: pass the correct data to ui components
+
 ## 1.1.9
 
 ### Patch Changes
