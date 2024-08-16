@@ -1,5 +1,23 @@
 # @openchatai/widget
 
+## 1.1.13
+
+### Patch Changes
+
+- e97953c: update deps
+
+## 1.1.12
+
+### Patch Changes
+
+- 8b22cb6: export correct types
+
+## 1.1.11
+
+### Patch Changes
+
+- 6b66e9d: fix the type exports
+
 ## 1.1.10
 
 ### Patch Changes
