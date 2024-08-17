@@ -18,6 +18,7 @@ function ChatProvider({
     botToken: config.token,
     headers: config.headers ?? {},
     queryParams: config.queryParams ?? {},
+    pathParams: config.pathParams ?? {},
   });
   return <SafeProvider value={chat}>{children}</SafeProvider>;
 }

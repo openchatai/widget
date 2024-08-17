@@ -5,6 +5,7 @@ export type WidgetOptions = {
   token: string;
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
+  pathParams?: Record<string, string>;
   initialMessage: string[];
   triggerSelector?: string;
   apiUrl?: string;

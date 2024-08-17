@@ -43,6 +43,7 @@ type useChatOptions = {
   };
   headers: Record<string, string>;
   queryParams: Record<string, string>;
+  pathParams: Record<string, string>;
 };
 
 export enum Events {
@@ -199,6 +200,7 @@ type SendMessagePayload = {
   headers?: Record<string, unknown>;
   bot_token: string;
   query_params?: Record<string, string>;
+  pathParams: Record<string, string>;
   user?: {
     email?: string;
     name?: string;
@@ -251,6 +253,7 @@ export function useChat({
   onSessionDestroy,
   headers,
   queryParams,
+  pathParams,
 }: useChatOptions) {
 
   const [settings, _setSettings] = useSyncedState(
@@ -386,6 +389,7 @@ export function useChat({
     headers?: Record<string, unknown>;
     user?: Record<string, unknown>;
     query_params?: Record<string, string>;
+    PathParams?: Record<string, string>;
   }) {
     let chatSession = session;
 
@@ -405,12 +409,14 @@ export function useChat({
         bot_token: botToken,
         content: content.text,
         session_id: chatSession.id,
-
         headers: {
           ...headers,
           ...data.headers,
         },
-
+        pathParams: {
+          ...pathParams,
+          ...data.PathParams
+        },
         query_params: {
           ...queryParams,
           ...data.query_params,
