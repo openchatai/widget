@@ -213,17 +213,17 @@ export function ChatScreen() {
                   />
                 </BotResponseWrapper>
               )) ?? (
-                  <BotResponseWrapper bot={config.bot}>
-                    <DefaultTextComponent
-                      component="TEXT"
-                      data={{ message: "Hello, how can I help?" }}
-                      id="123"
-                      responseFor={null}
-                      type="FROM_BOT"
-                      serverId={null}
-                    />
-                  </BotResponseWrapper>
-                )}
+                <BotResponseWrapper bot={config.bot}>
+                  <DefaultTextComponent
+                    component="TEXT"
+                    data={{ message: "Hello, how can I help?" }}
+                    id="123"
+                    responseFor={null}
+                    type="FROM_BOT"
+                    serverId={null}
+                  />
+                </BotResponseWrapper>
+              )}
               {state.messages.map((message, i) => {
                 if (message.type === "FROM_USER") {
                   return (
