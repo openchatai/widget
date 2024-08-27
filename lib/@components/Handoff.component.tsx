@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { ComponentProps, HandoffPayloadType } from "@lib/types";
 
 export type HandoffComponentProps = ComponentProps<HandoffPayloadType>;

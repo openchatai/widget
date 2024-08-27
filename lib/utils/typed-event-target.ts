@@ -30,7 +30,6 @@ export interface TypedEventTarget<M extends ValueIsEvent<M>> {
   dispatchEvent: <T extends keyof M & string>(event: M[T]) => boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-declaration-merging
 export class TypedEventTarget<M extends ValueIsEvent<M>> extends EventTarget {
   constructor() {
     super();

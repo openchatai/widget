@@ -8,7 +8,6 @@
   },
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "prepublishOnly": "pnpm clean && pnpm batman",
     "dev": "vite build --watch",
@@ -26,15 +25,11 @@
     "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^8.2.0",
-    "@typescript-eslint/parser": "^8.2.0",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.5",
     "class-variance-authority": "^0.7.0",
     "tailwindcss": "^3.4.6",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.11",
     "postcss": "^8.4.41",
     "postcss-prefix-selector": "^1.16.1",
     "react": "^18.3.1",
@@ -51,7 +46,10 @@
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
   },
-  "files": ["dist", "dist-embed"],
+  "files": [
+    "dist",
+    "dist-embed"
+  ],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },

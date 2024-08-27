@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, DependencyList, useCallback } from "react";
-import { io, ManagerOptions, Socket, SocketOptions } from "socket.io-client";
+import { DependencyList, useCallback, useEffect, useState } from "react";
+import { ManagerOptions, Socket, SocketOptions, io } from "socket.io-client";
 
 export type SocketState =
   | "connected"

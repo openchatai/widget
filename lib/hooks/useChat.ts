@@ -1,6 +1,17 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { useSyncedState } from "./useSyncState";
+import {
+  BotMessageType,
+  ChatSession,
+  HandoffPayloadType,
+  MessageType,
+  UserMessageType,
+} from "@lib/types";
+import {
+  ChatMessageHistory,
+  createSession,
+  getInitData,
+} from "@lib/utils/getters";
+import { decodeJSON } from "@lib/utils/parseJson";
+import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
   ReactNode,
@@ -10,26 +21,13 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  BotMessageType,
-  ChatSession,
-  HandoffPayloadType,
-  MessageType,
-  UserMessageType,
-} from "@lib/types";
-import { useAxiosInstance } from "./useAxiosInstance";
-import {
-  ChatMessageHistory,
-  createSession,
-  getInitData,
-} from "@lib/utils/getters";
 import useSWR from "swr";
 import { useTimeoutState } from "../hooks/useTimeoutState";
-import { TypedEventTarget } from "@lib/utils/typed-event-target";
+import { SocketMessageParams, isUiElement } from "./parse-structured-response";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
-import { isUiElement, SocketMessageParams } from "./parse-structured-response";
-import { decodeJSON } from "@lib/utils/parseJson";
+import { useAxiosInstance } from "./useAxiosInstance";
+import { useSyncedState } from "./useSyncState";
 
 function debug(...args: unknown[]) {
   const prefix = "[useChat]";
@@ -69,45 +67,45 @@ type State = {
 
 type ActionType =
   | {
-      type: "INIT";
-    }
+    type: "INIT";
+  }
   | {
-      type: "ADD_RESPONSE_MESSAGE";
-      payload: MessageType;
-    }
+    type: "ADD_RESPONSE_MESSAGE";
+    payload: MessageType;
+  }
   | {
-      type: "UPDATE_MESSAGE";
-      payload: { id: string; payload: Partial<MessageType> };
-    }
+    type: "UPDATE_MESSAGE";
+    payload: { id: string; payload: Partial<MessageType> };
+  }
   | {
-      type: "DELETE_MESSAGE";
-      payload: { id: string };
-    }
+    type: "DELETE_MESSAGE";
+    payload: { id: string };
+  }
   | {
-      type: "CLEAR_MESSAGES";
-    }
+    type: "CLEAR_MESSAGES";
+  }
   | {
-      type: "APPEND_USER_MESSAGE";
-      payload: UserMessageType;
-    }
+    type: "APPEND_USER_MESSAGE";
+    payload: UserMessageType;
+  }
   | {
-      type: "PREPEND_HISTORY";
-      payload: MessageType[];
-    }
+    type: "PREPEND_HISTORY";
+    payload: MessageType[];
+  }
   | {
-      type: "APPEND_CONTENT_TO_MESSAGE";
-      payload: {
-        content: string;
-        messageId: string;
-      };
-    }
-  | {
-      type: "SET_SERVER_ID";
-      payload: {
-        clientMessageId: string;
-        ServerMessageId: number;
-      };
+    type: "APPEND_CONTENT_TO_MESSAGE";
+    payload: {
+      content: string;
+      messageId: string;
     };
+  }
+  | {
+    type: "SET_SERVER_ID";
+    payload: {
+      clientMessageId: string;
+      ServerMessageId: number;
+    };
+  };
 
 function chatReducer(state: State, action: ActionType) {
   return produce(state, (draft) => {
