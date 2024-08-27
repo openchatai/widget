@@ -1,4 +1,5 @@
 import { WidgetOptions } from "@lib/types";
+import React from "react";
 import AgentIcon from "../static/agent-icon.png";
 
 export function BotResponseWrapper({

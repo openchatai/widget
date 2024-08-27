@@ -1,3 +1,4 @@
+import React from "react";
 import type { BotMessageType } from "./messages";
 
 export type ComponentProps<TData> = BotMessageType<TData>;

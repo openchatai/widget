@@ -1,7 +1,16 @@
-import { UserMessage } from "../components/messages";
-import { useChat } from "../providers/ChatProvider";
-import { useConfigData } from "../providers/ConfigDataProvider";
-import { motion, AnimatePresence } from "framer-motion";
+import { DefaultTextComponentProps } from "@lib/@components";
+import { BotMessage } from "@lib/@components/BotMessage";
+import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@lib/components/dialog";
+import { Switch } from "@lib/components/switch";
+import { TooltipProvider } from "@lib/components/tooltip";
+import { ComponentRegistry } from "@lib/providers/componentRegistry";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   CircleDashed,
   RotateCcw,
@@ -9,7 +18,7 @@ import {
   SettingsIcon,
   XIcon,
 } from "lucide-react";
-import {
+import React, {
   ComponentType,
   useEffect,
   useId,
@@ -17,18 +26,9 @@ import {
   useRef,
   useState,
 } from "react";
-import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
-import { BotMessage } from "@lib/@components/BotMessage";
-import { ComponentRegistry } from "@lib/providers/componentRegistry";
-import { Switch } from "@lib/components/switch";
-import { TooltipProvider } from "@lib/components/tooltip";
-import { DefaultTextComponentProps } from "@lib/@components";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTrigger,
-} from "@lib/components/dialog";
+import { UserMessage } from "../components/messages";
+import { useChat } from "../providers/ChatProvider";
+import { useConfigData } from "../providers/ConfigDataProvider";
 
 const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 
@@ -213,17 +213,17 @@ export function ChatScreen() {
                   />
                 </BotResponseWrapper>
               )) ?? (
-                <BotResponseWrapper bot={config.bot}>
-                  <DefaultTextComponent
-                    component="TEXT"
-                    data={{ message: "Hello, how can I help?" }}
-                    id="123"
-                    responseFor={null}
-                    type="FROM_BOT"
-                    serverId={null}
-                  />
-                </BotResponseWrapper>
-              )}
+                  <BotResponseWrapper bot={config.bot}>
+                    <DefaultTextComponent
+                      component="TEXT"
+                      data={{ message: "Hello, how can I help?" }}
+                      id="123"
+                      responseFor={null}
+                      type="FROM_BOT"
+                      serverId={null}
+                    />
+                  </BotResponseWrapper>
+                )}
               {state.messages.map((message, i) => {
                 if (message.type === "FROM_USER") {
                   return (
@@ -247,8 +247,9 @@ export function ChatScreen() {
             <footer>
               {noMessages && (
                 <div className="items-center justify-end mb-3 gap-1 flex-wrap">
-                  {initialData.data?.initial_questions?.map((iq) => (
+                  {initialData.data?.initial_questions?.map((iq, index) => (
                     <button
+                      key={index}
                       className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
                       onClick={() => {
                         sendMessage({

@@ -1,3 +1,4 @@
+import React from "react";
 import { WidgetOptions } from "../types";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 

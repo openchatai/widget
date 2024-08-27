@@ -1,4 +1,5 @@
 import { createSafeContext } from "@lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 import React, {
   ComponentProps,
   ElementRef,
@@ -6,7 +7,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
 
 const [useDialogState, SafeProvider] = createSafeContext<{
   open: boolean;
@@ -14,7 +14,9 @@ const [useDialogState, SafeProvider] = createSafeContext<{
   onOpenChange: (open: boolean) => void;
 }>();
 
-const noop = () => {};
+const noop = () => {
+  // 
+};
 
 function Dialog({
   defaultOpen,
@@ -23,14 +25,14 @@ function Dialog({
   children,
 }: {
   children:
-    | React.ReactNode
-    | (({
-        open,
-        setOpen,
-      }: {
-        open: boolean;
-        setOpen: (open: boolean) => void;
-      }) => React.ReactNode);
+  | React.ReactNode
+  | (({
+    open,
+    setOpen,
+  }: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+  }) => React.ReactNode);
   defaultOpen?: boolean;
   open?: boolean; // controlled
   onOpenChange?: (open: boolean) => void; // controlled

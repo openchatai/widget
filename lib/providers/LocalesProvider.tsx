@@ -1,6 +1,7 @@
 import { type LangType, getStr } from "@lib/locales";
-import { useConfigData } from "./ConfigDataProvider";
+import React from "react";
 import { createSafeContext } from "../utils/create-safe-context";
+import { useConfigData } from "./ConfigDataProvider";
 
 const [useLang, SafeLanguageProvider] = createSafeContext<{
   get: (key: string) => string;
