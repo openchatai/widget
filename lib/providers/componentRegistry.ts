@@ -1,6 +1,11 @@
 import type { ComponentType, OptionsType } from "@lib/types";
-import { BotLoadingComponent, BotTextResponse, HandoffComponent, FallbackComponent } from "../@components";
-import { } from "@lib/@components/Fallback.component";
+import {
+  BotLoadingComponent,
+  BotTextResponse,
+  HandoffComponent,
+  FallbackComponent,
+} from "../@components";
+import {} from "@lib/@components/Fallback.component";
 
 /**
  * this a singleton  class helps me to easily control the components present/available in the widget.
@@ -53,7 +58,7 @@ export class ComponentRegistry {
 
   private get(key: string) {
     const c = this.components.find(
-      (c) => c.key.toUpperCase() === key.toUpperCase()
+      (c) => c.key.toUpperCase() === key.toUpperCase(),
     );
     if (c) return c;
     return null;

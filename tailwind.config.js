@@ -1,8 +1,8 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    './src/**/*.{html,js,ts,jsx,tsx}',
-    './lib/**/*.{html,js,ts,jsx,tsx}',
+    "./src/**/*.{html,js,ts,jsx,tsx}",
+    "./lib/**/*.{html,js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -14,12 +14,11 @@ export default {
         accent: "hsl(var(--accent))",
         secondary: "hsl(var(--secondary))",
         dark: "hsl(var(--dark))",
-      }
+      },
     },
     fontFamily: {
-      inter: ['Inter', 'sans-serif'],
-    }
+      inter: ["Inter", "sans-serif"],
+    },
   },
   plugins: [],
-}
-
+};

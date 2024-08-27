@@ -1,3 +1,4 @@
+import React from "react";
 import type { ComponentType, HandoffPayloadType } from ".";
 import type { LangType } from "@lib/locales";
 

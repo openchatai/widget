@@ -10,8 +10,13 @@ export function HandoffComponent(_props: HandoffComponentProps) {
         open an issue ticket
       </button>
       <p className="text-xs mt-1">
-        this is the default handoff component.{" "} 
-        <a className='text-primary' href="https://docs.opencopilot.so/resources/human-handoff">Read docs</a>
+        this is the default handoff component.{" "}
+        <a
+          className="text-primary"
+          href="https://docs.opencopilot.so/resources/human-handoff"
+        >
+          Read docs
+        </a>
       </p>
     </div>
   );

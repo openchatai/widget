@@ -2,7 +2,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useSyncedState } from "./useSyncState";
 import { produce } from "immer";
-import { ReactNode, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import {
   BotMessageType,
   ChatSession,
@@ -62,45 +69,45 @@ type State = {
 
 type ActionType =
   | {
-    type: "INIT";
-  }
+      type: "INIT";
+    }
   | {
-    type: "ADD_RESPONSE_MESSAGE";
-    payload: MessageType;
-  }
+      type: "ADD_RESPONSE_MESSAGE";
+      payload: MessageType;
+    }
   | {
-    type: "UPDATE_MESSAGE";
-    payload: { id: string; payload: Partial<MessageType> };
-  }
+      type: "UPDATE_MESSAGE";
+      payload: { id: string; payload: Partial<MessageType> };
+    }
   | {
-    type: "DELETE_MESSAGE";
-    payload: { id: string };
-  }
+      type: "DELETE_MESSAGE";
+      payload: { id: string };
+    }
   | {
-    type: "CLEAR_MESSAGES";
-  }
+      type: "CLEAR_MESSAGES";
+    }
   | {
-    type: "APPEND_USER_MESSAGE";
-    payload: UserMessageType;
-  }
+      type: "APPEND_USER_MESSAGE";
+      payload: UserMessageType;
+    }
   | {
-    type: "PREPEND_HISTORY";
-    payload: MessageType[];
-  }
+      type: "PREPEND_HISTORY";
+      payload: MessageType[];
+    }
   | {
-    type: "APPEND_CONTENT_TO_MESSAGE";
-    payload: {
-      content: string;
-      messageId: string;
+      type: "APPEND_CONTENT_TO_MESSAGE";
+      payload: {
+        content: string;
+        messageId: string;
+      };
+    }
+  | {
+      type: "SET_SERVER_ID";
+      payload: {
+        clientMessageId: string;
+        ServerMessageId: number;
+      };
     };
-  }
-  | {
-    type: "SET_SERVER_ID";
-    payload: {
-      clientMessageId: string;
-      ServerMessageId: number;
-    };
-  };
 
 function chatReducer(state: State, action: ActionType) {
   return produce(state, (draft) => {
@@ -120,7 +127,7 @@ function chatReducer(state: State, action: ActionType) {
         const msg = action.payload;
         if (msg.type === "FROM_BOT" && msg.component === "TEXT") {
           const prevBotMessage = draft.messages.find(
-            (_) => _.type === "FROM_BOT" && _.responseFor === msg.responseFor
+            (_) => _.type === "FROM_BOT" && _.responseFor === msg.responseFor,
           ) as BotMessageType<{ message: string }> | undefined;
           // Sorry
           if (prevBotMessage && prevBotMessage.data.message.length > 0) {
@@ -149,14 +156,14 @@ function chatReducer(state: State, action: ActionType) {
         break;
       case "DELETE_MESSAGE":
         draft.messages = draft.messages.filter(
-          (msg) => msg.id !== action.payload.id
+          (msg) => msg.id !== action.payload.id,
         );
         setLastupdated();
         break;
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
         draft.messages = draft.messages.filter(
-          (msg) => !historyIds.includes(msg.id)
+          (msg) => !historyIds.includes(msg.id),
         );
         draft.messages = [...action.payload, ...draft.messages];
         setLastupdated();
@@ -167,7 +174,8 @@ function chatReducer(state: State, action: ActionType) {
         const { clientMessageId, ServerMessageId } = action.payload;
 
         const message = draft.messages.find(
-          (msg) => msg.type === "FROM_BOT" && msg.responseFor === clientMessageId
+          (msg) =>
+            msg.type === "FROM_BOT" && msg.responseFor === clientMessageId,
         );
 
         if (message) {
@@ -241,7 +249,6 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
   return messages;
 }
 
-
 type HookState = "loading" | "error" | "idle";
 
 export function useChat({
@@ -255,14 +262,13 @@ export function useChat({
   queryParams,
   pathParams,
 }: useChatOptions) {
-
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
     {
       persistSession: defaultHookSettings?.persistSession ?? false,
       useSoundEffects: defaultHookSettings?.useSoundEffects ?? false,
     },
-    "local"
+    "local",
   );
 
   const axiosInstance = useAxiosInstance({
@@ -273,7 +279,7 @@ export function useChat({
   const [session, setSession] = useSyncedState<ChatSession>(
     SESSION_KEY(botToken),
     undefined,
-    settings?.persistSession ? "local" : "memory"
+    settings?.persistSession ? "local" : "memory",
   );
 
   const { socket, socketState } = useSocket(socketUrl, {
@@ -292,7 +298,7 @@ export function useChat({
       error: CustomEvent<string>;
       new_message: CustomEvent<MessageType>;
       handoff: CustomEvent<HandoffPayloadType>;
-    }>()
+    }>(),
   ).current;
 
   const [chatState, dispatch] = useReducer(chatReducer, {
@@ -306,7 +312,7 @@ export function useChat({
 
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState),
-    1000
+    1000,
   );
 
   const initialData = useSWR(
@@ -332,7 +338,7 @@ export function useChat({
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
-    }
+    },
   );
 
   const handleConnect = useCallback(() => {
@@ -341,12 +347,11 @@ export function useChat({
     }
   }, [session?.id, socket]);
 
-
   const handleReconnect = useCallback(() => {
     if (session) {
       socket?.emit("join_session", { session_id: session.id });
     }
-  }, [socket])
+  }, [socket]);
 
   useEffect(() => {
     socket?.on("connect", handleConnect);
@@ -415,12 +420,12 @@ export function useChat({
         },
         pathParams: {
           ...pathParams,
-          ...data.PathParams
+          ...data.PathParams,
         },
         query_params: {
           ...queryParams,
           ...data.query_params,
-        }
+        },
       };
 
       debug("[send_message]", payload);
@@ -443,7 +448,7 @@ export function useChat({
         events.dispatchEvent(
           new CustomEvent("message", {
             detail: payload,
-          })
+          }),
         );
       } catch (error) {
         setHookState("error");
@@ -451,105 +456,89 @@ export function useChat({
     }
   }
 
-  const handleIncomingMessage =
-    (response: SocketMessageParams) => {
-      debug(response);
-      try {
-        let message: MessageType | null = null;
+  const handleIncomingMessage = (response: SocketMessageParams) => {
+    debug(response);
+    try {
+      let message: MessageType | null = null;
 
-        if (response.type === "info") {
+      if (response.type === "info") {
+        return;
+      }
+
+      if (response.type === "message") {
+        if (response.value === "|im_end|" || !response.value) {
           return;
         }
 
-        if (response.type === "message") {
-          if (response.value === "|im_end|" || !response.value) {
-            return;
-          }
-
-          message = {
-            type: "FROM_BOT",
-            component: "TEXT",
-            responseFor: response.client_message_id ?? null,
-            id: response.server_message_id?.toString() ?? genId(),
-            data: {
-              message: response.value,
-            },
-            serverId: response.server_message_id ?? null,
-            agent: response.agent
+        message = {
+          type: "FROM_BOT",
+          component: "TEXT",
+          responseFor: response.client_message_id ?? null,
+          id: response.server_message_id?.toString() ?? genId(),
+          data: {
+            message: response.value,
+          },
+          serverId: response.server_message_id ?? null,
+          agent: response.agent,
+        };
+      } else if (response.type === "vote") {
+        if (response.server_message_id && response.client_message_id) {
+          const payload = {
+            clientMessageId: response.client_message_id,
+            ServerMessageId: response.server_message_id,
           };
-
+          debug("vote", payload);
+          dispatch({
+            type: "SET_SERVER_ID",
+            payload,
+          });
         }
+      } else if (response.type === "handoff") {
+        const handoff = response.value;
+        const message: BotMessageType = {
+          component: "HANDOFF",
+          data: handoff,
+          type: "FROM_BOT",
+          serverId: response.server_message_id ?? null,
+          id: response.server_message_id?.toString() ?? genId(),
+          responseFor: response.client_message_id ?? null,
+        };
 
-        else if (response.type === "vote") {
-          if (
-            response.server_message_id &&
-            response.client_message_id
-          ) {
-            const payload = {
-              clientMessageId: response.client_message_id,
-              ServerMessageId: response.server_message_id,
-            }
-            debug("vote", payload);
-            dispatch({
-              type: "SET_SERVER_ID",
-              payload,
-            });
-          }
-        }
-
-        else if (
-          response.type === "handoff") {
-          const handoff = response.value;
-          const message: BotMessageType = {
-            component: "HANDOFF",
-            data: handoff,
-            type: "FROM_BOT",
-            serverId: response.server_message_id ?? null,
-            id: response.server_message_id?.toString() ?? genId(),
-            responseFor: response.client_message_id ?? null,
-          };
-
-          onHandoff?.(handoff);
-          dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
-          events.dispatchTypedEvent(
-            "handoff",
-            new CustomEvent("handoff", { detail: handoff })
-          );
-        }
-
-        else if (
-          response.type === "ui" &&
-          isUiElement(response.value)
-        ) {
-          const uiVal = response.value;
-          message = {
-            type: "FROM_BOT",
-            component: uiVal.name,
-            data: uiVal.request_response, // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
-            serverId: null,
-            id: genId(),
-            responseFor: response.client_message_id ?? null,
-            agent: response.agent,
-          };
-          debug("[ui]", message);
-        }
-
-        if (message) {
-          dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
-          setInfo(null);
-          events.dispatchEvent(
-            new CustomEvent("new_message", {
-              detail: message,
-            })
-          );
-        }
-
-      } catch (error) {
-        setHookState("error");
-        debug(error);
+        onHandoff?.(handoff);
+        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+        events.dispatchTypedEvent(
+          "handoff",
+          new CustomEvent("handoff", { detail: handoff }),
+        );
+      } else if (response.type === "ui" && isUiElement(response.value)) {
+        const uiVal = response.value;
+        message = {
+          type: "FROM_BOT",
+          component: uiVal.name,
+          data: uiVal.request_response, // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
+          serverId: null,
+          id: genId(),
+          responseFor: response.client_message_id ?? null,
+          agent: response.agent,
+        };
+        debug("[ui]", message);
       }
-      setHookState("idle");
+
+      if (message) {
+        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+        setInfo(null);
+        events.dispatchEvent(
+          new CustomEvent("new_message", {
+            detail: message,
+          }),
+        );
+      }
+    } catch (error) {
+      setHookState("error");
+      debug(error);
     }
+    setHookState("idle");
+  };
 
   const handleInfo = useCallback(
     (info: string) => {
@@ -557,10 +546,10 @@ export function useChat({
       events.dispatchEvent(
         new CustomEvent("info", {
           detail: info,
-        })
+        }),
       );
     },
-    [events, setInfo]
+    [events, setInfo],
   );
 
   useEffect(() => {
@@ -591,6 +580,6 @@ export function useChat({
     hookState,
     settings,
     setSettings,
-    axiosInstance
+    axiosInstance,
   };
 }

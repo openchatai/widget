@@ -43,7 +43,4 @@ export type HandoffPayloadType = {
   sentiment: "happy" | "angry" | "neutral";
 };
 
-export type MessageType =
-  | UserMessageType
-  | SystemEventType
-  | BotMessageType
+export type MessageType = UserMessageType | SystemEventType | BotMessageType;

@@ -39,14 +39,14 @@ export function WidgetPopover() {
         <PopoverPrimitive.PopoverTrigger
           className={cn(
             "bottom-2 right-4 z-[200] absolute p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
-            vars
+            vars,
           )}
           onClick={handleClick}
         >
           <div
             className={cn(
               "size-6 transition-transform duration-300 ease-in-out",
-              { "transform scale-110": isClicked }
+              { "transform scale-110": isClicked },
             )}
           >
             {!isClicked ? (
@@ -73,7 +73,7 @@ export const Widget = forwardRef<
         className={cn(
           "rounded-xl size-full overflow-hidden isolate relative font-inter",
           vars,
-          className
+          className,
         )}
       >
         <div className="size-full absolute antialiased font-inter">

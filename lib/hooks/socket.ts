@@ -20,7 +20,7 @@ type useSocketReturn = {
 export function useSocket(
   url: string,
   opts: Partial<ManagerOptions & SocketOptions>,
-  _deps: DependencyList = []
+  _deps: DependencyList = [],
 ): useSocketReturn {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [socketState, setState] = useState<SocketState>("disconnected");

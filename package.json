@@ -51,10 +51,7 @@
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
   },
-  "files": [
-    "dist",
-    "dist-embed"
-  ],
+  "files": ["dist", "dist-embed"],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },
