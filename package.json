@@ -38,7 +38,6 @@
     "eslint-plugin-react-refresh": "^0.4.11",
     "postcss": "^8.4.41",
     "postcss-prefix-selector": "^1.16.1",
-    "prettier": "^3.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
