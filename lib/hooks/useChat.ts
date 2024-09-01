@@ -123,7 +123,7 @@ function chatReducer(state: State, action: ActionType) {
       case "ADD_RESPONSE_MESSAGE": {
         // if the `responseFor`
         const msg = action.payload;
-        if (msg.type === "FROM_BOT" && msg.component === "TEXT") {
+        if (msg.type === "FROM_BOT" && msg.component === "TEXT" && msg.agent?.is_ai === true) {
           const prevBotMessage = draft.messages.find(
             (_) => _.type === "FROM_BOT" && _.responseFor === msg.responseFor,
           ) as BotMessageType<{ message: string }> | undefined;
@@ -448,7 +448,7 @@ export function useChat({
             detail: payload,
           }),
         );
-      } catch (error) {
+      } catch (_error) {
         setHookState("error");
       }
     }
