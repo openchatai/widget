@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.14
+
+### Patch Changes
+
+- 7709108: handle when the session gets handoffed to a human agent,
+
 ## 1.1.13
 
 ### Patch Changes
