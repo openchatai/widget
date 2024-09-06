@@ -178,7 +178,7 @@ export function ChatScreen() {
     <TooltipProvider>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
         <div
-          className="w-full mesh-gradient h-full justify-between rounded-t-xl flex flex-col relative overflow-auto"
+          className="w-full mesh-gradient h-full justify-between rounded-t-xl flex flex-col relative"
           style={{
             background:
               "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
@@ -189,7 +189,7 @@ export function ChatScreen() {
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
 
           <div
-            className="flex flex-col w-full flex-1 bg-background rounded-t-xl shadow"
+            className="flex flex-col w-full flex-1 bg-background rounded-t-xl shadow overflow-auto"
             style={{
               background: "#FAFBFB",
               boxShadow: "0px -8px 20px rgba(0, 0, 0, 0.12)",
@@ -213,17 +213,17 @@ export function ChatScreen() {
                   />
                 </BotResponseWrapper>
               )) ?? (
-                <BotResponseWrapper bot={config.bot}>
-                  <DefaultTextComponent
-                    component="TEXT"
-                    data={{ message: "Hello, how can I help?" }}
-                    id="123"
-                    responseFor={null}
-                    type="FROM_BOT"
-                    serverId={null}
-                  />
-                </BotResponseWrapper>
-              )}
+                  <BotResponseWrapper bot={config.bot}>
+                    <DefaultTextComponent
+                      component="TEXT"
+                      data={{ message: "Hello, how can I help?" }}
+                      id="123"
+                      responseFor={null}
+                      type="FROM_BOT"
+                      serverId={null}
+                    />
+                  </BotResponseWrapper>
+                )}
               {state.messages.map((message, i) => {
                 if (message.type === "FROM_USER") {
                   return (

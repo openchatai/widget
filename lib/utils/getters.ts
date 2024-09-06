@@ -35,3 +35,10 @@ export async function getInitData(instance: AxiosInstance, sessionId?: string) {
     },
   });
 }
+
+export async function getChatSessionById(
+  instance: AxiosInstance,
+  sessionId: string,
+) {
+  return instance.get<ChatSession>("/chat-session/one/" + sessionId);
+}

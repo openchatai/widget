@@ -8,6 +8,7 @@ import {
 import {
   ChatMessageHistory,
   createSession,
+  getChatSessionById,
   getInitData,
 } from "@lib/utils/getters";
 import { decodeJSON } from "@lib/utils/parseJson";
@@ -280,6 +281,16 @@ export function useChat({
     settings?.persistSession ? "local" : "memory",
   );
 
+  async function refreshSession(sessionId: string) {
+    let response = await getChatSessionById(axiosInstance, sessionId);
+    if (response.data) {
+      setSession(response.data);
+    }
+    return response.data;
+  }
+
+  const agent = session?.assignee_id === 555 ? "BOT" : "USER";
+
   const { socket, socketState } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
@@ -306,7 +317,14 @@ export function useChat({
 
   debug("[messages]", chatState.messages);
 
-  const [hookState, setHookState] = useState<HookState>("idle");
+  const [hookState, _setHookState] = useState<HookState>("idle");
+
+  const setHookState = (state: HookState) => {
+    if (state === "loading" && agent === "BOT") {
+      return;
+    }
+    _setHookState(state);
+  }
 
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState),
@@ -492,6 +510,7 @@ export function useChat({
           });
         }
       } else if (response.type === "handoff") {
+        // Handle Handoff
         const handoff = response.value;
         const message: BotMessageType = {
           component: "HANDOFF",
@@ -508,6 +527,11 @@ export function useChat({
           "handoff",
           new CustomEvent("handoff", { detail: handoff }),
         );
+
+        if (session?.id) {
+          refreshSession(session?.id);
+        }
+
       } else if (response.type === "ui" && isUiElement(response.value)) {
         const uiVal = response.value;
         message = {
@@ -568,6 +592,7 @@ export function useChat({
   return {
     state: chatState,
     session: session ?? null,
+    agent,
     recreateSession,
     clearSession,
     sendMessage,
