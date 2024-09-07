@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.15
+
+### Patch Changes
+
+- 2f0b5b0: added office hours getter `getOfficeHours`
+
 ## 1.1.14
 
 ### Patch Changes
