@@ -519,6 +519,7 @@ export function useChat({
           serverId: response.server_message_id ?? null,
           id: response.server_message_id?.toString() ?? genId(),
           responseFor: response.client_message_id ?? null,
+          agent: response.agent,
         };
 
         onHandoff?.(handoff);

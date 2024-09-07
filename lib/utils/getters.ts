@@ -21,6 +21,29 @@ export interface ChatMessageHistory {
   agent_avatar: string | null;
 }
 
+interface DayOfficeHours {
+  from: string;
+  to: string;
+}
+
+export const workingDays = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+  "WeekDays",
+  "Everyday",
+] as const;
+
+type Day = typeof workingDays[number];
+
+export type WorkingHours = {
+  [K in Day]: DayOfficeHours;
+};
+
 export type InitialData = {
   logo: string;
   faq: [];
@@ -41,4 +64,8 @@ export async function getChatSessionById(
   sessionId: string,
 ) {
   return instance.get<ChatSession>("/chat-session/one/" + sessionId);
+}
+
+export async function getOfficeHours(instance: AxiosInstance) {
+  return instance.get<WorkingHours>("/copilot/office-hours/public");
 }
