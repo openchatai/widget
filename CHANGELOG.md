@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.16
+
+### Patch Changes
+
+- a523b17: chat events, rendering, handling
+
 ## 1.1.15
 
 ### Patch Changes
