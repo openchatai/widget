@@ -1,14 +1,12 @@
-import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { useConfigData } from "@lib/providers/ConfigDataProvider";
+import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { BotMessageType } from "@lib/types";
 import { ComponentType, useMemo } from "react";
 
 export function BotMessage({
   message,
-  index,
 }: {
   message: BotMessageType;
-  index: number;
 }) {
   const config = useConfigData();
 
@@ -36,7 +34,7 @@ export function BotMessage({
       {...message}
       data={message.data ?? {}}
       id={message.id}
-      key={index}
+      key={message.id}
     />
   );
 }

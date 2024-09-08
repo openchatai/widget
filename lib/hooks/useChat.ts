@@ -5,13 +5,13 @@ import {
   MessageType,
   UserMessageType,
 } from "@lib/types";
+import { debug } from "@lib/utils/debug";
 import {
   ChatMessageHistory,
   createSession,
   getChatSessionById,
   getInitData,
 } from "@lib/utils/getters";
-import { decodeJSON } from "@lib/utils/parseJson";
 import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
@@ -24,18 +24,11 @@ import {
 } from "react";
 import useSWR from "swr";
 import { useTimeoutState } from "../hooks/useTimeoutState";
-import { SocketMessageParams, isUiElement } from "./parse-structured-response";
+import { MessageTypeEnum, SocketMessageParams, isUiElement } from "./parse-structured-response";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
 import { useAxiosInstance } from "./useAxiosInstance";
 import { useSyncedState } from "./useSyncState";
-
-function debug(...args: unknown[]) {
-  const prefix = "[useChat]";
-  if (process.env.NODE_ENV === "development") {
-    console.log(prefix, ...args);
-  }
-}
 
 type useChatOptions = {
   socketUrl: string;
@@ -59,6 +52,7 @@ export enum Events {
   AGENT_MESSAGE = "agent_message",
   USER_MESSAGE = "user_message",
   INFO = "info",
+  CHAT_EVENT = "chat_event",
 }
 
 type State = {
@@ -106,7 +100,14 @@ type ActionType =
       clientMessageId: string;
       ServerMessageId: number;
     };
-  };
+  } |
+  {
+    type: "CHAT_EVENT";
+    payload: {
+      event: string;
+      messageId: string;
+    };
+  }
 
 function chatReducer(state: State, action: ActionType) {
   return produce(state, (draft) => {
@@ -243,6 +244,19 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
           serverId: msg.id,
         });
       }
+    }
+    else if (msg.type === "handoff") {
+      messages.push({
+        type: "FROM_BOT",
+        component: "CHAT_EVENT",
+        data: {
+          event: MessageTypeEnum.HANDOFF,
+          message: msg.message ?? "the conversation was handedoff to a human agent",
+        },
+        id: msg.id.toString() ?? genId(),
+        serverId: msg.id ?? genId(),
+        responseFor: null,
+      })
     }
   }
   return messages;
@@ -497,7 +511,9 @@ export function useChat({
           serverId: response.server_message_id ?? null,
           agent: response.agent,
         };
-      } else if (response.type === "vote") {
+      }
+
+      else if (response.type === "vote") {
         if (response.server_message_id && response.client_message_id) {
           const payload = {
             clientMessageId: response.client_message_id,
@@ -509,7 +525,9 @@ export function useChat({
             payload,
           });
         }
-      } else if (response.type === "handoff") {
+      }
+
+      else if (response.type === "handoff") {
         // Handle Handoff
         const handoff = response.value;
         const message: BotMessageType = {
@@ -533,7 +551,23 @@ export function useChat({
           refreshSession(session?.id);
         }
 
-      } else if (response.type === "ui" && isUiElement(response.value)) {
+      }
+
+      else if (response.type === "chat_event") {
+        message = {
+          component: "CHAT_EVENT",
+          type: "FROM_BOT",
+          id: genId(),
+          responseFor: null,
+          serverId: null,
+          data: {
+            event: response.value.event,
+            message: response.value.message
+          }
+        }
+      }
+
+      else if (response.type === "ui" && isUiElement(response.value)) {
         const uiVal = response.value;
         message = {
           type: "FROM_BOT",

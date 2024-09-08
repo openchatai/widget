@@ -1,3 +1,4 @@
+import { MessageTypeEnum } from "@lib/hooks/parse-structured-response";
 import { WidgetOptions } from "./options";
 
 export type UserMessageType = {
@@ -14,14 +15,6 @@ export type UserMessageType = {
     customData?: Record<string, string>;
     avatarUrl?: string;
   };
-};
-
-export type SystemEventType = {
-  type: "SYSTEM_EVENT";
-  component: "SYSTEM_EVENT";
-  event: string;
-  id: string;
-  serverId: number | null;
 };
 
 export type BotMessageType<TData = unknown> = {
@@ -43,4 +36,4 @@ export type HandoffPayloadType = {
   sentiment: "happy" | "angry" | "neutral";
 };
 
-export type MessageType = UserMessageType | SystemEventType | BotMessageType;
+export type MessageType = UserMessageType | BotMessageType

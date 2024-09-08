@@ -232,9 +232,12 @@ export function ChatScreen() {
                     </UserMessage>
                   );
                 } else if (message.type === "FROM_BOT") {
+                  if (message.component == "CHAT_EVENT") {
+                    return <BotMessage message={message} key={i} />
+                  }
                   return (
                     <BotResponseWrapper bot={message.bot}>
-                      <BotMessage message={message} index={i} key={i} />
+                      <BotMessage message={message} key={i} />
                     </BotResponseWrapper>
                   );
                 }
@@ -246,7 +249,7 @@ export function ChatScreen() {
 
             <footer>
               {noMessages && (
-                <div className="items-center justify-end mb-3 gap-1 flex-wrap">
+                <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
                   {initialData.data?.initial_questions?.map((iq, index) => (
                     <button
                       key={index}

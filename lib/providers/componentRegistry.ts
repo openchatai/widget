@@ -2,10 +2,10 @@ import type { ComponentType, OptionsType } from "@lib/types";
 import {
   BotLoadingComponent,
   BotTextResponse,
-  HandoffComponent,
+  ChatEventComponent,
   FallbackComponent,
+  HandoffComponent,
 } from "../@components";
-import {} from "@lib/@components/Fallback.component";
 
 /**
  * this a singleton  class helps me to easily control the components present/available in the widget.
@@ -29,6 +29,10 @@ export class ComponentRegistry {
       key: "HANDOFF",
       component: HandoffComponent,
     },
+    {
+      key: "CHAT_EVENT",
+      component: ChatEventComponent
+    }
   ] as const;
 
   constructor(opts: OptionsType) {

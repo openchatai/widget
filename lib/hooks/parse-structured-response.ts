@@ -50,16 +50,42 @@ interface UiPayload {
   agent?: AgentType;
 }
 
+export enum MessageTypeEnum {
+  MESSAGE = 'message',
+  HANDOFF = 'handoff',
+  HANDOFF_TO_ZENDESK = 'handoff_to_zendesk',
+  AGENT_MESSAGE = 'agent_message',
+  AGENT_JOINED = 'agent_joined',
+  AGENT_COMMENT = 'agent_comment',
+  AGENT_TOOK_SESSION_FROM_AI = 'agent_took_session_from_ai',
+  AI_DECIDED_TO_RESOLVE_THE_ISSUE = 'ai_decided_to_resolve_the_issue',
+  // TODO: Rename, unclear
+  AI_DECIDED_AUTO_HANDOFF_THE_ISSUE = 'ai_decided_auto_handoff_the_issue',
+}
+
+export interface ChatEventPayload {
+  type: "chat_event";
+  value: {
+    event: MessageTypeEnum;
+    message: string;
+  };
+  agent: {
+    name: string;
+    is_ai: boolean;
+  }
+}
+
 export type SocketMessageParams =
   | InfoPayload
+  | ChatEventPayload
   | MessagePayload
   | VotePayload
   | UiPayload
   | {
-      type: "handoff";
-      value: HandoffPayloadType;
-      server_message_id?: number;
-      server_session_id?: string;
-      client_message_id?: string;
-      agent?: AgentType;
-    };
+    type: "handoff";
+    value: HandoffPayloadType;
+    server_message_id?: number;
+    server_session_id?: string;
+    client_message_id?: string;
+    agent?: AgentType;
+  };

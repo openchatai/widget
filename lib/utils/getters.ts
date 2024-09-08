@@ -16,7 +16,7 @@ export interface ChatMessageHistory {
   api_called: boolean | null;
   knowledgebase_called: boolean | null;
   extra_params: object | null;
-  type: "message" | null;
+  type: "message" | "handoff" | null;
   agent_name: string | null;
   agent_avatar: string | null;
 }
