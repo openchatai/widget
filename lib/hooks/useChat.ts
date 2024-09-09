@@ -69,10 +69,6 @@ type ActionType =
     payload: MessageType;
   }
   | {
-    type: "UPDATE_MESSAGE";
-    payload: { id: string; payload: Partial<MessageType> };
-  }
-  | {
     type: "DELETE_MESSAGE";
     payload: { id: string };
   }
@@ -86,13 +82,6 @@ type ActionType =
   | {
     type: "PREPEND_HISTORY";
     payload: MessageType[];
-  }
-  | {
-    type: "APPEND_CONTENT_TO_MESSAGE";
-    payload: {
-      content: string;
-      messageId: string;
-    };
   }
   | {
     type: "SET_SERVER_ID";
@@ -123,7 +112,6 @@ function chatReducer(state: State, action: ActionType) {
         draft.lastUpdated = null;
         break;
       case "ADD_RESPONSE_MESSAGE": {
-        // if the `responseFor`
         const msg = action.payload;
         if (msg.type === "FROM_BOT" && msg.component === "TEXT" && msg.agent?.is_ai === true) {
           const prevBotMessage = draft.messages.find(
@@ -143,17 +131,11 @@ function chatReducer(state: State, action: ActionType) {
         }
         break;
       }
-      case "APPEND_CONTENT_TO_MESSAGE": {
-        break;
-      }
       case "APPEND_USER_MESSAGE": {
         draft.messages.push(action.payload);
         setLastupdated();
         break;
       }
-      case "UPDATE_MESSAGE":
-        setLastupdated();
-        break;
       case "DELETE_MESSAGE":
         draft.messages = draft.messages.filter(
           (msg) => msg.id !== action.payload.id,
@@ -245,13 +227,13 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
         });
       }
     }
-    else if (msg.type === "handoff") {
+    else {
       messages.push({
         type: "FROM_BOT",
         component: "CHAT_EVENT",
         data: {
-          event: MessageTypeEnum.HANDOFF,
-          message: msg.message ?? "the conversation was handedoff to a human agent",
+          event: msg.type,
+          message: msg.message
         },
         id: msg.id.toString() ?? genId(),
         serverId: msg.id ?? genId(),
