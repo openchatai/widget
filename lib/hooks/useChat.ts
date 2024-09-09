@@ -115,14 +115,12 @@ function chatReducer(state: State, action: ActionType) {
         const msg = action.payload;
         if (msg.type === "FROM_BOT" && msg.component === "TEXT" && msg.agent?.is_ai === true) {
           const prevBotMessage = draft.messages.find(
-            (_) => _.type === "FROM_BOT" && _.responseFor === msg.responseFor,
+            (_) => _.type === "FROM_BOT" && _.responseFor !== null && _.responseFor === msg.responseFor,
           ) as BotMessageType<{ message: string }> | undefined;
-          // Sorry
+
           if (prevBotMessage && prevBotMessage.data.message.length > 0) {
             prevBotMessage.data.message +=
               (msg as BotMessageType<{ message: string }>).data.message ?? "";
-
-            debug("[message]", prevBotMessage.data.message);
           } else {
             draft.messages.push(msg);
           }
