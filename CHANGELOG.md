@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.17
+
+### Patch Changes
+
+- 717a7d5: fix the message appending issue
+
 ## 1.1.16
 
 ### Patch Changes
