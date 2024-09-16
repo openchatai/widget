@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.19
+
+### Patch Changes
+
+- 9c28a7c: send the user object
+
 ## 1.1.18
 
 ### Patch Changes
