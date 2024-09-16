@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.18
+
+### Patch Changes
+
+- b8609d7: send the user object with every message
+
 ## 1.1.17
 
 ### Patch Changes
