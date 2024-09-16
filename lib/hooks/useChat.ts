@@ -436,6 +436,7 @@ export function useChat({
           ...queryParams,
           ...data.query_params,
         },
+        user
       };
 
       debug("[send_message]", payload);
