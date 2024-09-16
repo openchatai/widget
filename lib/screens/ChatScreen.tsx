@@ -37,6 +37,7 @@ function ChatFooter() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, info, hookState } = useChat();
   const layoutId = useId();
+  const user = useConfigData().user;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
@@ -51,6 +52,7 @@ function ChatFooter() {
       content: {
         text: input,
       },
+      user
     });
     setInput("");
   }
