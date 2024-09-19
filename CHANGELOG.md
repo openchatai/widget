@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.20
+
+### Patch Changes
+
+- 3775ab6: users don't have to pass the user object to send a chat
+
 ## 1.1.19
 
 ### Patch Changes
