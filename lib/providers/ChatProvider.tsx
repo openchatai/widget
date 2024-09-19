@@ -1,6 +1,6 @@
 import React from "react";
-import { createSafeContext } from "../utils/create-safe-context";
 import { useChat as _useChat } from "../hooks/useChat";
+import { createSafeContext } from "../utils/create-safe-context";
 import { useConfigData } from "./ConfigDataProvider";
 
 const [useChat, SafeProvider] =
@@ -19,6 +19,7 @@ function ChatProvider({
     headers: config.headers ?? {},
     queryParams: config.queryParams ?? {},
     pathParams: config.pathParams ?? {},
+    userData: config.user ?? {},
   });
   return <SafeProvider value={chat}>{children}</SafeProvider>;
 }

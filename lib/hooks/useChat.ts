@@ -24,7 +24,7 @@ import {
 } from "react";
 import useSWR from "swr";
 import { useTimeoutState } from "../hooks/useTimeoutState";
-import { MessageTypeEnum, SocketMessageParams, isUiElement } from "./parse-structured-response";
+import { SocketMessageParams, isUiElement } from "./parse-structured-response";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
 import { useAxiosInstance } from "./useAxiosInstance";
@@ -43,6 +43,7 @@ type useChatOptions = {
   headers: Record<string, string>;
   queryParams: Record<string, string>;
   pathParams: Record<string, string>;
+  userData?: Record<string, any>;
 };
 
 export enum Events {
@@ -254,6 +255,7 @@ export function useChat({
   headers,
   queryParams,
   pathParams,
+  userData,
 }: useChatOptions) {
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
@@ -436,7 +438,10 @@ export function useChat({
           ...queryParams,
           ...data.query_params,
         },
-        user
+        user: {
+          ...user,
+          ...userData,
+        }
       };
 
       debug("[send_message]", payload);
