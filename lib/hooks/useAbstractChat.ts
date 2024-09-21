@@ -290,6 +290,7 @@ export function useAbstractChat({
   const { socket, socketState } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
+    closeOnBeforeunload: true,
   });
 
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
