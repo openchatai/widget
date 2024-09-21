@@ -1,7 +1,7 @@
 import { createRoot } from "react-dom/client";
+import { WidgetRoot } from "../lib/Root";
 import styles from "../lib/index.css?inline";
 import { WidgetOptions } from "../lib/types";
-import { WidgetRoot } from "../lib/widget";
 import { WidgetPopover } from "../lib/widget";
 
 const defaultRootId = "opencopilot-root";
