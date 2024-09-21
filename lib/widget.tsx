@@ -1,11 +1,8 @@
-import React, { ComponentPropsWithoutRef, forwardRef, useState } from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { MessageSquareDot, X } from "lucide-react";
-import { ConfigDataProvider } from "./providers/ConfigDataProvider";
-import { ChatProvider } from "./providers/ChatProvider";
+import { ComponentPropsWithoutRef, forwardRef, useState } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
 import { cn } from "./utils/cn";
-import { WidgetOptions } from "./types";
 
 const vars = `
 [--primary:211_65%_59%]
@@ -85,17 +82,3 @@ export const Widget = forwardRef<
 });
 
 Widget.displayName = "Widget";
-
-export function WidgetRoot({
-  children,
-  options,
-}: {
-  children: React.ReactNode;
-  options: WidgetOptions;
-}) {
-  return (
-    <ConfigDataProvider data={options}>
-      <ChatProvider>{children}</ChatProvider>
-    </ConfigDataProvider>
-  );
-}
