@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.24
+
+### Patch Changes
+
+- 7a64465: users can pass settings object to persist the sesion
+
 ## 1.1.23
 
 ### Patch Changes
