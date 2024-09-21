@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.22
+
+### Patch Changes
+
+- 9442830: fixed useConfigData which was removed by mistake
+
 ## 1.1.21
 
 ### Patch Changes
