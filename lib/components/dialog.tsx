@@ -1,4 +1,4 @@
-import { createSafeContext } from "@lib/utils";
+import { createSafeContext } from "@lib/utils/create-safe-context";
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
   ComponentProps,
@@ -25,14 +25,14 @@ function Dialog({
   children,
 }: {
   children:
-    | React.ReactNode
-    | (({
-        open,
-        setOpen,
-      }: {
-        open: boolean;
-        setOpen: (open: boolean) => void;
-      }) => React.ReactNode);
+  | React.ReactNode
+  | (({
+    open,
+    setOpen,
+  }: {
+    open: boolean;
+    setOpen: (open: boolean) => void;
+  }) => React.ReactNode);
   defaultOpen?: boolean;
   open?: boolean; // controlled
   onOpenChange?: (open: boolean) => void; // controlled
