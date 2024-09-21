@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.21
+
+### Patch Changes
+
+- 9b2ce64: rename useChat, refactor exports
+
 ## 1.1.20
 
 ### Patch Changes
