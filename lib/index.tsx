@@ -9,5 +9,6 @@ export {
     ComponentRegistry,
     useChat,
     useLang,
+    useConfigData,
 } from "./providers";
 export * from "./Root";

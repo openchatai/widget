@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.23
+
+### Patch Changes
+
+- 0e16581: same
+
 ## 1.1.22
 
 ### Patch Changes
