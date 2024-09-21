@@ -1,6 +1,6 @@
+import type { LangType } from "@lib/locales";
 import React from "react";
 import type { ComponentType, HandoffPayloadType } from ".";
-import type { LangType } from "@lib/locales";
 
 export type WidgetOptions = {
   token: string;
@@ -10,6 +10,10 @@ export type WidgetOptions = {
   initialMessage: string[];
   triggerSelector?: string;
   apiUrl?: string;
+  settings?: {
+    persistSession?: boolean;
+    useSoundEffects?: boolean;
+  },
   socketUrl?: string;
   defaultOpen?: boolean;
   debug?: boolean;

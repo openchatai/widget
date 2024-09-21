@@ -20,6 +20,10 @@ function ChatProvider({
     queryParams: config.queryParams ?? {},
     pathParams: config.pathParams ?? {},
     userData: config.user ?? {},
+    defaultHookSettings: {
+      persistSession: config.settings?.persistSession ?? true,
+      useSoundEffects: config.settings?.useSoundEffects ?? false,
+    }
   });
   return <SafeProvider value={chat}>{children}</SafeProvider>;
 }
