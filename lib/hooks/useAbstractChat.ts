@@ -245,7 +245,7 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
 
 type HookState = "loading" | "error" | "idle";
 
-export function useChat({
+export function useAbstractChat({
   apiUrl,
   socketUrl,
   botToken,
@@ -395,82 +395,6 @@ export function useChat({
     });
   }
 
-  async function sendMessage({
-    content,
-    user,
-    ...data
-  }: {
-    content: {
-      text: string;
-    };
-    headers?: Record<string, unknown>;
-    user?: Record<string, unknown>;
-    query_params?: Record<string, string>;
-    PathParams?: Record<string, string>;
-  }) {
-    let chatSession = session;
-
-    if (!session && chatState.messages.length === 0) {
-      const { data } = await createSession(axiosInstance, botToken);
-      if (data) {
-        setSession(data);
-        joinSession(data.id);
-        chatSession = data;
-      }
-    }
-
-    if (chatSession && socket) {
-      const msgId = genId();
-      const payload: SendMessagePayload = {
-        id: msgId,
-        bot_token: botToken,
-        content: content.text,
-        session_id: chatSession.id,
-        headers: {
-          ...headers,
-          ...data.headers,
-        },
-        pathParams: {
-          ...pathParams,
-          ...data.PathParams,
-        },
-        query_params: {
-          ...queryParams,
-          ...data.query_params,
-        },
-        user: {
-          ...user,
-          ...userData,
-        }
-      };
-
-      debug("[send_message]", payload);
-
-      dispatch({
-        type: "APPEND_USER_MESSAGE",
-        payload: {
-          type: "FROM_USER",
-          id: msgId,
-          content: content.text,
-          timestamp: new Date().toISOString(),
-          session_id: chatSession.id,
-          user,
-        },
-      });
-
-      try {
-        setHookState("loading");
-        socket.emit("send_chat", payload);
-        events.dispatchEvent(
-          new CustomEvent("message", {
-            detail: payload,
-          }),
-        );
-      } catch (_error) {
-        setHookState("error");
-      }
-    }
-  }
 
   const handleIncomingMessage = (response: SocketMessageParams) => {
     debug(response);
@@ -609,6 +533,83 @@ export function useChat({
   }, []);
 
   const noMessages = chatState.messages.length === 0;
+
+  async function sendMessage({
+    content,
+    user,
+    ...data
+  }: {
+    content: {
+      text: string;
+    };
+    headers?: Record<string, unknown>;
+    user?: Record<string, unknown>;
+    query_params?: Record<string, string>;
+    PathParams?: Record<string, string>;
+  }) {
+    let chatSession = session;
+
+    if (!session && chatState.messages.length === 0) {
+      const { data } = await createSession(axiosInstance, botToken);
+      if (data) {
+        setSession(data);
+        joinSession(data.id);
+        chatSession = data;
+      }
+    }
+
+    if (chatSession && socket) {
+      const msgId = genId();
+      const payload: SendMessagePayload = {
+        id: msgId,
+        bot_token: botToken,
+        content: content.text,
+        session_id: chatSession.id,
+        headers: {
+          ...headers,
+          ...data.headers,
+        },
+        pathParams: {
+          ...pathParams,
+          ...data.PathParams,
+        },
+        query_params: {
+          ...queryParams,
+          ...data.query_params,
+        },
+        user: {
+          ...userData,
+          ...user,
+        }
+      };
+
+      debug("[send_message]", payload);
+
+      dispatch({
+        type: "APPEND_USER_MESSAGE",
+        payload: {
+          type: "FROM_USER",
+          id: msgId,
+          content: content.text,
+          timestamp: new Date().toISOString(),
+          session_id: chatSession.id,
+          user,
+        },
+      });
+
+      try {
+        setHookState("loading");
+        socket.emit("send_chat", payload);
+        events.dispatchEvent(
+          new CustomEvent("message", {
+            detail: payload,
+          }),
+        );
+      } catch (_error) {
+        setHookState("error");
+      }
+    }
+  }
 
   return {
     state: chatState,
