@@ -1,9 +1,11 @@
+import { MessageEnumType } from "@lib/hooks/parse-structured-response";
 import { ChatSession } from "@lib/types";
 import { AxiosInstance } from "axios";
 
 export async function createSession(instance: AxiosInstance, botToken: string) {
   return instance.post<ChatSession>("/chat-session/" + botToken);
 }
+
 export interface ChatMessageHistory {
   id: number;
   chatbot_id: string | null;
@@ -16,7 +18,7 @@ export interface ChatMessageHistory {
   api_called: boolean | null;
   knowledgebase_called: boolean | null;
   extra_params: object | null;
-  type: "message" | "handoff" | null;
+  type: MessageEnumType | null;
   agent_name: string | null;
   agent_avatar: string | null;
 }

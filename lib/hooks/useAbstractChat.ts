@@ -201,43 +201,55 @@ type SendMessagePayload = {
 
 function historyToMessages(mgs: ChatMessageHistory[]) {
   const messages: MessageType[] = [];
-  for (const msg of mgs) {
-    const { type } = msg;
-    if (type === "message") {
-      if (msg.from_user) {
-        messages.push({
-          type: "FROM_USER",
-          content: msg.message ?? "",
-          id: msg.id.toString(),
-          session_id: msg.session_id ?? "",
-          timestamp: msg.created_at ?? "",
-          serverId: msg.id.toString(),
-        });
-      } else {
-        messages.push({
-          type: "FROM_BOT",
-          id: msg.id.toString(),
-          component: "TEXT",
-          data: {
-            message: msg.message ?? "",
-          },
-          responseFor: null,
-          serverId: msg.id,
-        });
-      }
+  for (let i = 0; i < mgs.length; i++) {
+    const msg = mgs[i];
+    if (msg.from_user === true && msg.message) {
+      messages.push({
+        type: "FROM_USER",
+        content: msg.message,
+        id: msg.id.toString(),
+        session_id: msg.session_id ?? "",
+        timestamp: msg.created_at ?? "",
+        serverId: msg.id.toString(),
+      });
     }
     else {
-      messages.push({
-        type: "FROM_BOT",
-        component: "CHAT_EVENT",
-        data: {
-          event: msg.type,
-          message: msg.message
-        },
-        id: msg.id.toString() ?? genId(),
-        serverId: msg.id ?? genId(),
-        responseFor: null,
-      })
+      switch (msg.type) {
+        case "handoff":
+          messages.push({
+            type: "FROM_BOT",
+            component: "HANDOFF",
+            data: {},
+            id: msg.id.toString() ?? genId(),
+            serverId: msg.id ?? genId(),
+            responseFor: null,
+          });
+          break;
+        case "message":
+          messages.push({
+            type: "FROM_BOT",
+            component: "TEXT",
+            data: {
+              message: msg.message ?? "",
+            },
+            id: msg.id.toString() ?? genId(),
+            serverId: msg.id ?? genId(),
+            responseFor: null,
+          });
+          break;
+        default:
+          messages.push({
+            type: "FROM_BOT",
+            component: "CHAT_EVENT",
+            data: {
+              event: msg.type,
+              message: msg.message
+            },
+            id: msg.id.toString() ?? genId(),
+            serverId: msg.id ?? genId(),
+            responseFor: null,
+          });
+      }
     }
   }
   return messages;
@@ -292,7 +304,6 @@ export function useAbstractChat({
     transports: ["websocket"],
     closeOnBeforeunload: true,
   });
-
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
     _setSettings(Object.assign({}, settings, data));
   };
@@ -342,7 +353,7 @@ export function useAbstractChat({
       );
     },
     {
-      onSuccess(data, key, config) {
+      onSuccess(data) {
         dispatch({
           type: "PREPEND_HISTORY",
           payload: historyToMessages(data.history),

@@ -1,4 +1,3 @@
-import { MessageTypeEnum } from "@lib/hooks/parse-structured-response";
 import { WidgetOptions } from "./options";
 
 export type UserMessageType = {
@@ -28,6 +27,7 @@ export type BotMessageType<TData = unknown> = {
   agent?: {
     name?: string;
     is_ai: boolean;
+    agent_avatar?: string;
   };
 };
 

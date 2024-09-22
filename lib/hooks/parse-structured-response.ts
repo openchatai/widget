@@ -38,8 +38,8 @@ export interface UiElement {
   request_response: unknown;
   name: string;
   message_id?: string;
-  content: string;
-  incoming_message_id: string;
+  content?: string;
+  incoming_message_id?: string;
 }
 
 interface UiPayload {
@@ -59,14 +59,14 @@ export enum MessageTypeEnum {
   AGENT_COMMENT = 'agent_comment',
   AGENT_TOOK_SESSION_FROM_AI = 'agent_took_session_from_ai',
   AI_DECIDED_TO_RESOLVE_THE_ISSUE = 'ai_decided_to_resolve_the_issue',
-  // TODO: Rename, unclear
   AI_DECIDED_AUTO_HANDOFF_THE_ISSUE = 'ai_decided_auto_handoff_the_issue',
 }
+export type MessageEnumType = `${MessageTypeEnum}`;
 
 export interface ChatEventPayload {
   type: "chat_event";
   value: {
-    event: MessageTypeEnum;
+    event: MessageEnumType;
     message: string;
   };
   agent: {
