@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.26
+
+### Patch Changes
+
+- ba37901: get the version
+
 ## 1.1.25
 
 ### Patch Changes
