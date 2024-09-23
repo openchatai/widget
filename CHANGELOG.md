@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.1.25
+
+### Patch Changes
+
+- 82979f2: allow sendmessage to recieve extra object keys, and return the payload on success
+
 ## 1.1.24
 
 ### Patch Changes
