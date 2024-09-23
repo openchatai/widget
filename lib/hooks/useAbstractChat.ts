@@ -182,7 +182,7 @@ const genId = (len = 20) => {
   return id;
 };
 
-type SendMessagePayload = {
+type MessagePayload = {
   id: string;
   content: string;
   session_id: string;
@@ -310,7 +310,7 @@ export function useAbstractChat({
 
   const events = useRef(
     new TypedEventTarget<{
-      message: CustomEvent<SendMessagePayload>;
+      message: CustomEvent<MessagePayload>;
       info: CustomEvent<string>;
       error: CustomEvent<string>;
       new_message: CustomEvent<MessageType>;
@@ -546,11 +546,7 @@ export function useAbstractChat({
 
   const noMessages = chatState.messages.length === 0;
 
-  async function sendMessage({
-    content,
-    user,
-    ...data
-  }: {
+  interface SendMessageInput extends Record<string, unknown> {
     content: {
       text: string;
     };
@@ -558,7 +554,13 @@ export function useAbstractChat({
     user?: Record<string, unknown>;
     query_params?: Record<string, string>;
     PathParams?: Record<string, string>;
-  }) {
+  }
+
+  async function sendMessage({
+    content,
+    user,
+    ...data
+  }: SendMessageInput) {
     let chatSession = session;
 
     if (!session && chatState.messages.length === 0) {
@@ -572,7 +574,7 @@ export function useAbstractChat({
 
     if (chatSession && socket) {
       const msgId = genId();
-      const payload: SendMessagePayload = {
+      const payload: MessagePayload = {
         id: msgId,
         bot_token: botToken,
         content: content.text,
@@ -592,7 +594,8 @@ export function useAbstractChat({
         user: {
           ...userData,
           ...user,
-        }
+        },
+        ...data
       };
 
       debug("[send_message]", payload);
@@ -605,7 +608,7 @@ export function useAbstractChat({
           content: content.text,
           timestamp: new Date().toISOString(),
           session_id: chatSession.id,
-          user,
+          user: payload.user,
         },
       });
 
@@ -617,10 +620,14 @@ export function useAbstractChat({
             detail: payload,
           }),
         );
+        return payload;
       } catch (_error) {
         setHookState("error");
+        return null;
       }
     }
+
+    return null;
   }
 
   return {
