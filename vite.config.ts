@@ -1,9 +1,9 @@
-import { defineConfig } from "vite";
 import { resolve } from "path";
 import react from "@vitejs/plugin-react";
+import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
-import tsconfigPaths from "vite-tsconfig-paths";
 import { externalizeDeps } from "vite-plugin-externalize-deps";
+import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tsconfigPaths(), dts(), externalizeDeps(), react()],
@@ -21,7 +21,6 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        preserveModules: false,
         exports: "named",
         intro: `"use client"`,
       },

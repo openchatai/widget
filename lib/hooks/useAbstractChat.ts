@@ -258,6 +258,16 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
 
 type HookState = "loading" | "error" | "idle";
 
+export interface SendMessageInput extends Record<string, unknown> {
+  content: {
+    text: string;
+  };
+  headers?: Record<string, unknown>;
+  user?: Record<string, unknown>;
+  query_params?: Record<string, string>;
+  PathParams?: Record<string, string>;
+}
+
 export function useAbstractChat({
   apiUrl,
   socketUrl,
@@ -304,6 +314,11 @@ export function useAbstractChat({
     autoConnect: true,
     transports: ["websocket"],
     closeOnBeforeunload: true,
+    query: {
+      version: pkg.version,
+      botToken,
+      sessionId: session?.id,
+    }
   });
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
     _setSettings(Object.assign({}, settings, data));
@@ -547,15 +562,6 @@ export function useAbstractChat({
 
   const noMessages = chatState.messages.length === 0;
 
-  interface SendMessageInput extends Record<string, unknown> {
-    content: {
-      text: string;
-    };
-    headers?: Record<string, unknown>;
-    user?: Record<string, unknown>;
-    query_params?: Record<string, string>;
-    PathParams?: Record<string, string>;
-  }
 
   async function sendMessage({
     content,
