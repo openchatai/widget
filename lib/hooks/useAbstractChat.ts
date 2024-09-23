@@ -315,11 +315,12 @@ export function useAbstractChat({
     transports: ["websocket"],
     closeOnBeforeunload: true,
     query: {
-      version: pkg.version,
       botToken,
       sessionId: session?.id,
+      client: "widget",
     }
   });
+
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
     _setSettings(Object.assign({}, settings, data));
   };
