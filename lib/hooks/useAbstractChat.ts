@@ -23,6 +23,7 @@ import {
   useState,
 } from "react";
 import useSWR from "swr";
+import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
 import { SocketMessageParams, isUiElement } from "./parse-structured-response";
 import { useSocket } from "./socket";
@@ -631,6 +632,7 @@ export function useAbstractChat({
   }
 
   return {
+    version: pkg.version,
     state: chatState,
     session: session ?? null,
     agent,
