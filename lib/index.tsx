@@ -11,4 +11,4 @@ export {
     useLang,
     useConfigData,
 } from "./providers";
-export * from "./Root";
+export { WidgetRoot } from "./Root";

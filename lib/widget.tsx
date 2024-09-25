@@ -63,7 +63,7 @@ export const Widget = forwardRef<
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
   return (
-    <div style={{ display: "contents" }} data-chat-widget>
+    <div style={{ display: "contents", zIndex: 1000 }} data-chat-widget>
       <div
         {...props}
         ref={_ref}
@@ -73,7 +73,7 @@ export const Widget = forwardRef<
           className,
         )}
       >
-        <div className="size-full absolute antialiased font-inter">
+        <div className="size-full absolute antialiased font-inter z-[500]">
           <ChatScreen />
         </div>
       </div>
