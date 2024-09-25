@@ -238,6 +238,18 @@ function historyToMessages(mgs: ChatMessageHistory[]) {
             responseFor: null,
           });
           break;
+        case "agent_message":
+          messages.push({
+            type: "FROM_BOT",
+            component: "TEXT",
+            data: {
+              message: msg.message ?? "",
+            },
+            id: msg.id.toString() ?? genId(),
+            serverId: msg.id ?? genId(),
+            responseFor: null,
+          });
+          break;
         default:
           messages.push({
             type: "FROM_BOT",
