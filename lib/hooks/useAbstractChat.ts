@@ -321,6 +321,27 @@ export function useAbstractChat({
     }
   });
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (session && socket) {
+      const currentSessionId = session.id;
+      interval = setInterval(() => {
+        socket.emit('heartbeat', {
+          sessionId: currentSessionId,
+          client: "widget",
+          botToken,
+          user: userData,
+          timestamp: Date.now(),
+        });
+      }, 30000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    }
+
+  }, [socket, session]);
+
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
     _setSettings(Object.assign({}, settings, data));
   };
