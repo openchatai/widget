@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.3
+
+### Patch Changes
+
+- 6def731: fix the font size on some websites
+
 ## 1.2.2
 
 ### Patch Changes
