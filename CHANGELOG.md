@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.0
+
+### Minor Changes
+
+- f64a2f2: realtime features and localization support
+
 ## 1.1.27
 
 ### Patch Changes
