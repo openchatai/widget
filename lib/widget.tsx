@@ -63,17 +63,20 @@ export const Widget = forwardRef<
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
   return (
-    <div style={{ display: "contents", zIndex: 1000 }} data-chat-widget>
+    <div style={{ display: "contents" }} data-chat-widget>
       <div
         {...props}
         ref={_ref}
+        style={{
+          zIndex: 10000000
+        }}
         className={cn(
           "rounded-xl size-full overflow-hidden isolate relative font-inter",
           vars,
           className,
         )}
       >
-        <div className="size-full absolute antialiased font-inter z-[500]">
+        <div className="size-full absolute antialiased font-inter">
           <ChatScreen />
         </div>
       </div>
