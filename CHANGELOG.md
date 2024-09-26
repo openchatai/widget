@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.1
+
+### Patch Changes
+
+- 95aad4a: fix the display of the open ui
+
 ## 1.2.0
 
 ### Minor Changes
