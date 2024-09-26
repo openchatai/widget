@@ -21,13 +21,14 @@ export function WidgetPopover() {
   };
   return (
     <PopoverPrimitive.Root>
-      <div style={{ display: "content", zIndex: 10000000 }} data-chat-widget>
+      <div style={{ display: "content" }} data-chat-widget>
         <PopoverPrimitive.Content
           onInteractOutside={(ev) => ev.preventDefault()}
           side="top"
           sideOffset={10}
           data-chat-widget
           align="end"
+          style={{ zIndex: 10000000 }}
         >
           <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px] font-inter" />
         </PopoverPrimitive.Content>
@@ -67,9 +68,6 @@ export const Widget = forwardRef<
       <div
         {...props}
         ref={_ref}
-        style={{
-          zIndex: 10000000
-        }}
         className={cn(
           "rounded-xl size-full overflow-hidden isolate relative font-inter",
           vars,

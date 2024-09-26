@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.2
+
+### Patch Changes
+
+- c6bf3dc: fix the z-index on widgetPopover
+
 ## 1.2.1
 
 ### Patch Changes
