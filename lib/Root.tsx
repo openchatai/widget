@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatProvider, LanguageProvider } from "./providers";
+import { ChatProvider, LocaleProvider } from "./providers";
 import { ConfigDataProvider } from "./providers/ConfigDataProvider";
 import { WidgetOptions } from "./types";
 
@@ -12,9 +12,9 @@ export function WidgetRoot({
 }) {
     return (
         <ConfigDataProvider data={options}>
-            <LanguageProvider>
+            <LocaleProvider>
                 <ChatProvider>{children}</ChatProvider>
-            </LanguageProvider>
+            </LocaleProvider>
         </ConfigDataProvider>
     );
 }

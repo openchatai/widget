@@ -9,6 +9,7 @@ import {
 } from "@lib/components/dialog";
 import { Switch } from "@lib/components/switch";
 import { TooltipProvider } from "@lib/components/tooltip";
+import { useLocale } from "@lib/providers";
 import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -37,6 +38,7 @@ function ChatFooter() {
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, info, hookState } = useChat();
   const layoutId = useId();
+  const locale = useLocale();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
@@ -100,7 +102,7 @@ function ChatFooter() {
               handleInputSubmit();
             }
           }}
-          placeholder="Write a message..."
+          placeholder={locale.get("write-a-message")}
         />
         <div>
           <button
@@ -115,7 +117,7 @@ function ChatFooter() {
             {hookState === "loading" ? (
               <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
             ) : (
-              <SendHorizonal className="size-3.5" />
+              <SendHorizonal className="size-3.5 rtl:-scale-100" />
             )}
           </button>
         </div>
@@ -253,6 +255,7 @@ export function ChatScreen() {
                   {initialData.data?.initial_questions?.map((iq, index) => (
                     <button
                       key={index}
+                      dir="auto"
                       className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
                       onClick={() => {
                         sendMessage({
@@ -279,6 +282,7 @@ export function ChatScreen() {
 
 function HeaderChatRunning() {
   const { session, clearSession, settings, setSettings } = useChat();
+  const locale = useLocale();
   return (
     <header
       className="p-3 gap-2 flex flex-col"
@@ -293,7 +297,9 @@ function HeaderChatRunning() {
           </DialogTrigger>
           <DialogContent>
             <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Settings</h2>
+              <h2 className="text-sm font-semibold" dir="auto">
+                {locale.get("settings")}
+              </h2>
               <DialogClose className="bg-transparent text-accent p-1 font-semibold">
                 <XIcon className="size-4" />
               </DialogClose>
@@ -301,7 +307,9 @@ function HeaderChatRunning() {
 
             <div className="p-3 space-y-2">
               <div className="flex items-center justify-between">
-                <label htmlFor="persist-session::open">Persist session</label>
+                <label htmlFor="persist-session::open" dir="auto">
+                  {locale.get("persist-session")}
+                </label>
                 <Switch
                   id="persist-session::open"
                   disabled={!!session}
@@ -312,7 +320,9 @@ function HeaderChatRunning() {
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label htmlFor="sfx::open">Sound effects</label>
+                <label htmlFor="sfx::open" dir="auto">
+                  {locale.get("sound-effects")}
+                </label>
                 <Switch
                   id="sfx::open"
                   disabled={!!session}
@@ -338,23 +348,23 @@ function HeaderChatRunning() {
                 </DialogTrigger>
                 <DialogContent>
                   <div className="p-4">
-                    <h2 className="text-sm">
-                      This will reset the current conversation, do you want to
-                      continue?
+                    <h2 className="text-sm" dir="auto">
+                      {locale.get("reset-conversation-confirm")}
                     </h2>
                   </div>
                   <div className="p-4 space-x-3 flex items-center justify-end">
                     <button
+                      dir="auto"
                       onClick={() => {
                         clearSession();
                         setOpen(false);
                       }}
                       className="bg-rose-400 text-white px-2 py-1 rounded-lg text-sm"
                     >
-                      Yes
+                      {locale.get("yes")}
                     </button>
-                    <DialogClose className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm">
-                      No
+                    <DialogClose dir="auto" className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm">
+                      {locale.get("no")}
                     </DialogClose>
                   </div>
                 </DialogContent>
@@ -369,6 +379,7 @@ function HeaderChatRunning() {
 
 function HeaderChatDidNotStart() {
   const { session, clearSession, settings, setSettings } = useChat();
+  const locale = useLocale();
   return (
     <header
       className="p-3 gap-2 flex flex-col"
@@ -383,7 +394,7 @@ function HeaderChatDidNotStart() {
           </DialogTrigger>
           <DialogContent>
             <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold">close the widget</h2>
+              <h2 className="text-sm font-semibold" dir="auto">{locale.get("close-widget")}</h2>
               <DialogClose className="bg-transparent text-accent p-2 font-semibold">
                 <XIcon className="size-4" />
               </DialogClose>
@@ -397,7 +408,9 @@ function HeaderChatDidNotStart() {
           </DialogTrigger>
           <DialogContent>
             <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold">Settings</h2>
+              <h2 className="text-sm font-semibold" dir="auto">
+                {locale.get("settings")}
+              </h2>
               <DialogClose className="bg-transparent text-accent p-1 font-semibold">
                 <XIcon className="size-4" />
               </DialogClose>
@@ -405,7 +418,9 @@ function HeaderChatDidNotStart() {
 
             <div className="p-3 space-y-2">
               <div className="flex items-center justify-between">
-                <label htmlFor="persist-session::open">Persist session</label>
+                <label htmlFor="persist-session::open" dir="auto">
+                  {locale.get("persist-session")}
+                </label>
                 <Switch
                   id="persist-session::open"
                   disabled={!!session}
@@ -416,7 +431,9 @@ function HeaderChatDidNotStart() {
                 />
               </div>
               <div className="flex items-center justify-between">
-                <label htmlFor="sfx::open">Sound effects</label>
+                <label htmlFor="sfx::open" dir="auto">
+                  {locale.get("sound-effects")}
+                </label>
                 <Switch
                   id="sfx::open"
                   disabled={!!session}
@@ -439,23 +456,25 @@ function HeaderChatDidNotStart() {
                 </DialogTrigger>
                 <DialogContent>
                   <div className="p-4">
-                    <h2 className="text-sm">
-                      This will reset the current conversation, do you want to
-                      continue?
+                    <h2 className="text-sm" dir="auto">
+                      {locale.get("reset-conversation-confirm")}
                     </h2>
                   </div>
-                  <div className="p-4 space-x-3 flex items-center justify-end">
+                  <div className="p-4 gap-2 flex items-center justify-end">
                     <button
                       onClick={() => {
                         clearSession();
                         setOpen(false);
                       }}
+                      dir="auto"
                       className="bg-rose-400 text-white px-2 py-1 rounded-lg text-sm"
                     >
-                      Yes
+                      {locale.get("yes")}
                     </button>
-                    <DialogClose className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm">
-                      No
+                    <DialogClose
+                      dir="auto"
+                      className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm">
+                      {locale.get("no")}
                     </DialogClose>
                   </div>
                 </DialogContent>
@@ -470,20 +489,22 @@ function HeaderChatDidNotStart() {
         </div>
         <h2
           className="text-lg font-semibold text-background text-center"
+          dir="auto"
           style={{
             textShadow: "0px 2px 8px rgba(0, 0, 0, 0.12)",
           }}
         >
-          Got any question? Chat with us!
+          {locale.get("got-any-questions")}
         </h2>
 
         <span
           className="text-sm text-white text-center"
+          dir="auto"
           style={{
             textShadow: "0px 2px 8px rgba(0, 0, 0, 0.12)",
           }}
         >
-          Typically respond in less than 1 minute
+          {locale.get("typical-response-time")}
         </span>
       </div>
     </header>

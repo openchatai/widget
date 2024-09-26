@@ -1,20 +1,20 @@
 import { SocketState } from "./socket";
 
-export function representSocketState(state: SocketState) {
+export function representSocketState(state: SocketState, getter: Function) {
   switch (state) {
     case "connected":
-      return "🟢 Connected";
+      return getter("connected", "🟢");
     case "connecting":
-      return "🟡 Connecting";
+      return getter("connecting", "🟡");
     case "reconnecting":
-      return "🟡 Reconnecting";
+      return getter("reconnecting", "🟡");
     case "reconnected":
-      return "🟢 Reconnected";
+      return getter("reconnected", "🟢");
     case "disconnecting":
-      return "🔴 Disconnecting";
+      return getter("disconnecting", "🔴");
     case "disconnected":
-      return "🔴 Disconnected";
+      return getter("disconnected", "🔴");
     case "error":
-      return "❌ Error";
+      return getter("error", "❌");
   }
 }

@@ -21,7 +21,7 @@ export function WidgetPopover() {
   };
   return (
     <PopoverPrimitive.Root>
-      <div style={{ display: "content" }} data-chat-widget>
+      <div style={{ display: "content", zIndex: 10000000 }} data-chat-widget>
         <PopoverPrimitive.Content
           onInteractOutside={(ev) => ev.preventDefault()}
           side="top"
@@ -35,7 +35,7 @@ export function WidgetPopover() {
       <div style={{ display: "content" }} data-chat-widget>
         <PopoverPrimitive.PopoverTrigger
           className={cn(
-            "bottom-2 right-4 z-[200] absolute p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
+            "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
             vars,
           )}
           onClick={handleClick}

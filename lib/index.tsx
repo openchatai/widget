@@ -8,7 +8,7 @@ export * from "./hooks";
 export {
     ComponentRegistry,
     useChat,
-    useLang,
+    useLocale as useLang,
     useConfigData,
 } from "./providers";
 export { WidgetRoot } from "./Root";

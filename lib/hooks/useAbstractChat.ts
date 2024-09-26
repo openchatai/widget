@@ -1,3 +1,5 @@
+import { LangType } from "@lib/locales";
+import { useLocale } from "@lib/providers";
 import {
   BotMessageType,
   ChatSession,
@@ -35,16 +37,17 @@ type useChatOptions = {
   socketUrl: string;
   apiUrl: string;
   botToken: string;
+  headers: Record<string, string>;
+  queryParams: Record<string, string>;
+  pathParams: Record<string, string>;
   onHandoff?: (payload: HandoffPayloadType) => void;
   onSessionDestroy?: () => void;
   defaultHookSettings?: {
     persistSession?: boolean;
     useSoundEffects?: boolean;
   };
-  headers: Record<string, string>;
-  queryParams: Record<string, string>;
-  pathParams: Record<string, string>;
   userData?: Record<string, any>;
+  language?: LangType;
 };
 
 export enum Events {
@@ -191,6 +194,7 @@ type MessagePayload = {
   bot_token: string;
   query_params?: Record<string, string>;
   pathParams: Record<string, string>;
+  language?: LangType;
   user?: {
     email?: string;
     name?: string;
@@ -291,6 +295,7 @@ export function useAbstractChat({
   queryParams,
   pathParams,
   userData,
+  language,
 }: useChatOptions) {
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
@@ -389,9 +394,9 @@ export function useAbstractChat({
     }
     _setHookState(state);
   }
-
+  const locale = useLocale();
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
-    () => representSocketState(socketState),
+    () => representSocketState(socketState, locale.get),
     1000,
   );
 
@@ -642,6 +647,7 @@ export function useAbstractChat({
           ...userData,
           ...user,
         },
+        language,
         ...data
       };
 

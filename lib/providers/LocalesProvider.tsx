@@ -3,22 +3,23 @@ import React from "react";
 import { createSafeContext } from "../utils/create-safe-context";
 import { useConfigData } from "./ConfigDataProvider";
 
-const [useLang, SafeLanguageProvider] = createSafeContext<{
-  get: (key: string) => string;
+const [useLocale, SafeProvider] = createSafeContext<{
+  get: (key: string, pfx?: string) => string;
   lang: LangType;
 }>();
 
-function LanguageProvider({ children }: { children: React.ReactNode }) {
+function LocaleProvider({ children }: { children: React.ReactNode }) {
   const config = useConfigData();
+
   return (
-    <SafeLanguageProvider
+    <SafeProvider
       value={{
-        get: (key: string) => getStr(key, config.language ?? "en"),
-        lang: config.language ?? "en",
+        get: (key: string, pfx) => getStr(key, config.language ?? "en") + (pfx ?? ""),
+        lang: config.language,
       }}
     >
       {children}
-    </SafeLanguageProvider>
+    </SafeProvider>
   );
 }
-export { LanguageProvider, useLang };
+export { LocaleProvider, useLocale };
