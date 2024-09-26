@@ -1,6 +1,7 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { MessageSquareDot, X } from "lucide-react";
 import { ComponentPropsWithoutRef, forwardRef, useState } from "react";
+import { useChat } from "./providers";
 import { ChatScreen } from "./screens/ChatScreen";
 import { cn } from "./utils/cn";
 
@@ -63,8 +64,9 @@ export const Widget = forwardRef<
   HTMLDivElement,
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
+  const chat = useChat()
   return (
-    <div style={{ display: "contents" }} data-chat-widget>
+    <div style={{ display: "contents" }} data-version={chat.version} data-chat-widget>
       <div
         {...props}
         ref={_ref}
