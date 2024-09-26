@@ -8,12 +8,13 @@ import {
   UserMessageType,
 } from "@lib/types";
 import { debug } from "@lib/utils/debug";
+import { genId } from "@lib/utils/genId";
 import {
-  ChatMessageHistory,
   createSession,
   getChatSessionById,
   getInitData,
 } from "@lib/utils/getters";
+import { historyToWidgetMessages } from "@lib/utils/history-to-widgetMessages";
 import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
@@ -177,14 +178,6 @@ function chatReducer(state: State, action: ActionType) {
 
 const SESSION_KEY = (botToken: string) => `[OPEN_SESSION_${botToken}`;
 
-const genId = (len = 20) => {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let id = "";
-  for (let i = 0; i < len; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return id;
-};
 
 type MessagePayload = {
   id: string;
@@ -203,74 +196,6 @@ type MessagePayload = {
     customData?: Record<string, string>;
   };
 };
-
-function historyToMessages(mgs: ChatMessageHistory[]) {
-  const messages: MessageType[] = [];
-  for (let i = 0; i < mgs.length; i++) {
-    const msg = mgs[i];
-    if (msg.from_user === true && msg.message) {
-      messages.push({
-        type: "FROM_USER",
-        content: msg.message,
-        id: msg.id.toString(),
-        session_id: msg.session_id ?? "",
-        timestamp: msg.created_at ?? "",
-        serverId: msg.id.toString(),
-      });
-    }
-    else {
-      switch (msg.type) {
-        case "handoff":
-          messages.push({
-            type: "FROM_BOT",
-            component: "HANDOFF",
-            data: {},
-            id: msg.id.toString() ?? genId(),
-            serverId: msg.id ?? genId(),
-            responseFor: null,
-          });
-          break;
-        case "message":
-          messages.push({
-            type: "FROM_BOT",
-            component: "TEXT",
-            data: {
-              message: msg.message ?? "",
-            },
-            id: msg.id.toString() ?? genId(),
-            serverId: msg.id ?? genId(),
-            responseFor: null,
-          });
-          break;
-        case "agent_message":
-          messages.push({
-            type: "FROM_BOT",
-            component: "TEXT",
-            data: {
-              message: msg.message ?? "",
-            },
-            id: msg.id.toString() ?? genId(),
-            serverId: msg.id ?? genId(),
-            responseFor: null,
-          });
-          break;
-        default:
-          messages.push({
-            type: "FROM_BOT",
-            component: "CHAT_EVENT",
-            data: {
-              event: msg.type,
-              message: msg.message
-            },
-            id: msg.id.toString() ?? genId(),
-            serverId: msg.id ?? genId(),
-            responseFor: null,
-          });
-      }
-    }
-  }
-  return messages;
-}
 
 type HookState = "loading" | "error" | "idle";
 
@@ -417,7 +342,7 @@ export function useAbstractChat({
       onSuccess(data) {
         dispatch({
           type: "PREPEND_HISTORY",
-          payload: historyToMessages(data.history),
+          payload: historyToWidgetMessages(data.history),
         });
       },
       revalidateOnFocus: false,
