@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -20,5 +22,14 @@ export default {
       inter: ["Inter", "Cairo", "sans-serif"],
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addBase }) {
+      addBase({
+        '[data-chat-widget]': { fontSize: "16px", lineHeight: '1.5', },
+        '[data-chat-widget] *': {
+          fontSize: 'inherit',
+        },
+      })
+    }),
+  ],
 };

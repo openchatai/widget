@@ -9,10 +9,6 @@ export default {
     prefixer({
       prefix: `[data-chat-widget]`,
       transform: function (prefix, selector, prefixedSelector, filePath, rule) {
-        if (selector === "html") {
-          return `html${prefix}`;
-        }
-
         if (!rule.nodes.length) {
           return selector;
         }
