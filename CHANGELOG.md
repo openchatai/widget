@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.4
+
+### Patch Changes
+
+- 70e0648: add pt translations
+
 ## 1.2.3
 
 ### Patch Changes
