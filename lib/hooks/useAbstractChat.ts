@@ -61,6 +61,10 @@ export enum Events {
   CHAT_EVENT = "chat_event",
 }
 
+const socketEventsMap = {
+  "heartbeat:ack": "heartbeat:ack",
+}
+
 type State = {
   lastUpdated: number | null;
   messages: MessageType[];
@@ -209,6 +213,7 @@ export interface SendMessageInput extends Record<string, unknown> {
   PathParams?: Record<string, string>;
 }
 
+
 export function useAbstractChat({
   apiUrl,
   socketUrl,
@@ -222,6 +227,7 @@ export function useAbstractChat({
   userData,
   language,
 }: useChatOptions) {
+  const locale = useLocale();
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
     {
@@ -277,11 +283,15 @@ export function useAbstractChat({
         timestamp: Date.now(),
       }
 
-      socket.emit('heartbeat', heartbeatPayload);
+      async function sendHeartbeat() {
+        socket?.emit('heartbeat', heartbeatPayload);
+      }
+
+      sendHeartbeat();
 
       interval = setInterval(() => {
-        socket.emit('heartbeat', heartbeatPayload);
-      }, 50 * 1000);
+        sendHeartbeat();
+      }, 50 * 1000); // 50 seconds
     }
 
     return () => {
@@ -289,6 +299,22 @@ export function useAbstractChat({
     }
 
   }, [socket, session, botToken, userData]);
+
+  useEffect(() => {
+    if (session) {
+
+      socket?.on("heartbeat:ack", (data: { success: boolean }) => {
+        if (data.success) {
+          debug("heartbeat ack")
+        }
+      })
+
+      return () => {
+        socket?.off("heartbeat:ack");
+      }
+    }
+  }, [session]);
+
 
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
     _setSettings(Object.assign({}, settings, data));
@@ -319,7 +345,6 @@ export function useAbstractChat({
     }
     _setHookState(state);
   }
-  const locale = useLocale();
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState, locale.get),
     1000,
