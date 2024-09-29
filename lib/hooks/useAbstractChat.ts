@@ -521,6 +521,16 @@ export function useAbstractChat({
         setSession(value.session);
       }
 
+      else if (response.type === "options") {
+        const { value } = response;
+        dispatch({
+          type: "SET_KEYBOARD",
+          payload: {
+            options: value.options
+          }
+        })
+      }
+
       if (message) {
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
         setInfo(null);
@@ -574,7 +584,6 @@ export function useAbstractChat({
     ...data
   }: SendMessageInput) {
     let chatSession = session;
-    let isNewSession = false;
 
     if (!session && chatState.messages.length === 0) {
       try {
@@ -583,7 +592,6 @@ export function useAbstractChat({
           setSession(newSession);
           joinSession(newSession.id);
           chatSession = newSession;
-          isNewSession = true;
         } else {
           throw new Error("Failed to create session");
         }
@@ -621,19 +629,17 @@ export function useAbstractChat({
         ...data
       };
 
-      if (!isNewSession) {
-        dispatch({
-          type: "APPEND_USER_MESSAGE",
-          payload: {
-            type: "FROM_USER",
-            id: msgId,
-            content: content.text,
-            timestamp: new Date().toISOString(),
-            session_id: chatSession.id,
-            user: payload.user,
-          },
-        });
-      }
+      dispatch({
+        type: "APPEND_USER_MESSAGE",
+        payload: {
+          type: "FROM_USER",
+          id: msgId,
+          content: content.text,
+          timestamp: new Date().toISOString(),
+          session_id: chatSession.id,
+          user: payload.user,
+        },
+      });
 
       try {
         setHookState("loading");

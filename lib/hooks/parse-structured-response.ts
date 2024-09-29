@@ -87,11 +87,24 @@ export interface SessionUpdatePayload {
   };
 }
 
+export interface OptionsPayload {
+  type: "options";
+  value: {
+    options: string[];
+  },
+  server_session_id?: string,
+  agent: {
+    name: string,
+    is_ai: boolean,
+  },
+}
+
 export type SocketMessageParams =
   | InfoPayload
   | ChatEventPayload
   | MessagePayload
   | VotePayload
+  | OptionsPayload
   | UiPayload
   | SessionUpdatePayload
   | {
