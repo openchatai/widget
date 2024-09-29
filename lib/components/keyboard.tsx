@@ -12,7 +12,7 @@ function Keyboard({
             {options.map((option, index) => (
                 <button
                     onClick={() => onKeyboardClick(option)}
-                    className='text-dark hover:border-secondary border-transparent border bg-white rounded-md p-2 w-full'
+                    className='text-dark hover:border-secondary border-transparent border bg-white rounded-md p-1 text-sm w-full'
                     key={index}>
                     {option}
                 </button>
