@@ -18,15 +18,13 @@ import { historyToWidgetMessages } from "@lib/utils/history-to-widgetMessages";
 import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
-  Dispatch,
   ReactNode,
   useCallback,
   useEffect,
   useReducer,
   useRef,
-  useState,
+  useTransition,
 } from "react";
-import { Socket } from "socket.io-client";
 import useSWR from "swr";
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
@@ -53,7 +51,7 @@ type useChatOptions = {
   language?: LangType;
 };
 
-export enum Events {
+enum Events {
   MESSAGE = "message",
   SYSTEM_EVENT = "system_event",
   BOT_MESSAGE = "bot_message",
@@ -206,7 +204,7 @@ type MessagePayload = {
 
 type HookState = "loading" | "error" | "idle";
 
-export interface SendMessageInput extends Record<string, unknown> {
+interface SendMessageInput extends Record<string, unknown> {
   content: {
     text: string;
   };
@@ -217,7 +215,7 @@ export interface SendMessageInput extends Record<string, unknown> {
 }
 
 
-export function useAbstractChat({
+function useAbstractChat({
   apiUrl,
   socketUrl,
   botToken,
@@ -574,7 +572,6 @@ export function useAbstractChat({
 
   const noMessages = chatState.messages.length === 0;
 
-
   async function sendMessage({
     content,
     user,
@@ -585,8 +582,9 @@ export function useAbstractChat({
   }: SendMessageInput) {
     let chatSession = session;
 
-    if (!session && chatState.messages.length === 0) {
+    if (!session && noMessages) {
       try {
+        setHookState("loading");
         const { data: newSession } = await createSession(axiosInstance, botToken);
         if (newSession) {
           setSession(newSession);
@@ -628,20 +626,18 @@ export function useAbstractChat({
         language,
         ...data
       };
-
-      dispatch({
-        type: "APPEND_USER_MESSAGE",
-        payload: {
-          type: "FROM_USER",
-          id: msgId,
-          content: content.text,
-          timestamp: new Date().toISOString(),
-          session_id: chatSession.id,
-          user: payload.user,
-        },
-      });
-
       try {
+        dispatch({
+          type: "APPEND_USER_MESSAGE",
+          payload: {
+            type: "FROM_USER",
+            id: msgId,
+            content: content.text,
+            timestamp: new Date().toISOString(),
+            session_id: chatSession.id,
+            user: payload.user,
+          },
+        });
         setHookState("loading");
         socket.emit("send_chat", payload);
         events.dispatchEvent(
@@ -656,9 +652,9 @@ export function useAbstractChat({
         return null;
       }
     }
-
     return null;
   }
+
   const handleKeyboard = useCallback(async (option: string) => {
     const res = await sendMessage({
       content: {
@@ -673,7 +669,6 @@ export function useAbstractChat({
     }
   }, [dispatch, sendMessage]);
 
-  debug("[messages]", chatState.messages)
   return {
     version: pkg.version,
     state: chatState,
@@ -693,3 +688,6 @@ export function useAbstractChat({
     handleKeyboard
   };
 }
+
+
+export { useAbstractChat, Events, type SendMessageInput, type HookState };
