@@ -37,7 +37,7 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, hookState, handleKeyboard, state } = useChat();
+  const { sendMessage, info, hookState } = useChat();
   const layoutId = useId();
   const locale = useLocale();
 
@@ -60,11 +60,6 @@ function ChatFooter() {
     setInput("");
   }
 
-  const KeyboardComponent = useMemo(() => {
-    if (state.keyboard) {
-      return <Keyboard onKeyboardClick={handleKeyboard} options={state.keyboard.options} />
-    }
-  }, [state.keyboard, handleKeyboard]);
 
   return (
     <div className="p-2 rounded-lg relative">
@@ -89,7 +84,7 @@ function ChatFooter() {
           )}
         </AnimatePresence>
       </div>
-      {KeyboardComponent ? KeyboardComponent : <div
+      <div
         className="flex items-center gap-2 bg-white border px-2 py-1.5 rounded-lg"
         style={{
           border: "1px solid rgba(19, 34, 68, 0.08)",
@@ -129,7 +124,7 @@ function ChatFooter() {
             )}
           </button>
         </div>
-      </div>}
+      </div>
     </div>
   );
 }
@@ -142,6 +137,7 @@ export function ChatScreen() {
     noMessages,
     hookState,
     events: chatEvents,
+    handleKeyboard
   } = useChat();
   const config = useConfigData();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -258,24 +254,31 @@ export function ChatScreen() {
             </div>
 
             <footer>
-              {noMessages && (
-                <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
-                  {initialData.data?.initial_questions?.map((iq, index) => (
-                    <button
-                      key={index}
-                      dir="auto"
-                      className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
-                      onClick={() => {
-                        sendMessage({
-                          content: { text: iq },
-                        });
-                      }}
-                    >
-                      {iq}
-                    </button>
-                  ))}
-                </div>
-              )}
+              <React.Fragment>
+                {state.keyboard && <Keyboard
+                  options={state.keyboard.options}
+                  onKeyboardClick={handleKeyboard} />}
+              </React.Fragment>
+              <React.Fragment>
+                {noMessages && (
+                  <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
+                    {initialData.data?.initial_questions?.map((iq, index) => (
+                      <button
+                        key={index}
+                        dir="auto"
+                        className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
+                        onClick={() => {
+                          sendMessage({
+                            content: { text: iq },
+                          });
+                        }}
+                      >
+                        {iq}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </React.Fragment>
               <ChatFooter />
             </footer>
           </div>

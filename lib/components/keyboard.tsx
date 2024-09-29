@@ -8,7 +8,7 @@ function Keyboard({
     onKeyboardClick
 }: Props) {
     return (
-        <div className='grid grid-cols-2 gap-2'>
+        <div className='flex items-center gap-2 p-1'>
             {options.map((option, index) => (
                 <button
                     onClick={() => onKeyboardClick(option)}

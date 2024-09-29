@@ -334,7 +334,7 @@ function useAbstractChat({
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
-    keyboard: null,
+    keyboard: null
   });
 
   const [hookState, _setHookState] = useTimeoutState<HookState>("idle", 1000 * 3);
@@ -638,6 +638,12 @@ function useAbstractChat({
             user: payload.user,
           },
         });
+        if (chatState.keyboard) {
+          dispatch({
+            type: "SET_KEYBOARD",
+            payload: null
+          });
+        }
         setHookState("loading");
         socket.emit("send_chat", payload);
         events.dispatchEvent(
