@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@lib/components/dialog";
+import { Keyboard } from "@lib/components/keyboard";
 import { Switch } from "@lib/components/switch";
 import { TooltipProvider } from "@lib/components/tooltip";
 import { useLocale } from "@lib/providers";
@@ -36,7 +37,7 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, hookState } = useChat();
+  const { sendMessage, info, hookState, handleKeyboard, state } = useChat();
   const layoutId = useId();
   const locale = useLocale();
 
@@ -45,17 +46,25 @@ function ChatFooter() {
     setInput(value);
   };
 
-  function handleInputSubmit() {
-    if (input.trim() === "") {
+  async function handleInputSubmit() {
+    if (input.trim().length === 0) {
       return;
     }
-    sendMessage({
+
+    await sendMessage({
       content: {
         text: input,
       },
     });
+
     setInput("");
   }
+
+  const KeyboardComponent = useMemo(() => {
+    if (state.keyboard) {
+      return <Keyboard onKeyboardClick={handleKeyboard} options={state.keyboard.options} />
+    }
+  }, [state.keyboard, handleKeyboard]);
 
   return (
     <div className="p-2 rounded-lg relative">
@@ -80,10 +89,9 @@ function ChatFooter() {
           )}
         </AnimatePresence>
       </div>
-      <div
-        className="flex items-center gap-2 border px-2 py-1.5 rounded-lg"
+      {KeyboardComponent ? KeyboardComponent : <div
+        className="flex items-center gap-2 bg-white border px-2 py-1.5 rounded-lg"
         style={{
-          background: "#FFFFFF",
           border: "1px solid rgba(19, 34, 68, 0.08)",
           boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.04)",
           borderRadius: "8px",
@@ -96,10 +104,10 @@ function ChatFooter() {
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
           autoFocus
-          onKeyDown={(event) => {
+          onKeyDown={async (event) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
-              handleInputSubmit();
+              await handleInputSubmit();
             }
           }}
           placeholder={locale.get("write-a-message")}
@@ -121,7 +129,7 @@ function ChatFooter() {
             )}
           </button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
@@ -229,17 +237,17 @@ export function ChatScreen() {
               {state.messages.map((message, i) => {
                 if (message.type === "FROM_USER") {
                   return (
-                    <UserMessage key={i} user={config.user}>
+                    <UserMessage key={message.id} user={config.user}>
                       {message.content}
                     </UserMessage>
                   );
                 } else if (message.type === "FROM_BOT") {
                   if (message.component == "CHAT_EVENT") {
-                    return <BotMessage message={message} key={i} />
+                    return <BotMessage message={message} key={message.id} />
                   }
                   return (
-                    <BotResponseWrapper bot={message.bot}>
-                      <BotMessage message={message} key={i} />
+                    <BotResponseWrapper bot={message.bot} key={message.id}>
+                      <BotMessage message={message} />
                     </BotResponseWrapper>
                   );
                 }
@@ -260,9 +268,6 @@ export function ChatScreen() {
                       onClick={() => {
                         sendMessage({
                           content: { text: iq },
-                          headers: config.headers,
-                          query_params: config.queryParams,
-                          user: config.user,
                         });
                       }}
                     >

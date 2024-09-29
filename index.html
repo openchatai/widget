@@ -18,9 +18,11 @@
   <script>
     const socketUrl = "http://localhost:8080";
     const apiUrl = "http://localhost:8080/backend";
+    let initlized = false;
     window.addEventListener("DOMContentLoaded", () => {
+      if (initlized) return;
       initOpenScript({
-        token: "10ce43f45ec044eae99c1da8c18c25a2",
+        token: "8ce19d99a6a2a2c31d4e7946fc3aaed8",
         apiUrl: apiUrl,
         socketUrl: socketUrl,
         language: "en",
@@ -42,6 +44,7 @@
         debug: true,
         organizationName: "Demo inc.",
       });
+      initlized = true;
     });
   </script>
 </body>

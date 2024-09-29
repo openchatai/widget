@@ -18,6 +18,7 @@ import { historyToWidgetMessages } from "@lib/utils/history-to-widgetMessages";
 import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
+  Dispatch,
   ReactNode,
   useCallback,
   useEffect,
@@ -25,6 +26,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { Socket } from "socket.io-client";
 import useSWR from "swr";
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
@@ -61,13 +63,10 @@ export enum Events {
   CHAT_EVENT = "chat_event",
 }
 
-const socketEventsMap = {
-  "heartbeat:ack": "heartbeat:ack",
-}
-
 type State = {
   lastUpdated: number | null;
   messages: MessageType[];
+  keyboard: { options: string[] } | null;
 };
 
 type ActionType =
@@ -99,13 +98,12 @@ type ActionType =
       clientMessageId: string;
       ServerMessageId: number;
     };
-  } |
-  {
-    type: "CHAT_EVENT";
+  }
+  | {
+    type: "SET_KEYBOARD";
     payload: {
-      event: string;
-      messageId: string;
-    };
+      options: string[];
+    } | null;
   }
 
 function chatReducer(state: State, action: ActionType) {
@@ -140,6 +138,7 @@ function chatReducer(state: State, action: ActionType) {
         break;
       }
       case "APPEND_USER_MESSAGE": {
+        debug("append user message")
         draft.messages.push(action.payload);
         setLastupdated();
         break;
@@ -172,6 +171,10 @@ function chatReducer(state: State, action: ActionType) {
           message.serverId = ServerMessageId;
         }
 
+        break;
+      }
+      case "SET_KEYBOARD": {
+        draft.keyboard = action.payload;
         break;
       }
       default:
@@ -333,11 +336,10 @@ export function useAbstractChat({
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
+    keyboard: null,
   });
 
-  debug("[messages]", chatState.messages);
-
-  const [hookState, _setHookState] = useState<HookState>("idle");
+  const [hookState, _setHookState] = useTimeoutState<HookState>("idle", 1000 * 3);
 
   const setHookState = (state: HookState) => {
     if (state === "loading" && agent === "BOT") {
@@ -406,6 +408,7 @@ export function useAbstractChat({
   function clearSession() {
     socket?.emit("leave_session", { session_id: session?.id });
     setSession(null);
+    setHookState("idle");
     dispatch({ type: "CLEAR_MESSAGES" });
     onSessionDestroy?.();
   }
@@ -417,7 +420,6 @@ export function useAbstractChat({
       joinSession(data.id);
     });
   }
-
 
   const handleIncomingMessage = (response: SocketMessageParams) => {
     debug(response);
@@ -514,6 +516,11 @@ export function useAbstractChat({
         debug("[ui]", message);
       }
 
+      else if (response.type === "session_update") {
+        const { value } = response;
+        setSession(value.session);
+      }
+
       if (message) {
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
         setInfo(null);
@@ -561,16 +568,29 @@ export function useAbstractChat({
   async function sendMessage({
     content,
     user,
+    headers: inputHeaders,
+    PathParams: inputPathParams,
+    query_params: inputQueryParams,
     ...data
   }: SendMessageInput) {
     let chatSession = session;
+    let isNewSession = false;
 
     if (!session && chatState.messages.length === 0) {
-      const { data } = await createSession(axiosInstance, botToken);
-      if (data) {
-        setSession(data);
-        joinSession(data.id);
-        chatSession = data;
+      try {
+        const { data: newSession } = await createSession(axiosInstance, botToken);
+        if (newSession) {
+          setSession(newSession);
+          joinSession(newSession.id);
+          chatSession = newSession;
+          isNewSession = true;
+        } else {
+          throw new Error("Failed to create session");
+        }
+      } catch (error) {
+        console.error("Error creating session:", error);
+        setHookState("error");
+        return null;
       }
     }
 
@@ -583,15 +603,15 @@ export function useAbstractChat({
         session_id: chatSession.id,
         headers: {
           ...headers,
-          ...data.headers,
+          ...inputHeaders,
         },
         pathParams: {
           ...pathParams,
-          ...data.PathParams,
+          ...inputPathParams,
         },
         query_params: {
           ...queryParams,
-          ...data.query_params,
+          ...inputQueryParams,
         },
         user: {
           ...userData,
@@ -601,19 +621,19 @@ export function useAbstractChat({
         ...data
       };
 
-      debug("[send_message]", payload);
-
-      dispatch({
-        type: "APPEND_USER_MESSAGE",
-        payload: {
-          type: "FROM_USER",
-          id: msgId,
-          content: content.text,
-          timestamp: new Date().toISOString(),
-          session_id: chatSession.id,
-          user: payload.user,
-        },
-      });
+      if (!isNewSession) {
+        dispatch({
+          type: "APPEND_USER_MESSAGE",
+          payload: {
+            type: "FROM_USER",
+            id: msgId,
+            content: content.text,
+            timestamp: new Date().toISOString(),
+            session_id: chatSession.id,
+            user: payload.user,
+          },
+        });
+      }
 
       try {
         setHookState("loading");
@@ -621,10 +641,11 @@ export function useAbstractChat({
         events.dispatchEvent(
           new CustomEvent("message", {
             detail: payload,
-          }),
+          })
         );
         return payload;
-      } catch (_error) {
+      } catch (error) {
+        console.error("Error sending message:", error);
         setHookState("error");
         return null;
       }
@@ -632,7 +653,21 @@ export function useAbstractChat({
 
     return null;
   }
+  const handleKeyboard = useCallback(async (option: string) => {
+    const res = await sendMessage({
+      content: {
+        text: option,
+      },
+    });
+    if (res) {
+      dispatch({
+        type: "SET_KEYBOARD",
+        payload: null
+      });
+    }
+  }, [dispatch, sendMessage]);
 
+  debug("[messages]", chatState.messages)
   return {
     version: pkg.version,
     state: chatState,
@@ -649,5 +684,6 @@ export function useAbstractChat({
     settings,
     setSettings,
     axiosInstance,
+    handleKeyboard
   };
 }

@@ -10,7 +10,7 @@
     "clean": "rm -rf ./dist ./dist-embed",
     "preview": "vite preview",
     "prepublishOnly": "pnpm clean && pnpm batman",
-    "dev": "vite build --watch",
+    "devv": "vite build --watch",
     "build": "vite build",
     "start:dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",

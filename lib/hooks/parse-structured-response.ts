@@ -1,4 +1,4 @@
-import { HandoffPayloadType } from "@lib/types";
+import { ChatSession, HandoffPayloadType } from "@lib/types";
 
 export function isUiElement(value: unknown): value is UiElement {
   return typeof value === "object" && value !== null;
@@ -75,12 +75,25 @@ export interface ChatEventPayload {
   }
 }
 
+export interface SessionUpdatePayload {
+  type: "session_update";
+  server_session_id: string,
+  agent: {
+    name: string;
+    is_ai: boolean;
+  }
+  value: {
+    session: ChatSession;
+  };
+}
+
 export type SocketMessageParams =
   | InfoPayload
   | ChatEventPayload
   | MessagePayload
   | VotePayload
   | UiPayload
+  | SessionUpdatePayload
   | {
     type: "handoff";
     value: HandoffPayloadType;
