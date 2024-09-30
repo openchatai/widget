@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.2.5",
+  "version": "1.2.6",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -10,7 +10,7 @@
     "clean": "rm -rf ./dist ./dist-embed",
     "preview": "vite preview",
     "prepublishOnly": "pnpm clean && pnpm batman",
-    "devv": "vite build --watch",
+    "dev": "vite build --watch",
     "build": "vite build",
     "start:dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",
