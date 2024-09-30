@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.5
+
+### Patch Changes
+
+- bb5f0a9: keyboard, options overall bug fixes
+
 ## 1.2.4
 
 ### Patch Changes
