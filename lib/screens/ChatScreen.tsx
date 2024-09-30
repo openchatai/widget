@@ -85,11 +85,10 @@ function ChatFooter() {
         </AnimatePresence>
       </div>
       <div
-        className="flex items-center gap-2 bg-white border px-2 py-1.5 rounded-lg"
+        className="flex rounded-lg items-center gap-2 bg-white border px-2 py-1.5"
         style={{
           border: "1px solid rgba(19, 34, 68, 0.08)",
           boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.04)",
-          borderRadius: "8px",
         }}
       >
         <input
@@ -254,13 +253,14 @@ export function ChatScreen() {
             </div>
 
             <footer>
-              <React.Fragment>
-                {state.keyboard && <Keyboard
+              {state.keyboard && <React.Fragment>
+                <Keyboard
                   options={state.keyboard.options}
-                  onKeyboardClick={handleKeyboard} />}
+                  onKeyboardClick={handleKeyboard} />
               </React.Fragment>
-              <React.Fragment>
-                {noMessages && (
+              }
+              {noMessages && (
+                <React.Fragment>
                   <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
                     {initialData.data?.initial_questions?.map((iq, index) => (
                       <button
@@ -277,8 +277,8 @@ export function ChatScreen() {
                       </button>
                     ))}
                   </div>
-                )}
-              </React.Fragment>
+                </React.Fragment>
+              )}
               <ChatFooter />
             </footer>
           </div>
