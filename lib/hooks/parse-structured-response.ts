@@ -18,6 +18,7 @@ interface MessagePayload {
   server_message_id?: number;
   type: "message";
   value: string;
+  is_message_chunk?: boolean;
 }
 
 interface InfoPayload {
@@ -99,7 +100,7 @@ export interface OptionsPayload {
   },
 }
 
-export type SocketMessageParams =
+export type SocketMessagePayload =
   | InfoPayload
   | ChatEventPayload
   | MessagePayload

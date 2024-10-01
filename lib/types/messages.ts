@@ -20,7 +20,6 @@ export type BotMessageType<TData = unknown> = {
   id: string;
   type: "FROM_BOT";
   component: string;
-  responseFor: string | null;
   data: TData;
   bot?: WidgetOptions["bot"];
   serverId: number | null;

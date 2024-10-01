@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const IS_SERVER = typeof window === "undefined";
 
@@ -7,14 +7,20 @@ type StorageType = "memory" | "local" | "session";
 interface StorageLike {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
+  removeItem(key: string): void;
 }
 
 const memoryStorage: StorageLike = {
   getItem: () => null,
-  setItem: () => null,
+  setItem: () => {
+    // 
+  },
+  removeItem: () => {
+    // 
+  },
 };
 
-export function getStorage(storage: StorageType): StorageLike {
+function getStorage(storage: StorageType): StorageLike {
   if (IS_SERVER) {
     return memoryStorage;
   }
@@ -32,9 +38,10 @@ type DefaultValue<T> = T | (() => T);
 export function useSyncedState<TData>(
   key: string,
   defaultValue?: DefaultValue<TData>,
-  storage: StorageType = "session",
-) {
+  storage: StorageType = "session"
+): [TData | null, (newState: TData | null) => void, () => void] {
   const bucket = useMemo(() => getStorage(storage), [storage]);
+
   const [state, setState] = useState<TData | null>(() => {
     const storageValue = bucket.getItem(key);
     if (storageValue !== null) {
@@ -53,25 +60,39 @@ export function useSyncedState<TData>(
   const setSyncedState = useCallback(
     (newState: TData | null) => {
       setState(newState);
-      if (newState === null || newState === undefined) {
-        bucket.setItem(key, "");
+      if (newState === null) {
+        bucket.removeItem(key);
       } else {
         try {
           bucket.setItem(key, JSON.stringify(newState));
         } catch (error) {
           console.error(
             `Error saving state to storage for key '${key}':`,
-            error,
+            error
           );
         }
       }
     },
-    [key, bucket],
+    [key, bucket]
   );
 
   const clear = useCallback(() => {
-    setSyncedState(null);
-  }, [setSyncedState]);
+    setState(null);
+    bucket.removeItem(key);
+  }, [key, bucket]);
 
-  return [state, setSyncedState, clear] as const;
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === key && e.newValue !== JSON.stringify(state)) {
+        setState(e.newValue ? JSON.parse(e.newValue) : null);
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [key, state]);
+
+  return [state, setSyncedState, clear];
 }

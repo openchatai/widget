@@ -291,7 +291,7 @@ export function ChatScreen() {
   return (
     <TooltipProvider>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-b absolute bottom-0 inset-x-0">
-        <div className="w-full overflow-hidden mesh-gradient h-full justify-between rounded-t-xl flex flex-col relative overflow-auto" style={{
+        <div className="w-full overflow-hidden mesh-gradient h-full justify-between rounded-t-xl flex flex-col relative" style={{
           background: "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
           boxShadow: "0px 8px 40px rgba(0, 0, 0, 0.12)",
           borderRadius: "16px"

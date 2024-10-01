@@ -37,10 +37,9 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, hookState } = useChat();
+  const { sendMessage, info, hookState, session } = useChat();
   const layoutId = useId();
   const locale = useLocale();
-
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
     setInput(value);
@@ -51,7 +50,7 @@ function ChatFooter() {
       return;
     }
 
-    await sendMessage({
+    sendMessage({
       content: {
         text: input,
       },
@@ -63,6 +62,7 @@ function ChatFooter() {
 
   return (
     <div className="p-2 rounded-lg relative">
+
       <div className="relative w-full top-0 overflow-hidden h-5 px-1">
         <AnimatePresence>
           {info && (
@@ -136,7 +136,8 @@ export function ChatScreen() {
     noMessages,
     hookState,
     events: chatEvents,
-    handleKeyboard
+    handleKeyboard,
+
   } = useChat();
   const config = useConfigData();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -212,7 +213,6 @@ export function ChatScreen() {
                     component="TEXT"
                     data={{ message }}
                     id={`${index}`}
-                    responseFor={null}
                     type="FROM_BOT"
                     serverId={null}
                   />
@@ -223,7 +223,6 @@ export function ChatScreen() {
                       component="TEXT"
                       data={{ message: "Hello, how can I help?" }}
                       id="123"
-                      responseFor={null}
                       type="FROM_BOT"
                       serverId={null}
                     />
