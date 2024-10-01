@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.7
+
+### Patch Changes
+
+- c33dfcc: fix the initial messages
+
 ## 1.2.6
 
 ### Patch Changes
