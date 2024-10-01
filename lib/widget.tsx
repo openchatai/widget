@@ -22,7 +22,7 @@ export function WidgetPopover() {
   };
   return (
     <PopoverPrimitive.Root>
-      <div style={{ display: "content" }} data-chat-widget>
+      <div style={{ display: "content", fontSize: "16px !important" }} data-chat-widget>
         <PopoverPrimitive.Content
           onInteractOutside={(ev) => ev.preventDefault()}
           side="top"
@@ -66,7 +66,7 @@ export const Widget = forwardRef<
 >(({ className, ...props }, _ref) => {
   const chat = useChat()
   return (
-    <div style={{ display: "contents" }} data-version={chat.version} data-chat-widget>
+    <div style={{ display: "contents", fontSize: "16px !important" }} data-version={chat.version} data-chat-widget>
       <div
         {...props}
         ref={_ref}

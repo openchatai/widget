@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.2.7",
+  "version": "1.2.10",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -34,6 +34,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
+    "react-shadow": "^20.5.0",
     "remark-gfm": "^4.0.0",
     "socket.io-client": "^4.7.5",
     "swr": "^2.2.5",

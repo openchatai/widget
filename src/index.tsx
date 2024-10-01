@@ -1,8 +1,10 @@
 import { createRoot } from "react-dom/client";
+import root from 'react-shadow';
 import { WidgetRoot } from "../lib/Root";
 import styles from "../lib/index.css?inline";
 import { WidgetOptions } from "../lib/types";
 import { WidgetPopover } from "../lib/widget";
+import packageJson from "../package.json";
 
 const defaultRootId = "opencopilot-root";
 
@@ -21,14 +23,17 @@ export function initOpenScript(options: WidgetOptions, rootId?: string) {
     document.body.appendChild(rootElement);
   }
 
-  const root = createRoot(rootElement);
-  if (root) {
-    root.render(
+  const _root = createRoot(rootElement);
+
+  if (_root) {
+    _root.render(
       <WidgetRoot options={options}>
-        <style>{styles}</style>
-        <WidgetPopover />
-      </WidgetRoot>,
-    );
+        <root.div data-version={packageJson.version} style={{ display: "contents" }}>
+          <style dangerouslySetInnerHTML={{ __html: styles }} />
+          <WidgetPopover />
+        </root.div>
+      </WidgetRoot>
+    )
   }
 }
 

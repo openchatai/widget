@@ -1,5 +1,23 @@
 # @openchatai/widget
 
+## 1.2.10
+
+### Patch Changes
+
+- 1cc6940: scoping the embeded widget
+
+## 1.2.9
+
+### Patch Changes
+
+- 8604e16: fix the font
+
+## 1.2.8
+
+### Patch Changes
+
+- a0af183: fix the font-size issue
+
 ## 1.2.7
 
 ### Patch Changes

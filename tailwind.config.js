@@ -25,10 +25,7 @@ export default {
   plugins: [
     plugin(function ({ addBase }) {
       addBase({
-        '[data-chat-widget]': { fontSize: "16px !important", lineHeight: '1.5', },
-        '[data-chat-widget] *': {
-          fontSize: 'inherit',
-        },
+        '[data-chat-widget]': { fontSize: "16px !important" },
       })
     }),
   ],
