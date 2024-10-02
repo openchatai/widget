@@ -5,7 +5,7 @@ import { useChat } from "./providers";
 import { ChatScreen } from "./screens/ChatScreen";
 import { cn } from "./utils/cn";
 
-const vars = `
+export const cssVars = `
 [--primary:211_65%_59%]
 [--foreground:0_0%_0%]
 [--background:0_0%_100%]
@@ -35,7 +35,7 @@ export function WidgetPopover() {
       <PopoverPrimitive.PopoverTrigger
         className={cn(
           "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
-          vars,
+          cssVars,
         )}
         onClick={handleClick}
       >
@@ -62,13 +62,14 @@ export const Widget = forwardRef<
 >(({ className, ...props }, _ref) => {
   const chat = useChat()
   return (
-    <div style={{ display: "contents" }} data-version={chat.version} data-chat-widget>
+    <div style={{ display: "contents" }} data-chat-widget>
       <div
         {...props}
         ref={_ref}
+        data-version={chat.version} data-chat-widget
         className={cn(
           "rounded-xl size-full overflow-hidden isolate relative font-inter",
-          vars,
+          cssVars,
           className,
         )}
       >

@@ -1,43 +1,11 @@
-import { createRoot } from "react-dom/client";
-import root from "react-shadow";
 import { WidgetRoot } from "../lib/Root";
 import styles from "../lib/index.css?inline";
 import { WidgetOptions } from "../lib/types";
 import { WidgetPopover } from "../lib/widget";
 import packageJson from "../package.json";
-
+import { IframedWidgetPopover } from "./iframed";
+import { render } from "./render";
 const defaultRootId = "opencopilot-root";
-
-const IS_SERVER = typeof window === "undefined";
-
-export function initOpenScript(options: WidgetOptions, rootId?: string) {
-  if (IS_SERVER) {
-    return;
-  }
-
-  let rootElement = document.getElementById(rootId ?? defaultRootId);
-
-  if (!rootElement) {
-    rootElement = document.createElement("div");
-    rootElement.id = rootId || defaultRootId;
-    rootElement.setAttribute("data-chat-widget", "");
-    document.body.appendChild(rootElement);
-  }
-
-  const _root = createRoot(rootElement);
-  if (_root) {
-    _root.render(
-      <WidgetRoot options={options}>
-        <root.div data-version={packageJson.version} style={{ fontSize: "16px", display: "contents" }}>
-          <WidgetPopover />
-          <style type="text/css">
-            {styles}
-          </style>
-        </root.div>
-      </WidgetRoot>
-    );
-  }
-}
 
 declare global {
   interface Window {
@@ -46,5 +14,27 @@ declare global {
 }
 
 window["initOpenScript"] = initOpenScript;
+function initIframedScript(options: WidgetOptions) {
+  render(
+    defaultRootId,
+    <WidgetRoot options={options}>
+      <IframedWidgetPopover />
+    </WidgetRoot>
+  );
+}
 
-console.log("OpenCopilot script loaded");
+export function initOpenScript(options: WidgetOptions, mode: "default" | "iframed" = "default") {
+  if (mode === "iframed") {
+    initIframedScript(options);
+    return;
+  }
+  render(
+    defaultRootId,
+    <WidgetRoot options={options}>
+      <style type="text/css" data-version={packageJson.version}>
+        {styles}
+      </style>
+      <WidgetPopover />
+    </WidgetRoot>
+  );
+}

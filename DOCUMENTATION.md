@@ -299,8 +299,6 @@ export function ChatScreen() {
 
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
 
-
-
           <div className="flex flex-col w-full flex-1 bg-background rounded-t-xl shadow" style={{
             background: "#FAFBFB",
             boxShadow: "0px -8px 20px rgba(0, 0, 0, 0.12)",

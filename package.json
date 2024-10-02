@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.2.19",
+  "version": "1.2.20",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -22,9 +22,13 @@
     "react": "^18.3.1"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
     "@types/node": "^20.14.8",
-    "@types/react": "^18.3.3",
+    "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
+    "@uiw/react-iframe": "^1.0.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.5",
@@ -34,7 +38,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
-    "react-shadow": "^20.5.0",
     "remark-gfm": "^4.0.0",
     "socket.io-client": "^4.7.5",
     "swr": "^2.2.5",

@@ -6,6 +6,8 @@ export default defineConfig({
   logLevel: "info",
   test: {
     exclude: [],
+    environment: "jsdom",
+    globals: true,
   },
   plugins: [
     tsconfigPaths(),

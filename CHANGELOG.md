@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.2.20
+
+### Patch Changes
+
+- e987a81: iframed option
+
 ## 1.2.19
 
 ### Patch Changes
