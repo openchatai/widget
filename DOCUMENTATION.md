@@ -38,7 +38,7 @@ type WidgetOptions = {
   token: string;
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
-  initialMessage: string[];
+  initialMessages: string[];
   triggerSelector?: string;
   apiUrl?: string;
   socketUrl?: string;
@@ -103,7 +103,7 @@ const customComponents = [
 
 const widgetOptions = {
   token: "your-token",
-  initialMessage: ["Hello! How can I help you?"],
+  initialMessages: ["Hello! How can I help you?"],
   components: customComponents,
 };
 ```
@@ -309,7 +309,7 @@ export function ChatScreen() {
               ref={messagesContainerRef}
               className="max-h-full scroll-smooth relative flex-1 py4 px3 space-y-3 overflow-auto"
             >
-              {config.initialMessage?.map((message, index) => (
+              {config.initialMessages?.map((message, index) => (
                 <BotResponseWrapper bot={config.bot} key={index}>
                   <DefaultTextComponent
                     component="TEXT"

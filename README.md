@@ -32,7 +32,7 @@ type WidgetOptions = {
   token: string;
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
-  initialMessage: string;
+  initialMessages: string;
   triggerSelector?: string;
   apiUrl: string;
   socketUrl: string;
