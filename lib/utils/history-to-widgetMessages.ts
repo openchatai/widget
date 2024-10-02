@@ -27,7 +27,6 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         data: {},
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
-                        responseFor: null,
                     });
                     break;
                 case "message":
@@ -39,7 +38,6 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         },
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
-                        responseFor: null,
                     });
                     break;
                 case "agent_message":
@@ -51,7 +49,6 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         },
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
-                        responseFor: null,
                     });
                     break;
                 default:
@@ -64,7 +61,6 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         },
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
-                        responseFor: null,
                     });
             }
         }

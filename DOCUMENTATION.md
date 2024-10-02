@@ -315,7 +315,6 @@ export function ChatScreen() {
                     component="TEXT"
                     data={{ message }}
                     id={`${index}`}
-                    responseFor={null}
                     type="FROM_BOT"
                     serverId={null}
                   />
@@ -325,7 +324,6 @@ export function ChatScreen() {
                     component="TEXT"
                     data={{ message: "Hello, how can I help?" }}
                     id="123"
-                    responseFor={null}
                     type="FROM_BOT"
                     serverId={null}
                   />

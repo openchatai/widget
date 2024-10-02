@@ -8,7 +8,6 @@ export type DefaultTextComponentProps = ComponentProps<{
 export function BotTextResponse({
   data,
   id,
-  responseFor,
   type,
 }: DefaultTextComponentProps) {
   return (
@@ -16,7 +15,6 @@ export function BotTextResponse({
       data-type={type}
       data-id={id}
       remarkPlugins={[remarkGfm]}
-      data-response-for={responseFor}
       className="leading-snug font-medium text-sm"
     >
       {data.message}
