@@ -22,40 +22,36 @@ export function WidgetPopover() {
   };
   return (
     <PopoverPrimitive.Root>
-      <div style={{ display: "content", fontSize: "16px !important" }} data-chat-widget>
-        <PopoverPrimitive.Content
-          onInteractOutside={(ev) => ev.preventDefault()}
-          side="top"
-          sideOffset={10}
-          data-chat-widget
-          align="end"
-          style={{ zIndex: 10000000 }}
-        >
-          <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px] font-inter" />
-        </PopoverPrimitive.Content>
-      </div>
-      <div style={{ display: "content" }} data-chat-widget>
-        <PopoverPrimitive.PopoverTrigger
+      <PopoverPrimitive.Content
+        onInteractOutside={(ev) => ev.preventDefault()}
+        side="top"
+        sideOffset={10}
+        data-chat-widget
+        align="end"
+        style={{ zIndex: 10000000 }}
+      >
+        <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px] font-inter" />
+      </PopoverPrimitive.Content>
+      <PopoverPrimitive.PopoverTrigger
+        className={cn(
+          "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
+          vars,
+        )}
+        onClick={handleClick}
+      >
+        <div
           className={cn(
-            "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
-            vars,
+            "size-6 transition-transform duration-300 ease-in-out",
+            { "transform scale-110": isClicked },
           )}
-          onClick={handleClick}
         >
-          <div
-            className={cn(
-              "size-6 transition-transform duration-300 ease-in-out",
-              { "transform scale-110": isClicked },
-            )}
-          >
-            {!isClicked ? (
-              <MessageSquareDot className="size-6 transform scale-y-[-1]" />
-            ) : (
-              <X className="size-6" />
-            )}
-          </div>
-        </PopoverPrimitive.PopoverTrigger>
-      </div>
+          {!isClicked ? (
+            <MessageSquareDot className="size-6 transform scale-y-[-1]" />
+          ) : (
+            <X className="size-6" />
+          )}
+        </div>
+      </PopoverPrimitive.PopoverTrigger>
     </PopoverPrimitive.Root>
   );
 }
@@ -66,7 +62,7 @@ export const Widget = forwardRef<
 >(({ className, ...props }, _ref) => {
   const chat = useChat()
   return (
-    <div style={{ display: "contents", fontSize: "16px !important" }} data-version={chat.version} data-chat-widget>
+    <div style={{ display: "contents" }} data-version={chat.version} data-chat-widget>
       <div
         {...props}
         ref={_ref}

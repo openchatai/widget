@@ -37,7 +37,7 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, hookState, session } = useChat();
+  const { sendMessage, info, hookState } = useChat();
   const layoutId = useId();
   const locale = useLocale();
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,6 @@ function ChatFooter() {
 
   return (
     <div className="p-2 rounded-lg relative">
-
       <div className="relative w-full top-0 overflow-hidden h-5 px-1">
         <AnimatePresence>
           {info && (
@@ -110,10 +109,9 @@ function ChatFooter() {
           <button
             onClick={handleInputSubmit}
             disabled={hookState === "loading"}
-            className="rounded-lg p-1.5 text-white bg-primary shrink-0 disabled:opacity-50"
+            className="rounded-lg border p-[7px] text-white bg-primary shrink-0 disabled:opacity-50"
             style={{
               background: "#1883FF",
-              border: "1px solid rgba(19, 34, 68, 0.08)",
             }}
           >
             {hookState === "loading" ? (
@@ -184,12 +182,11 @@ export function ChatScreen() {
     <TooltipProvider>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
         <div
-          className="w-full mesh-gradient h-full justify-between rounded-t-xl flex flex-col relative"
+          className="w-full mesh-gradient rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
           style={{
             background:
               "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
             boxShadow: "0px 8px 40px rgba(0, 0, 0, 0.12)",
-            borderRadius: "16px",
           }}
         >
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
@@ -207,7 +204,7 @@ export function ChatScreen() {
               ref={messagesContainerRef}
               className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
             >
-              {config.initialMessage?.map((message, index) => (
+              {config.initialMessages?.map((message, index) => (
                 <BotResponseWrapper bot={config.bot} key={index}>
                   <DefaultTextComponent
                     component="TEXT"

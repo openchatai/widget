@@ -23,6 +23,7 @@ import {
   useEffect,
   useReducer,
   useRef,
+  useTransition,
 } from "react";
 import useSWR from "swr";
 import pkg from "../../package.json";
@@ -110,6 +111,7 @@ function chatReducer(state: State, action: ActionType) {
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
     };
+    console.log(action.type)
     switch (action.type) {
       case "INIT":
         setLastupdated();
@@ -141,7 +143,7 @@ function chatReducer(state: State, action: ActionType) {
         break;
       }
       case "APPEND_USER_MESSAGE": {
-        debug("append user message")
+        debug("append user message", action.payload.id)
         draft.messages.push(action.payload);
         setLastupdated();
         break;
@@ -357,9 +359,9 @@ function useAbstractChat({
   );
 
   const initialData = useSWR(
-    ["initialData", botToken, session],
-    async ([_, _token, _session]) => {
-      const { data } = await getInitData(axiosInstance, _session?.id);
+    ["initialData", botToken],
+    async ([_, _token]) => {
+      const { data } = await getInitData(axiosInstance, session?.id);
       return (
         data ?? {
           faq: [],
@@ -434,9 +436,6 @@ function useAbstractChat({
       }
 
       if (response.type === "message") {
-        if (response.value === "|im_end|" || !response.value) {
-          return;
-        }
         message = {
           type: "FROM_BOT",
           component: "TEXT",
@@ -464,7 +463,6 @@ function useAbstractChat({
       }
 
       else if (response.type === "handoff") {
-        // Handle Handoff
         const handoff = response.value;
         const message: BotMessageType = {
           component: "HANDOFF",
@@ -572,7 +570,9 @@ function useAbstractChat({
 
   const noMessages = chatState.messages.length === 0;
 
-  function sendMessage({
+  debug(chatState.messages)
+
+  async function sendMessage({
     content,
     user,
     headers: inputHeaders,
@@ -582,103 +582,96 @@ function useAbstractChat({
   }: SendMessageInput) {
     let chatSession = session;
 
-    function send() {
-      if (chatSession && socket) {
-        const msgId = genId();
-        const payload: MessagePayload = {
-          id: msgId,
-          bot_token: botToken,
-          content: content.text,
-          session_id: chatSession.id,
-          headers: {
-            ...headers,
-            ...inputHeaders,
-          },
-          pathParams: {
-            ...pathParams,
-            ...inputPathParams,
-          },
-          query_params: {
-            ...queryParams,
-            ...inputQueryParams,
-          },
-          user: {
-            ...userData,
-            ...user,
-          },
-          language,
-          ...data
-        };
-        try {
-          dispatch({
-            type: "APPEND_USER_MESSAGE",
-            payload: {
-              type: "FROM_USER",
-              id: msgId,
-              content: content.text,
-              timestamp: new Date().toISOString(),
-              session_id: chatSession.id,
-              user: payload.user,
-            },
-          });
-          if (chatState.keyboard) {
-            dispatch({
-              type: "SET_KEYBOARD",
-              payload: null
-            });
-          }
-          setHookState("loading");
-          socket.emit("send_chat", payload);
-          events.dispatchEvent(
-            new CustomEvent("message", {
-              detail: payload,
-            })
-          );
-          return payload;
-        } catch (error) {
-          console.error("Error sending message:", error);
-          setHookState("error");
-          return null;
-        }
-      }
-    }
-
     if (!session && noMessages) {
       try {
         setHookState("loading");
-        createSession(axiosInstance, botToken).then(({ data: newSession }) => {
-          if (newSession) {
-            chatSession = newSession;
-            setSession(newSession);
-            joinSession(newSession.id);
-            send()
-          }
-        });
+        const { data: newSession } = await createSession(axiosInstance, botToken);
+        if (newSession) {
+          setSession(newSession);
+          joinSession(newSession.id);
+          chatSession = newSession;
+        } else {
+          throw new Error("Failed to create session");
+        }
       } catch (error) {
         console.error("Error creating session:", error);
         setHookState("error");
         return null;
       }
-    } else {
-      send();
     }
 
+    if (chatSession && socket) {
+      const msgId = genId();
+      const payload: MessagePayload = {
+        id: msgId,
+        bot_token: botToken,
+        content: content.text,
+        session_id: chatSession.id,
+        headers: {
+          ...headers,
+          ...inputHeaders,
+        },
+        pathParams: {
+          ...pathParams,
+          ...inputPathParams,
+        },
+        query_params: {
+          ...queryParams,
+          ...inputQueryParams,
+        },
+        user: {
+          ...userData,
+          ...user,
+        },
+        language,
+        ...data
+      };
+      try {
+        dispatch({
+          type: "APPEND_USER_MESSAGE",
+          payload: {
+            type: "FROM_USER",
+            id: msgId,
+            content: content.text,
+            timestamp: new Date().toISOString(),
+            session_id: chatSession.id,
+            user: payload.user,
+          },
+        });
+        if (chatState.keyboard) {
+          dispatch({
+            type: "SET_KEYBOARD",
+            payload: null
+          });
+        }
+        setHookState("loading");
+        socket.emit("send_chat", payload);
+        events.dispatchEvent(
+          new CustomEvent("message", {
+            detail: payload,
+          })
+        );
+        return payload;
+      } catch (error) {
+        console.error("Error sending message:", error);
+        setHookState("error");
+        return null;
+      }
+    }
     return null;
   }
 
   const handleKeyboard = useCallback((option: string) => {
-    const res = sendMessage({
+    sendMessage({
       content: {
         text: option,
       },
     });
-    if (res) {
-      dispatch({
-        type: "SET_KEYBOARD",
-        payload: null
-      });
-    }
-  }, [dispatch, sendMessage]);
+    dispatch({
+      type: "SET_KEYBOARD",
+      payload: null
+    });
+  }, [dispatch, sendMessage, socket,]);
 
   return {
     version: pkg.version,

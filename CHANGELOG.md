@@ -1,5 +1,59 @@
 # @openchatai/widget
 
+## 1.2.19
+
+### Patch Changes
+
+- 9f16c77: fix the resolution
+
+## 1.2.18
+
+### Patch Changes
+
+- 24f5a69: fix the duplicate first message
+
+## 1.2.17
+
+### Patch Changes
+
+- 0db6737: using variables
+
+## 1.2.16
+
+### Patch Changes
+
+- bb11a05: another trial to fix the sizing issue
+
+## 1.2.15
+
+### Patch Changes
+
+- dfaffeb: rr
+
+## 1.2.14
+
+### Patch Changes
+
+- dbe8c58: d
+
+## 1.2.13
+
+### Patch Changes
+
+- 4f5cfbf: d
+
+## 1.2.12
+
+### Patch Changes
+
+- efcb83a: another trial
+
+## 1.2.11
+
+### Patch Changes
+
+- 29beb30: another trial
+
 ## 1.2.10
 
 ### Patch Changes

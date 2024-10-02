@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import root from 'react-shadow';
+import root from "react-shadow";
 import { WidgetRoot } from "../lib/Root";
 import styles from "../lib/index.css?inline";
 import { WidgetOptions } from "../lib/types";
@@ -20,20 +20,22 @@ export function initOpenScript(options: WidgetOptions, rootId?: string) {
   if (!rootElement) {
     rootElement = document.createElement("div");
     rootElement.id = rootId || defaultRootId;
+    rootElement.setAttribute("data-chat-widget", "");
     document.body.appendChild(rootElement);
   }
 
   const _root = createRoot(rootElement);
-
   if (_root) {
     _root.render(
       <WidgetRoot options={options}>
-        <root.div data-version={packageJson.version} style={{ display: "contents" }}>
-          <style dangerouslySetInnerHTML={{ __html: styles }} />
+        <root.div data-version={packageJson.version} style={{ fontSize: "16px", display: "contents" }}>
           <WidgetPopover />
+          <style type="text/css">
+            {styles}
+          </style>
         </root.div>
       </WidgetRoot>
-    )
+    );
   }
 }
 
