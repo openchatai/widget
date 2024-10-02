@@ -186,7 +186,6 @@ export function ChatScreen() {
           style={{
             background:
               "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
-            boxShadow: "0px 8px 40px rgba(0, 0, 0, 0.12)",
           }}
         >
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}

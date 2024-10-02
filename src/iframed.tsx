@@ -28,6 +28,7 @@ export function IframedWidgetPopover() {
             >
                 <Iframe
                     data-chat-widget
+                    className="shadow-lg rounded-xl"
                     style={{
                         maxHeight: "85dvh",
                         width: "350px",
