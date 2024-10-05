@@ -14,7 +14,7 @@ import {
   getChatSessionById,
   getInitData,
 } from "@lib/utils/getters";
-import { historyToWidgetMessages } from "@lib/utils/history-to-widgetMessages";
+import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
 import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
@@ -23,7 +23,6 @@ import {
   useEffect,
   useReducer,
   useRef,
-  useTransition,
 } from "react";
 import useSWR from "swr";
 import pkg from "../../package.json";

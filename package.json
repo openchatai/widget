@@ -9,7 +9,7 @@
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
     "preview": "vite preview",
-    "prepublishOnly": "pnpm clean && pnpm batman",
+    "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
     "dev": "vite build --watch",
     "build": "vite build",
     "start:dev": "vite",
