@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.0
+
+### Minor Changes
+
+- 0833601: refactored socket message handling
+
 ## 1.2.20
 
 ### Patch Changes
