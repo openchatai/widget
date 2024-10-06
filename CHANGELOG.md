@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.2
+
+### Patch Changes
+
+- 4eca145: fix initial data
+
 ## 1.3.1
 
 ### Patch Changes
