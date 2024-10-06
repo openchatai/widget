@@ -12,6 +12,7 @@ import {
   getInitData,
 } from "@lib/utils/getters";
 import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
+import { AxiosInstance } from "axios";
 import { produce } from "immer";
 import {
   ReactNode,
@@ -22,7 +23,7 @@ import {
 import useSWR from "swr";
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
-import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
+import { ChatHistoryMessageType, type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
@@ -37,25 +38,12 @@ type useChatOptions = {
   queryParams: Record<string, string>;
   pathParams: Record<string, string>;
   onSessionDestroy?: () => void;
-  defaultHookSettings?: {
-    persistSession?: boolean;
-    useSoundEffects?: boolean;
-  };
+  defaultHookSettings?: HookSettings
   userData?: Record<string, any>;
   language?: LangType;
 };
 
-enum Events {
-  MESSAGE = "message",
-  SYSTEM_EVENT = "system_event",
-  BOT_MESSAGE = "bot_message",
-  AGENT_MESSAGE = "agent_message",
-  USER_MESSAGE = "user_message",
-  INFO = "info",
-  CHAT_EVENT = "chat_event",
-}
-
-type State = {
+type ChatState = {
   lastUpdated: number | null;
   messages: MessageType[];
   keyboard: { options: string[] } | null;
@@ -100,7 +88,7 @@ type ActionType =
     type: "RESET";
   }
 
-function chatReducer(state: State, action: ActionType) {
+function chatReducer(state: ChatState, action: ActionType) {
   return produce(state, (draft) => {
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
@@ -217,6 +205,11 @@ interface SendMessageInput extends Record<string, unknown> {
   PathParams?: Record<string, string>;
 }
 
+interface HookSettings {
+  persistSession?: boolean;
+  useSoundEffects?: boolean;
+}
+
 function useAbstractChat({
   apiUrl,
   socketUrl,
@@ -228,7 +221,7 @@ function useAbstractChat({
   pathParams,
   userData,
   language,
-}: useChatOptions) {
+}: useChatOptions): UseAbstractchatReturnType {
   const locale = useLocale();
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
@@ -346,20 +339,11 @@ function useAbstractChat({
     ["initialData", botToken],
     async ([_, _token]) => {
       const { data } = await getInitData(axiosInstance, session?.id);
-      if (data) {
-        return {
-          history: historyToWidgetMessages(data.history),
-          faq: data.faq,
-          initial_questions: data.initial_questions,
-          logo: data.logo,
-        }
-      }
-
       return {
-        history: [],
-        faq: [],
-        initial_questions: [],
-        logo: "",
+        history: data ? historyToWidgetMessages(data.history) : [],
+        faq: data?.faq ?? [],
+        initial_questions: data?.initial_questions ?? [],
+        logo: data?.logo ?? "",
       }
     },
     {
@@ -593,7 +577,7 @@ function useAbstractChat({
     clearSession,
     sendMessage,
     noMessages,
-    initialData,
+    initialData: initialData.data ?? null,
     info,
     hookState,
     settings,
@@ -603,5 +587,30 @@ function useAbstractChat({
   };
 }
 
+interface InitialData {
+  logo: string;
+  faq: [];
+  initial_questions: string[];
+  history: MessageType[];
+}
 
-export { useAbstractChat, Events, type SendMessageInput, type HookState };
+interface UseAbstractchatReturnType {
+  version: string;
+  state: ChatState,
+  session: ChatSessionType | null;
+  agent: "BOT" | "USER";
+  isSessionClosed: boolean;
+  recreateSession: () => void;
+  clearSession: () => void;
+  sendMessage: (input: SendMessageInput) => Promise<MessagePayload | null>;
+  noMessages: boolean;
+  info: ReactNode;
+  hookState: HookState;
+  initialData: InitialData | null;
+  settings: HookSettings | null;
+  setSettings: (data: NonNullable<Partial<HookSettings>>) => void;
+  axiosInstance: AxiosInstance;
+  handleKeyboard: (option: string) => void;
+}
+
+export { useAbstractChat, type SendMessageInput, type HookState, type UseAbstractchatReturnType };

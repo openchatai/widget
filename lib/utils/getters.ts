@@ -37,7 +37,7 @@ export type InitialData = {
 };
 
 export async function getInitData(instance: AxiosInstance, sessionId?: string) {
-  return instance.get<InitialData>("/chat/init", {
+  return instance.get<InitialData | undefined | null>("/chat/init", {
     headers: {
       "X-Session-Id": sessionId,
     },
