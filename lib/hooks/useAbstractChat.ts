@@ -268,6 +268,7 @@ function useAbstractChat({
       botToken,
       sessionId: session?.id,
       client: "widget",
+      clientVersion: pkg.version,
     }
   });
 
