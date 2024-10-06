@@ -1,5 +1,5 @@
-import { ComponentProps } from "@lib/types"
-import { MessageTypeEnum } from "@lib/types/schemas.backend";
+import { ComponentProps } from "../types"
+import { MessageTypeEnum } from "../types/schemas";
 
 type ChatEventComponentProps = ComponentProps<{
     event: MessageTypeEnum
