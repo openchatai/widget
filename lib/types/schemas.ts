@@ -1,12 +1,12 @@
 import z from "zod";
 
-enum SessionStatus {
+export enum SessionStatus {
     OPEN = 0,
     CLOSED_RESOLVED = 1,
     CLOSED_UNRESOLVED = 2,
 }
 
-enum SessionChannel {
+export enum SessionChannel {
     WEB = 'web',
     WEB_VOICE = 'web_voice',
     PHONE_VOICE = 'phone_voice',
@@ -16,24 +16,24 @@ enum SessionChannel {
     API = 'api',
 }
 
-enum AIClosureType {
+export enum AIClosureType {
     resolved = 'resolved',
     assumed_resolved = 'assumed_resolved',
     handed_off = 'handed_off',
 }
 
-enum AIBillingType {
+export enum AIBillingType {
     hard = 'hard',
     light = 'light',
 }
 
-enum SentimentEnum {
+export enum SentimentEnum {
     happy = 'happy',
     neutral = 'neutral',
     angry = 'angry',
 }
 
-enum MessageTypeEnum {
+export enum MessageTypeEnum {
     MESSAGE = 'message',
     HANDOFF = 'handoff',
     HANDOFF_TO_ZENDESK = 'handoff_to_zendesk',
@@ -48,7 +48,7 @@ enum MessageTypeEnum {
     CONTACT_RESOLVED_THE_SESSION = 'user_confirmed_the_session_resolved',
 }
 
-const chatSessionSchema = z.object({
+export const chatSessionSchema = z.object({
     status: z.nativeEnum(SessionStatus),
     channel: z.nativeEnum(SessionChannel),
     assignee_id: z.number().nullable(),
@@ -98,7 +98,7 @@ const chatSessionSchema = z.object({
     ai_phone_call_recording_url: z.string().nullable(),
 });
 
-const chatHistoryMessageSchema = z.object({
+export const chatHistoryMessageSchema = z.object({
     message: z.string().nullable(),
     type: z.string().nullable(),
     agent_avatar: z.string().nullable(),
@@ -194,7 +194,7 @@ const sessionUpdateSchema = z.object({
     server_session_id: z.string(),
 })
 
-const structuredSocketMessageSchema = z.discriminatedUnion("type", [
+export const structuredSocketMessageSchema = z.discriminatedUnion("type", [
     messageSchema,
     voteSchema,
     infoSchema,
@@ -212,4 +212,3 @@ type ChatSessionType = z.infer<typeof chatSessionSchema>;
 type StructuredSocketMessageType = z.infer<typeof structuredSocketMessageSchema>;
 type ChatHistoryMessageType = z.infer<typeof chatHistoryMessageSchema>;
 export type { ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType };
-export { MessageTypeEnum, SessionStatus, structuredSocketMessageSchema, chatSessionSchema, chatHistoryMessageSchema };
