@@ -1,4 +1,4 @@
-import { ChatHistoryMessageType, ChatSessionType } from "@lib/types/schemas.backend";
+import { ChatHistoryMessageType, ChatSessionType } from "@lib/types/schemas";
 import { AxiosInstance } from "axios";
 
 export async function createSession(instance: AxiosInstance, botToken: string) {
