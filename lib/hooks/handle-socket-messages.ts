@@ -1,7 +1,7 @@
 import { MessageType } from "@lib/types";
-import { StructuredSocketMessageType } from "@lib/types/schemas.backend";
 import { genId } from "@lib/utils/genId";
 import { Socket } from "socket.io-client";
+import { StructuredSocketMessageType } from "../types/schemas";
 
 interface Context<SocketMessage = StructuredSocketMessageType> {
     _message: SocketMessage;

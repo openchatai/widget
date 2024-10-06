@@ -1,5 +1,5 @@
-import { StructuredSocketMessageType } from "@lib/types/schemas.backend";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 
 describe("handle-socket-messages", () => {

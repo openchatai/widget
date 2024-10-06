@@ -1,5 +1,5 @@
-import { ChatHistoryMessageType } from "@lib/types/schemas.backend";
 import { describe, expect, it } from "vitest";
+import { ChatHistoryMessageType } from "../types/schemas";
 import { historyToWidgetMessages } from "./history-to-widget-messages";
 
 const sampleData: ChatHistoryMessageType[] = [

@@ -4,7 +4,6 @@ import {
   MessageType,
   UserMessageType,
 } from "@lib/types";
-import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "@lib/types/schemas.backend";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
 import {
@@ -23,6 +22,7 @@ import {
 import useSWR from "swr";
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
+import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";

@@ -1,5 +1,5 @@
 import { MessageType } from "@lib/types";
-import { ChatHistoryMessageType } from "@lib/types/schemas.backend";
+import { ChatHistoryMessageType } from "../types/schemas";
 import { genId } from "./genId";
 
 function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {

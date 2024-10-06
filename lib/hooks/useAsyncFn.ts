@@ -1,28 +1,28 @@
+import { FunctionReturningPromise, PromiseType } from "@lib/types";
 import { DependencyList, useCallback, useRef, useState } from "react";
 import { useMountedState } from "./useMountedState";
-import { FunctionReturningPromise, PromiseType } from "@lib/types";
 
 export type AsyncState<T> =
   | {
-      loading: boolean;
-      error?: undefined;
-      value?: undefined;
-    }
+    loading: boolean;
+    error?: undefined;
+    value?: undefined;
+  }
   | {
-      loading: true;
-      error?: Error | undefined;
-      value?: T;
-    }
+    loading: true;
+    error?: Error | undefined;
+    value?: T;
+  }
   | {
-      loading: false;
-      error: Error;
-      value?: undefined;
-    }
+    loading: false;
+    error: Error;
+    value?: undefined;
+  }
   | {
-      loading: false;
-      error?: undefined;
-      value: T;
-    };
+    loading: false;
+    error?: undefined;
+    value: T;
+  };
 
 type StateFromFunctionReturningPromise<T extends FunctionReturningPromise> =
   AsyncState<PromiseType<ReturnType<T>>>;

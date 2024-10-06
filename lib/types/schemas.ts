@@ -1,6 +1,6 @@
 import z from "zod";
 
-export enum SessionStatus {
+enum SessionStatus {
     OPEN = 0,
     CLOSED_RESOLVED = 1,
     CLOSED_UNRESOLVED = 2,
@@ -212,4 +212,4 @@ type ChatSessionType = z.infer<typeof chatSessionSchema>;
 type StructuredSocketMessageType = z.infer<typeof structuredSocketMessageSchema>;
 type ChatHistoryMessageType = z.infer<typeof chatHistoryMessageSchema>;
 export type { ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType };
-export { MessageTypeEnum }
+export { MessageTypeEnum, SessionStatus }

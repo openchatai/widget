@@ -1,5 +1,5 @@
 import { WidgetOptions } from "./options";
-import { ChatHistoryMessageType } from "./schemas.backend";
+import { ChatHistoryMessageType } from "./schemas";
 
 export type UserMessageType = {
   type: "FROM_USER";
