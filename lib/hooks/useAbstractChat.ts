@@ -353,6 +353,12 @@ function useAbstractChat({
           payload: data.history,
         });
       },
+      fallbackData: {
+        history: [],
+        faq: [],
+        initial_questions: [],
+        logo: "",
+      },
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
       revalidateOnMount: true,
@@ -577,7 +583,7 @@ function useAbstractChat({
     clearSession,
     sendMessage,
     noMessages,
-    initialData: initialData.data ?? null,
+    initialData: initialData?.data ?? null,
     info,
     hookState,
     settings,

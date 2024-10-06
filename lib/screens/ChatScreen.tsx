@@ -252,7 +252,7 @@ export function ChatScreen() {
                 {noMessages && (
                   <React.Fragment>
                     <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
-                      {initialData.data?.initial_questions?.map((iq, index) => (
+                      {initialData?.initial_questions?.map((iq, index) => (
                         <button
                           key={index}
                           dir="auto"
