@@ -12,7 +12,6 @@ import { Switch } from "@lib/components/switch";
 import { TooltipProvider } from "@lib/components/tooltip";
 import { useLocale } from "@lib/providers";
 import { ComponentRegistry } from "@lib/providers/componentRegistry";
-import { SessionStatus } from "@lib/types/schemas.backend";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CircleDashed,
