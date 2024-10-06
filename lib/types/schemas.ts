@@ -212,4 +212,4 @@ type ChatSessionType = z.infer<typeof chatSessionSchema>;
 type StructuredSocketMessageType = z.infer<typeof structuredSocketMessageSchema>;
 type ChatHistoryMessageType = z.infer<typeof chatHistoryMessageSchema>;
 export type { ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType };
-export { MessageTypeEnum, SessionStatus }
+export { MessageTypeEnum, SessionStatus, structuredSocketMessageSchema, chatSessionSchema, chatHistoryMessageSchema };
