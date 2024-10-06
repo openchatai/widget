@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.1
+
+### Patch Changes
+
+- 055a518: update widget file structure
+
 ## 1.3.0
 
 ### Minor Changes
