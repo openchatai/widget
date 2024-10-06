@@ -1,5 +1,5 @@
-import { ChatMessageHistory } from "@lib/utils";
 import { WidgetOptions } from "./options";
+import { ChatHistoryMessageType } from "./schemas.backend";
 
 export type UserMessageType = {
   type: "FROM_USER";
@@ -25,18 +25,12 @@ export type BotMessageType<TData = unknown> = {
   bot?: WidgetOptions["bot"];
   serverId: number | null;
   timestamp?: string;
-  original?: ChatMessageHistory;
+  original?: ChatHistoryMessageType;
   agent?: {
     name?: string;
     is_ai: boolean;
     agent_avatar?: string;
   };
-};
-
-export type HandoffPayloadType = {
-  summary: string;
-  sentiment: "happy" | "angry" | "neutral";
-  timestamp?: string;
 };
 
 export type MessageType = UserMessageType | BotMessageType

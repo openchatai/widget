@@ -1,6 +1,6 @@
 import type { LangType } from "@lib/locales";
 import React from "react";
-import type { ComponentType, HandoffPayloadType } from ".";
+import type { ComponentType } from ".";
 
 export type WidgetOptions = {
   token: string;
@@ -21,7 +21,6 @@ export type WidgetOptions = {
   warnBeforeClose?: boolean;
   onClose?: () => void;
   organizationName?: string;
-  onHandoff?: (handout: HandoffPayloadType) => void;
   containerProps?: React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement

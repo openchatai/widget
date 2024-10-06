@@ -1,69 +1,107 @@
 import { MessageType } from "@lib/types";
+import { StructuredSocketMessageType } from "@lib/types/schemas.backend";
 import { genId } from "@lib/utils/genId";
 import { Socket } from "socket.io-client";
-import { SocketMessagePayload } from "./parse-structured-response";
 
-interface Context {
-    _message: SocketMessagePayload;
-    _socket?: Socket;
-    onMessageReady?: (message: MessageType, _ctx: Context) => void;
-    onHandoff?: (message: Extract<MessageType, { type: "FROM_BOT" }>, _ctx: Context) => void;
-    onSessionUpdate?: (message: SocketMessagePayload, _ctx: Context) => void;
-    onOptions?: (message: Extract<SocketMessagePayload, { type: "options" }>, _ctx: Context) => void;
+interface Context<SocketMessage = StructuredSocketMessageType> {
+    _message: SocketMessage;
+    _socket?: Socket | null;
+
+    onChatEvent?: (message: MessageType, _ctx: Context<SocketMessage>) => void;
+
+    onBotMessage?: (message: MessageType, _ctx: Context<SocketMessage>) => void;
+
+    onUi?: (message: MessageType, _ctx: Context<SocketMessage>) => void;
+
+    onForm?: (message: MessageType, _ctx: Context<SocketMessage>) => void;
+
+    onVote?: (message: Extract<SocketMessage, { type: "vote" }>, _ctx: Context<SocketMessage>) => void;
+
+    onInfo?: (message: Extract<SocketMessage, { type: "info" }>, _ctx: Context<SocketMessage>) => void;
+
+    onSessionUpdate?: (message: Extract<SocketMessage, { type: "session_update" }>, _ctx: Context<SocketMessage>) => void;
+
+    onOptions?: (message: Extract<SocketMessage, { type: "options" }>, _ctx: Context<SocketMessage>) => void;
 }
 
-export function handleSocketMessages(_ctx: Context) {
+export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>) {
     const response = _ctx._message;
-    let message: MessageType | null = null;
     switch (response.type) {
         case "message":
-            message = {
-                id: response.server_message_id?.toString() ?? genId(15),
-                type: "FROM_BOT",
-                component: "TEXT",
-                serverId: response?.server_message_id ?? null,
-                data: {
-                    message: response.value,
-                },
-                agent: response.agent,
+            {
+                _ctx.onBotMessage?.({
+                    type: "FROM_BOT",
+                    component: "TEXT",
+                    id: genId(15),
+                    serverId: null,
+                    bot: response.agent,
+                    timestamp: response.timestamp,
+                    data: {
+                        message: response.value,
+                    },
+                    agent: response.agent,
+                }, _ctx);
+                break;
             }
-            break;
         case "info":
+            _ctx.onInfo?.(response, _ctx);
             break;
         case "chat_event":
-            message = {
-                component: "CHAT_EVENT",
-                type: "FROM_BOT",
-                id: genId(),
-                serverId: null,
-                data: {
-                    event: response.value.event,
-                    message: response.value.message
-                }
+            {
+                _ctx.onChatEvent?.({
+                    component: "CHAT_EVENT",
+                    type: "FROM_BOT",
+                    id: genId(),
+                    serverId: null,
+                    data: {
+                        event: response.value.event,
+                        message: response.value.message
+                    },
+                    timestamp: response.timestamp
+                }, _ctx);
+                break;
             }
-            break;
         case "session_update":
             _ctx.onSessionUpdate?.(response, _ctx);
             break;
         case "options":
             _ctx.onOptions?.(response, _ctx);
             break;
-        case "handoff":
-            message = {
-                type: "FROM_BOT",
-                id: response.server_message_id?.toString() ?? genId(),
-                component: "HANDOFF",
-                data: response.value,
-                serverId: response?.server_message_id ?? null,
-                agent: response.agent,
-            };
-            _ctx.onHandoff?.(message, _ctx);
-            break;
+        case "ui":
+            {
+                const uiVal = response.value;
+                _ctx.onUi?.({
+                    type: "FROM_BOT",
+                    component: uiVal.name,
+                    data: uiVal.request_response,
+                    serverId: null,
+                    id: genId(),
+                    bot: response.agent,
+                    timestamp: response.timestamp,
+                }, _ctx);
+                break;
+            }
+        case "form":
+            {
+                const formVal = response.value;
+                _ctx.onForm?.({
+                    type: "FROM_BOT",
+                    component: "FORM",
+                    data: formVal,
+                    serverId: null,
+                    id: genId(),
+                    bot: response.agent,
+                    timestamp: response.timestamp,
+                }, _ctx);
+                break;
+            }
+        case "vote":
+            {
+                _ctx.onVote?.(response, _ctx);
+                break;
+            }
         default:
             break;
     }
-    if (message) {
-        _ctx.onMessageReady?.(message, _ctx);
-    }
-    return message;
+
 }

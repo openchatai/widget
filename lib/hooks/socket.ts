@@ -35,13 +35,13 @@ export function useSocket(
       updateState("disconnected");
     }
   };
-  const onConnect = useCallback(() => updateState("connected"), []);
-  const onDisconnect = useCallback(() => updateState("disconnected"), []);
-  const onConnectError = useCallback(() => updateState("error"), []);
-  const onReconnect = useCallback(() => updateState("reconnected"), []);
-  const onReconnecting = useCallback(() => updateState("reconnecting"), []);
-  const onReconnectError = useCallback(() => updateState("error"), []);
-  const onReconnectFailed = useCallback(() => updateState("error"), []);
+  const onConnect = useCallback(() => updateState("connected"), [updateState]);
+  const onDisconnect = useCallback(() => updateState("disconnected"), [updateState]);
+  const onConnectError = useCallback(() => updateState("error"), [updateState]);
+  const onReconnect = useCallback(() => updateState("reconnected"), [updateState]);
+  const onReconnecting = useCallback(() => updateState("reconnecting"), [updateState]);
+  const onReconnectError = useCallback(() => updateState("error"), [updateState]);
+  const onReconnectFailed = useCallback(() => updateState("error"), [updateState]);
 
   useEffect(() => {
     if (!url) return;

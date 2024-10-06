@@ -1,12 +1,10 @@
 import { LangType } from "@lib/locales";
 import { useLocale } from "@lib/providers";
 import {
-  BotMessageType,
-  ChatSession,
-  HandoffPayloadType,
   MessageType,
   UserMessageType,
 } from "@lib/types";
+import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "@lib/types/schemas.backend";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
 import {
@@ -15,19 +13,17 @@ import {
   getInitData,
 } from "@lib/utils/getters";
 import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
-import { TypedEventTarget } from "@lib/utils/typed-event-target";
 import { produce } from "immer";
 import {
   ReactNode,
   useCallback,
   useEffect,
   useReducer,
-  useRef,
 } from "react";
 import useSWR from "swr";
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
-import { SocketMessagePayload, isUiElement } from "./parse-structured-response";
+import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
 import { useAxiosInstance } from "./useAxiosInstance";
@@ -40,7 +36,6 @@ type useChatOptions = {
   headers: Record<string, string>;
   queryParams: Record<string, string>;
   pathParams: Record<string, string>;
-  onHandoff?: (payload: HandoffPayloadType) => void;
   onSessionDestroy?: () => void;
   defaultHookSettings?: {
     persistSession?: boolean;
@@ -227,7 +222,6 @@ function useAbstractChat({
   socketUrl,
   botToken,
   defaultHookSettings,
-  onHandoff,
   onSessionDestroy,
   headers,
   queryParams,
@@ -250,7 +244,7 @@ function useAbstractChat({
     botToken,
   });
 
-  const [session, setSession] = useSyncedState<ChatSession>(
+  const [session, setSession] = useSyncedState<ChatSessionType>(
     SESSION_KEY(botToken),
     undefined,
     settings?.persistSession ? "local" : "memory",
@@ -328,16 +322,6 @@ function useAbstractChat({
     _setSettings(Object.assign({}, settings, data));
   };
 
-  const events = useRef(
-    new TypedEventTarget<{
-      message: CustomEvent<MessagePayload>;
-      info: CustomEvent<string>;
-      error: CustomEvent<string>;
-      new_message: CustomEvent<MessageType>;
-      handoff: CustomEvent<HandoffPayloadType>;
-    }>(),
-  ).current;
-
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
@@ -361,20 +345,27 @@ function useAbstractChat({
     ["initialData", botToken],
     async ([_, _token]) => {
       const { data } = await getInitData(axiosInstance, session?.id);
-      return (
-        data ?? {
-          faq: [],
-          history: [],
-          initial_questions: [],
-          logo: "",
+      if (data) {
+        return {
+          history: historyToWidgetMessages(data.history),
+          faq: data.faq,
+          initial_questions: data.initial_questions,
+          logo: data.logo,
         }
-      );
+      }
+
+      return {
+        history: [],
+        faq: [],
+        initial_questions: [],
+        logo: "",
+      }
     },
     {
       onSuccess(data) {
         dispatch({
           type: "PREPEND_HISTORY",
-          payload: historyToWidgetMessages(data.history),
+          payload: data.history,
         });
       },
       revalidateOnFocus: false,
@@ -426,132 +417,54 @@ function useAbstractChat({
     });
   }
 
-  const handleIncomingMessage = (response: SocketMessagePayload) => {
-    try {
-      let message: MessageType | null = null;
-
-      if (response.type === "info") {
-        return;
-      }
-
-      if (response.type === "message") {
-        message = {
-          type: "FROM_BOT",
-          component: "TEXT",
-          id: response.server_message_id?.toString() ?? genId(),
-          data: {
-            message: response.value,
-          },
-          serverId: response.server_message_id ?? null,
-          agent: response.agent,
-        };
-      }
-
-      else if (response.type === "vote") {
-        if (response.server_message_id && response.client_message_id) {
-          const payload = {
-            clientMessageId: response.client_message_id,
-            ServerMessageId: response.server_message_id,
-          };
-          debug("vote", payload);
-          dispatch({
-            type: "SET_SERVER_ID",
-            payload,
-          });
-        }
-      }
-
-      else if (response.type === "handoff") {
-        const handoff = response.value;
-        const message: BotMessageType = {
-          component: "HANDOFF",
-          data: handoff,
-          type: "FROM_BOT",
-          serverId: response.server_message_id ?? null,
-          id: response.server_message_id?.toString() ?? genId(),
-          agent: response.agent,
-        };
-
-        onHandoff?.(handoff);
+  const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
+    handleSocketMessages({
+      _message: socketMsg,
+      onSessionUpdate(message, _ctx) {
+        setSession(message.value.session);
+      },
+      onBotMessage(message, _ctx) {
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
-        events.dispatchTypedEvent(
-          "handoff",
-          new CustomEvent("handoff", { detail: handoff }),
-        );
-
-        if (session?.id) {
-          refreshSession(session?.id);
-        }
-
-      }
-
-      else if (response.type === "chat_event") {
-        message = {
-          component: "CHAT_EVENT",
-          type: "FROM_BOT",
-          id: genId(),
-          serverId: null,
-          data: {
-            event: response.value.event,
-            message: response.value.message
-          }
-        }
-      }
-
-      else if (response.type === "ui" && isUiElement(response.value)) {
-        const uiVal = response.value;
-        message = {
-          type: "FROM_BOT",
-          component: uiVal.name,
-          data: uiVal.request_response, // sometimes the api response is messed up, nested json strings, ...etc. kinda work around
-          serverId: null,
-          id: genId(),
-          agent: response.agent,
-        };
-        debug("[ui]", message);
-      }
-
-      else if (response.type === "session_update") {
-        const { value } = response;
-        setSession(value.session);
-      }
-
-      else if (response.type === "options") {
-        const { value } = response;
+      },
+      onChatEvent(message, _ctx) {
+        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+      },
+      onUi(message, _ctx) {
+        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+      },
+      onForm(message, _ctx) {
+        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+      },
+      onInfo(message, _ctx) {
+        // setInfo(message.value);
+      },
+      onOptions(message, _ctx) {
         dispatch({
           type: "SET_KEYBOARD",
           payload: {
-            options: value.options
+            options: message.value.options
           }
         })
-      }
-
-      if (message) {
-        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
-        setInfo(null);
-        events.dispatchEvent(
-          new CustomEvent("new_message", {
-            detail: message,
-          }),
-        );
-      }
-    } catch (error) {
-      setHookState("error");
-      debug(error);
-    }
-    setHookState("idle");
-  };
-
+      },
+      onVote(message, _ctx) {
+        if (message.server_message_id && message.client_message_id) {
+          dispatch({
+            type: "SET_SERVER_ID",
+            payload: {
+              clientMessageId: message.client_message_id,
+              ServerMessageId: message.server_message_id,
+            }
+          });
+        }
+      },
+      _socket: socket,
+    })
+  }
   const handleInfo = useCallback(
     (info: string) => {
       setInfo(info);
-      events.dispatchEvent(
-        new CustomEvent("info", {
-          detail: info,
-        }),
-      );
     },
-    [events, setInfo],
+    [setInfo],
   );
 
   useEffect(() => {
@@ -645,11 +558,6 @@ function useAbstractChat({
         }
         setHookState("loading");
         socket.emit("send_chat", payload);
-        events.dispatchEvent(
-          new CustomEvent("message", {
-            detail: payload,
-          })
-        );
         return payload;
       } catch (error) {
         console.error("Error sending message:", error);
@@ -677,13 +585,15 @@ function useAbstractChat({
     state: chatState,
     session: session ?? null,
     agent,
+    // Detived // 
+    isSessionClosed: session?.status === SessionStatus.CLOSED_RESOLVED || session?.status === SessionStatus.CLOSED_UNRESOLVED,
+    // ------- //
     recreateSession,
     clearSession,
     sendMessage,
     noMessages,
     initialData,
     info,
-    events,
     hookState,
     settings,
     setSettings,

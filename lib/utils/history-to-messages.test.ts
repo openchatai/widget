@@ -1,7 +1,8 @@
+import { ChatHistoryMessageType } from "@lib/types/schemas.backend";
 import { describe, expect, it } from "vitest";
 import { historyToWidgetMessages } from "./history-to-widget-messages";
 
-const sampleData = [
+const sampleData: ChatHistoryMessageType[] = [
     {
         id: 164240,
         chatbot_id: "23ab3726-187f-4c11-83e9-0fb3ccabd6f4",

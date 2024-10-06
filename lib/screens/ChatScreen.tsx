@@ -12,6 +12,7 @@ import { Switch } from "@lib/components/switch";
 import { TooltipProvider } from "@lib/components/tooltip";
 import { useLocale } from "@lib/providers";
 import { ComponentRegistry } from "@lib/providers/componentRegistry";
+import { SessionStatus } from "@lib/types/schemas.backend";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CircleDashed,
@@ -37,7 +38,7 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, hookState } = useChat();
+  const { sendMessage, info, hookState, isSessionClosed } = useChat();
   const layoutId = useId();
   const locale = useLocale();
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,7 +93,7 @@ function ChatFooter() {
       >
         <input
           ref={inputRef}
-          disabled={hookState === "loading"}
+          disabled={hookState === "loading" || isSessionClosed}
           value={input}
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
@@ -133,9 +134,7 @@ export function ChatScreen() {
     sendMessage,
     noMessages,
     hookState,
-    events: chatEvents,
     handleKeyboard,
-
   } = useChat();
   const config = useConfigData();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -150,15 +149,9 @@ export function ChatScreen() {
       }
     }, 0);
   }
-
   useEffect(() => {
-    chatEvents.addEventListener("message", handleNewMessage);
-    chatEvents.addEventListener("new_message", handleNewMessage);
-    return () => {
-      chatEvents.removeEventListener("new_message", handleNewMessage);
-      chatEvents.removeEventListener("message", handleNewMessage);
-    };
-  }, [chatEvents]);
+    handleNewMessage();
+  }, [state.messages]);
 
   const components = useMemo(
     () =>
@@ -174,7 +167,7 @@ export function ChatScreen() {
   ) as ComponentType;
 
   const DefaultTextComponent = components.getComponent(
-    "TEXT",
+    "text",
     config.debug,
   ) as React.ComponentType<DefaultTextComponentProps>;
 
@@ -248,33 +241,39 @@ export function ChatScreen() {
             </div>
 
             <footer>
+
               {state.keyboard && <React.Fragment>
                 <Keyboard
                   options={state.keyboard.options}
                   onKeyboardClick={handleKeyboard} />
               </React.Fragment>
               }
-              {noMessages && (
-                <React.Fragment>
-                  <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
-                    {initialData.data?.initial_questions?.map((iq, index) => (
-                      <button
-                        key={index}
-                        dir="auto"
-                        className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
-                        onClick={() => {
-                          sendMessage({
-                            content: { text: iq },
-                          });
-                        }}
-                      >
-                        {iq}
-                      </button>
-                    ))}
-                  </div>
-                </React.Fragment>
-              )}
-              <ChatFooter />
+
+              <React.Fragment>
+                {noMessages && (
+                  <React.Fragment>
+                    <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
+                      {initialData.data?.initial_questions?.map((iq, index) => (
+                        <button
+                          key={index}
+                          dir="auto"
+                          className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
+                          onClick={() => {
+                            sendMessage({
+                              content: { text: iq },
+                            });
+                          }}
+                        >
+                          {iq}
+                        </button>
+                      ))}
+                    </div>
+                  </React.Fragment>
+                )}
+
+                <ChatFooter />
+              </React.Fragment>
+
             </footer>
           </div>
         </div>

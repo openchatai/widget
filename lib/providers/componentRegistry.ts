@@ -1,11 +1,10 @@
-import { FollowupComponent } from "@lib/@components/Followup.component";
 import type { ComponentType, OptionsType } from "@lib/types";
 import {
   BotLoadingComponent,
   BotTextResponse,
   ChatEventComponent,
   FallbackComponent,
-  HandoffComponent,
+  ResolveComponent,
 } from "../@components";
 
 /**
@@ -27,16 +26,12 @@ export class ComponentRegistry {
       component: BotLoadingComponent,
     },
     {
-      key: "HANDOFF",
-      component: HandoffComponent,
-    },
-    {
       key: "CHAT_EVENT",
       component: ChatEventComponent
     },
     {
-      key: "FOLLOWUP",
-      component: FollowupComponent,
+      key: "RESOLVE",
+      component: ResolveComponent
     }
   ] as const;
 

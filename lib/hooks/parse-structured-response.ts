@@ -1,6 +1,6 @@
-import { ChatSession, HandoffPayloadType } from "@lib/types";
+import { ChatSessionType } from "./schemas.backend";
 
-export function isUiElement(value: unknown): value is UiElement {
+function isUiElement(value: unknown): value is UiElement {
   return typeof value === "object" && value !== null;
 }
 
@@ -51,7 +51,7 @@ interface UiPayload {
   agent?: AgentType;
 }
 
-export enum MessageTypeEnum {
+enum MessageTypeEnum {
   MESSAGE = 'message',
   HANDOFF = 'handoff',
   HANDOFF_TO_ZENDESK = 'handoff_to_zendesk',
@@ -62,9 +62,9 @@ export enum MessageTypeEnum {
   AI_DECIDED_TO_RESOLVE_THE_ISSUE = 'ai_decided_to_resolve_the_issue',
   AI_DECIDED_AUTO_HANDOFF_THE_ISSUE = 'ai_decided_auto_handoff_the_issue',
 }
-export type MessageEnumType = `${MessageTypeEnum}`;
+type MessageEnumType = `${MessageTypeEnum}`;
 
-export interface ChatEventPayload {
+interface ChatEventPayload {
   type: "chat_event";
   value: {
     event: MessageEnumType;
@@ -76,7 +76,7 @@ export interface ChatEventPayload {
   }
 }
 
-export interface SessionUpdatePayload {
+interface SessionUpdatePayload {
   type: "session_update";
   server_session_id: string,
   agent: {
@@ -84,11 +84,11 @@ export interface SessionUpdatePayload {
     is_ai: boolean;
   }
   value: {
-    session: ChatSession;
+    session: ChatSessionType;
   };
 }
 
-export interface OptionsPayload {
+interface OptionsPayload {
   type: "options";
   value: {
     options: string[];
@@ -99,8 +99,7 @@ export interface OptionsPayload {
     is_ai: boolean,
   },
 }
-
-export type SocketMessagePayload =
+type SocketMessagePayload =
   | InfoPayload
   | ChatEventPayload
   | MessagePayload
@@ -108,11 +107,4 @@ export type SocketMessagePayload =
   | OptionsPayload
   | UiPayload
   | SessionUpdatePayload
-  | {
-    type: "handoff";
-    value: HandoffPayloadType;
-    server_message_id?: number;
-    server_session_id?: string;
-    client_message_id?: string;
-    agent?: AgentType;
-  };
+

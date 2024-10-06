@@ -86,6 +86,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^11.3.30",
     "immer": "^10.1.1",
-    "lucide-react": "^0.436.0"
+    "lucide-react": "^0.436.0",
+    "zod": "^3.23.8"
   }
 }

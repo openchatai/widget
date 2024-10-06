@@ -1,8 +1,8 @@
 import { MessageType } from "@lib/types";
+import { ChatHistoryMessageType } from "@lib/types/schemas.backend";
 import { genId } from "./genId";
-import { ChatMessageHistory } from "./getters";
 
-function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
+function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
     const messages: MessageType[] = [];
     for (let i = 0; i < mgs.length; i++) {
         const msg = mgs[i];
@@ -20,17 +20,6 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
         }
         else {
             switch (msg.type) {
-                case "handoff":
-                    messages.push({
-                        type: "FROM_BOT",
-                        component: "HANDOFF",
-                        data: {},
-                        id: msg.id.toString() ?? genId(),
-                        serverId: msg.id ?? genId(),
-                        timestamp: msg.created_at ?? "",
-                        original: msg,
-                    });
-                    break;
                 case "message":
                     messages.push({
                         type: "FROM_BOT",

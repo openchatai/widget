@@ -1,5 +1,5 @@
-import { MessageTypeEnum } from "@lib/hooks/parse-structured-response";
 import { ComponentProps } from "@lib/types"
+import { MessageTypeEnum } from "@lib/types/schemas.backend";
 
 type ChatEventComponentProps = ComponentProps<{
     event: MessageTypeEnum
