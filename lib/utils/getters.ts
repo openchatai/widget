@@ -14,13 +14,14 @@ export interface ChatMessageHistory {
   message: string | null;
   created_at: string | null;
   updated_at: string | null;
-  debug_json: string | null;
+  debug_json: unknown | null;
   api_called: boolean | null;
   knowledgebase_called: boolean | null;
   extra_params: object | null;
-  type: MessageEnumType | null;
+  type: MessageEnumType | string | null;
   agent_name: string | null;
   agent_avatar: string | null;
+  handoff_happened_during_office_hours: boolean | null;
 }
 
 interface DayOfficeHours {

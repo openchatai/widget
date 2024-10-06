@@ -27,6 +27,8 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         data: {},
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
+                        timestamp: msg.created_at ?? "",
+                        original: msg,
                     });
                     break;
                 case "message":
@@ -38,6 +40,8 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         },
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
+                        timestamp: msg.created_at ?? "",
+                        original: msg,
                     });
                     break;
                 case "agent_message":
@@ -49,6 +53,8 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         },
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
+                        timestamp: msg.created_at ?? "",
+                        original: msg,
                     });
                     break;
                 default:
@@ -61,6 +67,8 @@ function historyToWidgetMessages(mgs: ChatMessageHistory[]) {
                         },
                         id: msg.id.toString() ?? genId(),
                         serverId: msg.id ?? genId(),
+                        original: msg,
+                        timestamp: msg.created_at ?? "",
                     });
             }
         }

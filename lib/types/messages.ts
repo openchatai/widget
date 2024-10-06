@@ -1,10 +1,11 @@
+import { ChatMessageHistory } from "@lib/utils";
 import { WidgetOptions } from "./options";
 
 export type UserMessageType = {
   type: "FROM_USER";
   id: string;
   content: string;
-  timestamp: string;
+  timestamp?: string;
   session_id: string;
   serverId?: string;
   user?: {
@@ -23,6 +24,8 @@ export type BotMessageType<TData = unknown> = {
   data: TData;
   bot?: WidgetOptions["bot"];
   serverId: number | null;
+  timestamp?: string;
+  original?: ChatMessageHistory;
   agent?: {
     name?: string;
     is_ai: boolean;
@@ -33,6 +36,7 @@ export type BotMessageType<TData = unknown> = {
 export type HandoffPayloadType = {
   summary: string;
   sentiment: "happy" | "angry" | "neutral";
+  timestamp?: string;
 };
 
 export type MessageType = UserMessageType | BotMessageType
