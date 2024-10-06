@@ -15,7 +15,8 @@
     "start:dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
-    "batman": "pnpm build && pnpm build:embed"
+    "batman": "pnpm build && pnpm build:embed",
+    "test:watch": "vitest --watch"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",

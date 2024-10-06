@@ -1,6 +1,4 @@
-import { TranslatableMessages } from "@lib/types";
-
-export const enLocale: TranslatableMessages = {
+export const enLocale = {
   ok: "OK",
   "yes": "Yes",
   "no": "No",
@@ -43,3 +41,5 @@ export const enLocale: TranslatableMessages = {
   "got-any-questions": "Got any questions? Chat with us!",
   "typical-response-time": "Typically respond in less than 1 minute",
 };
+
+export type TranslationKeysType = keyof typeof enLocale;

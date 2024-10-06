@@ -1,5 +1,5 @@
 import { BotMessageType } from "@lib/types";
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { handleSocketMessages } from "./handle-socket-messages";
 
 describe("handle-socket-messages", () => {
