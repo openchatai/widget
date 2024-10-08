@@ -42,4 +42,5 @@ export const frLocale: TranslatableMessages = {
   "close-widget": "Fermer le widget",
   "got-any-questions": "Vous avez des questions ? Chattez avec nous !",
   "typical-response-time": "Nous répondons généralement en moins d'une minute",
+  "session-closed-lead": "Votre problème a été résolu !"
 };

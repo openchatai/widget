@@ -18,6 +18,7 @@ import {
   ReactNode,
   useCallback,
   useEffect,
+  useId,
   useReducer,
 } from "react";
 import useSWR from "swr";
@@ -86,6 +87,9 @@ type ActionType =
     } | null;
   } | {
     type: "RESET";
+  } | {
+    type: "SYNC_CHAT_STATE";
+    payload: ChatState;
   }
 
 function chatReducer(state: ChatState, action: ActionType) {
@@ -166,6 +170,14 @@ function chatReducer(state: ChatState, action: ActionType) {
         draft.keyboard = action.payload;
         break;
       }
+
+      case "SYNC_CHAT_STATE": {
+        draft.messages = action.payload.messages;
+        draft.lastUpdated = action.payload.lastUpdated;
+        draft.keyboard = action.payload.keyboard;
+        break;
+      }
+
       default:
         break;
     }
@@ -173,7 +185,37 @@ function chatReducer(state: ChatState, action: ActionType) {
 }
 
 const SESSION_KEY = (botToken: string) => `[OPEN_SESSION_${botToken}`;
+const chatChannel = new BroadcastChannel('open:chat_widget_sync_channel');
 
+interface SyncEventMessage {
+  type: "sync_chat_state";
+  lastSyncedAt: number;
+  meta: {
+    botToken: string;
+    sessionId: string;
+    instanceId: string;
+  };
+  state: ChatState;
+}
+
+type BroadcastChannelMessages = SyncEventMessage;
+
+function syncChatStateBetweenTabs(state: ChatState, meta: {
+  botToken: string,
+  sessionId: string;
+  instanceId: string;
+}) {
+
+  const syncPayload = <SyncEventMessage>{
+    type: "sync_chat_state",
+    lastSyncedAt: Date.now(),
+    meta,
+    state,
+  };
+
+  chatChannel.postMessage(syncPayload);
+
+}
 
 type MessagePayload = {
   id: string;
@@ -203,6 +245,8 @@ interface SendMessageInput extends Record<string, unknown> {
   user?: Record<string, unknown>;
   query_params?: Record<string, string>;
   PathParams?: Record<string, string>;
+  id?: string;
+  language?: useChatOptions['language'];
 }
 
 interface HookSettings {
@@ -231,6 +275,8 @@ function useAbstractChat({
     },
     "local",
   );
+  const [instanceId,] = useSyncedState("open:instanceId", genId(10), "session")
+
 
   const axiosInstance = useAxiosInstance({
     apiUrl,
@@ -330,10 +376,46 @@ function useAbstractChat({
     }
     _setHookState(state);
   }
+
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState, locale.get),
     1000,
   );
+
+  const handleCrossTabChannelMessage = (event: MessageEvent<BroadcastChannelMessages>) => {
+    let message = event.data;
+    // Only process messages that have a valid type
+    if (!message.type) return;
+
+    // Ignore messages from the same instance
+    if (message.meta.instanceId === instanceId) return;
+
+    // Only process messages for the current session
+    if (session && message.meta.sessionId !== session.id) return;
+    console.log(message)
+
+    if (message.type) {
+      switch (message.type) {
+        case "sync_chat_state": {
+          dispatch({
+            type: "SYNC_CHAT_STATE",
+            payload: message.state,
+          })
+          break;
+        }
+        default:
+          console.warn(`Unhandled message type: ${(message as any).type}`);
+          break;
+      }
+    }
+  };
+
+  // useEffect(() => {
+  //   chatChannel.addEventListener("message", handleCrossTabChannelMessage)
+  //   return () => {
+  //     chatChannel.removeEventListener("message", handleCrossTabChannelMessage)
+  //   }
+  // }, [handleCrossTabChannelMessage]);
 
   const initialData = useSWR(
     ["initialData", botToken],
@@ -411,6 +493,7 @@ function useAbstractChat({
   const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
     handleSocketMessages({
       _message: socketMsg,
+      _socket: socket,
       onSessionUpdate(message, _ctx) {
         setSession(message.value.session);
       },
@@ -425,9 +508,6 @@ function useAbstractChat({
       },
       onForm(message, _ctx) {
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
-      },
-      onInfo(message, _ctx) {
-        // setInfo(message.value);
       },
       onOptions(message, _ctx) {
         dispatch({
@@ -448,9 +528,9 @@ function useAbstractChat({
           });
         }
       },
-      _socket: socket,
     })
   }
+
   const handleInfo = useCallback(
     (info: string) => {
       setInfo(info);
@@ -458,22 +538,40 @@ function useAbstractChat({
     [setInfo],
   );
 
+
+  const handleUserMessageBroadcast = useCallback(
+    (message: MessagePayload) => {
+      dispatch({
+        type: "APPEND_USER_MESSAGE",
+        payload: {
+          user: message.user,
+          type: "FROM_USER",
+          session_id: session?.id ?? "",
+          content: message.content,
+          id: message.id ?? genId(10),
+        }
+      })
+    },
+    [],
+  );
+
   useEffect(() => {
-    socket?.on("structured_message", handleIncomingMessage);
-    socket?.on("info", handleInfo);
+    if (!socket) return;
+    socket.on("structured_message", handleIncomingMessage);
+    socket.on("user_message_broadcast", handleUserMessageBroadcast)
+    socket.on("info", handleInfo);
     return () => {
-      socket?.off("structured_message");
-      socket?.off("info");
+      socket.off("structured_message");
+      socket.off("info");
+      socket.off("user_message_broadcast")
     };
-  }, [handleIncomingMessage, handleInfo, socket]);
+  }, [handleIncomingMessage, handleInfo, handleUserMessageBroadcast, socket]);
 
   useEffect(() => {
     dispatch({ type: "INIT" });
   }, []);
 
   const noMessages = chatState.messages.length === 0;
-
-  debug(chatState.messages)
 
   async function sendMessage({
     content,
@@ -504,6 +602,7 @@ function useAbstractChat({
     }
 
     if (chatSession && socket) {
+      setHookState("loading");
       const msgId = genId();
       const payload: MessagePayload = {
         id: msgId,
@@ -547,7 +646,7 @@ function useAbstractChat({
             payload: null
           });
         }
-        setHookState("loading");
+
         socket.emit("send_chat", payload);
         return payload;
       } catch (error) {

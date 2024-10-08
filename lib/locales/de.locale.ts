@@ -42,4 +42,5 @@ export const deLocale: TranslatableMessages = {
   "typical-response-time": "Üblicherweise antworten wir in weniger als 1 Minute",
   "reset-conversation-confirm": "Möchten Sie die Konversation wirklich zurücksetzen?",
   "close-widget": "Widget schließen",
+  "session-closed-lead": "Ihr Problem wurde gelöst!",
 };

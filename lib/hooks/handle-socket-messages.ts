@@ -22,10 +22,17 @@ interface Context<SocketMessage = StructuredSocketMessageType> {
     onSessionUpdate?: (message: Extract<SocketMessage, { type: "session_update" }>, _ctx: Context<SocketMessage>) => void;
 
     onOptions?: (message: Extract<SocketMessage, { type: "options" }>, _ctx: Context<SocketMessage>) => void;
+
+    onAny?: (message: SocketMessage, _ctx: Context<SocketMessage>) => void;
 }
 
 export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>) {
     const response = _ctx._message;
+
+    if (response) {
+        _ctx.onAny?.(response, _ctx)
+    }
+
     switch (response.type) {
         case "message":
             {

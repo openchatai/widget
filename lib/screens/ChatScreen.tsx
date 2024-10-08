@@ -126,6 +126,20 @@ function ChatFooter() {
   );
 }
 
+function SessionClosedDialog() {
+  const { isSessionClosed } = useChat();
+  const locale = useLocale();
+  return <Dialog open={isSessionClosed}>
+    <DialogContent>
+      <header>
+        <h2 className="text-base font-semibold" dir="auto">
+          {locale.get("session-closed-lead")}
+        </h2>
+      </header>
+    </DialogContent>
+  </Dialog>
+}
+
 export function ChatScreen() {
   const {
     initialData,
@@ -277,6 +291,7 @@ export function ChatScreen() {
           </div>
         </div>
       </div>
+
     </TooltipProvider>
   );
 }

@@ -1,5 +1,6 @@
 import { TranslatableMessages } from "@lib/types";
 
+// language: portuguese
 export const ptLocale: TranslatableMessages = {
     ok: "OK",
     "yes": "Sim",
@@ -42,4 +43,5 @@ export const ptLocale: TranslatableMessages = {
     "close-widget": "Fechar widget",
     "got-any-questions": "Tem alguma dúvida? Converse conosco!",
     "typical-response-time": "Geralmente respondemos em menos de 1 minuto",
+    "session-closed-lead": "Seu problema foi resolvido!"
 };

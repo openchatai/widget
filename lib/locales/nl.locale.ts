@@ -1,5 +1,6 @@
 import { TranslatableMessages } from "@lib/types";
 
+// language -> Dutch
 export const nlLocale: TranslatableMessages = {
   ok: "OK",
   "yes": "Ja",
@@ -42,4 +43,5 @@ export const nlLocale: TranslatableMessages = {
   "close-widget": "Widget sluiten",
   "got-any-questions": "Heeft u vragen? Chat met ons!",
   "typical-response-time": "We reageren doorgaans binnen 1 minuut",
+  "session-closed-lead": "Your issue has been resolved!"
 };

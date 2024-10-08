@@ -1,6 +1,6 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { MessageSquareDot, X } from "lucide-react";
-import React, { ComponentPropsWithoutRef, forwardRef, useEffect } from "react";
+import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { useChat } from "./providers";
 import { ChatScreen } from "./screens/ChatScreen";
 import { cn } from "./utils/cn";
@@ -21,9 +21,11 @@ export function WidgetPopover(props: { triggerId?: string }) {
   const handleClick = () => {
     setIsClicked(!isClicked);
   };
+
   return (
     <PopoverPrimitive.Root>
       <PopoverPrimitive.Content
+        forceMount
         onInteractOutside={(ev) => ev.preventDefault()}
         side="top"
         sideOffset={10}
@@ -38,8 +40,8 @@ export function WidgetPopover(props: { triggerId?: string }) {
 
       <PopoverPrimitive.PopoverTrigger
         className={cn(
-          "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
           cssVars,
+          "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
         )}
         onClick={handleClick}
       >

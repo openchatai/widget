@@ -40,6 +40,7 @@ export const enLocale = {
   "close-widget": "Close widget",
   "got-any-questions": "Got any questions? Chat with us!",
   "typical-response-time": "Typically respond in less than 1 minute",
+  "session-closed-lead": "Your issue has been resolved!",
 };
 
 export type TranslationKeysType = keyof typeof enLocale;

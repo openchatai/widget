@@ -1,6 +1,7 @@
 import { ComponentProps } from "@lib/types";
-import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { MemoizedReactMarkdown } from "./markdown";
+
 export type DefaultTextComponentProps = ComponentProps<{
   message: string;
 }>;
@@ -11,13 +12,13 @@ export function BotTextResponse({
   type,
 }: DefaultTextComponentProps) {
   return (
-    <ReactMarkdown
+    <MemoizedReactMarkdown
       data-type={type}
       data-id={id}
       remarkPlugins={[remarkGfm]}
       className="leading-snug font-medium text-sm"
     >
       {data.message}
-    </ReactMarkdown>
+    </MemoizedReactMarkdown>
   );
 }
