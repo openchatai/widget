@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.3
+
+### Patch Changes
+
+- 3687c56: handle cross tab sync
+
 ## 1.3.2
 
 ### Patch Changes
