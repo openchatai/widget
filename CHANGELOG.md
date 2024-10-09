@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.6
+
+### Patch Changes
+
+- 64b4057: refresh the chat session on startup!
+
 ## 1.3.5
 
 ### Patch Changes
