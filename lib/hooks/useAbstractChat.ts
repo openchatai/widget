@@ -84,11 +84,9 @@ type ActionType =
     payload: {
       options: string[];
     } | null;
-  } | {
+  }
+  | {
     type: "RESET";
-  } | {
-    type: "SYNC_CHAT_STATE";
-    payload: ChatState;
   }
 
 function chatReducer(state: ChatState, action: ActionType) {
@@ -105,23 +103,6 @@ function chatReducer(state: ChatState, action: ActionType) {
         draft.messages = [];
         draft.lastUpdated = null;
         break;
-      // case "ADD_RESPONSE_MESSAGE": {
-      //   const msg = action.payload;
-      //   if (msg.type === "FROM_BOT" && msg.component === "TEXT" && msg.agent?.is_ai === true) {
-      //     const prevBotMessage = draft.messages.find(
-      //       (_) => _.type === "FROM_BOT" && _.responseFor !== null && _.responseFor === msg.responseFor,
-      //     ) as BotMessageType<{ message: string }> | undefined;
-      //     if (prevBotMessage && prevBotMessage.data?.message.length > 0) {
-      //       prevBotMessage.data.message +=
-      //         (msg as BotMessageType<{ message: string }>).data.message ?? "";
-      //     } else {
-      //       draft.messages.push(msg);
-      //     }
-      //   } else {
-      //     draft.messages.push(msg);
-      //   }
-      //   break;
-      // }
       case "ADD_RESPONSE_MESSAGE": {
         draft.messages.push(action.payload);
         setLastupdated();
@@ -139,12 +120,14 @@ function chatReducer(state: ChatState, action: ActionType) {
         draft.keyboard = null;
         break;
       }
+
       case "DELETE_MESSAGE":
         draft.messages = draft.messages.filter(
           (msg) => msg.id !== action.payload.id,
         );
         setLastupdated();
         break;
+
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
         draft.messages = draft.messages.filter(
@@ -154,26 +137,20 @@ function chatReducer(state: ChatState, action: ActionType) {
         setLastupdated();
         break;
       }
+
       case "SET_SERVER_ID": {
-        // const { clientMessageId, ServerMessageId } = action.payload;
-        // const message = draft.messages.find(
-        //   (msg) =>
-        //     msg.type === "FROM_BOT" && msg.responseFor === clientMessageId,
-        // );
-        // if (message) {
-        //   message.serverId = ServerMessageId;
-        // }
-        break;
-      }
-      case "SET_KEYBOARD": {
-        draft.keyboard = action.payload;
+        const { clientMessageId, ServerMessageId } = action.payload;
+        const message = draft.messages.find(
+          (msg) => msg.id === clientMessageId,
+        );
+        if (message) {
+          message.serverId = ServerMessageId;
+        }
         break;
       }
 
-      case "SYNC_CHAT_STATE": {
-        draft.messages = action.payload.messages;
-        draft.lastUpdated = action.payload.lastUpdated;
-        draft.keyboard = action.payload.keyboard;
+      case "SET_KEYBOARD": {
+        draft.keyboard = action.payload;
         break;
       }
 
@@ -243,7 +220,6 @@ function useAbstractChat({
     },
     "local",
   );
-
   const axiosInstance = useAxiosInstance({
     apiUrl,
     botToken,
@@ -262,6 +238,11 @@ function useAbstractChat({
     }
     return response.data;
   }
+
+  useEffect(() => {
+    if (!session?.id) return;
+    refreshSession(session.id)
+  }, [])
 
   const agent = session?.assignee_id === 555 ? "BOT" : "USER";
 
@@ -347,7 +328,6 @@ function useAbstractChat({
     () => representSocketState(socketState, locale.get),
     1000,
   );
-
 
   const initialData = useSWR(
     ["initialData", botToken],
@@ -607,14 +587,16 @@ function useAbstractChat({
     state: chatState,
     session: session ?? null,
     agent,
-    // Detived // 
+
+    // Derived // 
     isSessionClosed: session?.status === SessionStatus.CLOSED_RESOLVED || session?.status === SessionStatus.CLOSED_UNRESOLVED,
+    noMessages,
+    initialData: initialData?.data ?? null,
     // ------- //
+
     recreateSession,
     clearSession,
     sendMessage,
-    noMessages,
-    initialData: initialData?.data ?? null,
     info,
     hookState,
     settings,
