@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.5
+
+### Patch Changes
+
+- c5cf81a: add box shadow
+
 ## 1.3.4
 
 ### Patch Changes
