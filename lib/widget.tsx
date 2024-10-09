@@ -37,6 +37,7 @@ export function WidgetPopover(props: { triggerId?: string }) {
       </PopoverPrimitive.Content>
 
       <PopoverPrimitive.PopoverTrigger
+        data-chat-widget
         className={`${cssVars} shadow-lg bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90`}
         onClick={handleClick}
       >
