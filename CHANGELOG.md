@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.4
+
+### Patch Changes
+
+- e8c2312: remove BroadcastChannel
+
 ## 1.3.3
 
 ### Patch Changes
