@@ -28,13 +28,14 @@ export function IframedWidgetPopover() {
             >
                 <Iframe
                     data-chat-widget
-                    className="shadow-lg rounded-xl"
+                    className="rounded-xl"
                     style={{
                         maxHeight: "85dvh",
                         width: "350px",
                         height: "600px",
                         fontSize: "16px",
-                        zIndex: 10000000
+                        zIndex: 10000000,
+                        boxShadow: "rgba(0, 0, 0, 0.16) 0px 5px 40px"
                     }}>
                     <style>
                         {

@@ -16,43 +16,38 @@ export const cssVars = `
 `;
 
 export function WidgetPopover(props: { triggerId?: string }) {
-  const [isClicked, setIsClicked] = React.useState(false);
+  const [isOpen, setIsOpened] = React.useState(false);
 
   const handleClick = () => {
-    setIsClicked(!isClicked);
+    setIsOpened(!isOpen);
   };
 
   return (
-    <PopoverPrimitive.Root>
+    <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
       <PopoverPrimitive.Content
-        forceMount
         onInteractOutside={(ev) => ev.preventDefault()}
         side="top"
         sideOffset={10}
         data-chat-widget
-        className="shadow-lg"
         asChild
         align="end"
         style={{ zIndex: 10000000 }}
       >
-        <Widget className="max-h-[85dvh] w-[350px] z-[200] h-[600px] font-inter" />
+        <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter" />
       </PopoverPrimitive.Content>
 
       <PopoverPrimitive.PopoverTrigger
-        className={cn(
-          cssVars,
-          "bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90",
-        )}
+        className={`${cssVars} shadow-lg bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90`}
         onClick={handleClick}
       >
         <div
           className={cn(
             "size-6 transition-transform duration-300 ease-in-out",
-            { "transform scale-110": isClicked },
+            { "transform scale-110": isOpen },
           )}
         >
-          {!isClicked ? (
-            <MessageSquareDot className="size-6 transform scale-y-[-1]" />
+          {!isOpen ? (
+            <MessageSquareDot className="size-6 transform -scale-95" />
           ) : (
             <X className="size-6" />
           )}
