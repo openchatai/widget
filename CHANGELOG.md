@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.8
+
+### Patch Changes
+
+- 3934edf: use external id
+
 ## 1.3.7
 
 ### Patch Changes
