@@ -21,6 +21,7 @@ function ChatProvider({
     pathParams: config.pathParams ?? {},
     userData: config.user ?? {},
     language: config.language,
+    user: config.user ?? {},
     defaultHookSettings: {
       persistSession: config.settings?.persistSession ?? true,
       useSoundEffects: config.settings?.useSoundEffects ?? false,

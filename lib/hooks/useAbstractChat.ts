@@ -41,6 +41,7 @@ type useChatOptions = {
   defaultHookSettings?: HookSettings
   userData?: Record<string, any>;
   language?: LangType;
+  user: Record<string, any> & { email?: string }
 };
 
 type ChatState = {
@@ -160,7 +161,7 @@ function chatReducer(state: ChatState, action: ActionType) {
   });
 }
 
-const SESSION_KEY = (botToken: string) => `[OPEN_SESSION_${botToken}`;
+const SESSION_KEY = (botToken: string, userEmail?: string) => `[OPEN_SESSION_${botToken}]` + userEmail ? `_${userEmail} : ""` : "";
 
 type MessagePayload = {
   id: string;
@@ -210,6 +211,7 @@ function useAbstractChat({
   pathParams,
   userData,
   language,
+  user
 }: useChatOptions): UseAbstractchatReturnType {
   const locale = useLocale();
   const [settings, _setSettings] = useSyncedState(
@@ -226,7 +228,7 @@ function useAbstractChat({
   });
 
   const [session, setSession] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken),
+    SESSION_KEY(botToken, user.email),
     undefined,
     settings?.persistSession ? "local" : "memory",
   );
