@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.7
+
+### Patch Changes
+
+- 209bd7f: additional key to persist
+
 ## 1.3.6
 
 ### Patch Changes
