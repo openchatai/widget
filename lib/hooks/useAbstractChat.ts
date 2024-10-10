@@ -3,6 +3,7 @@ import { useLocale } from "@lib/providers";
 import {
   MessageType,
   UserMessageType,
+  UserObject,
 } from "@lib/types";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
@@ -39,9 +40,8 @@ type useChatOptions = {
   pathParams: Record<string, string>;
   onSessionDestroy?: () => void;
   defaultHookSettings?: HookSettings
-  userData?: Record<string, any>;
+  userData?: UserObject;
   language?: LangType;
-  user: Record<string, any> & { email?: string }
 };
 
 type ChatState = {
@@ -211,7 +211,6 @@ function useAbstractChat({
   pathParams,
   userData,
   language,
-  user
 }: useChatOptions): UseAbstractchatReturnType {
   const locale = useLocale();
   const [settings, _setSettings] = useSyncedState(
@@ -228,7 +227,7 @@ function useAbstractChat({
   });
 
   const [session, setSession] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, user.email),
+    SESSION_KEY(botToken, userData?.external_id),
     undefined,
     settings?.persistSession ? "local" : "memory",
   );

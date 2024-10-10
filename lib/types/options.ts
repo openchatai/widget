@@ -2,6 +2,15 @@ import type { LangType } from "@lib/locales";
 import React from "react";
 import type { ComponentType } from ".";
 
+export type UserObject = {
+  external_id?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  customData?: Record<string, string>;
+  avatarUrl?: string;
+}
+
 export type WidgetOptions = {
   token: string;
   headers?: Record<string, string>;
@@ -25,13 +34,7 @@ export type WidgetOptions = {
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   >;
-  user?: {
-    name?: string;
-    email?: string;
-    phone?: string;
-    customData?: Record<string, string>;
-    avatarUrl?: string;
-  };
+  user?: UserObject
   bot?: {
     name?: string;
     avatarUrl?: string;
