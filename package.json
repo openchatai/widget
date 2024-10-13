@@ -8,6 +8,7 @@
   },
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
+    "clean:dist": "rm -rf ./dist ./dist-embed",
     "preview": "vite preview",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
     "dev": "vite build --watch",
@@ -77,16 +78,6 @@
       "import": "./dist/basic.es.js",
       "require": "./dist/basic.cjs.js",
       "types": "./dist/basic.d.ts"
-    },
-    "./minimal": {
-      "import": "./dist/minimal.es.js",
-      "require": "./dist/minimal.cjs.js",
-      "types": "./dist/minimal.d.ts"
-    },
-    "./advanced": {
-      "import": "./dist/advanced.es.js",
-      "require": "./dist/advanced.cjs.js",
-      "types": "./dist/advanced.d.ts"
     },
     "./package.json": "./package.json",
     "./dist/*.css": "./dist/*.css"
