@@ -23,10 +23,10 @@ export default defineConfig({
     reportCompressedSize: false,
     lib: {
       entry: [
-        resolve(__dirname, "lib/index.tsx"),
         resolve(__dirname, "src/designs/basic/basic.tsx"),
         resolve(__dirname, "src/designs/minimal/minimal.tsx"),
         resolve(__dirname, "src/designs/advanced/advanced.tsx"),
+        resolve(__dirname, "lib/index.tsx"),
       ],
       fileName: (format, entryName) => `${entryName}.${format}.js`,
       formats: ['es', 'cjs'],
