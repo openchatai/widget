@@ -2,7 +2,7 @@ import { WidgetRoot } from "../lib/Root";
 import styles from "../lib/index.css?inline";
 import { WidgetOptions } from "../lib/types";
 import packageJson from "../package.json";
-import { BasicWidget } from "./designs";
+import { WidgetPopover } from "./designs/basic";
 import { IframedWidgetPopover } from "./iframed";
 import { render } from "./render";
 
@@ -35,7 +35,7 @@ export function initOpenScript(options: WidgetOptions, mode: "default" | "iframe
       <style type="text/css" data-version={packageJson.version}>
         {styles}
       </style>
-      <BasicWidget.WidgetPopover />
+      <WidgetPopover />
     </WidgetRoot>
   );
 }

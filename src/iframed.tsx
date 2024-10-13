@@ -4,7 +4,7 @@ import Iframe from "@uiw/react-iframe"
 import { MessageSquareDot, X } from "lucide-react";
 import { useState } from "react";
 import styles from "../lib/index.css?inline";
-import { BasicWidget } from "./designs";
+import { Widget } from "./designs/basic";
 import { cssVars } from "./designs/constants";
 
 export function IframedWidgetPopover() {
@@ -54,7 +54,7 @@ export function IframedWidgetPopover() {
                     <style>
                         {styles}
                     </style>
-                    <BasicWidget.Widget data-chat-widget className="font-inter size-full" />
+                    <Widget data-chat-widget className="font-inter size-full" />
                 </Iframe>
             </PopoverPrimitive.Content>
 
