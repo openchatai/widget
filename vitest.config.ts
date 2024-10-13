@@ -9,7 +9,7 @@ export default defineConfig({
     include: ["./lib/**/*.test.{ts,tsx}", ...configDefaults.exclude],
     environment: "jsdom",
     globals: true,
-    setupFiles: ["./test/setup.ts"],
+    setupFiles: ["./vitest/setup.ts"],
   },
   plugins: [
     tsconfigPaths(),

@@ -4,7 +4,7 @@ import Iframe from "@uiw/react-iframe"
 import { MessageSquareDot, X } from "lucide-react";
 import { useState } from "react";
 import styles from "../lib/index.css?inline";
-import { Widget } from "./designs/basic";
+import { Widget } from "./designs/basic/basic";
 import { cssVars } from "./designs/constants";
 
 export function IframedWidgetPopover() {

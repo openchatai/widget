@@ -63,19 +63,31 @@
     "name": "openchatai",
     "url": "https://github.com/openchatai"
   },
-  "types": "./dist/lib/index.d.ts",
   "main": "./dist/index.cjs.js",
   "module": "./dist/index.es.js",
+  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/lib/index.d.ts",
-      "require": "./dist/index.cjs.js",
       "import": "./dist/index.es.js",
-      "default": "./dist/index.es.js"
+      "require": "./dist/index.cjs.js",
+      "types": "./dist/index.d.ts"
     },
-    "./package.json": "./package.json",
-    "./dist/*.css": "./dist/*.css"
+    "./basic": {
+      "import": "./dist/basic.es.js",
+      "require": "./dist/basic.cjs.js",
+      "types": "./dist/basic.d.ts"
+    },
+    "./minimal": {
+      "import": "./dist/minimal.es.js",
+      "require": "./dist/minimal.cjs.js",
+      "types": "./dist/minimal.d.ts"
+    },
+    "./advanced": {
+      "import": "./dist/advanced.es.js",
+      "require": "./dist/advanced.cjs.js",
+      "types": "./dist/advanced.d.ts"
+    }
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",

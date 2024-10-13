@@ -6,18 +6,30 @@ import { externalizeDeps } from "vite-plugin-externalize-deps";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), dts(), externalizeDeps(), react()],
+  plugins: [
+    tsconfigPaths(),
+    dts({
+      insertTypesEntry: true
+    }),
+    externalizeDeps(), react()],
   server: {
     port: 3005,
   },
   clearScreen: false,
   build: {
+    sourcemap: false,
     minify: true,
     emptyOutDir: true,
+    reportCompressedSize: false,
     lib: {
-      entry: resolve(__dirname, "lib/index.tsx"),
-      formats: ["es", "cjs"],
-      fileName: (format) => `index.${format}.js`,
+      entry: [
+        resolve(__dirname, "lib/index.tsx"),
+        resolve(__dirname, "src/designs/basic/basic.tsx"),
+        resolve(__dirname, "src/designs/minimal/minimal.tsx"),
+        resolve(__dirname, "src/designs/advanced/advanced.tsx"),
+      ],
+      fileName: (format, entryName) => `${entryName}.${format}.js`,
+      formats: ['es', 'cjs'],
     },
     rollupOptions: {
       output: {

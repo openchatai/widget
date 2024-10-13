@@ -2,7 +2,7 @@ import { WidgetRoot } from "../lib/Root";
 import styles from "../lib/index.css?inline";
 import { WidgetOptions } from "../lib/types";
 import packageJson from "../package.json";
-import { WidgetPopover } from "./designs/basic";
+import { WidgetPopover } from "./designs/basic/basic";
 import { IframedWidgetPopover } from "./iframed";
 import { render } from "./render";
 
