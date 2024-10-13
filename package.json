@@ -87,7 +87,9 @@
       "import": "./dist/advanced.es.js",
       "require": "./dist/advanced.cjs.js",
       "types": "./dist/advanced.d.ts"
-    }
+    },
+    "./package.json": "./package.json",
+    "./dist/*.css": "./dist/*.css"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
