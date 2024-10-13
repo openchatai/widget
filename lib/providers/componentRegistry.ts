@@ -4,7 +4,6 @@ import {
   BotTextResponse,
   ChatEventComponent,
   FallbackComponent,
-  ResolveComponent,
 } from "../@components";
 
 /**
@@ -29,10 +28,6 @@ export class ComponentRegistry {
       key: "CHAT_EVENT",
       component: ChatEventComponent
     },
-    {
-      key: "RESOLVE",
-      component: ResolveComponent
-    }
   ] as const;
 
   constructor(opts: OptionsType) {

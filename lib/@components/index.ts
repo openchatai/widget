@@ -4,4 +4,3 @@ export * from "./Fallback.component";
 export * from "./BotMessageWrapper";
 export * from "./BotMessage";
 export * from "./ChatEvent.component";
-export * from "./Resolve.component";
