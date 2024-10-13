@@ -1,1 +1,1 @@
-export { WidgetPopover } from "./Basic"
+export { WidgetPopover, Widget } from "./Basic"

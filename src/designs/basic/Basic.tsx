@@ -4,18 +4,9 @@ import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
 import { useChat } from "@lib/providers";
 import { cn } from "@lib/utils/cn";
+import { cssVars } from "../constants";
 
-export const cssVars = `
-[--primary:211_65%_59%]
-[--foreground:0_0%_0%]
-[--background:0_0%_100%]
-[--secondary:0_0%_96%]
-[--primary-foreground:217_72%_18%]
-[--accent:0_0_22%]
-[--dark:0_0%_0%]
-`;
-
-export function WidgetPopover(props: { triggerId?: string }) {
+function WidgetPopover(props: { triggerId?: string }) {
   const [isOpen, setIsOpened] = React.useState(false);
 
   const handleClick = () => {
@@ -58,7 +49,7 @@ export function WidgetPopover(props: { triggerId?: string }) {
   );
 }
 
-export const Widget = forwardRef<
+const Widget = forwardRef<
   HTMLDivElement,
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
@@ -84,3 +75,9 @@ export const Widget = forwardRef<
 });
 
 Widget.displayName = "Widget";
+
+
+export {
+  WidgetPopover,
+  Widget,
+}

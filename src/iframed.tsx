@@ -1,10 +1,11 @@
 import { cn } from "@lib/utils/cn";
-import { Widget, cssVars } from "@lib/widget";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import Iframe from "@uiw/react-iframe"
 import { MessageSquareDot, X } from "lucide-react";
 import { useState } from "react";
 import styles from "../lib/index.css?inline";
+import { Widget } from "./designs/basic";
+import { cssVars } from "./designs/constants";
 
 export function IframedWidgetPopover() {
     const [isClicked, setIsClicked] = useState(false);
