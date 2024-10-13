@@ -8,9 +8,10 @@ import {
   DialogTrigger,
 } from "@lib/components/dialog";
 import { Keyboard } from "@lib/components/keyboard";
+import { UserMessage } from "@lib/components/messages";
 import { Switch } from "@lib/components/switch";
 import { TooltipProvider } from "@lib/components/tooltip";
-import { useLocale } from "@lib/providers";
+import { useChat, useConfigData, useLocale } from "@lib/providers";
 import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -28,9 +29,6 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { UserMessage } from "../components/messages";
-import { useChat } from "../providers/ChatProvider";
-import { useConfigData } from "../providers/ConfigDataProvider";
 
 const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 

@@ -1,9 +1,9 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { MessageSquareDot, X } from "lucide-react";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
-import { useChat } from "./providers";
 import { ChatScreen } from "./screens/ChatScreen";
-import { cn } from "./utils/cn";
+import { useChat } from "@lib/providers";
+import { cn } from "@lib/utils/cn";
 
 export const cssVars = `
 [--primary:211_65%_59%]
