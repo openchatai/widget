@@ -4,6 +4,7 @@ exports[`history-to-messages > should convert history to messages 1`] = `
 [
   {
     "content": "I need help",
+    "deliveredAt": null,
     "id": "164240",
     "serverId": "164240",
     "session_id": "fe726b6f-e668-441a-bed6-94f770574953",
@@ -11,6 +12,10 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_USER",
   },
   {
+    "agent": {
+      "is_ai": true,
+      "name": "",
+    },
     "component": "TEXT",
     "data": {
       "message": "Hi there! How can I assist you today with your Mollie account or services? Let me know what you need help with, and I'll do my best to assist you.",
@@ -44,6 +49,7 @@ exports[`history-to-messages > should convert history to messages 1`] = `
   },
   {
     "content": "hi there ",
+    "deliveredAt": null,
     "id": "165176",
     "serverId": "165176",
     "session_id": "fe726b6f-e668-441a-bed6-94f770574953",
@@ -51,6 +57,10 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_USER",
   },
   {
+    "agent": {
+      "is_ai": true,
+      "name": "",
+    },
     "component": "TEXT",
     "data": {
       "message": "Hi! How can I assist you today with your Mollie account or services? If you have any questions or need help with something specific, just let me know!",
@@ -83,6 +93,10 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_BOT",
   },
   {
+    "agent": {
+      "is_ai": true,
+      "name": "Ahmad Falta",
+    },
     "component": "CHAT_EVENT",
     "data": {
       "event": "agent_took_session_from_ai",
@@ -112,6 +126,11 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_BOT",
   },
   {
+    "agent": {
+      "agent_avatar": "",
+      "is_ai": false,
+      "name": "Ahmad Falta",
+    },
     "component": "TEXT",
     "data": {
       "message": "help me please!",
@@ -140,6 +159,11 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_BOT",
   },
   {
+    "agent": {
+      "agent_avatar": "",
+      "is_ai": false,
+      "name": "Ahmad Falta",
+    },
     "component": "TEXT",
     "data": {
       "message": "i am trapped in here ",
@@ -169,6 +193,7 @@ exports[`history-to-messages > should convert history to messages 1`] = `
   },
   {
     "content": "how can i help you ? ",
+    "deliveredAt": null,
     "id": "165181",
     "serverId": "165181",
     "session_id": "fe726b6f-e668-441a-bed6-94f770574953",
@@ -176,6 +201,11 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_USER",
   },
   {
+    "agent": {
+      "agent_avatar": "",
+      "is_ai": false,
+      "name": "Ahmad Falta",
+    },
     "component": "TEXT",
     "data": {
       "message": "helpoo ",
@@ -204,6 +234,11 @@ exports[`history-to-messages > should convert history to messages 1`] = `
     "type": "FROM_BOT",
   },
   {
+    "agent": {
+      "agent_avatar": "",
+      "is_ai": false,
+      "name": "Ahmad Falta",
+    },
     "component": "TEXT",
     "data": {
       "message": "will u help me ? ",
