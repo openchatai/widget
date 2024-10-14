@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.9
+
+### Patch Changes
+
+- 639d20d: fix the agent name issue
+
 ## 1.3.8
 
 ### Patch Changes
