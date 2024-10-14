@@ -119,7 +119,8 @@ describe("handle-socket-messages", () => {
             type: "ui",
             agent: {
                 is_ai: true,
-                name: "Open"
+                name: "Open",
+                id: null
             },
             server_session_id: "123",
             timestamp: "2024-09-30T17:28:21.000Z",
@@ -274,6 +275,7 @@ describe("handle-socket-messages", () => {
             agent: {
                 is_ai: true,
                 name: "Open",
+                id: null
             }
         }
 
