@@ -59,13 +59,6 @@ type ActionType =
     payload: MessageType;
   }
   | {
-    type: "DELETE_MESSAGE";
-    payload: { id: string };
-  }
-  | {
-    type: "CLEAR_MESSAGES";
-  }
-  | {
     type: "APPEND_USER_MESSAGE";
     payload: UserMessageType;
   }
@@ -88,46 +81,44 @@ type ActionType =
   }
   | {
     type: "RESET";
+  } | {
+    type: "SET_DELIVERED_AT",
+    payload: {
+      clientMessageId: string;
+      deliveredAt: string;
+    }
   }
 
 function chatReducer(state: ChatState, action: ActionType) {
   return produce(state, (draft) => {
+
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
     };
-    console.log(action.type)
+
     switch (action.type) {
-      case "INIT":
+      case "INIT": {
         setLastupdated();
         break;
-      case "CLEAR_MESSAGES":
-        draft.messages = [];
-        draft.lastUpdated = null;
-        break;
+      }
       case "ADD_RESPONSE_MESSAGE": {
         draft.messages.push(action.payload);
         setLastupdated();
         break;
       }
+
       case "APPEND_USER_MESSAGE": {
-        debug("append user message", action.payload.id)
         draft.messages.push(action.payload);
         setLastupdated();
         break;
       }
+
       case "RESET": {
         draft.messages = [];
         draft.lastUpdated = null;
         draft.keyboard = null;
         break;
       }
-
-      case "DELETE_MESSAGE":
-        draft.messages = draft.messages.filter(
-          (msg) => msg.id !== action.payload.id,
-        );
-        setLastupdated();
-        break;
 
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
@@ -245,8 +236,6 @@ function useAbstractChat({
     refreshSession(session.id)
   }, [])
 
-  const agent = session?.assignee_id === 555 ? "BOT" : "USER";
-
   const { socket, socketState } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
@@ -316,14 +305,6 @@ function useAbstractChat({
     keyboard: null
   });
 
-  const [hookState, _setHookState] = useTimeoutState<HookState>("idle", 1000 * 5);
-
-  const setHookState = (state: HookState) => {
-    if (state === "loading" && agent === "BOT") {
-      return;
-    }
-    _setHookState(state);
-  }
 
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState, locale.get),
@@ -361,14 +342,14 @@ function useAbstractChat({
   );
 
   const handleConnect = useCallback(() => {
-    if (session) {
-      socket?.emit("join_session", { session_id: session.id });
+    if (session && socket) {
+      socket.emit("join_session", { session_id: session.id });
     }
   }, [session?.id, socket]);
 
   const handleReconnect = useCallback(() => {
-    if (session) {
-      socket?.emit("join_session", { session_id: session.id });
+    if (session && socket) {
+      socket.emit("join_session", { session_id: session.id });
     }
   }, [socket]);
 
@@ -390,7 +371,6 @@ function useAbstractChat({
   function clearSession() {
     socket?.emit("leave_session", { session_id: session?.id });
     setSession(null);
-    setHookState("idle");
     dispatch({ type: "RESET" });
     onSessionDestroy?.();
   }
@@ -451,7 +431,6 @@ function useAbstractChat({
     [setInfo],
   );
 
-
   const handleUserMessageBroadcast = useCallback(
     (message: MessagePayload) => {
       dispatch({
@@ -459,6 +438,8 @@ function useAbstractChat({
         payload: {
           user: message.user,
           type: "FROM_USER",
+          deliveredAt: null,
+          serverId: null,
           session_id: session?.id ?? "",
           content: message.content,
           id: message.id ?? genId(10),
@@ -468,15 +449,28 @@ function useAbstractChat({
     [],
   );
 
+  // this will just resend the user message again to the widget with everyhing
+  const handleDeliveredAck = useCallback((payload: MessagePayload) => {
+    dispatch({
+      type: "SET_DELIVERED_AT",
+      payload: {
+        clientMessageId: payload.id,
+        deliveredAt: new Date().toISOString()
+      }
+    });
+  }, [])
+
   useEffect(() => {
     if (!socket) return;
     socket.on("structured_message", handleIncomingMessage);
     socket.on("user_message_broadcast", handleUserMessageBroadcast)
+    socket.on("ack:chat_message:delivered", handleDeliveredAck)
     socket.on("info", handleInfo);
     return () => {
       socket.off("structured_message");
       socket.off("info");
       socket.off("user_message_broadcast")
+      socket.off("ack:chat_message:delivered")
     };
   }, [handleIncomingMessage, handleInfo, handleUserMessageBroadcast, socket]);
 
@@ -498,7 +492,6 @@ function useAbstractChat({
 
     if (!session && noMessages) {
       try {
-        setHookState("loading");
         const { data: newSession } = await createSession(axiosInstance, botToken);
         if (newSession) {
           setSession(newSession);
@@ -509,13 +502,11 @@ function useAbstractChat({
         }
       } catch (error) {
         console.error("Error creating session:", error);
-        setHookState("error");
         return null;
       }
     }
 
     if (chatSession && socket) {
-      setHookState("loading");
       const msgId = genId();
       const payload: MessagePayload = {
         id: msgId,
@@ -551,6 +542,8 @@ function useAbstractChat({
             timestamp: new Date().toISOString(),
             session_id: chatSession.id,
             user: payload.user,
+            deliveredAt: null,
+            serverId: null
           },
         });
         if (chatState.keyboard) {
@@ -564,7 +557,6 @@ function useAbstractChat({
         return payload;
       } catch (error) {
         console.error("Error sending message:", error);
-        setHookState("error");
         return null;
       }
     }
@@ -587,7 +579,6 @@ function useAbstractChat({
     version: pkg.version,
     state: chatState,
     session: session ?? null,
-    agent,
 
     // Derived // 
     isSessionClosed: session?.status === SessionStatus.CLOSED_RESOLVED || session?.status === SessionStatus.CLOSED_UNRESOLVED,
@@ -599,11 +590,11 @@ function useAbstractChat({
     clearSession,
     sendMessage,
     info,
-    hookState,
     settings,
     setSettings,
     axiosInstance,
-    handleKeyboard
+    handleKeyboard,
+    hookState: "idle"
   };
 }
 
@@ -618,7 +609,6 @@ interface UseAbstractchatReturnType {
   version: string;
   state: ChatState,
   session: ChatSessionType | null;
-  agent: "BOT" | "USER";
   isSessionClosed: boolean;
   recreateSession: () => void;
   clearSession: () => void;

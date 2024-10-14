@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      zIndex: {
+        max: 9999
+      },
       colors: {
         primary: "hsl(var(--primary))",
         foreground: "hsl(var(--foreground))",
@@ -20,4 +23,7 @@ export default {
       inter: ["Inter", "Cairo", "sans-serif"],
     },
   },
+  plugins: [
+    require("tailwindcss-animate"),
+  ]
 };

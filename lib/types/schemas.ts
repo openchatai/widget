@@ -122,6 +122,7 @@ const agentSchema = z.object({
     name: z.string(),
     is_ai: z.boolean(),
     profile_picture: z.string().optional().nullable(),
+    id: z.string().nullable(),
 })
 
 const messageSchema = z.object({

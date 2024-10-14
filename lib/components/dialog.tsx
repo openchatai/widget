@@ -12,6 +12,7 @@ const [useDialogState, SafeProvider] = createSafeContext<{
   open: boolean;
   setOpen: (open: boolean) => void;
   onOpenChange: (open: boolean) => void;
+  isAlert: boolean
 }>();
 
 const noop = () => {
@@ -23,6 +24,7 @@ function Dialog({
   onOpenChange,
   open,
   children,
+  isAlert
 }: {
   children:
   | React.ReactNode
@@ -35,6 +37,7 @@ function Dialog({
   }) => React.ReactNode);
   defaultOpen?: boolean;
   open?: boolean; // controlled
+  isAlert?: boolean;
   onOpenChange?: (open: boolean) => void; // controlled
 }) {
   const [uncontrolled, setUncontrolled] = useState(defaultOpen);
@@ -42,7 +45,11 @@ function Dialog({
   const setOpen = onOpenChange ?? setUncontrolled;
   return (
     <SafeProvider
-      value={{ open: isOpen, setOpen, onOpenChange: onOpenChange ?? noop }}
+      value={{
+        open: isOpen,
+        setOpen, onOpenChange: onOpenChange ?? noop,
+        isAlert: isAlert ? isAlert : false
+      }}
     >
       {typeof children === "function"
         ? children({ open: isOpen, setOpen })
@@ -67,17 +74,22 @@ const DialogTrigger = React.forwardRef<
 });
 
 const DialogBackDrop = React.forwardRef<
-  ElementRef<"div">,
-  ComponentProps<"div">
+  ElementRef<typeof motion.div>,
+  ComponentProps<typeof motion.div>
 >((props, ref) => {
   return (
-    <div
-      className="absolute inset-0 z-[24] flex items-center justify-center bg-black/10 backdrop-blur-sm"
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { delay: 0.1 } }}
+      transition={{ duration: 0.2 }}
+      className="absolute inset-0 z-[24] from-gray-100/30 to-gray-50/30 bg-gradient-to-t backdrop-blur-sm"
       {...props}
       ref={ref}
     />
   );
 });
+
 function mergeRefs<T>(...refs: Array<React.Ref<T>>) {
   return (value: T) => {
     refs.forEach((ref) => {
@@ -91,16 +103,16 @@ function mergeRefs<T>(...refs: Array<React.Ref<T>>) {
 }
 
 const DialogContent = React.forwardRef<
-  ElementRef<"div">,
+  ElementRef<typeof motion.div>,
   ComponentProps<typeof motion.div>
->((props, ref) => {
-  const { open, setOpen } = useDialogState();
+>(({ children, ...props }, ref) => {
+  const { open, setOpen, isAlert } = useDialogState();
   const contentRef = useRef<HTMLDivElement>(null);
-  const backdfropRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
   const _ref = mergeRefs(ref, contentRef);
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || isAlert) return;
     const close = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setOpen(false);
@@ -110,7 +122,7 @@ const DialogContent = React.forwardRef<
     return () => {
       window.removeEventListener("keydown", close);
     };
-  }, []);
+  }, [open, setOpen]);
 
   useEffect(() => {
     if (open) {
@@ -119,31 +131,36 @@ const DialogContent = React.forwardRef<
   }, [open]);
 
   return (
-    open && (
-      <DialogBackDrop
-        onClick={(ev) => {
-          if (ev.target === backdfropRef.current) {
-            setOpen(false);
-          }
-        }}
-        ref={backdfropRef}
-      >
-        <AnimatePresence>
-          {open && (
-            <motion.div
-              {...props}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-background animate rounded-lg max-w-[80%] w-full"
-              ref={_ref}
-            />
-          )}
-        </AnimatePresence>
-      </DialogBackDrop>
-    )
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            data-alert={isAlert}
+            initial={{ opacity: 0, y: 20, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: 20, x: "-50%" }}
+            transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            className="bg-white rounded-xl grid grid-cols-1 gap-2 border max-w-[90%] bottom-2 w-full absolute left-1/2 p-3 z-[25]"
+            ref={_ref}
+            {...props}
+          >
+            {children}
+          </motion.div>
+          <DialogBackDrop
+            onClick={(ev) => {
+              if (isAlert) return;
+              if (ev.target === backdropRef.current) {
+                setOpen(false);
+              }
+            }}
+            ref={backdropRef}
+          />
+        </>
+      )}
+    </AnimatePresence>
   );
 });
+
 
 const DialogClose = React.forwardRef<
   ElementRef<"button">,

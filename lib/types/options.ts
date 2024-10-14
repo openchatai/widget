@@ -13,6 +13,7 @@ export type UserObject = {
 
 export type WidgetOptions = {
   token: string;
+  theme?: "basic" | "default",
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
   pathParams?: Record<string, string>;

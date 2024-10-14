@@ -7,7 +7,8 @@ export type UserMessageType = {
   content: string;
   timestamp?: string;
   session_id: string;
-  serverId?: string;
+  serverId: string | null;
+  deliveredAt: string | null;
   user?: {
     name?: string;
     email?: string;
