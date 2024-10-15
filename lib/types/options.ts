@@ -20,9 +20,16 @@ export type WidgetOptions = {
   initialMessages: string[];
   triggerSelector?: string;
   apiUrl?: string;
-  settings?: {
-    persistSession?: boolean;
-    useSoundEffects?: boolean;
+  defaultSettings?: {
+    playSoundEffects?: boolean;
+    keepUserData?: boolean
+  },
+  conversations?: {
+    /**
+     * note that opened sessions will be grapped as well regardless of this setting.
+     * so this setting is exclusive fot the closed sessions.
+     */
+    maxFetchedSessions?: number;
   },
   socketUrl?: string;
   defaultOpen?: boolean;

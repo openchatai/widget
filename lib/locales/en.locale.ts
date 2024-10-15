@@ -41,6 +41,7 @@ export const enLocale = {
   "got-any-questions": "Got any questions? Chat with us!",
   "typical-response-time": "Typically respond in less than 1 minute",
   "session-closed-lead": "Your issue has been resolved!",
+  "start-conversation": "Start conversation",
 };
 
 export type TranslationKeysType = keyof typeof enLocale;

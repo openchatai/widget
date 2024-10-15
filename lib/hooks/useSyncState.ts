@@ -39,7 +39,7 @@ export function useSyncedState<TData>(
   key: string,
   defaultValue?: DefaultValue<TData>,
   storage: StorageType = "session"
-): [TData | null, (newState: TData | null) => void, () => void] {
+): [TData | null, (newState: TData | null) => void, StorageLike] {
   const bucket = useMemo(() => getStorage(storage), [storage]);
 
   const [state, setState] = useState<TData | null>(() => {
@@ -94,5 +94,5 @@ export function useSyncedState<TData>(
     };
   }, [key, state]);
 
-  return [state, setSyncedState, clear];
+  return [state, setSyncedState, bucket];
 }
