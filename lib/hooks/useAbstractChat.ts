@@ -1,48 +1,23 @@
 import { LangType } from "@lib/locales";
-import { useLocale } from "@lib/providers";
+import { useConsumer } from "@lib/providers";
+import { useConfigData } from "@lib/providers/ConfigProvider";
+import { useLocale } from "@lib/providers/LocalesProvider";
 import {
   MessageType,
   UserMessageType,
-  UserObject,
 } from "@lib/types";
-import { debug } from "@lib/utils/debug";
-import { genId } from "@lib/utils/genId";
-import {
-  createSession,
-  getChatSessionById,
-  getInitData,
-} from "@lib/utils/getters";
-import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
-import { AxiosInstance } from "axios";
 import { produce } from "immer";
 import {
-  ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
+  useState,
 } from "react";
-import useSWR from "swr";
 import pkg from "../../package.json";
-import { useTimeoutState } from "../hooks/useTimeoutState";
 import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
-import { representSocketState } from "./socketState";
-import { useAxiosInstance } from "./useAxiosInstance";
-import { useSyncedState } from "./useSyncState";
-
-type useChatOptions = {
-  socketUrl: string;
-  apiUrl: string;
-  botToken: string;
-  headers: Record<string, string>;
-  queryParams: Record<string, string>;
-  pathParams: Record<string, string>;
-  onSessionDestroy?: () => void;
-  defaultHookSettings?: HookSettings
-  userData?: UserObject;
-  language?: LangType;
-};
 
 type ChatState = {
   lastUpdated: number | null;
@@ -152,8 +127,6 @@ function chatReducer(state: ChatState, action: ActionType) {
   });
 }
 
-const SESSION_KEY = (botToken: string, userEmail?: string) => `[OPEN_SESSION_${botToken}]` + userEmail ? `_${userEmail} : ""` : "";
-
 type MessagePayload = {
   id: string;
   content: string;
@@ -183,121 +156,127 @@ interface SendMessageInput extends Record<string, unknown> {
   query_params?: Record<string, string>;
   PathParams?: Record<string, string>;
   id?: string;
-  language?: useChatOptions['language'];
 }
 
-interface HookSettings {
-  persistSession?: boolean;
-  useSoundEffects?: boolean;
-}
+type C = ChatSessionType | null;
 
-function useAbstractChat({
-  apiUrl,
-  socketUrl,
-  botToken,
-  defaultHookSettings,
-  onSessionDestroy,
-  headers,
-  queryParams,
-  pathParams,
-  userData,
-  language,
-}: useChatOptions): UseAbstractchatReturnType {
-  const locale = useLocale();
-  const [settings, _setSettings] = useSyncedState(
-    "[SETTINGS]:[OPEN]",
-    {
-      persistSession: defaultHookSettings?.persistSession ?? false,
-      useSoundEffects: defaultHookSettings?.useSoundEffects ?? false,
-    },
-    "local",
-  );
-  const axiosInstance = useAxiosInstance({
-    apiUrl,
-    botToken,
-  });
-
-  const [session, setSession] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, userData?.external_id),
-    undefined,
-    settings?.persistSession ? "local" : "memory",
-  );
-
-  async function refreshSession(sessionId: string) {
-    let response = await getChatSessionById(axiosInstance, sessionId);
-    if (response.data) {
-      setSession(response.data);
+function useConversation({ defaultConversation, onCreateConversation, onConversationChange, onRefetch }: {
+  defaultConversation?: C;
+  onCreateConversation?: (conversation: C) => void;
+  onConversationChange?: (conversation: C) => void;
+  onRefetch?: (c: C) => void
+}) {
+  const [_activeConversation, _setActiveConversation] = useState<C>(defaultConversation as C);
+  const { apis } = useConfigData();
+  const { consumer } = useConsumer()
+  const activeConversation = useMemo(() => {
+    if (!_activeConversation) return null;
+    return {
+      ..._activeConversation,
+      isClosed: _activeConversation.status !== SessionStatus.OPEN,
+      isAiAssigned: _activeConversation.assignee_id === 555,
     }
-    return response.data;
-  }
+  }, [_activeConversation]);
 
-  useEffect(() => {
-    if (!session?.id) return;
-    refreshSession(session.id)
+  const setActiveConversation = useCallback((c: C) => {
+    _setActiveConversation(c);
+    onConversationChange?.(c);
   }, [])
 
-  const { socket, socketState } = useSocket(socketUrl, {
-    autoConnect: true,
+  const createConversation = useCallback(async () => {
+    if (!consumer) {
+      throw new Error("You are trying to create a conversation without a consumer id")
+    };
+    const { data } = await apis.createConversation(consumer.id);
+    if (data) {
+      setActiveConversation(data);
+      onCreateConversation?.(data);
+    }
+    return data
+  }, [apis.options])
+
+  const refetchConversation = useCallback((cId: string) => {
+    apis.fetchSession(cId).then(({ data }) => {
+      if (data) {
+        setActiveConversation(data);
+        onRefetch?.(data);
+      }
+    })
+  }, [apis.options])
+
+  return {
+    activeConversation,
+    createConversation,
+    refetchConversation,
+    setActiveConversation
+  }
+}
+
+function useAbstractChat() {
+  const { socketUrl, botToken } = useConfigData();
+  const { consumer } = useConsumer();
+  const locale = useLocale();
+  const { socket } = useSocket(socketUrl, {
     transports: ["websocket"],
     closeOnBeforeunload: true,
     query: {
-      botToken,
-      sessionId: session?.id,
       client: "widget",
+      botToken,
+      language: locale.lang,
       clientVersion: pkg.version,
+      sessionId: null,
+      contactId: consumer?.id,
     }
   });
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (session && socket) {
-
-      const currentSessionId = session.id;
-
-      const heartbeatPayload = {
-        sessionId: currentSessionId,
-        client: "widget",
-        botToken,
-        user: userData,
-        timestamp: Date.now(),
-      }
-
-      async function sendHeartbeat() {
-        socket?.emit('heartbeat', heartbeatPayload);
-      }
-
-      sendHeartbeat();
-
-      interval = setInterval(() => {
-        sendHeartbeat();
-      }, 50 * 1000); // 50 seconds
-    }
-
-    return () => {
-      clearInterval(interval);
-    }
-
-  }, [socket, session, botToken, userData]);
-
-  useEffect(() => {
-    if (session) {
-
-      socket?.on("heartbeat:ack", (data: { success: boolean }) => {
-        if (data.success) {
-          debug("heartbeat ack")
-        }
-      })
-
-      return () => {
-        socket?.off("heartbeat:ack");
-      }
-    }
-  }, [session]);
 
 
-  const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
-    _setSettings(Object.assign({}, settings, data));
-  };
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
+  //   if (session && socket) {
+
+  //     const currentSessionId = session.id;
+
+  //     const heartbeatPayload = {
+  //       sessionId: currentSessionId,
+  //       client: "widget",
+  //       botToken,
+  //       user: userData,
+  //       timestamp: Date.now(),
+  //     }
+
+  //     async function sendHeartbeat() {
+  //       socket?.emit('heartbeat', heartbeatPayload);
+  //     }
+
+  //     sendHeartbeat();
+
+  //     interval = setInterval(() => {
+  //       sendHeartbeat();
+  //     }, 50 * 1000); // 50 seconds
+  //   }
+
+  //   return () => {
+  //     clearInterval(interval);
+  //   }
+
+  // }, [socket, session, botToken, userData]);
+
+  // useEffect(() => {
+  //   if (session) {
+
+  //     socket?.on("heartbeat:ack", (data: { success: boolean }) => {
+  //       if (data.success) {
+  //         debug("heartbeat ack")
+  //       }
+  //     })
+
+  //     return () => {
+  //       socket?.off("heartbeat:ack");
+  //     }
+  //   }
+  // }, [session]);
+
 
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
@@ -305,41 +284,6 @@ function useAbstractChat({
     keyboard: null
   });
 
-
-  const [info, setInfo] = useTimeoutState<ReactNode | null>(
-    () => representSocketState(socketState, locale.get),
-    1000,
-  );
-
-  const initialData = useSWR(
-    ["initialData", botToken],
-    async ([_, _token]) => {
-      const { data } = await getInitData(axiosInstance, session?.id);
-      return {
-        history: data ? historyToWidgetMessages(data.history) : [],
-        faq: data?.faq ?? [],
-        initial_questions: data?.initial_questions ?? [],
-        logo: data?.logo ?? "",
-      }
-    },
-    {
-      onSuccess(data) {
-        dispatch({
-          type: "PREPEND_HISTORY",
-          payload: data.history,
-        });
-      },
-      fallbackData: {
-        history: [],
-        faq: [],
-        initial_questions: [],
-        logo: "",
-      },
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-    },
-  );
 
   const handleConnect = useCallback(() => {
     if (session && socket) {
@@ -368,27 +312,25 @@ function useAbstractChat({
     });
   }
 
-  function clearSession() {
-    socket?.emit("leave_session", { session_id: session?.id });
-    setSession(null);
-    dispatch({ type: "RESET" });
-    onSessionDestroy?.();
-  }
+  const { activeConversation, setActiveConversation } = useConversation({
+    onConversationChange(conversation) {
+      // 
+    },
+    onCreateConversation(conversation) {
+      //       
+    },
+    onRefetch(cconversation) {
+      // 
+    },
 
-  function recreateSession() {
-    clearSession();
-    createSession(axiosInstance, botToken).then(({ data }) => {
-      setSession(data);
-      joinSession(data.id);
-    });
-  }
+  });
 
   const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
     handleSocketMessages({
       _message: socketMsg,
       _socket: socket,
       onSessionUpdate(message, _ctx) {
-        setSession(message.value.session);
+        setActiveConversation(message.value.session)
       },
       onBotMessage(message, _ctx) {
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
@@ -424,30 +366,23 @@ function useAbstractChat({
     })
   }
 
-  const handleInfo = useCallback(
-    (info: string) => {
-      setInfo(info);
-    },
-    [setInfo],
-  );
-
-  const handleUserMessageBroadcast = useCallback(
-    (message: MessagePayload) => {
-      dispatch({
-        type: "APPEND_USER_MESSAGE",
-        payload: {
-          user: message.user,
-          type: "FROM_USER",
-          deliveredAt: null,
-          serverId: null,
-          session_id: session?.id ?? "",
-          content: message.content,
-          id: message.id ?? genId(10),
-        }
-      })
-    },
-    [],
-  );
+  // const handleUserMessageBroadcast = useCallback(
+  //   (message: MessagePayload) => {
+  //     dispatch({
+  //       type: "APPEND_USER_MESSAGE",
+  //       payload: {
+  //         user: message.user,
+  //         type: "FROM_USER",
+  //         deliveredAt: null,
+  //         serverId: null,
+  //         session_id: session?.id ?? "",
+  //         content: message.content,
+  //         id: message.id ?? genId(10),
+  //       }
+  //     })
+  //   },
+  //   [],
+  // );
 
   // this will just resend the user message again to the widget with everyhing
   const handleDeliveredAck = useCallback((payload: MessagePayload) => {
@@ -463,16 +398,16 @@ function useAbstractChat({
   useEffect(() => {
     if (!socket) return;
     socket.on("structured_message", handleIncomingMessage);
-    socket.on("user_message_broadcast", handleUserMessageBroadcast)
+    // socket.on("user_message_broadcast", handleUserMessageBroadcast)
     socket.on("ack:chat_message:delivered", handleDeliveredAck)
-    socket.on("info", handleInfo);
+    // socket.on("info", handleInfo);
     return () => {
       socket.off("structured_message");
       socket.off("info");
       socket.off("user_message_broadcast")
       socket.off("ack:chat_message:delivered")
     };
-  }, [handleIncomingMessage, handleInfo, handleUserMessageBroadcast, socket]);
+  }, [handleIncomingMessage, socket]);
 
   useEffect(() => {
     dispatch({ type: "INIT" });
@@ -488,79 +423,79 @@ function useAbstractChat({
     query_params: inputQueryParams,
     ...data
   }: SendMessageInput) {
-    let chatSession = session;
+    // let chatSession = session;
 
-    if (!session && noMessages) {
-      try {
-        const { data: newSession } = await createSession(axiosInstance, botToken);
-        if (newSession) {
-          setSession(newSession);
-          joinSession(newSession.id);
-          chatSession = newSession;
-        } else {
-          throw new Error("Failed to create session");
-        }
-      } catch (error) {
-        console.error("Error creating session:", error);
-        return null;
-      }
-    }
+    // if (!session && noMessages) {
+    //   try {
+    //     const { data: newSession } = await createSession(axiosInstance, botToken);
+    //     if (newSession) {
+    //       setSession(newSession);
+    //       joinSession(newSession.id);
+    //       chatSession = newSession;
+    //     } else {
+    //       throw new Error("Failed to create session");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error creating session:", error);
+    //     return null;
+    //   }
+    // }
 
-    if (chatSession && socket) {
-      const msgId = genId();
-      const payload: MessagePayload = {
-        id: msgId,
-        bot_token: botToken,
-        content: content.text,
-        session_id: chatSession.id,
-        headers: {
-          ...headers,
-          ...inputHeaders,
-        },
-        pathParams: {
-          ...pathParams,
-          ...inputPathParams,
-        },
-        query_params: {
-          ...queryParams,
-          ...inputQueryParams,
-        },
-        user: {
-          ...userData,
-          ...user,
-        },
-        language,
-        ...data
-      };
-      try {
-        dispatch({
-          type: "APPEND_USER_MESSAGE",
-          payload: {
-            type: "FROM_USER",
-            id: msgId,
-            content: content.text,
-            timestamp: new Date().toISOString(),
-            session_id: chatSession.id,
-            user: payload.user,
-            deliveredAt: null,
-            serverId: null
-          },
-        });
-        if (chatState.keyboard) {
-          dispatch({
-            type: "SET_KEYBOARD",
-            payload: null
-          });
-        }
+    // if (chatSession && socket) {
+    //   const msgId = genId();
+    //   const payload: MessagePayload = {
+    //     id: msgId,
+    //     bot_token: botToken,
+    //     content: content.text,
+    //     session_id: chatSession.id,
+    //     headers: {
+    //       ...headers,
+    //       ...inputHeaders,
+    //     },
+    //     pathParams: {
+    //       ...pathParams,
+    //       ...inputPathParams,
+    //     },
+    //     query_params: {
+    //       ...queryParams,
+    //       ...inputQueryParams,
+    //     },
+    //     user: {
+    //       ...userData,
+    //       ...user,
+    //     },
+    //     language,
+    //     ...data
+    //   };
+    //   try {
+    //     dispatch({
+    //       type: "APPEND_USER_MESSAGE",
+    //       payload: {
+    //         type: "FROM_USER",
+    //         id: msgId,
+    //         content: content.text,
+    //         timestamp: new Date().toISOString(),
+    //         session_id: chatSession.id,
+    //         user: payload.user,
+    //         deliveredAt: null,
+    //         serverId: null
+    //       },
+    //     });
+    //     if (chatState.keyboard) {
+    //       dispatch({
+    //         type: "SET_KEYBOARD",
+    //         payload: null
+    //       });
+    //     }
 
-        socket.emit("send_chat", payload);
-        return payload;
-      } catch (error) {
-        console.error("Error sending message:", error);
-        return null;
-      }
-    }
-    return null;
+    //     socket.emit("send_chat", payload);
+    //     return payload;
+    //   } catch (error) {
+    //     console.error("Error sending message:", error);
+    //     return null;
+    //   }
+    // }
+    // return null;
   }
 
   const handleKeyboard = useCallback((option: string) => {
@@ -578,49 +513,11 @@ function useAbstractChat({
   return {
     version: pkg.version,
     state: chatState,
-    session: session ?? null,
-
-    // Derived // 
-    isSessionClosed: session?.status === SessionStatus.CLOSED_RESOLVED || session?.status === SessionStatus.CLOSED_UNRESOLVED,
     noMessages,
-    initialData: initialData?.data ?? null,
-    // ------- //
-
-    recreateSession,
-    clearSession,
     sendMessage,
-    info,
-    settings,
-    setSettings,
-    axiosInstance,
     handleKeyboard,
-    hookState: "idle"
   };
 }
 
-interface InitialData {
-  logo: string;
-  faq: [];
-  initial_questions: string[];
-  history: MessageType[];
-}
 
-interface UseAbstractchatReturnType {
-  version: string;
-  state: ChatState,
-  session: ChatSessionType | null;
-  isSessionClosed: boolean;
-  recreateSession: () => void;
-  clearSession: () => void;
-  sendMessage: (input: SendMessageInput) => Promise<MessagePayload | null>;
-  noMessages: boolean;
-  info: ReactNode;
-  hookState: HookState;
-  initialData: InitialData | null;
-  settings: HookSettings | null;
-  setSettings: (data: NonNullable<Partial<HookSettings>>) => void;
-  axiosInstance: AxiosInstance;
-  handleKeyboard: (option: string) => void;
-}
-
-export { useAbstractChat, type SendMessageInput, type HookState, type UseAbstractchatReturnType };
+export { useAbstractChat, type SendMessageInput, type HookState };
