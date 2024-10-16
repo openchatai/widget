@@ -286,15 +286,15 @@ function useAbstractChat() {
 
 
   const handleConnect = useCallback(() => {
-    if (session && socket) {
-      socket.emit("join_session", { session_id: session.id });
-    }
-  }, [session?.id, socket]);
+    // if (session && socket) {
+    //   socket.emit("join_session", { session_id: session.id });
+    // }
+  }, [socket]);
 
   const handleReconnect = useCallback(() => {
-    if (session && socket) {
-      socket.emit("join_session", { session_id: session.id });
-    }
+    // if (session && socket) {
+    //   socket.emit("join_session", { session_id: session.id });
+    // }
   }, [socket]);
 
   useEffect(() => {
