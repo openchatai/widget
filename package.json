@@ -9,11 +9,9 @@
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
-    "preview": "vite preview",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
-    "ddev": "vite build --watch",
     "build": "vite build",
-    "start:dev": "vite",
+    "dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
     "batman": "pnpm build && pnpm build:embed",
@@ -39,6 +37,7 @@
     "postcss": "^8.4.41",
     "postcss-prefix-selector": "^1.16.1",
     "react": "^18.3.1",
+    "@biomejs/biome": "1.9.4",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
@@ -52,6 +51,7 @@
     "vite-plugin-dts": "4.0.3",
     "vite-plugin-externalize-deps": "^0.8.0",
     "vite-tsconfig-paths": "^5.0.1",
+    "@changesets/cli": "^2.27.9",
     "vitest": "^2.0.5"
   },
   "files": [
