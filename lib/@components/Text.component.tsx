@@ -1,6 +1,6 @@
+import { MemoizedReactMarkdown } from "@components/markdown";
 import { ComponentProps } from "@lib/types";
 import remarkGfm from "remark-gfm";
-import { MemoizedReactMarkdown } from "./markdown";
 
 export type DefaultTextComponentProps = ComponentProps<{
   message: string;

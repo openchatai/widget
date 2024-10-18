@@ -1,6 +1,6 @@
 import React from "react";
-import { WidgetOptions } from "../types";
-import { Avatar, AvatarImage } from "./avatar";
+import { WidgetOptions } from "@lib/types";
+import { Avatar, AvatarImage } from "@components/avatar";
 
 export function UserMessage({
   children,

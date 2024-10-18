@@ -6,7 +6,10 @@ export default defineConfig({
   clearScreen: true,
   logLevel: "info",
   test: {
-    include: ["./lib/**/*.test.{ts,tsx}", ...configDefaults.exclude],
+    include: [
+      "./src/**/*.test.{ts,tsx}",
+      "./lib/**/*.test.{ts,tsx}",
+      ...configDefaults.exclude],
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest/setup.ts"],
