@@ -11,7 +11,7 @@ type Settings = {
 }
 type NotNullableSomeConfigKeys = MakeKeysNotNullable<
   WidgetOptions,
-  "language" | "apiUrl" | "socketUrl" | "debug" | "dryRun" | "user"
+  "language" | "apiUrl" | "socketUrl" | "debug" | "preview" | "user"
 >
 
 type PreludeSWRType = SWRResponse<PreludeData | null, any, any>
@@ -53,16 +53,16 @@ export function ConfigDataProvider({
   const _data = useMemo(() => {
     return {
       ...data,
+      settings,
+      setSettings,
       language: data.language ?? DEFAULT_LANG,
       botToken: data.token,
       apiUrl: data.apiUrl ?? "https://api-v2.opencopilot.so/backend",
       socketUrl: data.socketUrl ?? "https://api-v2.opencopilot.so",
       userData: data.user ?? {},
       user: data.user ?? {},
-      settings,
-      dryRun: data.dryRun ?? false,
       debug: data.debug ?? false,
-      setSettings
+      preview: data.preview ?? false,
     };
   }, [data, settings, setSettings]);
 

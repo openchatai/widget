@@ -46,10 +46,10 @@ export type WidgetOptions = {
   components?: ComponentType[];
   
   /**
-   * this will get/set the consumer if true.
+   * no api requests, or socket connections will be made.
    * @default false
    */
-  dryRun?: boolean;
+  preview?: boolean;
   /**
    * to show fallback component when the key is not found.
    * useful for custom components

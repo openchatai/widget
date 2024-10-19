@@ -17,7 +17,7 @@ import {
 import pkg from "../../package.json";
 import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
-import { useSocket } from "./socket";
+import { useSocket } from "./useSocket";
 
 type ChatState = {
   lastUpdated: number | null;
@@ -168,7 +168,8 @@ function useConversation({ defaultConversation, onCreateConversation, onConversa
 }) {
   const [_activeConversation, _setActiveConversation] = useState<C>(defaultConversation as C);
   const { apis } = useConfigData();
-  const { consumer } = useConsumer()
+  const { consumer } = useConsumer();
+
   const activeConversation = useMemo(() => {
     if (!_activeConversation) return null;
     return {
@@ -212,20 +213,28 @@ function useConversation({ defaultConversation, onCreateConversation, onConversa
   }
 }
 
+type CanSendType = {
+  canSend: boolean;
+  reason?: "socketError" | "sessionClosed" | "noConsumer" | "noSession";
+}
+
 function useAbstractChat() {
   const { socketUrl, botToken } = useConfigData();
   const { consumer } = useConsumer();
   const locale = useLocale();
-  const { socket } = useSocket(socketUrl, {
+  
+  const { socket, useListen, socketState } = useSocket(socketUrl, {
     transports: ["websocket"],
     closeOnBeforeunload: true,
+    autoConnect: false,
+    retries: 3,
     query: {
       client: "widget",
       botToken,
       language: locale.lang,
       clientVersion: pkg.version,
-      sessionId: null,
       contactId: consumer?.id,
+      sessionId: null,
     }
   });
 

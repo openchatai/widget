@@ -1,5 +1,5 @@
 import { AsyncState, isResponseOk, useAsyncFn, useSyncedState } from "@lib/hooks";
-import { useLifecycle } from "@lib/hooks/useMount";
+import { useLifecycle } from "@lib/hooks/useLifecycle";
 import { ChatSessionType, ConsumerType } from "@lib/types/schemas";
 import { createSafeContext } from "@lib/utils/create-safe-context";
 import { type PropsWithChildren, useCallback, useMemo } from "react";

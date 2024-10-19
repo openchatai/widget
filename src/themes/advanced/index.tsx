@@ -8,7 +8,7 @@ import { Toaster } from "@components/toaster";
 import styled from 'styled-components';
 import { WidgetProvider } from "src/providers/WidgetProvider";
 import { mergeRefs } from "@lib/utils/merge-refs";
-import { useLifecycle } from "@lib/hooks/useMount";
+import { useLifecycle } from "@lib/hooks/useLifecycle";
 
 // Define styled components for styling
 const WidgetContainer = styled(motion.div)`
@@ -60,6 +60,7 @@ const AdvancedWidget = forwardRef<
     })
 
     return (
+        // @ts-expect-error
         <WidgetContainer ref={ref} {...props} layout style={{ height: widgetHeight, overflow: 'hidden' }} animate={{ height: widgetHeight }} transition={{ duration: 0.1, type: "spring" }}>
             <InnerContainer ref={innerContainerRef}>
                 <WidgetProvider value={{ widgetRoot: widgetContainerRef.current }}>

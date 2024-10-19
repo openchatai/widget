@@ -1,5 +1,7 @@
 function useEnvironment() {
-    // not implemented
+    return {
+        env: process.env.NODE_ENV || 'development',
+    }
 }
 
 export {

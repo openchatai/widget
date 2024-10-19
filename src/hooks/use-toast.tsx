@@ -1,6 +1,6 @@
 "use client"
 
-import { ToastActionElement, ToastProps } from "@lib/components/toast"
+import { ToastActionElement, ToastProps } from "@components/toast"
 import * as React from "react"
 
 const TOAST_LIMIT = 2
