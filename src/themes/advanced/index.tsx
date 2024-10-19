@@ -12,17 +12,19 @@ import { useLifecycle } from "@lib/hooks/useLifecycle";
 
 // Define styled components for styling
 const WidgetContainer = styled(motion.div)`
-    border: 1px solid ${props => props.theme.colors.border}; /* border-gray-200 */
+    border: 1px solid ${props => props.theme.colors.border};
 
     overflow: hidden;
     isolation: isolate;
     background-color: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.secondary};
-    
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     font-family: Inter, Cairo, system-ui;
-    border-radius: ${({ theme }) => theme.radii.lg};
+    border-radius: ${({ theme }) => theme.radii.xl};
     width: 350px;
     max-width: 100%;
+    transform-origin: bottom;
 `
 
 const InnerContainer = styled.div`
@@ -61,7 +63,7 @@ const AdvancedWidget = forwardRef<
 
     return (
         // @ts-expect-error
-        <WidgetContainer ref={ref} {...props} layout style={{ height: widgetHeight, overflow: 'hidden' }} animate={{ height: widgetHeight }} transition={{ duration: 0.1, type: "spring" }}>
+        <WidgetContainer ref={ref} {...props} animate={{ height: widgetHeight }} transition={{ type: "spring", duration: .3 }}>
             <InnerContainer ref={innerContainerRef}>
                 <WidgetProvider value={{ widgetRoot: widgetContainerRef.current }}>
                     <AnimatePresence>

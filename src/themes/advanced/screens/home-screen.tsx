@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
 import { Bot, Send } from 'lucide-react';
 import { Link } from 'wouter';
 import { SizableScreenContainer } from '../WidgetPopoverContent';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { size } from 'src/design-helpers';
 
 const HeaderContainer = styled.header`
     padding: 0.5rem; /* p-2 */
@@ -68,16 +68,26 @@ const StyledLink = styled(Link)`
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    border-radius: ${props => props.theme.radii.lg}; /* rounded-lg */
+    border-radius: ${props => props.theme.radii.lg};
     padding: ${props => props.theme.spacing.lg} ${props => props.theme.spacing.xl};
     font-size: ${props => props.theme.fs.md};
     transition: background-color 0.3s, filter 0.3s;
-    
     background-color: ${props => props.theme.colors.primary};
     color: ${props => props.theme.colors.foreground}; 
-    font-weight: 600;
+    font-weight: 500;
+
     &:hover {
-        filter: brightness(110%); /* hover:brightness-110 */
+        filter: brightness(110%); 
+    }
+    
+    [data-send-icon]{
+        transition: transform .7s ease-in-out;
+        ${size("24px")}
+    }
+    &:hover {
+        [data-send-icon]{
+            transform: translate(30px, -30px);
+        }
     }
 `;
 
@@ -86,9 +96,32 @@ const SendContainer = styled.div`
     margin-left: auto;
     align-items: center;
     justify-content: center;
-    height: 1.5rem; 
+    height: 1.5rem;
+
 `;
 
+
+const ConversationCard = styled.div`
+    padding: ${props => props.theme.spacing.md};
+    border-radius: ${props => props.theme.radii.lg};
+    color: ${props => props.theme.colors.secondary};
+    transition: background-color 0.3s;
+    border: 1px solid ${props => props.theme.colors.border};
+
+
+
+`
+const ConversationsContainer = styled.div`
+    padding: ${props => props.theme.spacing.md};
+
+    h2 {
+        font-size:  ${props => props.theme.fs.xs};
+        font-weight: 700;
+        margin-bottom: ${props => props.theme.spacing.xs};
+        text-transform: uppercase;
+    }
+
+`
 export function HomeScreen() {
     return (
         <AnimatedHomeScreenContainer
@@ -115,9 +148,17 @@ export function HomeScreen() {
                     </Paragraph>
                 </div>
             </HeaderContainer>
-            {/* Past conversations */}
             <Main>
-
+                <ConversationsContainer>
+                    <h2>
+                        Conversations
+                    </h2>
+                    <ConversationCard>
+                        <span>Ticket</span>
+                        <span>#12345s</span>
+                        <h3>Conversation with John Doe</h3>
+                    </ConversationCard>
+                </ConversationsContainer>
             </Main>
 
             <Footer>
@@ -128,7 +169,7 @@ export function HomeScreen() {
                         start a conversation
                     </span>
                     <SendContainer>
-                        <Send className='size-4' />
+                        <Send data-send-icon />
                     </SendContainer>
                 </StyledLink>
             </Footer>

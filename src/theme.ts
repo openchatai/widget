@@ -7,9 +7,9 @@ export const widgetTheme = {
         background: 'hsl(0, 100%, 100%)', // Main background color for the app or sections
         primary: 'hsl(217, 91%, 60%)',   // Primary buttons, links, or highlights
         foreground: 'hsl(210, 40%, 98%)', // Text color for primary content
-        secondary: 'hsl(222, 9%, 37%)',  // Secondary text, borders, or less important elements
+        secondary: 'hsl(207.44, 23.37%, 34.35%)',  // Secondary text, borders, or less important elements
         destructive: 'hsl(0, 63%, 31%)',  // Error messages, warnings, or delete buttons
-        border: 'hsl(240,9.8%,90%)',      // Border color for cards, inputs, or dividers
+        border: 'hsl(221, 32%, 88%)',      // Border color for cards, inputs, or dividers
         transparent: 'transparent',
         popoverForeground: 'hsl(222.2, 84%, 4.9%)', // Text color for popovers, modals, or dropdowns
     },

@@ -1,5 +1,4 @@
 import { SrOnly } from "@components/sr-only";
-import { cn } from "@lib/utils/cn";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { MessageCircleMoreIcon, XIcon } from "lucide-react";
 import { ComponentProps, ComponentRef, forwardRef } from "react";
@@ -16,9 +15,9 @@ const WidgetPopoverTriggerStyled = styled(PopoverPrimitive.PopoverTrigger)`
     font-weight: bold;
     cursor: pointer;
     border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.foreground};
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: ${({ theme }) => theme.colors.background};
+    color: ${({ theme }) => theme.colors.secondary};
     border: none;
     
     ${size("50px")}
