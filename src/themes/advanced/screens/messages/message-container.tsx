@@ -20,7 +20,6 @@ const MessageContainer = styled.div<{
     .message-body {
         display: flex;
         flex-direction: column;
-        align-items: ${props => props.direction === 'right' ? 'flex-end' : 'flex-start'};
         flex: 1;
         gap: 4px;
 
@@ -31,7 +30,7 @@ const MessageContainer = styled.div<{
 
         [data-author-name]{
             font-weight: 600;
-            font-size: ${props => props.theme.fs.xs};
+            font-size: ${props => props.theme.fs.sm};
             line-height: 1.1;
             color: ${props => props.theme.colors.secondary};
         }
@@ -39,20 +38,20 @@ const MessageContainer = styled.div<{
         [data-messages-stack] {
             display: flex;
             flex-direction: column;
+            align-items: ${props => props.direction === 'right' ? 'flex-end' : 'flex-start'};
             gap: 2px;
-            align-content: flex-start;
         }
 
         [data-message-text]{
-            font-size: ${props => props.theme.fs.xs};
-            line-height: 1.5;
-            padding: 0.5rem;
-            font-weight: 500;
+            font-size: ${props => props.theme.fs.sm};
+            padding: ${props => props.theme.spacing.lg};
+            line-height: 1.3;
+            font-weight: 600;
             border-radius: ${props => props.theme.radii.md};
             background: ${props => props.theme.colors.foreground};
             color: ${props => props.theme.colors.secondary};
             width: fit-content;
-            
+            max-width: 90%;
             &:is(:first-child) {
                 border-top-${props => props.direction === 'right' ? 'right' : 'left'}-radius: 0;
             }

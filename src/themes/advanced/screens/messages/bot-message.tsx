@@ -12,7 +12,7 @@ export function BotMessage() {
                     <div data-author-name>Bot</div>
                 </div>
                 <div data-messages-stack>
-                    <div data-message-text>I am a bot, how can I help you today?</div>
+                    <div data-message-text>I am a bot, how can I help you today?, I am a bot, how can I help you today?</div>
                 </div>
             </div>
         </MessageContainer>

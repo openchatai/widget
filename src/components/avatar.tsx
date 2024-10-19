@@ -4,14 +4,14 @@ import { size } from "src/design-helpers";
 import styled from "styled-components";
 
 // Styled components
-const Avatar = styled(AvatarPrimitive.Root)`
+const Avatar = styled(AvatarPrimitive.Root) <{ size?: string }>`
   position: relative;
   display: flex;
   overflow: hidden;
   border-radius: ${({ theme }) => theme.radii.lg};
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.foreground};
-  ${size("24px")};
+  ${props => props.size ? size(props.size) : size("28px")};
 `;
 
 const AvatarImage = styled(AvatarPrimitive.Image)`

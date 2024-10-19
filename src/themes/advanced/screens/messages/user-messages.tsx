@@ -5,7 +5,7 @@ export function UserMessage() {
         <MessageContainer direction="right">
             <div className="message-body">
                 <div data-messages-stack>
-                    <p data-message-text>Hi there can u help me?</p>
+                    <p data-message-text>Hi there can u help me?, Hi there can u help me?</p>
                     <p data-message-text>Hi there can u help me?</p>
                     <p data-message-text>Hi there can u help me?</p>
                 </div>

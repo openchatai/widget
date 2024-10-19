@@ -4,6 +4,7 @@ import { type ReactNode, useMemo } from "react";
 import useSWR, { SWRResponse } from "swr";
 import { createSafeContext } from "../utils/create-safe-context";
 import { LocaleProvider } from "./LocalesProvider";
+import { ComponentRegistry } from "./componentRegistry";
 
 type Settings = {
   playSoundEffects: boolean;
@@ -16,7 +17,7 @@ type NotNullableSomeConfigKeys = MakeKeysNotNullable<
 
 type PreludeSWRType = SWRResponse<PreludeData | null, any, any>
 
-interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defaultSettings"> {
+interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defaultSettings" | "components"> {
   settings: {
     playSoundEffects: boolean;
     keepUserData: boolean;
@@ -26,6 +27,7 @@ interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defau
   userData: UserObject;
   botToken: string;
   preludeSWR: PreludeSWRType;
+  components: ComponentRegistry | null;
 }
 
 const [useConfigData, ConfigDataSafeProvider] =
@@ -63,6 +65,7 @@ export function ConfigDataProvider({
       user: data.user ?? {},
       debug: data.debug ?? false,
       preview: data.preview ?? false,
+      components: new ComponentRegistry({ components: data.components }),
     };
   }, [data, settings, setSettings]);
 
@@ -76,7 +79,7 @@ export function ConfigDataProvider({
     if (resp.data) return resp.data
     return null
   })
-
+  
   return (
     <ConfigDataSafeProvider value={{ ..._data, apis, preludeSWR }}>
       <LocaleProvider>
