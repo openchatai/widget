@@ -1,5 +1,4 @@
 import type { LangType } from "@lib/locales";
-import React from "react";
 import type { ComponentType } from ".";
 
 export type UserObject = {
@@ -12,40 +11,49 @@ export type UserObject = {
 }
 
 export type WidgetOptions = {
-  token: string;
-  theme?: "basic" | "default",
+  initialMessages: string[];
+
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
   pathParams?: Record<string, string>;
-  initialMessages: string[];
-  triggerSelector?: string;
-  apiUrl?: string;
+  
   defaultSettings?: {
     playSoundEffects?: boolean;
     keepUserData?: boolean
   },
-  conversations?: {
-    /**
-     * note that opened sessions will be grapped as well regardless of this setting.
-     * so this setting is exclusive fot the closed sessions.
-     */
-    maxFetchedSessions?: number;
-  },
+  
   socketUrl?: string;
+  apiUrl?: string;
+  token: string;
+  
   defaultOpen?: boolean;
-  debug?: boolean;
+  
   language?: LangType;
-  warnBeforeClose?: boolean;
-  onClose?: () => void;
+  
   organizationName?: string;
-  containerProps?: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >;
-  user?: UserObject
+  
+  /**
+   * the user data known to the tenant.
+   * @default {}
+   */
+  user?: UserObject;
+
   bot?: {
     name?: string;
     avatarUrl?: string;
   };
+  
   components?: ComponentType[];
+  
+  /**
+   * this will get/set the consumer if true.
+   * @default false
+   */
+  dryRun?: boolean;
+  /**
+   * to show fallback component when the key is not found.
+   * useful for custom components
+   * @default false
+   */
+  debug?: boolean;
 };

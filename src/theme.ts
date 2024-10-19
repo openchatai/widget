@@ -11,7 +11,6 @@ export const widgetTheme = {
         destructive: 'hsl(0, 63%, 31%)',  // Error messages, warnings, or delete buttons
         border: 'hsl(240,9.8%,90%)',      // Border color for cards, inputs, or dividers
         transparent: 'transparent',
-        popover: 'hsl(0, 0%, 100%)',      // Background color for popovers, modals, or dropdowns
         popoverForeground: 'hsl(222.2, 84%, 4.9%)', // Text color for popovers, modals, or dropdowns
     },
     radii: {
@@ -20,6 +19,7 @@ export const widgetTheme = {
         lg: '0.5rem',
         xl: '0.75rem',
         full: '9999px',
+        none: '0px',
     },
     spacing: {
         xs: '0.125rem',
@@ -52,7 +52,7 @@ export const widgetTheme = {
     fontFamily: {
         DEFAULT: "Inter, Cairo, system-ui"
     }
-};
+} as const;
 
 type ThemeType = typeof widgetTheme;
 

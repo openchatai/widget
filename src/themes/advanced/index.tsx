@@ -1,14 +1,17 @@
-import { AnimatePresence } from "framer-motion";
-import { ComponentPropsWithoutRef, forwardRef, useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ComponentPropsWithoutRef, ElementType, forwardRef, useRef, useState } from "react";
 import { Route, Router } from "wouter";
 import { memoryLocation } from "wouter/memory-location";
-import { ChatScreen } from "./screen/chat-screen";
-import { HomeScreen } from "./screen/home-screen";
+import { ChatScreen } from "./screens/chat-screen";
+import { HomeScreen } from "./screens/home-screen";
 import { Toaster } from "@components/toaster";
 import styled from 'styled-components';
+import { WidgetProvider } from "src/providers/WidgetProvider";
+import { mergeRefs } from "@lib/utils/merge-refs";
+import { useLifecycle } from "@lib/hooks/useMount";
 
 // Define styled components for styling
-const WidgetContainer = styled.div`
+const WidgetContainer = styled(motion.div)`
     border: 1px solid ${props => props.theme.colors.border}; /* border-gray-200 */
 
     overflow: hidden;
@@ -19,10 +22,10 @@ const WidgetContainer = styled.div`
     font-family: Inter, Cairo, system-ui;
     border-radius: ${({ theme }) => theme.radii.lg};
     width: 350px;
-`;
+    max-width: 100%;
+`
 
 const InnerContainer = styled.div`
-    height: 100%; 
     position: relative;
 `;
 
@@ -31,24 +34,45 @@ const router = memoryLocation({
 });
 
 const AdvancedWidget = forwardRef<
-    HTMLDivElement,
+    ElementType<typeof WidgetContainer>,
     ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
+    const widgetContainerRef = useRef<ElementType<typeof WidgetContainer>>(null);
+    const ref = mergeRefs(_ref, widgetContainerRef);
+
+
+    const innerContainerRef = useRef<HTMLDivElement>(null);
+    const [widgetHeight, setWidgetHeight] = useState<number | 'auto'>('auto');
+
+    useLifecycle(() => {
+        if (innerContainerRef.current) {
+            const resizeObserver = new ResizeObserver((entries) => {
+                const observedHeight = entries[0].contentRect.height
+                setWidgetHeight(observedHeight)
+            })
+
+            resizeObserver.observe(innerContainerRef.current)
+
+            return () => {
+                resizeObserver.disconnect()
+            }
+        }
+    })
+
     return (
-        <WidgetContainer ref={_ref} {...props}>
-            <InnerContainer>
-                <AnimatePresence>
-                    <Router hook={router.hook}>
-                        <Route path={"/"}>
-                            <HomeScreen />
-                        </Route>
-                        <Route path={"/chat"}>
-                            <ChatScreen />
-                        </Route>
-                    </Router>
-                </AnimatePresence>
+        <WidgetContainer ref={ref} {...props} layout style={{ height: widgetHeight, overflow: 'hidden' }} animate={{ height: widgetHeight }} transition={{ duration: 0.1, type: "spring" }}>
+            <InnerContainer ref={innerContainerRef}>
+                <WidgetProvider value={{ widgetRoot: widgetContainerRef.current }}>
+                    <AnimatePresence>
+                        <Router hook={router.hook}>
+                            <Route path={"/"} component={HomeScreen} />
+                            <Route path={"/chat"} component={ChatScreen} />
+                            <Route path={"/chat/:sessionId"} component={ChatScreen} />
+                        </Router>
+                    </AnimatePresence>
+                </WidgetProvider>
+                <Toaster />
             </InnerContainer>
-            <Toaster />
         </WidgetContainer>
     );
 });

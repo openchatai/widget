@@ -1,5 +1,5 @@
 import { useAxiosInstance, useSyncedState } from "@lib/hooks";
-import type { MakeKeysNotNullable, PrelaudeData, UserObject, WidgetOptions } from "@lib/types";
+import type { MakeKeysNotNullable, PreludeData, UserObject, WidgetOptions } from "@lib/types";
 import { type ReactNode, useMemo } from "react";
 import useSWR, { SWRResponse } from "swr";
 import { createSafeContext } from "../utils/create-safe-context";
@@ -9,9 +9,12 @@ type Settings = {
   playSoundEffects: boolean;
   keepUserData: boolean;
 }
-type NotNullableSomeConfigKeys = MakeKeysNotNullable<WidgetOptions, "language" | "apiUrl" | "socketUrl">
+type NotNullableSomeConfigKeys = MakeKeysNotNullable<
+  WidgetOptions,
+  "language" | "apiUrl" | "socketUrl" | "debug" | "dryRun" | "user"
+>
 
-type PrelaudeSWRType = SWRResponse<PrelaudeData | null, any, any>
+type PreludeSWRType = SWRResponse<PreludeData | null, any, any>
 
 interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defaultSettings"> {
   settings: {
@@ -22,7 +25,7 @@ interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defau
   apis: ReturnType<typeof useAxiosInstance>;
   userData: UserObject;
   botToken: string;
-  prelaudeSWR: PrelaudeSWRType;
+  preludeSWR: PreludeSWRType;
 }
 
 const [useConfigData, ConfigDataSafeProvider] =
@@ -55,7 +58,10 @@ export function ConfigDataProvider({
       apiUrl: data.apiUrl ?? "https://api-v2.opencopilot.so/backend",
       socketUrl: data.socketUrl ?? "https://api-v2.opencopilot.so",
       userData: data.user ?? {},
+      user: data.user ?? {},
       settings,
+      dryRun: data.dryRun ?? false,
+      debug: data.debug ?? false,
       setSettings
     };
   }, [data, settings, setSettings]);
@@ -65,14 +71,14 @@ export function ConfigDataProvider({
     botToken: _data.botToken,
   });
 
-  const prelaudeSWR = useSWR([apis.options], async () => {
-    const resp = await apis.fetchPrelaudeData();
+  const preludeSWR = useSWR([apis.options], async () => {
+    const resp = await apis.fetchPreludeData();
     if (resp.data) return resp.data
     return null
   })
 
   return (
-    <ConfigDataSafeProvider value={{ ..._data, apis, prelaudeSWR }}>
+    <ConfigDataSafeProvider value={{ ..._data, apis, preludeSWR }}>
       <LocaleProvider>
         {children}
       </LocaleProvider>

@@ -9,7 +9,7 @@ import styled, { ThemeProvider, StyleSheetManager } from "styled-components";
 import { GlobalStyle, widgetTheme } from "./theme";
 import { WidgetPopoverContent } from "./themes/advanced/WidgetPopoverContent";
 import { TooltipProvider } from "@components/tooltip";
-import { defaultRootId } from "./contants";
+import { defaultRootId } from "./constants";
 
 declare global {
   interface Window {

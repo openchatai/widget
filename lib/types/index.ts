@@ -27,7 +27,7 @@ export type WorkingHours = {
     [K in Day]: DayOfficeHours;
 };
 
-export type PrelaudeData = {
+export type PreludeData = {
     initial_questions: string[];
     ai_enabled: boolean,
     office_hours: WorkingHours;

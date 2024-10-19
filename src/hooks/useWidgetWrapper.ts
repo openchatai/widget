@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "react";
-import { defaultRootId } from "src/contants";
+import { defaultRootId } from "src/constants";
 
 const IS_SERVER = typeof window === "undefined";
 

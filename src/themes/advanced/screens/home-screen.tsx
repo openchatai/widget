@@ -115,11 +115,14 @@ export function HomeScreen() {
                     </Paragraph>
                 </div>
             </HeaderContainer>
+            {/* Past conversations */}
+            <Main>
 
-            <Main />
+            </Main>
+
             <Footer>
                 <StyledLink
-                    to='/chat'
+                    to='/chat/sessionid'
                 >
                     <span>
                         start a conversation

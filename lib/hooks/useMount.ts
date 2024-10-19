@@ -2,15 +2,16 @@ import { useEffect } from 'react';
 
 type Callback = () => void;
 
-const useLifecycles = (mount: Callback, unmount?: Callback) => {
+const useLifecycle = (mount: Callback, unmount?: Callback) => {
     useEffect(() => {
         if (mount) {
             mount();
         }
         return () => {
+            mount()
             unmount?.();
         };
     }, []);
 };
 
-export { useLifecycles };
+export { useLifecycle };

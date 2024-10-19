@@ -1,11 +1,11 @@
-import { motion } from 'framer-motion';
 import { ArrowLeft, SendHorizontal } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { SizableScreenContainer } from '../WidgetPopoverContent';
 import styled from 'styled-components';
 import { size } from 'src/design-helpers';
-import { Dialog, DialogContent, DialogTrigger } from '@components/dialog';
+import { UserMessage } from './messages/user-messages';
+import { BotMessage } from "./messages/bot-message";
 
 const FooterContainer = styled.footer`
     padding: ${props => props.theme.spacing.md};
@@ -84,7 +84,7 @@ const AnimatedChatScreenContainer = styled(SizableScreenContainer)`
     justify-content: space-between;
     gap: ${props => props.theme.spacing.xs};
 
-    header {
+    & > header {
 
     padding: ${props => props.theme.spacing.sm};
     display: flex;
@@ -179,8 +179,12 @@ const MainChatContent = styled.main`
     flex: 1;
 
 `
-
-export function ChatScreen() {
+interface ChatScreenProps {
+    params: {
+        sessionId?: string;
+    }
+}
+export function ChatScreen(props: ChatScreenProps) {
     const [location, navigate] = useLocation();
     return (
         <AnimatedChatScreenContainer
@@ -211,14 +215,8 @@ export function ChatScreen() {
                 </div>
             </header>
             <MainChatContent>
-                <Dialog>
-                    <DialogTrigger>
-                        Trigger
-                    </DialogTrigger>
-                    <DialogContent isAlert>
-                        Content
-                    </DialogContent>
-                </Dialog>
+                <UserMessage />
+                <BotMessage />
             </MainChatContent>
             <ChatFooter />
         </AnimatedChatScreenContainer>

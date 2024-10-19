@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 const SizableScreenContainer = styled(motion.div)`
   height: 500px;
+  max-height: 100%;
 `
 
 const WidgetPopoverContent = styled(PopoverContent)`
@@ -15,6 +16,7 @@ const WidgetPopoverContent = styled(PopoverContent)`
   background-color: transparent;
   height: fit-content;
   border-radius: ${props => props.theme.radii.lg};
+  outline: none;
 `
 
 export {

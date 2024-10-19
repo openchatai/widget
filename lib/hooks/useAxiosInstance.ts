@@ -1,4 +1,4 @@
-import { PrelaudeData, UserObject, WorkingHours } from "@lib/types";
+import { PreludeData, UserObject, WorkingHours } from "@lib/types";
 import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@lib/types/schemas";
 import axios, { HttpStatusCode } from "axios";
 import { useMemo } from "react";
@@ -62,8 +62,8 @@ export function useAxiosInstance(options: Options) {
       return instance.get<WorkingHours>("/copilot/office-hours/public");
     },
 
-    fetchPrelaudeData: () => {
-      return instance.get<PrelaudeData | undefined>("/widget/prelaude");
+    fetchPreludeData: () => {
+      return instance.get<PreludeData | undefined>("/widget/prelude");
     },
 
     /**

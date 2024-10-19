@@ -1,5 +1,5 @@
 import { AsyncState, isResponseOk, useAsyncFn, useSyncedState } from "@lib/hooks";
-import { useLifecycles } from "@lib/hooks/useMount";
+import { useLifecycle } from "@lib/hooks/useMount";
 import { ChatSessionType, ConsumerType } from "@lib/types/schemas";
 import { createSafeContext } from "@lib/utils/create-safe-context";
 import { type PropsWithChildren, useCallback, useMemo } from "react";
@@ -29,7 +29,7 @@ interface ConsumerProviderProps extends PropsWithChildren {
 
 function ConsumerProvider({ children, storageKey, onConsumerCreated }: ConsumerProviderProps) {
     const { botToken, userData, settings, apis } = useConfigData();
-
+    
     const _storageKey = storageKey ?? SESSION_KEY(botToken, userData.external_id)
     const strategy = settings?.keepUserData ? userData.external_id ? "local" : "session" : "session";
     const [_consumer, _setConsumer, bucket] = useSyncedState<T | null>(_storageKey, null, strategy);
@@ -50,7 +50,7 @@ function ConsumerProvider({ children, storageKey, onConsumerCreated }: ConsumerP
         return _consumer
     }, [_consumer])
 
-    useLifecycles(async () => {
+    useLifecycle(async () => {
         if (!_consumer) {
             const data = await createConsumerAsync();
             if (data) {

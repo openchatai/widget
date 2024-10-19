@@ -8,8 +8,8 @@ const Avatar = styled(AvatarPrimitive.Root)`
   position: relative;
   display: flex;
   overflow: hidden;
-  border-radius: ${({ theme }) => theme.radii.full};
-  background: ${({ theme }) => theme.colors.secondary};
+  border-radius: ${({ theme }) => theme.radii.lg};
+  background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.foreground};
   ${size("24px")};
 `;
@@ -27,4 +27,14 @@ const AvatarFallback = styled(AvatarPrimitive.Fallback)`
   font-weight: 500;
   ${size("100%")};
 `;
-export { Avatar, AvatarImage, AvatarFallback };
+
+function AvatarComponent({ src, fallback, alt }: { src?: string; fallback: string, alt?: string }) {
+  return (
+    <Avatar>
+      <AvatarImage src={src} alt={alt} />
+      <AvatarFallback>{fallback}</AvatarFallback>
+    </Avatar>
+  );
+}
+
+export { Avatar, AvatarImage, AvatarFallback, AvatarComponent };

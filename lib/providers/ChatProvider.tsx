@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAbstractChat } from "../hooks/useAbstractChat";
 import { createSafeContext } from "../utils/create-safe-context";
 import { useConsumer } from "./ConsumerProvider";
