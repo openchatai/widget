@@ -47,6 +47,7 @@ const MessageContainer = styled.div<{
             font-size: ${props => props.theme.fs.xs};
             line-height: 1.5;
             padding: 0.5rem;
+            font-weight: 500;
             border-radius: ${props => props.theme.radii.md};
             background: ${props => props.theme.colors.foreground};
             color: ${props => props.theme.colors.secondary};
