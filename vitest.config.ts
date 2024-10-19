@@ -6,6 +6,7 @@ export default defineConfig({
   clearScreen: true,
   logLevel: "info",
   test: {
+    includeSource: ["./src/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
     include: [
       "./src/**/*.test.{ts,tsx}",
       "./lib/**/*.test.{ts,tsx}",
@@ -13,6 +14,9 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest/setup.ts"],
+  },
+  define: {
+    'import.meta.vitest': 'undefined',
   },
   plugins: [
     tsconfigPaths(),
