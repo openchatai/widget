@@ -1,5 +1,4 @@
-import { ArrowLeft, SendHorizontal } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft } from "lucide-react";
 import { useLocation } from "wouter";
 import { SizableScreenContainer } from '../WidgetPopoverContent';
 import styled from 'styled-components';
@@ -7,7 +6,6 @@ import { size } from 'src/design-helpers';
 import { UserMessage } from './messages/user-messages';
 import { BotMessage } from "./messages/bot-message";
 import { ChatInput } from "./chatInput";
-import { CaptureScreenshot } from "@components/capture-screenshot/captureScreenshot";
 
 const AnimatedChatScreenContainer = styled(SizableScreenContainer)`
     display: flex;
