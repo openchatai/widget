@@ -14,7 +14,10 @@ const EditorContent = styled(UnstyledEditorContent)`
   width: 100%;
   
   padding: 10px;
-  font-size: ${props => props.theme.fs.xs};
+  
+  font-size: ${props => props.theme.fs.sm};
+  font-weight: 500;
+
   border: none;
   outline: none;
 
