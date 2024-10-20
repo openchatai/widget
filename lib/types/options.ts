@@ -1,5 +1,6 @@
 import type { LangType } from "@lib/locales";
 import type { ComponentType } from ".";
+import { WidgetLogger } from "@lib/utils/logger";
 
 export type UserObject = {
   external_id?: string;
@@ -12,7 +13,7 @@ export type UserObject = {
 
 export type WidgetOptions = {
   initialMessages: string[];
-
+  logger?: WidgetLogger;
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
   pathParams?: Record<string, string>;

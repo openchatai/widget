@@ -9,7 +9,6 @@ import {
 import { produce } from "immer";
 import {
   useCallback,
-  useEffect,
   useMemo,
   useReducer,
   useState,
@@ -18,6 +17,8 @@ import pkg from "../../package.json";
 import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./useSocket";
+import { genId } from "@lib/utils/genId";
+import { useLifecycle } from "./useLifecycle";
 
 type ChatState = {
   lastUpdated: number | null;
@@ -218,11 +219,20 @@ type CanSendType = {
   reason?: "socketError" | "sessionClosed" | "noConsumer" | "noSession";
 }
 
-function useAbstractChat() {
+/**
+ * manages the socket, messages
+ */
+function useAbstractChat({
+  session,
+  onCreateConversation,
+}: {
+  session?: C;
+  onCreateConversation?: (conversation: C) => void;
+}) {
   const { socketUrl, botToken } = useConfigData();
   const { consumer } = useConsumer();
   const locale = useLocale();
-  
+
   const { socket, useListen, socketState } = useSocket(socketUrl, {
     transports: ["websocket"],
     closeOnBeforeunload: true,
@@ -237,7 +247,6 @@ function useAbstractChat() {
       sessionId: null,
     }
   });
-
 
 
   // useEffect(() => {
@@ -269,22 +278,7 @@ function useAbstractChat() {
   //     clearInterval(interval);
   //   }
 
-  // }, [socket, session, botToken, userData]);
-
-  // useEffect(() => {
-  //   if (session) {
-
-  //     socket?.on("heartbeat:ack", (data: { success: boolean }) => {
-  //       if (data.success) {
-  //         debug("heartbeat ack")
-  //       }
-  //     })
-
-  //     return () => {
-  //       socket?.off("heartbeat:ack");
-  //     }
-  //   }
-  // }, [session]);
+  // }, [socket, session, botToken]);
 
 
   const [chatState, dispatch] = useReducer(chatReducer, {
@@ -306,14 +300,6 @@ function useAbstractChat() {
     // }
   }, [socket]);
 
-  useEffect(() => {
-    socket?.on("connect", handleConnect);
-    socket?.on("reconnect", handleReconnect);
-    return () => {
-      socket?.off("connect", handleConnect);
-      socket?.off("reconnect", handleReconnect);
-    };
-  }, [handleConnect, socket, handleReconnect]);
 
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
@@ -331,7 +317,6 @@ function useAbstractChat() {
     onRefetch(cconversation) {
       // 
     },
-
   });
 
   const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
@@ -375,26 +360,8 @@ function useAbstractChat() {
     })
   }
 
-  // const handleUserMessageBroadcast = useCallback(
-  //   (message: MessagePayload) => {
-  //     dispatch({
-  //       type: "APPEND_USER_MESSAGE",
-  //       payload: {
-  //         user: message.user,
-  //         type: "FROM_USER",
-  //         deliveredAt: null,
-  //         serverId: null,
-  //         session_id: session?.id ?? "",
-  //         content: message.content,
-  //         id: message.id ?? genId(10),
-  //       }
-  //     })
-  //   },
-  //   [],
-  // );
-
-  // this will just resend the user message again to the widget with everyhing
-  const handleDeliveredAck = useCallback((payload: MessagePayload) => {
+  useListen("structured_message", handleIncomingMessage);
+  useListen("ack:chat_message:delivered", (payload: MessagePayload) => {
     dispatch({
       type: "SET_DELIVERED_AT",
       payload: {
@@ -402,27 +369,31 @@ function useAbstractChat() {
         deliveredAt: new Date().toISOString()
       }
     });
-  }, [])
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("structured_message", handleIncomingMessage);
-    // socket.on("user_message_broadcast", handleUserMessageBroadcast)
-    socket.on("ack:chat_message:delivered", handleDeliveredAck)
-    // socket.on("info", handleInfo);
-    return () => {
-      socket.off("structured_message");
-      socket.off("info");
-      socket.off("user_message_broadcast")
-      socket.off("ack:chat_message:delivered")
-    };
-  }, [handleIncomingMessage, socket]);
-
-  useEffect(() => {
+  })
+  useListen("user_message_broadcast", (message: MessagePayload) => {
+    dispatch({
+      type: "APPEND_USER_MESSAGE",
+      payload: {
+        user: message.user,
+        type: "FROM_USER",
+        deliveredAt: null,
+        serverId: null,
+        session_id: session?.id ?? "",
+        content: message.content,
+        id: message.id ?? genId(10),
+      }
+    })
+  },);
+  useListen("connect", handleConnect);
+  useListen("heartbeat:ack", (data: { success: boolean }) => {
+    if (data.success) {
+      // 
+    }
+  })
+  useListen("reconnect", handleReconnect);
+  useLifecycle(() => {
     dispatch({ type: "INIT" });
-  }, []);
-
-  const noMessages = chatState.messages.length === 0;
+  })
 
   async function sendMessage({
     content,
@@ -522,7 +493,6 @@ function useAbstractChat() {
   return {
     version: pkg.version,
     state: chatState,
-    noMessages,
     sendMessage,
     handleKeyboard,
   };

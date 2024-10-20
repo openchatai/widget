@@ -5,6 +5,8 @@ import useSWR, { SWRResponse } from "swr";
 import { createSafeContext } from "../utils/create-safe-context";
 import { LocaleProvider } from "./LocalesProvider";
 import { ComponentRegistry } from "./componentRegistry";
+import { ConsoleLogger } from "@lib/utils/logger";
+import { useLazyInit } from "@lib/hooks/useLazyInit";
 
 type Settings = {
   playSoundEffects: boolean;
@@ -17,7 +19,7 @@ type NotNullableSomeConfigKeys = MakeKeysNotNullable<
 
 type PreludeSWRType = SWRResponse<PreludeData | null, any, any>
 
-interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defaultSettings" | "components"> {
+interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defaultSettings" | "components" | "logger"> {
   settings: {
     playSoundEffects: boolean;
     keepUserData: boolean;
@@ -28,6 +30,7 @@ interface ConfigDataProviderValue extends Omit<NotNullableSomeConfigKeys, "defau
   botToken: string;
   preludeSWR: PreludeSWRType;
   components: ComponentRegistry | null;
+  logger: ConsoleLogger | null;
 }
 
 const [useConfigData, ConfigDataSafeProvider] =
@@ -37,12 +40,11 @@ const DEFAULT_LANG = "en";
 
 export function ConfigDataProvider({
   children,
-  data,
+  data: { logger: _logger, ...data },
 }: {
   data: WidgetOptions;
   children: ReactNode;
 }) {
-
   const [settings, setSettings] = useSyncedState<Settings>(
     "[SETTINGS]:[OPEN]",
     {
@@ -79,9 +81,11 @@ export function ConfigDataProvider({
     if (resp.data) return resp.data
     return null
   })
-  
+
+  const logger = useLazyInit(() => _logger ? _logger : new ConsoleLogger());
+
   return (
-    <ConfigDataSafeProvider value={{ ..._data, apis, preludeSWR }}>
+    <ConfigDataSafeProvider value={{ ..._data, apis, preludeSWR, logger }}>
       <LocaleProvider>
         {children}
       </LocaleProvider>
