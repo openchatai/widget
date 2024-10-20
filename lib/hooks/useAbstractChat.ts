@@ -9,12 +9,11 @@ import {
 import { produce } from "immer";
 import {
   useCallback,
-  useMemo,
   useReducer,
   useState,
 } from "react";
 import pkg from "../../package.json";
-import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
+import { type ChatSessionType, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./useSocket";
 import { genId } from "@lib/utils/genId";
@@ -161,58 +160,6 @@ interface SendMessageInput extends Record<string, unknown> {
 
 type C = ChatSessionType | null;
 
-function useConversation({ defaultConversation, onCreateConversation, onConversationChange, onRefetch }: {
-  defaultConversation?: C;
-  onCreateConversation?: (conversation: C) => void;
-  onConversationChange?: (conversation: C) => void;
-  onRefetch?: (c: C) => void
-}) {
-  const [_activeConversation, _setActiveConversation] = useState<C>(defaultConversation as C);
-  const { apis } = useConfigData();
-  const { consumer } = useConsumer();
-
-  const activeConversation = useMemo(() => {
-    if (!_activeConversation) return null;
-    return {
-      ..._activeConversation,
-      isClosed: _activeConversation.status !== SessionStatus.OPEN,
-      isAiAssigned: _activeConversation.assignee_id === 555,
-    }
-  }, [_activeConversation]);
-
-  const setActiveConversation = useCallback((c: C) => {
-    _setActiveConversation(c);
-    onConversationChange?.(c);
-  }, [])
-
-  const createConversation = useCallback(async () => {
-    if (!consumer) {
-      throw new Error("You are trying to create a conversation without a consumer id")
-    };
-    const { data } = await apis.createConversation(consumer.id);
-    if (data) {
-      setActiveConversation(data);
-      onCreateConversation?.(data);
-    }
-    return data
-  }, [apis.options])
-
-  const refetchConversation = useCallback((cId: string) => {
-    apis.fetchSession(cId).then(({ data }) => {
-      if (data) {
-        setActiveConversation(data);
-        onRefetch?.(data);
-      }
-    })
-  }, [apis.options])
-
-  return {
-    activeConversation,
-    createConversation,
-    refetchConversation,
-    setActiveConversation
-  }
-}
 
 type CanSendType = {
   canSend: boolean;
@@ -220,16 +167,22 @@ type CanSendType = {
 }
 
 /**
- * manages the socket, messages
+ * manages the socket, messages, session/ticket
  */
 function useAbstractChat({
-  session,
+  conversation,
   onCreateConversation,
 }: {
-  session?: C;
+  conversation?: C;
+  /**
+   * when the conversation is undefined
+   * @param conversation 
+   * @returns 
+   */
   onCreateConversation?: (conversation: C) => void;
 }) {
-  const { socketUrl, botToken } = useConfigData();
+  const [_conversation, _setConversation] = useState<C>(conversation ?? null);
+  const { socketUrl, botToken, logger } = useConfigData();
   const { consumer } = useConsumer();
   const locale = useLocale();
 
@@ -280,26 +233,11 @@ function useAbstractChat({
 
   // }, [socket, session, botToken]);
 
-
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
     keyboard: null
   });
-
-
-  const handleConnect = useCallback(() => {
-    // if (session && socket) {
-    //   socket.emit("join_session", { session_id: session.id });
-    // }
-  }, [socket]);
-
-  const handleReconnect = useCallback(() => {
-    // if (session && socket) {
-    //   socket.emit("join_session", { session_id: session.id });
-    // }
-  }, [socket]);
-
 
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
@@ -307,38 +245,32 @@ function useAbstractChat({
     });
   }
 
-  const { activeConversation, setActiveConversation } = useConversation({
-    onConversationChange(conversation) {
-      // 
-    },
-    onCreateConversation(conversation) {
-      //       
-    },
-    onRefetch(cconversation) {
-      // 
-    },
-  });
-
-  const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
+  useListen("structured_message", (socketMsg: StructuredSocketMessageType) => {
     handleSocketMessages({
       _message: socketMsg,
       _socket: socket,
       onSessionUpdate(message, _ctx) {
-        setActiveConversation(message.value.session)
+        logger?.debug("updateSession", message);
+        // 
       },
       onBotMessage(message, _ctx) {
+        logger?.debug("onBotMessage", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onChatEvent(message, _ctx) {
+        logger?.debug("onChatEvent", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
+        logger?.debug("onUi", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onForm(message, _ctx) {
+        logger?.debug("onForm", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onOptions(message, _ctx) {
+        logger?.debug("onOptions", message);
         dispatch({
           type: "SET_KEYBOARD",
           payload: {
@@ -358,10 +290,10 @@ function useAbstractChat({
         }
       },
     })
-  }
+  });
 
-  useListen("structured_message", handleIncomingMessage);
   useListen("ack:chat_message:delivered", (payload: MessagePayload) => {
+    logger?.debug("ack:chat_message:delivered", payload);
     dispatch({
       type: "SET_DELIVERED_AT",
       payload: {
@@ -370,7 +302,9 @@ function useAbstractChat({
       }
     });
   })
+  
   useListen("user_message_broadcast", (message: MessagePayload) => {
+    logger?.debug("user_message_broadcast", message);
     dispatch({
       type: "APPEND_USER_MESSAGE",
       payload: {
@@ -378,19 +312,31 @@ function useAbstractChat({
         type: "FROM_USER",
         deliveredAt: null,
         serverId: null,
-        session_id: session?.id ?? "",
+        session_id: _conversation?.id ?? "",
         content: message.content,
         id: message.id ?? genId(10),
       }
     })
   },);
-  useListen("connect", handleConnect);
+
+  useListen("connect", () => {
+    // if (session && socket) {
+    //   socket.emit("join_session", { session_id: session.id });
+    // }
+  });
+
   useListen("heartbeat:ack", (data: { success: boolean }) => {
     if (data.success) {
       // 
     }
   })
-  useListen("reconnect", handleReconnect);
+
+  useListen("reconnect", () => {
+    // if (session && socket) {
+    //   socket.emit("join_session", { session_id: session.id });
+    // }
+  });
+
   useLifecycle(() => {
     dispatch({ type: "INIT" });
   })
