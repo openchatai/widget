@@ -76,11 +76,6 @@ export function useSyncedState<TData>(
     [key, bucket]
   );
 
-  const clear = useCallback(() => {
-    setState(null);
-    bucket.removeItem(key);
-  }, [key, bucket]);
-
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === key && e.newValue !== JSON.stringify(state)) {

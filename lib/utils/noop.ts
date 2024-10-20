@@ -1,2 +1,2 @@
 // biome-ignore lint/suspicious/noEmptyBlockStatements: <explanation>
-export const noop = () => {};
+export const noop = (...args: any[]) => {};

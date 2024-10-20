@@ -12,7 +12,7 @@ function ChatProvider({
   children: React.ReactNode;
 }) {
   const { conversationsSWR } = useConsumer();
-  const chat = useAbstractChat();
+  const chat = useAbstractChat({});
   return <SafeProvider value={chat}>{children}</SafeProvider>;
 }
 

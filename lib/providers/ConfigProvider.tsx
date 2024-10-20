@@ -6,7 +6,8 @@ import { createSafeContext } from "../utils/create-safe-context";
 import { LocaleProvider } from "./LocalesProvider";
 import { ComponentRegistry } from "./componentRegistry";
 import { ConsoleLogger } from "@lib/utils/logger";
-import { useLazyInit } from "@lib/hooks/useLazyInit";
+import { useLazyRef } from "@lib/hooks/useLazyRef";
+import { WidgetEventsEmitter } from "./widget-events";
 
 type Settings = {
   playSoundEffects: boolean;
@@ -41,9 +42,11 @@ const DEFAULT_LANG = "en";
 export function ConfigDataProvider({
   children,
   data: { logger: _logger, ...data },
+  emitter
 }: {
   data: WidgetOptions;
   children: ReactNode;
+  emitter: WidgetEventsEmitter
 }) {
   const [settings, setSettings] = useSyncedState<Settings>(
     "[SETTINGS]:[OPEN]",
@@ -82,10 +85,10 @@ export function ConfigDataProvider({
     return null
   })
 
-  const logger = useLazyInit(() => _logger ? _logger : new ConsoleLogger());
+  const logger = useLazyRef(() => _logger ? _logger : new ConsoleLogger());
 
   return (
-    <ConfigDataSafeProvider value={{ ..._data, apis, preludeSWR, logger }}>
+    <ConfigDataSafeProvider value={{ ..._data, apis, preludeSWR, logger: logger.current }}>
       <LocaleProvider>
         {children}
       </LocaleProvider>

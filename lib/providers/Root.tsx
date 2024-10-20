@@ -1,19 +1,30 @@
 import { WidgetOptions } from "@lib/types";
-import React from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { ChatProvider } from "./ChatProvider";
 import { ConfigDataProvider } from "./ConfigProvider";
 import { ConsumerProvider } from "./ConsumerProvider";
 import { LocaleProvider } from "./LocalesProvider";
+import type { WidgetEvents, WidgetEventsEmitter } from "./widget-events";
+import mitt from 'mitt';
+import { useLazyRef } from "@lib/hooks/useLazyRef";
 
-export default function Root({
-    children,
-    options,
-}: {
-    children: React.ReactNode;
+type RootProps = React.PropsWithChildren<{
     options: WidgetOptions;
-}) {
+}>
+
+type RootRef = {
+    ev: WidgetEventsEmitter
+}
+
+const Root = forwardRef<RootRef, RootProps>(({ options, children }, _ref) => {
+    const ev = useLazyRef(() => mitt<WidgetEvents>());
+    
+    useImperativeHandle(_ref, () => ({
+        ev: ev.current
+    }));
+
     return (
-        <ConfigDataProvider data={options}>
+        <ConfigDataProvider data={options} emitter={ev.current}>
             <LocaleProvider>
                 <ConsumerProvider>
                     <ChatProvider>{children}</ChatProvider>
@@ -21,4 +32,8 @@ export default function Root({
             </LocaleProvider>
         </ConfigDataProvider>
     );
-}
+});
+
+Root.displayName = "Root";
+
+export default Root;

@@ -10,6 +10,7 @@ import { GlobalStyle, widgetTheme } from "./theme";
 import { WidgetPopoverContent } from "./themes/advanced/WidgetPopoverContent";
 import { TooltipProvider } from "@components/tooltip";
 import { defaultRootId } from "./constants";
+import WidgetRoot from "@lib/providers/Root";
 
 declare global {
   interface Window {
@@ -50,26 +51,28 @@ function App({ options }: { options: WidgetOptions }) {
 
       <TooltipProvider delayDuration={100}>
         <PopoverRoot open={isOpen} onOpenChange={setIsOpened}>
-          <AnimatePresence>
-            {isOpen && (
-              <WidgetPopoverContent
-                forceMount
-                onInteractOutside={(ev) => ev.preventDefault()}
-                align="end"
-                side="top"
-                sideOffset={10}
-                asChild
-              >
-                <motion.div
-                  initial={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
-                  exit={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
-                  animate={{ opacity: 1, y: 0, rotate: "0deg", scale: 1, pointerEvents: "initial" }}
+          <WidgetRoot options={options}>
+            <AnimatePresence>
+              {isOpen && (
+                <WidgetPopoverContent
+                  forceMount
+                  onInteractOutside={(ev) => ev.preventDefault()}
+                  align="end"
+                  side="top"
+                  sideOffset={10}
+                  asChild
                 >
-                  <AdvancedWidget />
-                </motion.div>
-              </WidgetPopoverContent>
-            )}
-          </AnimatePresence>
+                  <motion.div
+                    initial={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
+                    exit={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
+                    animate={{ opacity: 1, y: 0, rotate: "0deg", scale: 1, pointerEvents: "initial" }}
+                  >
+                    <AdvancedWidget />
+                  </motion.div>
+                </WidgetPopoverContent>
+              )}
+            </AnimatePresence>
+          </WidgetRoot>
           <WidgetPopoverTrigger />
         </PopoverRoot>
       </TooltipProvider>
