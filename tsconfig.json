@@ -2,6 +2,9 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
+    "types": [
+      "vitest/importMeta"
+    ],
     "lib": [
       "ES2020",
       "DOM",
@@ -10,7 +13,6 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": ".",
-    /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -25,6 +27,9 @@
     "paths": {
       "@lib/*": [
         "./lib/*"
+      ],
+      "@components/*": [
+        "./src/components/*"
       ]
     }
   },
@@ -32,7 +37,8 @@
     "src",
     "lib",
     "types.d.ts",
-    "test"
+    "test",
+    "components"
   ],
   "exclude": [
     "node_modules",

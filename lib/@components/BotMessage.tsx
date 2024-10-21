@@ -1,4 +1,4 @@
-import { useConfigData } from "@lib/providers/ConfigDataProvider";
+import { useConfigData } from "@lib/providers/ConfigProvider";
 import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { BotMessageType } from "@lib/types";
 import { ComponentType, useMemo } from "react";

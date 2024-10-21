@@ -68,7 +68,7 @@ describe('useSyncedState', () => {
         expect(result.current[0]).toEqual({ value: 'updated' });
 
         act(() => {
-            result.current[2]();
+            result.current[1](null);
         });
 
         expect(result.current[0]).toBeNull();

@@ -6,10 +6,17 @@ export default defineConfig({
   clearScreen: true,
   logLevel: "info",
   test: {
-    include: ["./lib/**/*.test.{ts,tsx}", ...configDefaults.exclude],
+    includeSource: ["./src/**/*.{ts,tsx}", "./lib/**/*.{ts,tsx}"],
+    include: [
+      "./src/**/*.test.{ts,tsx}",
+      "./lib/**/*.test.{ts,tsx}",
+      ...configDefaults.exclude],
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest/setup.ts"],
+  },
+  define: {
+    'import.meta.vitest': 'undefined',
   },
   plugins: [
     tsconfigPaths(),

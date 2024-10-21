@@ -1,12 +1,16 @@
-import { WidgetRoot } from "../lib/Root";
-import styles from "../lib/index.css?inline";
+import { Root as PopoverRoot } from "@radix-ui/react-popover"
+import { AnimatePresence, motion } from "framer-motion";
+import { ComponentRef, useRef, useState } from "react";
 import { WidgetOptions } from "../lib/types";
-import packageJson from "../package.json";
-import { WidgetPopover } from "./designs/basic";
-import { IframedWidgetPopover } from "./iframed";
+import { AdvancedWidget } from "./themes/advanced";
+import { WidgetPopoverTrigger } from "./themes/advanced/WidgetPopoverTrigger";
 import { render } from "./render";
-
-const defaultRootId = "opencopilot-root";
+import styled, { ThemeProvider, StyleSheetManager } from "styled-components";
+import { GlobalStyle, widgetTheme } from "./theme";
+import { WidgetPopoverContent } from "./themes/advanced/WidgetPopoverContent";
+import { TooltipProvider } from "@components/tooltip";
+import { defaultRootId } from "./constants";
+import WidgetRoot from "@lib/providers/Root";
 
 declare global {
   interface Window {
@@ -15,27 +19,74 @@ declare global {
 }
 
 window["initOpenScript"] = initOpenScript;
-function initIframedScript(options: WidgetOptions) {
-  render(
-    defaultRootId,
-    <WidgetRoot options={options}>
-      <IframedWidgetPopover />
-    </WidgetRoot>
-  );
+
+const ColorCubes = styled.ul`
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  flex-wrap: wrap;
+  li {
+    border-radius: 5px;
+    padding: 10px;
+    height: auto;
+    aspect-ratio: 1/1;
+    width: fit-content;
+  }
+`
+
+function App({ options }: { options: WidgetOptions }) {
+  const [isOpen, setIsOpened] = useState(true);
+  const rootRef = useRef<ComponentRef<typeof WidgetRoot>>(null);
+  
+  return (
+    <ThemeProvider theme={widgetTheme}>
+      <StyleSheetManager namespace={`#${defaultRootId}`} enableVendorPrefixes>
+        <GlobalStyle />
+
+        <ColorCubes>
+          {Object.entries(widgetTheme.colors).map(([key, value]) => (
+            <li key={key} style={{ backgroundColor: value }}>
+              {key}
+            </li>
+          ))}
+        </ColorCubes>
+        <TooltipProvider delayDuration={100}>
+
+          <PopoverRoot open={isOpen} onOpenChange={setIsOpened}>
+            <WidgetRoot ref={rootRef} options={options}>
+              <AnimatePresence>
+                {isOpen && (
+                  <WidgetPopoverContent
+                    forceMount
+                    onInteractOutside={(ev) => ev.preventDefault()}
+                    align="end"
+                    side="top"
+                    sideOffset={10}
+                    asChild
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
+                      exit={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
+                      animate={{ opacity: 1, y: 0, rotate: "0deg", scale: 1, pointerEvents: "initial" }}
+                    >
+                      <AdvancedWidget />
+                    </motion.div>
+                  </WidgetPopoverContent>
+                )}
+              </AnimatePresence>
+            </WidgetRoot>
+            <WidgetPopoverTrigger />
+          </PopoverRoot>
+
+        </TooltipProvider>
+      </StyleSheetManager>
+    </ThemeProvider>
+  )
 }
 
-export function initOpenScript(options: WidgetOptions, mode: "default" | "iframed" = "default") {
-  if (mode === "iframed") {
-    initIframedScript(options);
-    return;
-  }
+export function initOpenScript(options: WidgetOptions) {
   render(
     defaultRootId,
-    <WidgetRoot options={options}>
-      <style type="text/css" data-version={packageJson.version}>
-        {styles}
-      </style>
-      <WidgetPopover />
-    </WidgetRoot>
+    <App options={options} />
   );
 }

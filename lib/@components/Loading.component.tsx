@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@lib/components/avatar";
+import { Avatar, AvatarFallback } from "@components/avatar";
 
 export function BotLoadingComponent() {
   return (

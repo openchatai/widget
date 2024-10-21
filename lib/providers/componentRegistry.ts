@@ -7,11 +7,11 @@ import {
 } from "../@components";
 
 /**
- * this a singleton  class helps me to easily control the components present/available in the widget.
- * it also manages the various types of components to be added along the way.
+ * Singleton class for managing components within the widget.
+ * Allows registering and fetching components with fallback options.
  */
 export class ComponentRegistry {
-  components: ComponentType[] = [
+  private components: ComponentType[] = [
     {
       key: "TEXT",
       component: BotTextResponse,
@@ -26,52 +26,72 @@ export class ComponentRegistry {
     },
     {
       key: "CHAT_EVENT",
-      component: ChatEventComponent
+      component: ChatEventComponent,
     },
-  ] as const;
+  ];
 
   constructor(opts: OptionsType) {
-    const { components } = opts;
-
-    if (components) {
-      components.forEach((c) => this.register(c));
+    if (opts?.components) {
+      opts.components.forEach((c) => this.register(c));
     }
 
     if (this.components.length === 0) {
-      throw new Error("No components registered");
-    } else if (!this.get("FALLBACK")) {
-      throw new Error("No fallback component registered");
+      throw new Error("ComponentRegistry initialization failed: No components registered.");
+    }
+
+    if (!this.getComponent("FALLBACK")) {
+      throw new Error("ComponentRegistry requires a fallback component.");
     }
   }
 
-  register(com: ComponentType) {
-    // Replace the key if it already exists
-    const index = this.components.findIndex((c) => c.key === com.key);
-    if (index !== -1) {
-      this.components[index] = com;
+  /**
+   * Registers a new component or replaces an existing one with the same key.
+   * @param component - The component to be registered.
+   */
+  register(component: ComponentType): this {
+    const existingIndex = this.components.findIndex((c) => c.key === component.key);
+
+    if (existingIndex !== -1) {
+      this.components[existingIndex] = component;
     } else {
-      this.components.push(com);
+      this.components.push(component);
     }
+
     return this;
   }
 
-  private get(key: string) {
-    const c = this.components.find(
-      (c) => c.key.toUpperCase() === key.toUpperCase(),
-    );
-    if (c) return c;
-    return null;
+  /**
+   * Retrieves a component by its key. If not found, returns null.
+   * @param key - The key of the component to retrieve.
+   */
+  private getComponentByKey(key: string): ComponentType | null {
+    return this.components.find((c) => c.key.toUpperCase() === key.toUpperCase()) || null;
   }
 
-  private getOrFallback(key?: string) {
-    return key ? this.get(key) || this.get("FALLBACK")! : this.get("FALLBACK")!;
+  /**
+   * Retrieves a component by key or falls back to the fallback component.
+   * @param key - The key of the component to retrieve (optional).
+   */
+  private getComponentOrFallback(key?: string): ComponentType {
+    return this.getComponentByKey(key ?? "FALLBACK") || this.getComponentByKey("FALLBACK")!;
   }
 
-  public getComponent(key: string, getFallback?: boolean) {
-    if (getFallback) {
-      return this.getOrFallback(key).component;
+  /**
+   * Public method to retrieve a component.
+   * Optionally, returns a fallback component if the key is not found.
+   * @param key - The key of the component to retrieve.
+   * @param useFallback - Whether to return the fallback component if the key is not found.
+   */
+  public getComponent(key: string, useFallback: boolean = false): ComponentType["component"] | null {
+    if (useFallback) {
+      return this.getComponentOrFallback(key).component;
     }
 
-    return this.get(key)?.component;
+    return this.getComponentByKey(key)?.component ?? null;
   }
+
+  public destroy(): void {
+    this.components = [];
+  }
+
 }

@@ -1,6 +1,6 @@
 import type { LangType } from "@lib/locales";
-import React from "react";
 import type { ComponentType } from ".";
+import { WidgetLogger } from "@lib/utils/logger";
 
 export type UserObject = {
   external_id?: string;
@@ -12,33 +12,49 @@ export type UserObject = {
 }
 
 export type WidgetOptions = {
-  token: string;
-  theme?: "basic" | "default",
+  initialMessages: string[];
+  logger?: WidgetLogger;
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
   pathParams?: Record<string, string>;
-  initialMessages: string[];
-  triggerSelector?: string;
-  apiUrl?: string;
-  settings?: {
-    persistSession?: boolean;
-    useSoundEffects?: boolean;
+  
+  defaultSettings?: {
+    playSoundEffects?: boolean;
+    keepUserData?: boolean
   },
+  
   socketUrl?: string;
+  apiUrl?: string;
+  token: string;
+  
   defaultOpen?: boolean;
-  debug?: boolean;
+  
   language?: LangType;
-  warnBeforeClose?: boolean;
-  onClose?: () => void;
+  
   organizationName?: string;
-  containerProps?: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >;
-  user?: UserObject
+  
+  /**
+   * the user data known to the tenant.
+   * @default {}
+   */
+  user?: UserObject;
+
   bot?: {
     name?: string;
     avatarUrl?: string;
   };
+  
   components?: ComponentType[];
+  
+  /**
+   * no api requests, or socket connections will be made.
+   * @default false
+   */
+  preview?: boolean;
+  /**
+   * to show fallback component when the key is not found.
+   * useful for custom components
+   * @default false
+   */
+  debug?: boolean;
 };

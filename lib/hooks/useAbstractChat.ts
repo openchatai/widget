@@ -1,158 +1,98 @@
 import { LangType } from "@lib/locales";
-import { useLocale } from "@lib/providers";
+import { useConsumer } from "@lib/providers";
+import { useConfigData } from "@lib/providers/ConfigProvider";
+import { useLocale } from "@lib/providers/LocalesProvider";
 import {
   MessageType,
   UserMessageType,
-  UserObject,
 } from "@lib/types";
-import { debug } from "@lib/utils/debug";
-import { genId } from "@lib/utils/genId";
-import {
-  createSession,
-  getChatSessionById,
-  getInitData,
-} from "@lib/utils/getters";
-import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
-import { AxiosInstance } from "axios";
 import { produce } from "immer";
 import {
-  ReactNode,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
+  useState,
 } from "react";
-import useSWR from "swr";
 import pkg from "../../package.json";
-import { useTimeoutState } from "../hooks/useTimeoutState";
-import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
+import { SessionStatus, type ChatSessionType, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
-import { useSocket } from "./socket";
-import { representSocketState } from "./socketState";
-import { useAxiosInstance } from "./useAxiosInstance";
-import { useSyncedState } from "./useSyncState";
-
-type useChatOptions = {
-  socketUrl: string;
-  apiUrl: string;
-  botToken: string;
-  headers: Record<string, string>;
-  queryParams: Record<string, string>;
-  pathParams: Record<string, string>;
-  onSessionDestroy?: () => void;
-  defaultHookSettings?: HookSettings
-  userData?: UserObject;
-  language?: LangType;
-};
+import { useSocket } from "./useSocket";
+import { genId } from "@lib/utils/genId";
+import { useLifecycle } from "./useLifecycle";
+import { debugAssert } from "@lib/utils/debug-assert";
+import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
+type HookState = "loading" | "error" | "idle";
 
 type ChatState = {
+  prevState: ChatState | null;
   lastUpdated: number | null;
   messages: MessageType[];
   keyboard: { options: string[] } | null;
+  meta: {
+    state: HookState;
+  }
 };
 
 type ActionType =
-  | {
-    type: "INIT";
-  }
-  | {
-    type: "ADD_RESPONSE_MESSAGE";
-    payload: MessageType;
-  }
-  | {
-    type: "APPEND_USER_MESSAGE";
-    payload: UserMessageType;
-  }
-  | {
-    type: "PREPEND_HISTORY";
-    payload: MessageType[];
-  }
-  | {
-    type: "SET_SERVER_ID";
-    payload: {
-      clientMessageId: string;
-      ServerMessageId: number;
-    };
-  }
-  | {
-    type: "SET_KEYBOARD";
-    payload: {
-      options: string[];
-    } | null;
-  }
-  | {
-    type: "RESET";
-  } | {
-    type: "SET_DELIVERED_AT",
-    payload: {
-      clientMessageId: string;
-      deliveredAt: string;
-    }
-  }
-
+  | { type: "ADD_RESPONSE_MESSAGE"; payload: MessageType }
+  | { type: "APPEND_USER_MESSAGE"; payload: UserMessageType }
+  | { type: "PREPEND_HISTORY"; payload: MessageType[] }
+  | { type: "SET_SERVER_ID"; payload: { clientMessageId: string; ServerMessageId: number } }
+  | { type: "SET_KEYBOARD"; payload: { options: string[] } | null }
+  | { type: "RESET" }
+  | { type: "SET_DELIVERED_AT"; payload: { clientMessageId: string; deliveredAt: string } }
+  | { type: "CHANGE_STATE", payload: ChatState['meta']['state'] };
+// Reducer function to manage chat state
 function chatReducer(state: ChatState, action: ActionType) {
   return produce(state, (draft) => {
-
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
     };
-
+    draft.prevState = state;
     switch (action.type) {
-      case "INIT": {
-        setLastupdated();
-        break;
-      }
-      case "ADD_RESPONSE_MESSAGE": {
+      case "ADD_RESPONSE_MESSAGE":
         draft.messages.push(action.payload);
         setLastupdated();
         break;
-      }
-
-      case "APPEND_USER_MESSAGE": {
+      case "APPEND_USER_MESSAGE":
         draft.messages.push(action.payload);
         setLastupdated();
         break;
-      }
-
-      case "RESET": {
+      case "RESET":
         draft.messages = [];
         draft.lastUpdated = null;
         draft.keyboard = null;
+        draft.prevState = null;
+        draft.meta.state = "idle";
         break;
-      }
-
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
-        draft.messages = draft.messages.filter(
-          (msg) => !historyIds.includes(msg.id),
-        );
+        draft.messages = draft.messages.filter((msg) => !historyIds.includes(msg.id));
         draft.messages = [...action.payload, ...draft.messages];
         setLastupdated();
         break;
       }
-
       case "SET_SERVER_ID": {
         const { clientMessageId, ServerMessageId } = action.payload;
-        const message = draft.messages.find(
-          (msg) => msg.id === clientMessageId,
-        );
+        const message = draft.messages.find((msg) => msg.id === clientMessageId);
         if (message) {
           message.serverId = ServerMessageId;
         }
         break;
       }
-
-      case "SET_KEYBOARD": {
+      case "SET_KEYBOARD":
         draft.keyboard = action.payload;
         break;
+      case "CHANGE_STATE": {
+        draft.meta.state = action.payload;
+        break;
       }
-
       default:
         break;
     }
   });
 }
-
-const SESSION_KEY = (botToken: string, userEmail?: string) => `[OPEN_SESSION_${botToken}]` + userEmail ? `_${userEmail} : ""` : "";
 
 type MessagePayload = {
   id: string;
@@ -172,237 +112,198 @@ type MessagePayload = {
   };
 };
 
-type HookState = "loading" | "error" | "idle";
 
-interface SendMessageInput extends Record<string, unknown> {
-  content: {
-    text: string;
-  };
+type SendMessageInput = {
+  content: { text: string };
   headers?: Record<string, unknown>;
   user?: Record<string, unknown>;
   query_params?: Record<string, string>;
   PathParams?: Record<string, string>;
   id?: string;
-  language?: useChatOptions['language'];
+};
+
+type C = ChatSessionType | null;
+
+export type CanSendType = {
+  canSend: boolean;
+  reason?: "socketError" | "sessionClosed" | "noConsumer" | "noSession" | "noContent";
 }
 
-interface HookSettings {
-  persistSession?: boolean;
-  useSoundEffects?: boolean;
-}
-
+/**
+ * manages the socket, messages, session/ticket
+ */
 function useAbstractChat({
-  apiUrl,
-  socketUrl,
-  botToken,
-  defaultHookSettings,
-  onSessionDestroy,
-  headers,
-  queryParams,
-  pathParams,
-  userData,
-  language,
-}: useChatOptions): UseAbstractchatReturnType {
+  defaultConversation: conversation,
+  onCreateConversation,
+}: {
+  defaultConversation?: C | string;
+  /**
+   * when the conversation is undefined
+   * @param conversation 
+   * @returns 
+   */
+  onCreateConversation?: (conversation: C) => void;
+}) {
+  const [_activeConversation, setActiveConversation] = useState<C>();
+  const { socketUrl, botToken, logger, apis, ...config } = useConfigData();
+  const { consumer } = useConsumer();
   const locale = useLocale();
-  const [settings, _setSettings] = useSyncedState(
-    "[SETTINGS]:[OPEN]",
-    {
-      persistSession: defaultHookSettings?.persistSession ?? false,
-      useSoundEffects: defaultHookSettings?.useSoundEffects ?? false,
-    },
-    "local",
-  );
-  const axiosInstance = useAxiosInstance({
-    apiUrl,
-    botToken,
-  });
-
-  const [session, setSession] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, userData?.external_id),
-    undefined,
-    settings?.persistSession ? "local" : "memory",
-  );
-
-  async function refreshSession(sessionId: string) {
-    let response = await getChatSessionById(axiosInstance, sessionId);
-    if (response.data) {
-      setSession(response.data);
-    }
-    return response.data;
-  }
-
-  useEffect(() => {
-    if (!session?.id) return;
-    refreshSession(session.id)
-  }, [])
-
-  const { socket, socketState } = useSocket(socketUrl, {
-    autoConnect: true,
-    transports: ["websocket"],
-    closeOnBeforeunload: true,
-    query: {
-      botToken,
-      sessionId: session?.id,
-      client: "widget",
-      clientVersion: pkg.version,
-    }
-  });
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (session && socket) {
-
-      const currentSessionId = session.id;
-
-      const heartbeatPayload = {
-        sessionId: currentSessionId,
-        client: "widget",
-        botToken,
-        user: userData,
-        timestamp: Date.now(),
-      }
-
-      async function sendHeartbeat() {
-        socket?.emit('heartbeat', heartbeatPayload);
-      }
-
-      sendHeartbeat();
-
-      interval = setInterval(() => {
-        sendHeartbeat();
-      }, 50 * 1000); // 50 seconds
-    }
-
-    return () => {
-      clearInterval(interval);
-    }
-
-  }, [socket, session, botToken, userData]);
-
-  useEffect(() => {
-    if (session) {
-
-      socket?.on("heartbeat:ack", (data: { success: boolean }) => {
-        if (data.success) {
-          debug("heartbeat ack")
-        }
-      })
-
-      return () => {
-        socket?.off("heartbeat:ack");
-      }
-    }
-  }, [session]);
-
-
-  const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
-    _setSettings(Object.assign({}, settings, data));
-  };
 
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
-    keyboard: null
+    keyboard: null,
+    prevState: null,
+    meta: {
+      state: "idle"
+    }
   });
 
 
-  const [info, setInfo] = useTimeoutState<ReactNode | null>(
-    () => representSocketState(socketState, locale.get),
-    1000,
-  );
-
-  const initialData = useSWR(
-    ["initialData", botToken],
-    async ([_, _token]) => {
-      const { data } = await getInitData(axiosInstance, session?.id);
-      return {
-        history: data ? historyToWidgetMessages(data.history) : [],
-        faq: data?.faq ?? [],
-        initial_questions: data?.initial_questions ?? [],
-        logo: data?.logo ?? "",
-      }
-    },
-    {
-      onSuccess(data) {
-        dispatch({
-          type: "PREPEND_HISTORY",
-          payload: data.history,
-        });
-      },
-      fallbackData: {
-        history: [],
-        faq: [],
-        initial_questions: [],
-        logo: "",
-      },
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-    },
-  );
-
-  const handleConnect = useCallback(() => {
-    if (session && socket) {
-      socket.emit("join_session", { session_id: session.id });
+  const { socket, useListen } = useSocket(socketUrl, {
+    transports: ["websocket"],
+    closeOnBeforeunload: true,
+    query: {
+      client: "widget",
+      botToken,
+      language: locale.lang,
+      clientVersion: pkg.version,
+      contactId: consumer?.id,
+      sessionId: null,
     }
-  }, [session?.id, socket]);
+  });
 
-  const handleReconnect = useCallback(() => {
-    if (session && socket) {
-      socket.emit("join_session", { session_id: session.id });
-    }
-  }, [socket]);
+  function changeActiveConversation(c: C) {
+    setActiveConversation(c);
+    dispatch({ type: "RESET" })
+  }
 
   useEffect(() => {
-    socket?.on("connect", handleConnect);
-    socket?.on("reconnect", handleReconnect);
+    if (!consumer) {
+      logger?.warn("consumer is undefined");
+      return;
+    }
+    if (!conversation) {
+      // 
+    }
+    if (typeof conversation === "string") {
+      apis.fetchSession(
+        conversation,
+        consumer.id
+      ).then((c) => {
+        if (c.data) {
+          setActiveConversation(c.data);
+        }
+      })
+    } else if (typeof conversation === "object") {
+      setActiveConversation(conversation);
+    }
+  }, [conversation]);
+
+  const joinChatSession = (sessionId: string) => {
+    if (socket) {
+      socket.emit("join_session", { sessionId });
+      logger?.debug("joined session", sessionId);
+    } else {
+      console.error("Socket is not initialized");
+    }
+  }
+
+  const leaveChatSession = (sessionId: string) => {
+    if (socket) {
+      socket.emit("leave_session", { sessionId });
+      logger?.debug("left session", sessionId);
+    } else {
+      console.error("Socket is not initialized");
+    }
+  }
+
+  useEffect(() => {
+    if (socket && _activeConversation) {
+      joinChatSession(_activeConversation.id);
+    }
     return () => {
-      socket?.off("connect", handleConnect);
-      socket?.off("reconnect", handleReconnect);
+      if (socket && _activeConversation) {
+        leaveChatSession(_activeConversation.id);
+      }
     };
-  }, [handleConnect, socket, handleReconnect]);
+  }, [_activeConversation, socket]);
 
-  function joinSession(session_id: string) {
-    socket?.emit("join_session", {
-      session_id,
-    });
-  }
+  useEffect(() => {
+    if (_activeConversation && consumer) {
+      apis.fetchConversationHistory(_activeConversation.id, consumer.id)
+        .then((response) => {
+          if (response.data) {
+            const messages = historyToWidgetMessages(response.data);
+            logger?.debug({
+              original: response.data,
+              widget: messages
+            });
+            dispatch({ type: "PREPEND_HISTORY", payload: messages });
+          }
+        })
+        .catch(error => logger?.error("Error fetching conversation history", error));
+    }
+  }, [_activeConversation, consumer, apis]);
 
-  function clearSession() {
-    socket?.emit("leave_session", { session_id: session?.id });
-    setSession(null);
-    dispatch({ type: "RESET" });
-    onSessionDestroy?.();
-  }
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
+  //   if (session && socket) {
 
-  function recreateSession() {
-    clearSession();
-    createSession(axiosInstance, botToken).then(({ data }) => {
-      setSession(data);
-      joinSession(data.id);
-    });
-  }
+  //     const currentSessionId = session.id;
 
-  const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
+  //     const heartbeatPayload = {
+  //       sessionId: currentSessionId,
+  //       client: "widget",
+  //       botToken,
+  //       user: userData,
+  //       timestamp: Date.now(),
+  //     }
+
+  //     async function sendHeartbeat() {
+  //       socket?.emit('heartbeat', heartbeatPayload);
+  //     }
+
+  //     sendHeartbeat();
+
+  //     interval = setInterval(() => {
+  //       sendHeartbeat();
+  //     }, 50 * 1000); // 50 seconds
+  //   }
+
+  //   return () => {
+  //     clearInterval(interval);
+  //   }
+
+  // }, [socket, session, botToken]);
+
+
+  useListen("structured_message", (socketMsg: StructuredSocketMessageType) => {
     handleSocketMessages({
       _message: socketMsg,
       _socket: socket,
       onSessionUpdate(message, _ctx) {
-        setSession(message.value.session);
+        logger?.debug("updateSession", message);
+        // 
       },
       onBotMessage(message, _ctx) {
+        logger?.debug("onBotMessage", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onChatEvent(message, _ctx) {
+        logger?.debug("onChatEvent", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
+        logger?.debug("onUi", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onForm(message, _ctx) {
+        logger?.debug("onForm", message);
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onOptions(message, _ctx) {
+        logger?.debug("onOptions", message);
         dispatch({
           type: "SET_KEYBOARD",
           payload: {
@@ -422,35 +323,10 @@ function useAbstractChat({
         }
       },
     })
-  }
+  });
 
-  const handleInfo = useCallback(
-    (info: string) => {
-      setInfo(info);
-    },
-    [setInfo],
-  );
-
-  const handleUserMessageBroadcast = useCallback(
-    (message: MessagePayload) => {
-      dispatch({
-        type: "APPEND_USER_MESSAGE",
-        payload: {
-          user: message.user,
-          type: "FROM_USER",
-          deliveredAt: null,
-          serverId: null,
-          session_id: session?.id ?? "",
-          content: message.content,
-          id: message.id ?? genId(10),
-        }
-      })
-    },
-    [],
-  );
-
-  // this will just resend the user message again to the widget with everyhing
-  const handleDeliveredAck = useCallback((payload: MessagePayload) => {
+  useListen("ack:chat_message:delivered", (payload: MessagePayload) => {
+    logger?.debug("ack:chat_message:delivered", payload);
     dispatch({
       type: "SET_DELIVERED_AT",
       payload: {
@@ -458,25 +334,41 @@ function useAbstractChat({
         deliveredAt: new Date().toISOString()
       }
     });
-  }, [])
+  })
 
-  useEffect(() => {
-    if (!socket) return;
-    socket.on("structured_message", handleIncomingMessage);
-    socket.on("user_message_broadcast", handleUserMessageBroadcast)
-    socket.on("ack:chat_message:delivered", handleDeliveredAck)
-    socket.on("info", handleInfo);
-    return () => {
-      socket.off("structured_message");
-      socket.off("info");
-      socket.off("user_message_broadcast")
-      socket.off("ack:chat_message:delivered")
-    };
-  }, [handleIncomingMessage, handleInfo, handleUserMessageBroadcast, socket]);
+  useListen("user_message_broadcast", (message: MessagePayload) => {
+    logger?.debug("user_message_broadcast", message);
+    dispatch({
+      type: "APPEND_USER_MESSAGE",
+      payload: {
+        user: message.user,
+        type: "FROM_USER",
+        deliveredAt: null,
+        serverId: null,
+        session_id: _activeConversation?.id ?? "",
+        content: message.content,
+        id: message.id ?? genId(10),
+      }
+    })
+  },);
 
-  useEffect(() => {
-    dispatch({ type: "INIT" });
-  }, []);
+  useListen("connect", () => {
+    if (_activeConversation && socket) {
+      joinChatSession(_activeConversation.id)
+    }
+  });
+
+  useListen("heartbeat:ack", (data: { success: boolean }) => {
+    if (data.success) {
+      // 
+    }
+  })
+
+  useListen("reconnect", () => {
+    if (_activeConversation && socket) {
+      joinChatSession(_activeConversation.id)
+    }
+  });
 
   const noMessages = chatState.messages.length === 0;
 
@@ -488,48 +380,53 @@ function useAbstractChat({
     query_params: inputQueryParams,
     ...data
   }: SendMessageInput) {
-    let chatSession = session;
+    debugAssert()(consumer, "consumer should be defined");
 
-    if (!session && noMessages) {
+    if (!consumer) return;
+
+    let conversation = _activeConversation;
+
+    if (!conversation && noMessages) {
       try {
-        const { data: newSession } = await createSession(axiosInstance, botToken);
-        if (newSession) {
-          setSession(newSession);
-          joinSession(newSession.id);
-          chatSession = newSession;
+        const { data: newConversation } = await apis.createConversation(consumer.id);
+        if (newConversation) {
+          onCreateConversation?.(newConversation)
+          setActiveConversation(newConversation);
+          joinChatSession(newConversation.id);
+          conversation = newConversation;
         } else {
-          throw new Error("Failed to create session");
+          throw new Error("Failed to create conversation");
         }
       } catch (error) {
-        console.error("Error creating session:", error);
+        console.error("Error creating conversation:", error);
         return null;
       }
     }
 
-    if (chatSession && socket) {
+    if (conversation && socket) {
       const msgId = genId();
       const payload: MessagePayload = {
         id: msgId,
         bot_token: botToken,
         content: content.text,
-        session_id: chatSession.id,
+        session_id: conversation.id,
         headers: {
-          ...headers,
+          ...config.headers,
           ...inputHeaders,
         },
         pathParams: {
-          ...pathParams,
+          ...config.pathParams,
           ...inputPathParams,
         },
         query_params: {
-          ...queryParams,
+          ...config.queryParams,
           ...inputQueryParams,
         },
         user: {
-          ...userData,
+          ...config.userData,
           ...user,
         },
-        language,
+        language: config.language,
         ...data
       };
       try {
@@ -540,7 +437,7 @@ function useAbstractChat({
             id: msgId,
             content: content.text,
             timestamp: new Date().toISOString(),
-            session_id: chatSession.id,
+            session_id: conversation.id,
             user: payload.user,
             deliveredAt: null,
             serverId: null
@@ -552,7 +449,6 @@ function useAbstractChat({
             payload: null
           });
         }
-
         socket.emit("send_chat", payload);
         return payload;
       } catch (error) {
@@ -575,52 +471,38 @@ function useAbstractChat({
     });
   }, [dispatch, sendMessage, socket,]);
 
+  const activeConversation = useMemo(() => {
+    if (_activeConversation) {
+      return {
+        ..._activeConversation,
+        isClosed: _activeConversation.status !== SessionStatus.OPEN,
+      }
+    }
+    return undefined
+  }, [_activeConversation]);
+
+  const canSend = useMemo<CanSendType>(() => {
+    if (activeConversation?.isClosed) {
+      return {
+        canSend: false,
+        reason: "sessionClosed"
+      }
+    }
+    return {
+      canSend: true
+    };
+  }, [activeConversation]);
+
   return {
     version: pkg.version,
     state: chatState,
-    session: session ?? null,
-
-    // Derived // 
-    isSessionClosed: session?.status === SessionStatus.CLOSED_RESOLVED || session?.status === SessionStatus.CLOSED_UNRESOLVED,
-    noMessages,
-    initialData: initialData?.data ?? null,
-    // ------- //
-
-    recreateSession,
-    clearSession,
+    activeConversation,
     sendMessage,
-    info,
-    settings,
-    setSettings,
-    axiosInstance,
     handleKeyboard,
-    hookState: "idle"
+    changeActiveConversation,
+    canSend
   };
 }
 
-interface InitialData {
-  logo: string;
-  faq: [];
-  initial_questions: string[];
-  history: MessageType[];
-}
 
-interface UseAbstractchatReturnType {
-  version: string;
-  state: ChatState,
-  session: ChatSessionType | null;
-  isSessionClosed: boolean;
-  recreateSession: () => void;
-  clearSession: () => void;
-  sendMessage: (input: SendMessageInput) => Promise<MessagePayload | null>;
-  noMessages: boolean;
-  info: ReactNode;
-  hookState: HookState;
-  initialData: InitialData | null;
-  settings: HookSettings | null;
-  setSettings: (data: NonNullable<Partial<HookSettings>>) => void;
-  axiosInstance: AxiosInstance;
-  handleKeyboard: (option: string) => void;
-}
-
-export { useAbstractChat, type SendMessageInput, type HookState, type UseAbstractchatReturnType };
+export { useAbstractChat, type SendMessageInput, type HookState };
