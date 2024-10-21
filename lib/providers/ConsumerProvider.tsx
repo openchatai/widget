@@ -1,8 +1,8 @@
 import { AsyncState, isResponseOk, useAsyncFn, useSyncedState } from "@lib/hooks";
-import { useLifecycle } from "@lib/hooks/useLifecycle";
+import { useLifecycle, useRunOnce } from "@lib/hooks/useLifecycle";
 import { ChatSessionType, consumerSchema, ConsumerType } from "@lib/types/schemas";
 import { createSafeContext } from "@lib/utils/create-safe-context";
-import { type PropsWithChildren, useCallback, useMemo } from "react";
+import { type PropsWithChildren, useCallback } from "react";
 import useSWR, { SWRResponse } from "swr";
 import { useConfigData } from "./ConfigProvider";
 import { debugAssert } from "@lib/utils/debug-assert";
@@ -18,7 +18,8 @@ const [
     creatingConsumerState: AsyncState<T | null>;
     clearConsumerData: () => void;
     refreshConsumer: () => Promise<T | null>;
-    conversationsSWR: ConversationsSWR
+    conversationsSWR: ConversationsSWR;
+    selectConversationById: (conv: string) => ChatSessionType | null;
 }>();
 
 const SESSION_KEY = (botToken: string, anotherKey?: string) => `open_consumer_${botToken}_${anotherKey ?? 'data'}`;
@@ -51,9 +52,10 @@ function ConsumerProvider({ children, storageKey, onConsumerCreated, defaultCons
     }, [userData, apis])
 
 
-    useLifecycle(async () => {
+    useRunOnce(async () => {
         const isValidConsumer = consumerSchema.passthrough().nullable().safeParse(_consumer);
-
+        logger?.debug(isValidConsumer);
+        
         // detect invalid storage data
         if (!isValidConsumer.success && _consumer) {
             bucket.removeItem(_storageKey)
@@ -83,32 +85,31 @@ function ConsumerProvider({ children, storageKey, onConsumerCreated, defaultCons
         bucket.removeItem(_storageKey);
     }, [bucket]);
 
-    const consumer = useMemo(() => {
-        // for later to add extra properties. 
-        if (!_consumer) {
-            return null
-        }
-        return _consumer
-    }, [_consumer]);
-
-    const conversationsSWR = useSWR([consumer, _storageKey, apis.options], async () => {
-        if (!consumer) return null;
-        const response = await apis.fetchConversations(consumer.id);
+    const conversationsSWR = useSWR([_consumer, _storageKey, apis.options], async () => {
+        if (!_consumer) return null;
+        const response = await apis.fetchConversations(_consumer.id);
         if (isResponseOk(response.status)) {
             return response.data
         }
         return null
     })
-    logger?.debug("consumer", _consumer)
+
+    const selectConversationById = useCallback((conv: string) => {
+        if (!conversationsSWR.data) return null;
+        return conversationsSWR.data.find(c => c.id === conv) ?? null
+    }, [conversationsSWR])
+
+    logger?.debug("consumer", _consumer?.id)
     debugAssert()(typeof _consumer === "object" || _consumer === null, "Consumer must be an object or null");
 
     return <SafeProvider
         value={{
-            consumer,
+            consumer: _consumer,
             creatingConsumerState,
             clearConsumerData,
             refreshConsumer,
-            conversationsSWR
+            conversationsSWR,
+            selectConversationById
         }}>
         {children}
     </SafeProvider>

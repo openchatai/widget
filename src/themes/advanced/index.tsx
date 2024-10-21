@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import { WidgetProvider } from "src/providers/WidgetProvider";
 import { mergeRefs } from "@lib/utils/merge-refs";
 import { useLifecycle } from "@lib/hooks/useLifecycle";
+import { ContainerProvider } from "./ContainerProvider";
 
 // Define styled components for styling
 const WidgetContainer = styled(motion.div)`
@@ -63,20 +64,23 @@ const AdvancedWidget = forwardRef<
 
     return (
         // @ts-expect-error
-        <WidgetContainer ref={ref} {...props} animate={{ height: widgetHeight }} transition={{ type: "spring", duration: .3 }}>
-            <InnerContainer ref={innerContainerRef}>
-                <WidgetProvider value={{ widgetRoot: widgetContainerRef.current }}>
-                    <AnimatePresence>
-                        <Router hook={router.hook}>
-                            <Route path={"/"} component={HomeScreen} />
-                            <Route path={"/chat"} component={ChatScreen} />
-                            <Route path={"/chat/:sessionId"} component={ChatScreen} />
-                        </Router>
-                    </AnimatePresence>
-                </WidgetProvider>
-                <Toaster />
-            </InnerContainer>
-        </WidgetContainer>
+        <ContainerProvider value={{ containerElement: widgetContainerRef.current}}>
+            {/* @ts-expect-error */}
+            <WidgetContainer ref={ref} {...props} animate={{ height: widgetHeight }} transition={{ type: "spring", duration: .3 }}>
+                <InnerContainer ref={innerContainerRef}>
+                    <WidgetProvider value={{ widgetRoot: widgetContainerRef.current }}>
+                        <AnimatePresence>
+                            <Router hook={router.hook}>
+                                <Route path={"/"} component={HomeScreen} />
+                                <Route path={"/chat"} component={ChatScreen} />
+                                <Route path={"/chat/:sessionId"} component={ChatScreen} />
+                            </Router>
+                        </AnimatePresence>
+                    </WidgetProvider>
+                    <Toaster />
+                </InnerContainer>
+            </WidgetContainer>
+        </ContainerProvider>
     );
 });
 

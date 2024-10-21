@@ -47,15 +47,6 @@ function useSocket(
     }
   }, [socket, updateState]);
 
-  const socketEventHandlers = {
-    connect: () => updateState("connected"),
-    disconnect: () => updateState("disconnected"),
-    connect_error: () => updateState("error"),
-    reconnect: () => updateState("reconnected"),
-    reconnecting: () => updateState("reconnecting"),
-    reconnect_error: () => updateState("error"),
-    reconnect_failed: () => updateState("error"),
-  };
 
   useEffect(() => {
     if (!url) return;
@@ -63,19 +54,12 @@ function useSocket(
     const newSocket = io(url, opts);
     setSocket(newSocket);
 
-    Object.entries(socketEventHandlers).forEach(([event, handler]) => {
-      newSocket.on(event, handler);
-    });
-
     return () => {
-      Object.keys(socketEventHandlers).forEach((event) => {
-        newSocket.off(event);
-      });
       newSocket.disconnect();
       setSocket(null);
     };
   }, [url, ...deps]);
-  
+
   const useListen = (event: string, callback: (data: any) => void) => {
     useEffect(() => {
       if (!socket) return;

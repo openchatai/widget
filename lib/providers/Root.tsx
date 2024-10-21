@@ -1,5 +1,5 @@
 import { WidgetOptions } from "@lib/types";
-import React, { forwardRef, useImperativeHandle } from "react";
+import React, { createRef, forwardRef, useImperativeHandle } from "react";
 import { ChatProvider } from "./ChatProvider";
 import { ConfigDataProvider } from "./ConfigProvider";
 import { ConsumerProvider } from "./ConsumerProvider";
@@ -20,7 +20,8 @@ const Root = forwardRef<RootRef, RootProps>(({ options, children }, _ref) => {
     const ev = useLazyRef(() => mitt<WidgetEvents>());
     
     useImperativeHandle(_ref, () => ({
-        ev: ev.current
+        ev: ev.current,
+        name: "opencopilot-widget-root"
     }));
 
     return (

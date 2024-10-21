@@ -1,6 +1,6 @@
 import { Root as PopoverRoot } from "@radix-ui/react-popover"
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { ComponentRef, useRef, useState } from "react";
 import { WidgetOptions } from "../lib/types";
 import { AdvancedWidget } from "./themes/advanced";
 import { WidgetPopoverTrigger } from "./themes/advanced/WidgetPopoverTrigger";
@@ -36,49 +36,52 @@ const ColorCubes = styled.ul`
 
 function App({ options }: { options: WidgetOptions }) {
   const [isOpen, setIsOpened] = useState(true);
+  const rootRef = useRef<ComponentRef<typeof WidgetRoot>>(null);
+  
+  return (
+    <ThemeProvider theme={widgetTheme}>
+      <StyleSheetManager namespace={`#${defaultRootId}`} enableVendorPrefixes>
+        <GlobalStyle />
 
-  return <ThemeProvider theme={widgetTheme}>
-    <StyleSheetManager namespace={`#${defaultRootId}`}>
-      <GlobalStyle />
+        <ColorCubes>
+          {Object.entries(widgetTheme.colors).map(([key, value]) => (
+            <li key={key} style={{ backgroundColor: value }}>
+              {key}
+            </li>
+          ))}
+        </ColorCubes>
+        <TooltipProvider delayDuration={100}>
 
-      <ColorCubes>
-        {Object.entries(widgetTheme.colors).map(([key, value]) => (
-          <li key={key} style={{ backgroundColor: value }}>
-            {key}
-          </li>
-        ))}
-      </ColorCubes>
-
-      <TooltipProvider delayDuration={100}>
-        <PopoverRoot open={isOpen} onOpenChange={setIsOpened}>
-          <WidgetRoot options={options}>
-            <AnimatePresence>
-              {isOpen && (
-                <WidgetPopoverContent
-                  forceMount
-                  onInteractOutside={(ev) => ev.preventDefault()}
-                  align="end"
-                  side="top"
-                  sideOffset={10}
-                  asChild
-                >
-                  <motion.div
-                    initial={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
-                    exit={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
-                    animate={{ opacity: 1, y: 0, rotate: "0deg", scale: 1, pointerEvents: "initial" }}
+          <PopoverRoot open={isOpen} onOpenChange={setIsOpened}>
+            <WidgetRoot ref={rootRef} options={options}>
+              <AnimatePresence>
+                {isOpen && (
+                  <WidgetPopoverContent
+                    forceMount
+                    onInteractOutside={(ev) => ev.preventDefault()}
+                    align="end"
+                    side="top"
+                    sideOffset={10}
+                    asChild
                   >
-                    <AdvancedWidget />
-                  </motion.div>
-                </WidgetPopoverContent>
-              )}
-            </AnimatePresence>
-          </WidgetRoot>
-          <WidgetPopoverTrigger />
-        </PopoverRoot>
-      </TooltipProvider>
+                    <motion.div
+                      initial={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
+                      exit={{ opacity: 0, rotate: "-20deg", y: 20, scale: 0.9, pointerEvents: "none" }}
+                      animate={{ opacity: 1, y: 0, rotate: "0deg", scale: 1, pointerEvents: "initial" }}
+                    >
+                      <AdvancedWidget />
+                    </motion.div>
+                  </WidgetPopoverContent>
+                )}
+              </AnimatePresence>
+            </WidgetRoot>
+            <WidgetPopoverTrigger />
+          </PopoverRoot>
 
-    </StyleSheetManager>
-  </ThemeProvider>
+        </TooltipProvider>
+      </StyleSheetManager>
+    </ThemeProvider>
+  )
 }
 
 export function initOpenScript(options: WidgetOptions) {

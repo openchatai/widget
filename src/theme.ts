@@ -11,7 +11,6 @@ export const widgetTheme = {
         destructive: 'hsl(0, 63%, 31%)',  // Error messages, warnings, or delete buttons
         border: 'hsl(221, 32%, 88%)',      // Border color for cards, inputs, or dividers
         transparent: 'transparent',
-        popoverForeground: 'hsl(222.2, 84%, 4.9%)', // Text color for popovers, modals, or dropdowns
     },
     radii: {
         sm: '0.125rem',
@@ -81,5 +80,21 @@ export const GlobalStyle = createGlobalStyle`
     a {
         color: ${({ theme }) => theme.colors.primary};
         text-decoration: none;
+    }
+
+    .ProseMirror .is-editor-empty:first-child::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: #ced4da;
+        pointer-events: none;
+        height: 0;
+    }
+
+    .ProseMirror .is-empty::before {
+        content: attr(data-placeholder);
+        float: left;
+        color: #ced4da;
+        pointer-events: none;
+        height: 0;
     }
 `

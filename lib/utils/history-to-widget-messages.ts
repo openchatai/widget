@@ -6,7 +6,7 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
     const messages: MessageType[] = [];
     for (let i = 0; i < mgs.length; i++) {
         const msg = mgs[i];
-        if (msg.from_user === true) {
+        if (msg.from_user === 1) {
             if (msg.message && msg.message.length > 0) {
                 messages.push({
                     type: "FROM_USER",

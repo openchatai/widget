@@ -104,15 +104,15 @@ export const chatHistoryMessageSchema = z.object({
     agent_avatar: z.string().nullable(),
     agent_id: z.number().nullable(),
     agent_name: z.string().nullable(),
-    api_called: z.boolean().nullable(),
+    api_called: z.number().nullable(),
     chatbot_id: z.string().nullable(),
     created_at: z.string(),
     debug_json: z.any().nullable(),
     extra_params: z.any(),
-    from_user: z.boolean().nullable(),
-    handoff_happened_during_office_hours: z.boolean().nullable(),
+    from_user: z.number().nullable(),
+    handoff_happened_during_office_hours: z.number().nullable(),
     id: z.number(),
-    knowledgebase_called: z.boolean().nullable(),
+    knowledgebase_called: z.number().nullable(),
     session_id: z.string(),
     updated_at: z.string().nullable(),
 })
@@ -120,7 +120,7 @@ export const chatHistoryMessageSchema = z.object({
 
 const agentSchema = z.object({
     name: z.string(),
-    is_ai: z.boolean(),
+    is_ai: z.number(),
     profile_picture: z.string().optional().nullable(),
     id: z.string().nullable(),
 })
@@ -128,7 +128,7 @@ const agentSchema = z.object({
 const messageSchema = z.object({
     type: z.literal('message'),
     value: z.string(),
-    is_stream_chunk: z.boolean().optional(),
+    is_stream_chunk: z.number().optional(),
     server_session_id: z.string(),
     client_message_id: z.string().optional(),
 })
@@ -213,7 +213,7 @@ export const consumerSchema = z.object({
     id: z.string(),
     copilot_id: z.string(),
     name: z.string().nullable(),
-    created_at: z.date(),
+    created_at: z.string(),
     avatar_url: z.string().nullable(),
 });
 

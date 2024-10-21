@@ -1,8 +1,11 @@
 import { Bot, Send } from 'lucide-react';
 import { Link } from 'wouter';
 import { SizableScreenContainer } from '../WidgetPopoverContent';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { size } from 'src/design-helpers';
+import { useConsumer } from '@lib/providers';
+import { formatDistanceToNow } from 'date-fns';
+import clr from "tinycolor2";
 
 const HeaderContainer = styled.header`
     padding: 0.5rem; /* p-2 */
@@ -39,7 +42,6 @@ const BotContainer = styled.div`
 const Heading = styled.h2`
     font-size: 1.125rem;
     font-weight: 600;
-    color: #111827;
 `;
 
 const Paragraph = styled.p`
@@ -53,11 +55,17 @@ const AnimatedHomeScreenContainer = styled(SizableScreenContainer)`
     width: 100%;
     height: fit-content;
     justify-content: space-between;
-    gap: 15px;
+    gap: 10px;
 `;
 
 const Main = styled.main`
     flex: 1;
+    [data-conversations-title]{
+        font-size:  ${props => props.theme.fs.sm};
+        font-weight: 700;
+        text-transform: uppercase;
+        padding-inline: ${props => props.theme.spacing.md};
+    }
 `;
 
 const Footer = styled.footer`
@@ -97,32 +105,42 @@ const SendContainer = styled.div`
     align-items: center;
     justify-content: center;
     height: 1.5rem;
-
 `;
 
 
-const ConversationCard = styled.div`
+const ConversationCard = styled(Link)`
     padding: ${props => props.theme.spacing.md};
     border-radius: ${props => props.theme.radii.lg};
     color: ${props => props.theme.colors.secondary};
     transition: background-color 0.3s;
+    width: 100%;
     border: 1px solid ${props => props.theme.colors.border};
+    background-color: ${props => props.theme.colors.background};
 
-
-
+    &:hover {
+        background-color: ${props => clr(props.theme.colors.background).darken(2).toString("hex")};
+    }
 `
+
 const ConversationsContainer = styled.div`
     padding: ${props => props.theme.spacing.md};
+    gap: ${props => props.theme.spacing.sm};
+    width: 100%;
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    overflow: auto;
+    max-height: 250px;
 
     h2 {
         font-size:  ${props => props.theme.fs.xs};
         font-weight: 700;
-        margin-bottom: ${props => props.theme.spacing.xs};
         text-transform: uppercase;
     }
-
 `
+
 export function HomeScreen() {
+    const consumer = useConsumer()
     return (
         <AnimatedHomeScreenContainer
             animate={{
@@ -134,7 +152,6 @@ export function HomeScreen() {
                 opacity: 0,
             }}
         >
-
             <HeaderContainer>
                 <HeaderContent>
                     <BotContainer>
@@ -149,18 +166,38 @@ export function HomeScreen() {
                 </div>
             </HeaderContainer>
             <Main>
+                <h2 data-conversations-title>
+                    Conversations
+                </h2>
                 <ConversationsContainer>
-                    <h2>
-                        Conversations
-                    </h2>
-                    <ConversationCard>
-                        <span>Ticket</span>
-                        <span>#12345s</span>
-                        <h3>Conversation with John Doe</h3>
-                    </ConversationCard>
+                    {
+                        consumer.conversationsSWR.data?.map((conversation) => {
+                            const { last_message_at, created_at } = conversation;
+                            return <ConversationCard to={`/chat/${conversation.id}`} key={conversation.id}>
+                                <h3>
+                                    {conversation.summary}
+                                </h3>
+                                <p>
+                                    {conversation.last_message}
+                                </p>
+                                <span>
+                                    {!last_message_at && (
+                                        <>
+                                            <span>Created</span>
+                                            <br />
+                                        </>
+                                    )}
+                                    <span>
+                                        {formatDistanceToNow(new Date(last_message_at || created_at), {
+                                            addSuffix: true,
+                                        })}
+                                    </span>
+                                </span>
+                            </ConversationCard>
+                        })
+                    }
                 </ConversationsContainer>
             </Main>
-
             <Footer>
                 <StyledLink
                     to='/chat/sessionid'

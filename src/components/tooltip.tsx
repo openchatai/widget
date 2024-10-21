@@ -51,19 +51,18 @@ const slideLeftAndFade = keyframes`
 `;
 const TooltipContent = styled(TooltipPrimitive.Content)`
   overflow: hidden; 
-  z-index: 50; 
-  padding: 0.375rem; 
-  border-radius: 0.5rem; 
-  font-size: 0.75rem;
-  line-height: 1rem; 
+  z-index: 50000; 
   user-select: none;
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
-  
+  font-weight: 500;
+  font-size: ${({ theme }) => theme.fs.xs};
   font-family: ${({ theme }) => theme.fontFamily.DEFAULT};
-  background: ${({ theme }) => theme.colors.popover};
-  color: ${({ theme }) => theme.colors.popoverForeground};
+  color: ${({ theme }) => theme.colors.foreground};
+  background-color: ${({ theme }) => theme.colors.secondary};
+  padding: ${({ theme }) => theme.spacing.xs} ${({ theme }) => theme.spacing.sm};
+  border-radius: ${({ theme }) => theme.radii.lg};
 
   &[data-state='delayed-open'][data-side='top'] {
     animation-name: ${slideDownAndFade};

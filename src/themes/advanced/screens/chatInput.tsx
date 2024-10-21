@@ -1,7 +1,12 @@
 import { StyledTiptapEditor } from "@components/tiptap";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@components/tooltip";
+import { useChat } from "@lib/index";
+import { TooltipPortal } from "@radix-ui/react-tooltip";
 import { SendHorizontal } from "lucide-react";
+import { useState } from "react";
 import { size } from "src/design-helpers";
 import styled from "styled-components";
+import { useContainer } from "../ContainerProvider";
 
 const InputContainer = styled.div`
     --min-input-height: 40px; /* h-12 */
@@ -61,28 +66,55 @@ const SendButton = styled.button`
     }
     
     &:disabled {
-        background-color: ${props => props.theme.colors.destructive}; /* enabled:bg-blue-500 */
-        color: white;
+        opacity: 0.5; /* disabled:opacity-50 */
+        cursor: not-allowed; /* disabled:cursor-not-allowed */
     }
 
 `;
 
 
 function ChatInput() {
+    const [content, setContent] = useState("");
+    const { sendMessage, canSend } = useChat()
+
+    const handleSend = () => {
+        sendMessage({ content: { text: content } })
+    }
+    const Tooltip__Content = () => {
+        if (!canSend.canSend) {
+            return <div>{canSend.reason}</div>
+        }
+        if (!content) {
+            return <div>can't send empty message</div>
+        }
+
+        return <div>send</div>
+    }
+    const container = useContainer()
     return <InputContainer>
         <div style={{
             position: "relative",
             display: "flex",
         }}>
             <StyledTiptapEditor
-                onContentChange={(content) => {
-                    // 
+                defaultContent={content}
+                onContentChange={(_content) => {
+                    setContent(_content)
                 }}
             />
             <ButtonContainer>
-                <SendButton>
-                    <SendHorizontal data-icon />
-                </SendButton>
+                <Tooltip>
+                    <TooltipPortal container={container.containerElement}>
+                        <TooltipContent>
+                            <Tooltip__Content />
+                        </TooltipContent>
+                    </TooltipPortal>
+                    <TooltipTrigger asChild>
+                        <SendButton onClick={handleSend} disabled={!canSend.canSend || !content}>
+                            <SendHorizontal data-icon />
+                        </SendButton>
+                    </TooltipTrigger>
+                </Tooltip>
             </ButtonContainer>
         </div>
     </InputContainer>

@@ -1,13 +1,12 @@
+import { UserMessageType } from "@lib/types";
 import { MessageContainer } from "./message-container";
 
-export function UserMessage() {
+export function UserMessage({ message }: { message: UserMessageType }) {
     return (
         <MessageContainer direction="right">
             <div className="message-body">
                 <div data-messages-stack>
-                    <p data-message-text>Hi there can u help me?, Hi there can u help me?</p>
-                    <p data-message-text>Hi there can u help me?</p>
-                    <p data-message-text>Hi there can u help me?</p>
+                    <p data-message-text>{message.content}</p>
                 </div>
             </div>
         </MessageContainer>

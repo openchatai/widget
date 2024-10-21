@@ -4,7 +4,7 @@ function debugAssert() {
     if (process.env.NODE_ENV !== 'production') {
         return function assert(condition: any, message: string) {
             if (!condition) {
-                throw new Error(message || 'Assertion failed');
+                throw new Error(message || '[DEBUG]: Assertion failed');
             }
         };
     }

@@ -83,6 +83,8 @@ export function ConfigDataProvider({
     const resp = await apis.fetchPreludeData();
     if (resp.data) return resp.data
     return null
+  },{
+    dedupingInterval: 2000,
   })
 
   const logger = useLazyRef(() => _logger ? _logger : new ConsoleLogger());

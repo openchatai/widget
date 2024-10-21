@@ -1,8 +1,8 @@
 import { useEditor, EditorContent as UnstyledEditorContent, Editor as EditorType, EditorEvents } from '@tiptap/react'
-import { extensions } from "./extensions";
 import styled from 'styled-components';
 import { useCallback } from 'react';
-
+import StarterKit from '@tiptap/starter-kit';
+import Placeholder from '@tiptap/extension-placeholder';
 const DEFAULT_CONTENT = `<P></P>`
 
 const EditorContent = styled(UnstyledEditorContent)`
@@ -17,17 +17,6 @@ const EditorContent = styled(UnstyledEditorContent)`
   
   font-size: ${props => props.theme.fs.sm};
   font-weight: 500;
-
-  border: none;
-  outline: none;
-
-  p.is-editor-empty:first-child::before {
-    color: #adb5bd;
-    content: attr(data-placeholder);
-    float: left;
-    height: 0;
-    pointer-events: none;
-  }
   
   :focus {
     border: none;
@@ -46,11 +35,17 @@ function StyledTiptapEditor({
 }: EditorProps) {
 
   const handleUpdate = useCallback((props: EditorEvents["update"]) => {
-    // 
+    onContentChange(props.editor.getText(), props.editor)
   }, [onContentChange])
 
   const editor = useEditor({
-    extensions,
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: 'Type your message...',
+      })
+    ],
+    enableCoreExtensions: true,
     content: defaultContent,
     editable: true,
     editorProps: {

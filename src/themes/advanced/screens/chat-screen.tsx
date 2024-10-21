@@ -6,6 +6,9 @@ import { size } from 'src/design-helpers';
 import { UserMessage } from './messages/user-messages';
 import { BotMessage } from "./messages/bot-message";
 import { ChatInput } from "./chatInput";
+import { useLifecycle } from "@lib/hooks/useLifecycle";
+import { useChat, useConsumer } from "@lib/index";
+import { debugAssert } from "@lib/utils/debug-assert";
 
 const AnimatedChatScreenContainer = styled(SizableScreenContainer)`
     display: flex;
@@ -88,8 +91,24 @@ interface ChatScreenProps {
     }
 }
 
-export function ChatScreen(props: ChatScreenProps) {
+export function ChatScreen({ params }: ChatScreenProps) {
     const [location, navigate] = useLocation();
+    const chat = useChat();
+    const { selectConversationById } = useConsumer();
+
+    debugAssert()(typeof params.sessionId === "string" || !params.sessionId, "sessionId must be a string or undefined");
+
+    useLifecycle(() => {
+        if (params.sessionId) {
+            const conv = selectConversationById(params.sessionId);
+            if (conv) {
+                chat.changeActiveConversation(conv)
+            }
+        }
+    }, () => {
+        chat.changeActiveConversation(null)
+    });
+
     return (
         <AnimatedChatScreenContainer
             initial={{
@@ -112,15 +131,24 @@ export function ChatScreen(props: ChatScreenProps) {
                     <ArrowLeft />
                 </BackButton>
                 <div data-header-lead>
-                    <HeaderTitle>Bird</HeaderTitle>
+                    <HeaderTitle>
+                        {chat.activeConversation?.id}
+                    </HeaderTitle>
                     <HeaderParagraph>
-                        a refund for the order I placed last week
+                        {chat.activeConversation?.summary}
                     </HeaderParagraph>
                 </div>
             </header>
             <MainChatContent>
-                <UserMessage />
-                <BotMessage />
+                {
+                    chat.state.messages.map((msg) => {
+                        if (msg.type === "FROM_USER") {
+                            return <UserMessage key={msg.id} message={msg} />
+                        } else if (msg.type === "FROM_BOT") {
+                            return <BotMessage />
+                        }
+                    })
+                }
             </MainChatContent>
             <FooterContainer>
                 <ChatInput />

@@ -9,118 +9,85 @@ import {
 import { produce } from "immer";
 import {
   useCallback,
+  useEffect,
+  useMemo,
   useReducer,
   useState,
 } from "react";
 import pkg from "../../package.json";
-import { type ChatSessionType, type StructuredSocketMessageType } from "../types/schemas";
+import { SessionStatus, type ChatSessionType, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./useSocket";
 import { genId } from "@lib/utils/genId";
 import { useLifecycle } from "./useLifecycle";
+import { debugAssert } from "@lib/utils/debug-assert";
+import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
+type HookState = "loading" | "error" | "idle";
 
 type ChatState = {
+  prevState: ChatState | null;
   lastUpdated: number | null;
   messages: MessageType[];
   keyboard: { options: string[] } | null;
+  meta: {
+    state: HookState;
+  }
 };
 
 type ActionType =
-  | {
-    type: "INIT";
-  }
-  | {
-    type: "ADD_RESPONSE_MESSAGE";
-    payload: MessageType;
-  }
-  | {
-    type: "APPEND_USER_MESSAGE";
-    payload: UserMessageType;
-  }
-  | {
-    type: "PREPEND_HISTORY";
-    payload: MessageType[];
-  }
-  | {
-    type: "SET_SERVER_ID";
-    payload: {
-      clientMessageId: string;
-      ServerMessageId: number;
-    };
-  }
-  | {
-    type: "SET_KEYBOARD";
-    payload: {
-      options: string[];
-    } | null;
-  }
-  | {
-    type: "RESET";
-  } | {
-    type: "SET_DELIVERED_AT",
-    payload: {
-      clientMessageId: string;
-      deliveredAt: string;
-    }
-  }
-
+  | { type: "ADD_RESPONSE_MESSAGE"; payload: MessageType }
+  | { type: "APPEND_USER_MESSAGE"; payload: UserMessageType }
+  | { type: "PREPEND_HISTORY"; payload: MessageType[] }
+  | { type: "SET_SERVER_ID"; payload: { clientMessageId: string; ServerMessageId: number } }
+  | { type: "SET_KEYBOARD"; payload: { options: string[] } | null }
+  | { type: "RESET" }
+  | { type: "SET_DELIVERED_AT"; payload: { clientMessageId: string; deliveredAt: string } }
+  | { type: "CHANGE_STATE", payload: ChatState['meta']['state'] };
+// Reducer function to manage chat state
 function chatReducer(state: ChatState, action: ActionType) {
   return produce(state, (draft) => {
-
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
     };
-
+    draft.prevState = state;
     switch (action.type) {
-      case "INIT": {
-        setLastupdated();
-        break;
-      }
-      case "ADD_RESPONSE_MESSAGE": {
+      case "ADD_RESPONSE_MESSAGE":
         draft.messages.push(action.payload);
         setLastupdated();
         break;
-      }
-
-      case "APPEND_USER_MESSAGE": {
+      case "APPEND_USER_MESSAGE":
         draft.messages.push(action.payload);
         setLastupdated();
         break;
-      }
-
-      case "RESET": {
+      case "RESET":
         draft.messages = [];
         draft.lastUpdated = null;
         draft.keyboard = null;
+        draft.prevState = null;
+        draft.meta.state = "idle";
         break;
-      }
-
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
-        draft.messages = draft.messages.filter(
-          (msg) => !historyIds.includes(msg.id),
-        );
+        draft.messages = draft.messages.filter((msg) => !historyIds.includes(msg.id));
         draft.messages = [...action.payload, ...draft.messages];
         setLastupdated();
         break;
       }
-
       case "SET_SERVER_ID": {
         const { clientMessageId, ServerMessageId } = action.payload;
-        const message = draft.messages.find(
-          (msg) => msg.id === clientMessageId,
-        );
+        const message = draft.messages.find((msg) => msg.id === clientMessageId);
         if (message) {
           message.serverId = ServerMessageId;
         }
         break;
       }
-
-      case "SET_KEYBOARD": {
+      case "SET_KEYBOARD":
         draft.keyboard = action.payload;
         break;
+      case "CHANGE_STATE": {
+        draft.meta.state = action.payload;
+        break;
       }
-
       default:
         break;
     }
@@ -145,35 +112,31 @@ type MessagePayload = {
   };
 };
 
-type HookState = "loading" | "error" | "idle";
 
-interface SendMessageInput extends Record<string, unknown> {
-  content: {
-    text: string;
-  };
+type SendMessageInput = {
+  content: { text: string };
   headers?: Record<string, unknown>;
   user?: Record<string, unknown>;
   query_params?: Record<string, string>;
   PathParams?: Record<string, string>;
   id?: string;
-}
+};
 
 type C = ChatSessionType | null;
 
-
-type CanSendType = {
+export type CanSendType = {
   canSend: boolean;
-  reason?: "socketError" | "sessionClosed" | "noConsumer" | "noSession";
+  reason?: "socketError" | "sessionClosed" | "noConsumer" | "noSession" | "noContent";
 }
 
 /**
  * manages the socket, messages, session/ticket
  */
 function useAbstractChat({
-  conversation,
+  defaultConversation: conversation,
   onCreateConversation,
 }: {
-  conversation?: C;
+  defaultConversation?: C | string;
   /**
    * when the conversation is undefined
    * @param conversation 
@@ -181,16 +144,25 @@ function useAbstractChat({
    */
   onCreateConversation?: (conversation: C) => void;
 }) {
-  const [_conversation, _setConversation] = useState<C>(conversation ?? null);
-  const { socketUrl, botToken, logger } = useConfigData();
+  const [_activeConversation, setActiveConversation] = useState<C>();
+  const { socketUrl, botToken, logger, apis, ...config } = useConfigData();
   const { consumer } = useConsumer();
   const locale = useLocale();
 
-  const { socket, useListen, socketState } = useSocket(socketUrl, {
+  const [chatState, dispatch] = useReducer(chatReducer, {
+    lastUpdated: null,
+    messages: [],
+    keyboard: null,
+    prevState: null,
+    meta: {
+      state: "idle"
+    }
+  });
+
+
+  const { socket, useListen } = useSocket(socketUrl, {
     transports: ["websocket"],
     closeOnBeforeunload: true,
-    autoConnect: false,
-    retries: 3,
     query: {
       client: "widget",
       botToken,
@@ -201,6 +173,78 @@ function useAbstractChat({
     }
   });
 
+  function changeActiveConversation(c: C) {
+    setActiveConversation(c);
+    dispatch({ type: "RESET" })
+  }
+
+  useEffect(() => {
+    if (!consumer) {
+      logger?.warn("consumer is undefined");
+      return;
+    }
+    if (!conversation) {
+      // 
+    }
+    if (typeof conversation === "string") {
+      apis.fetchSession(
+        conversation,
+        consumer.id
+      ).then((c) => {
+        if (c.data) {
+          setActiveConversation(c.data);
+        }
+      })
+    } else if (typeof conversation === "object") {
+      setActiveConversation(conversation);
+    }
+  }, [conversation]);
+
+  const joinChatSession = (sessionId: string) => {
+    if (socket) {
+      socket.emit("join_session", { sessionId });
+      logger?.debug("joined session", sessionId);
+    } else {
+      console.error("Socket is not initialized");
+    }
+  }
+
+  const leaveChatSession = (sessionId: string) => {
+    if (socket) {
+      socket.emit("leave_session", { sessionId });
+      logger?.debug("left session", sessionId);
+    } else {
+      console.error("Socket is not initialized");
+    }
+  }
+
+  useEffect(() => {
+    if (socket && _activeConversation) {
+      joinChatSession(_activeConversation.id);
+    }
+    return () => {
+      if (socket && _activeConversation) {
+        leaveChatSession(_activeConversation.id);
+      }
+    };
+  }, [_activeConversation, socket]);
+
+  useEffect(() => {
+    if (_activeConversation && consumer) {
+      apis.fetchConversationHistory(_activeConversation.id, consumer.id)
+        .then((response) => {
+          if (response.data) {
+            const messages = historyToWidgetMessages(response.data);
+            logger?.debug({
+              original: response.data,
+              widget: messages
+            });
+            dispatch({ type: "PREPEND_HISTORY", payload: messages });
+          }
+        })
+        .catch(error => logger?.error("Error fetching conversation history", error));
+    }
+  }, [_activeConversation, consumer, apis]);
 
   // useEffect(() => {
   //   let interval: NodeJS.Timeout;
@@ -233,17 +277,6 @@ function useAbstractChat({
 
   // }, [socket, session, botToken]);
 
-  const [chatState, dispatch] = useReducer(chatReducer, {
-    lastUpdated: null,
-    messages: [],
-    keyboard: null
-  });
-
-  function joinSession(session_id: string) {
-    socket?.emit("join_session", {
-      session_id,
-    });
-  }
 
   useListen("structured_message", (socketMsg: StructuredSocketMessageType) => {
     handleSocketMessages({
@@ -302,7 +335,7 @@ function useAbstractChat({
       }
     });
   })
-  
+
   useListen("user_message_broadcast", (message: MessagePayload) => {
     logger?.debug("user_message_broadcast", message);
     dispatch({
@@ -312,7 +345,7 @@ function useAbstractChat({
         type: "FROM_USER",
         deliveredAt: null,
         serverId: null,
-        session_id: _conversation?.id ?? "",
+        session_id: _activeConversation?.id ?? "",
         content: message.content,
         id: message.id ?? genId(10),
       }
@@ -320,9 +353,9 @@ function useAbstractChat({
   },);
 
   useListen("connect", () => {
-    // if (session && socket) {
-    //   socket.emit("join_session", { session_id: session.id });
-    // }
+    if (_activeConversation && socket) {
+      joinChatSession(_activeConversation.id)
+    }
   });
 
   useListen("heartbeat:ack", (data: { success: boolean }) => {
@@ -332,14 +365,12 @@ function useAbstractChat({
   })
 
   useListen("reconnect", () => {
-    // if (session && socket) {
-    //   socket.emit("join_session", { session_id: session.id });
-    // }
+    if (_activeConversation && socket) {
+      joinChatSession(_activeConversation.id)
+    }
   });
 
-  useLifecycle(() => {
-    dispatch({ type: "INIT" });
-  })
+  const noMessages = chatState.messages.length === 0;
 
   async function sendMessage({
     content,
@@ -349,79 +380,83 @@ function useAbstractChat({
     query_params: inputQueryParams,
     ...data
   }: SendMessageInput) {
-    // let chatSession = session;
+    debugAssert()(consumer, "consumer should be defined");
 
-    // if (!session && noMessages) {
-    //   try {
-    //     const { data: newSession } = await createSession(axiosInstance, botToken);
-    //     if (newSession) {
-    //       setSession(newSession);
-    //       joinSession(newSession.id);
-    //       chatSession = newSession;
-    //     } else {
-    //       throw new Error("Failed to create session");
-    //     }
-    //   } catch (error) {
-    //     console.error("Error creating session:", error);
-    //     return null;
-    //   }
-    // }
+    if (!consumer) return;
 
-    // if (chatSession && socket) {
-    //   const msgId = genId();
-    //   const payload: MessagePayload = {
-    //     id: msgId,
-    //     bot_token: botToken,
-    //     content: content.text,
-    //     session_id: chatSession.id,
-    //     headers: {
-    //       ...headers,
-    //       ...inputHeaders,
-    //     },
-    //     pathParams: {
-    //       ...pathParams,
-    //       ...inputPathParams,
-    //     },
-    //     query_params: {
-    //       ...queryParams,
-    //       ...inputQueryParams,
-    //     },
-    //     user: {
-    //       ...userData,
-    //       ...user,
-    //     },
-    //     language,
-    //     ...data
-    //   };
-    //   try {
-    //     dispatch({
-    //       type: "APPEND_USER_MESSAGE",
-    //       payload: {
-    //         type: "FROM_USER",
-    //         id: msgId,
-    //         content: content.text,
-    //         timestamp: new Date().toISOString(),
-    //         session_id: chatSession.id,
-    //         user: payload.user,
-    //         deliveredAt: null,
-    //         serverId: null
-    //       },
-    //     });
-    //     if (chatState.keyboard) {
-    //       dispatch({
-    //         type: "SET_KEYBOARD",
-    //         payload: null
-    //       });
-    //     }
+    let conversation = _activeConversation;
 
-    //     socket.emit("send_chat", payload);
-    //     return payload;
-    //   } catch (error) {
-    //     console.error("Error sending message:", error);
-    //     return null;
-    //   }
-    // }
-    // return null;
+    if (!conversation && noMessages) {
+      try {
+        const { data: newConversation } = await apis.createConversation(consumer.id);
+        if (newConversation) {
+          onCreateConversation?.(newConversation)
+          setActiveConversation(newConversation);
+          joinChatSession(newConversation.id);
+          conversation = newConversation;
+        } else {
+          throw new Error("Failed to create conversation");
+        }
+      } catch (error) {
+        console.error("Error creating conversation:", error);
+        return null;
+      }
+    }
+
+    if (conversation && socket) {
+      const msgId = genId();
+      const payload: MessagePayload = {
+        id: msgId,
+        bot_token: botToken,
+        content: content.text,
+        session_id: conversation.id,
+        headers: {
+          ...config.headers,
+          ...inputHeaders,
+        },
+        pathParams: {
+          ...config.pathParams,
+          ...inputPathParams,
+        },
+        query_params: {
+          ...config.queryParams,
+          ...inputQueryParams,
+        },
+        user: {
+          ...config.userData,
+          ...user,
+        },
+        language: config.language,
+        ...data
+      };
+      try {
+        dispatch({
+          type: "APPEND_USER_MESSAGE",
+          payload: {
+            type: "FROM_USER",
+            id: msgId,
+            content: content.text,
+            timestamp: new Date().toISOString(),
+            session_id: conversation.id,
+            user: payload.user,
+            deliveredAt: null,
+            serverId: null
+          },
+        });
+        if (chatState.keyboard) {
+          dispatch({
+            type: "SET_KEYBOARD",
+            payload: null
+          });
+        }
+        socket.emit("send_chat", payload);
+        return payload;
+      } catch (error) {
+        console.error("Error sending message:", error);
+        return null;
+      }
+    }
+    return null;
   }
 
   const handleKeyboard = useCallback((option: string) => {
@@ -436,11 +471,36 @@ function useAbstractChat({
     });
   }, [dispatch, sendMessage, socket,]);
 
+  const activeConversation = useMemo(() => {
+    if (_activeConversation) {
+      return {
+        ..._activeConversation,
+        isClosed: _activeConversation.status !== SessionStatus.OPEN,
+      }
+    }
+    return undefined
+  }, [_activeConversation]);
+
+  const canSend = useMemo<CanSendType>(() => {
+    if (activeConversation?.isClosed) {
+      return {
+        canSend: false,
+        reason: "sessionClosed"
+      }
+    }
+    return {
+      canSend: true
+    };
+  }, [activeConversation]);
+
   return {
     version: pkg.version,
     state: chatState,
+    activeConversation,
     sendMessage,
     handleKeyboard,
+    changeActiveConversation,
+    canSend
   };
 }
 

@@ -12,12 +12,15 @@ export function isResponseOk(status: HttpStatusCode) {
   return status >= 200 && status < 300;
 }
 
+const ConsumerIdHeader = "X-Consumer-Id";
+const BotTokenHeader = "X-Bot-Token";
+
 export function useAxiosInstance(options: Options) {
   const instance = useMemo(() => {
     return axios.create({
       baseURL: options.apiUrl,
       headers: {
-        "X-Bot-Token": options.botToken,
+        [BotTokenHeader]: options.botToken,
       },
     })
   }, [options]);
@@ -35,8 +38,12 @@ export function useAxiosInstance(options: Options) {
      * get session data by id
      * @param sessionId 
      */
-    fetchSession: (sessionId: string) => {
-      return instance.get<ChatSessionType>(`/chat-session/one/${sessionId}`)
+    fetchSession: (sessionId: string, consumerId: string) => {
+      return instance.get<ChatSessionType>(`/chat-session/one/${sessionId}`, {
+        headers: {
+          [ConsumerIdHeader]: consumerId
+        }
+      })
     },
 
     /**
@@ -52,8 +59,12 @@ export function useAxiosInstance(options: Options) {
       })
     },
 
-    fetchSessionHistory: (sessionId: string) => {
-      return instance.get<ChatHistoryMessageType[]>(`/widget/session/history/${sessionId}`)
+    fetchConversationHistory: (sessionId: string, consumerId: string) => {
+      return instance.get<ChatHistoryMessageType[]>(`/widget/session/history/${sessionId}`, {
+        headers: {
+          [ConsumerIdHeader]: consumerId
+        }
+      })
     },
     /**
      * get the organization office working hours.
