@@ -7,15 +7,24 @@
   "publishConfig": {
     "access": "public"
   },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./advanced": {
+      "import": "./dist/advanced.js",
+      "types": "./dist/advanced.d.ts"
+    }
+  },
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
-    "build": "vite build",
     "dev": "vite",
-    "build:embed": "vite build -c vite.embed.config.ts",
-    "batman": "pnpm build && pnpm build:embed",
-    "test": "vitest run",
-    "test:watch": "vitest --watch"
+    "batman": "pnpm tsc && pnpm tsup",
+    "test": "vitest run"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",

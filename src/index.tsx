@@ -5,7 +5,7 @@ import { WidgetOptions } from "../lib/types";
 import { AdvancedWidget } from "./themes/advanced";
 import { WidgetPopoverTrigger } from "./themes/advanced/WidgetPopoverTrigger";
 import { render } from "./render";
-import styled, { ThemeProvider, StyleSheetManager } from "styled-components";
+import { ThemeProvider, StyleSheetManager } from "styled-components";
 import { GlobalStyle, widgetTheme } from "./theme";
 import { WidgetPopoverContent } from "./themes/advanced/WidgetPopoverContent";
 import { TooltipProvider } from "@components/tooltip";
@@ -20,36 +20,14 @@ declare global {
 
 window["initOpenScript"] = initOpenScript;
 
-const ColorCubes = styled.ul`
-  display: flex;
-  gap: 10px;
-  margin: 0;
-  flex-wrap: wrap;
-  li {
-    border-radius: 5px;
-    padding: 10px;
-    height: auto;
-    aspect-ratio: 1/1;
-    width: fit-content;
-  }
-`
-
 function App({ options }: { options: WidgetOptions }) {
   const [isOpen, setIsOpened] = useState(true);
   const rootRef = useRef<ComponentRef<typeof WidgetRoot>>(null);
-  
+
   return (
     <ThemeProvider theme={widgetTheme}>
       <StyleSheetManager namespace={`#${defaultRootId}`} enableVendorPrefixes>
         <GlobalStyle />
-
-        <ColorCubes>
-          {Object.entries(widgetTheme.colors).map(([key, value]) => (
-            <li key={key} style={{ backgroundColor: value }}>
-              {key}
-            </li>
-          ))}
-        </ColorCubes>
         <TooltipProvider delayDuration={100}>
 
           <PopoverRoot open={isOpen} onOpenChange={setIsOpened}>

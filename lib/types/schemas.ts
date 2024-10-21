@@ -120,7 +120,7 @@ export const chatHistoryMessageSchema = z.object({
 
 const agentSchema = z.object({
     name: z.string(),
-    is_ai: z.number(),
+    is_ai: z.boolean(),
     profile_picture: z.string().optional().nullable(),
     id: z.string().nullable(),
 })
@@ -128,7 +128,7 @@ const agentSchema = z.object({
 const messageSchema = z.object({
     type: z.literal('message'),
     value: z.string(),
-    is_stream_chunk: z.number().optional(),
+    is_stream_chunk: z.boolean().optional(),
     server_session_id: z.string(),
     client_message_id: z.string().optional(),
 })

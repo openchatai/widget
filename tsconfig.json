@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "tsBuildInfoFile": "node_modules/.cache/tsconfig.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
     "types": [
@@ -18,12 +19,14 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
     "jsx": "react-jsx",
-    /* Linting */
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+    "incremental": true,
     "paths": {
       "@lib/*": [
         "./lib/*"

@@ -28,8 +28,9 @@ describe("handle-socket-messages", () => {
             type: "message",
             value: "hello back!",
             agent: {
-                is_ai: true,
-                name: "Open"
+                is_ai: false,
+                name: "Open",
+                id: null
             },
             client_message_id: "123",
             server_session_id: "123",

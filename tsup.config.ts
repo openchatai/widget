@@ -3,15 +3,11 @@ import { defineConfig } from "tsup"
 const libraryConfig = defineConfig({
     dts: true,
     minify: true,
-    outDir: "dist-lib",
-    splitting: true,
+    outDir: "dist",
     clean: true,
     treeshake: true,
-    format: [
-        "cjs",
-        "esm",
-    ],
-
+    format: ['esm'],
+    splitting: true,
     jsxFactory: "React.createElement",
     jsxFragment: "React.Fragment",
     define: {
@@ -25,19 +21,19 @@ const libraryConfig = defineConfig({
 })
 
 const browserEmbed = defineConfig({
+    entry: ['src/index.tsx'],
     outDir: "dist-embed",
-    entry: {
-        index: "./src/index.tsx",
-    },
-    clean: true,
+    format: ['esm'],
+    dts: false,
+    sourcemap: false,
     minify: true,
-    external: [],
+    target: 'es2015',
+    clean: true,
+    platform: 'browser',
     define: {
         'import.meta.vitest': 'undefined',
     },
-    jsxFactory: "React.createElement",
-    jsxFragment: "React.Fragment",
-    platform: "browser",
+    noExternal: [ /(.*)/ ],
 })
 
 export default [
