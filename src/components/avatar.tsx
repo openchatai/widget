@@ -1,4 +1,3 @@
-"use client";
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import { size } from "src/design-helpers";
 import styled from "styled-components";

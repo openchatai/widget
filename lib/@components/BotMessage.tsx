@@ -10,15 +10,7 @@ export function BotMessage({
 }) {
   const config = useConfigData();
 
-  const components = useMemo(
-    () =>
-      new ComponentRegistry({
-        components: config.components,
-      }),
-    [config],
-  );
-
-  const component = components.getComponent(message.component, config.debug);
+  const component = config.components?.getComponent(message.component, config.debug);
 
   if (!component) {
     return null;

@@ -46,7 +46,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     data: {
                         message: response.value,
                     },
-                    agent: response.agent,
                 }, _ctx);
                 break;
             }

@@ -1,5 +1,3 @@
-"use client"
-
 import { ToastActionElement, ToastProps } from "@components/toast"
 import * as React from "react"
 

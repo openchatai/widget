@@ -19,12 +19,11 @@ import { SessionStatus, type ChatSessionType, type StructuredSocketMessageType }
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./useSocket";
 import { genId } from "@lib/utils/genId";
-import { useLifecycle } from "./useLifecycle";
 import { debugAssert } from "@lib/utils/debug-assert";
 import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
 type HookState = "loading" | "error" | "idle";
 
-type ChatState = {
+export type ChatState = {
   prevState: ChatState | null;
   lastUpdated: number | null;
   messages: MessageType[];

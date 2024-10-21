@@ -1,4 +1,3 @@
-"use client";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
 import styled, { keyframes } from "styled-components";
 
