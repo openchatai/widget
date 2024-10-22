@@ -13,9 +13,6 @@ function ChatProvider({
 }) {
   const config = useConfigData();
   const chat = useAbstractChat({
-    apiUrl: config.apiUrl ?? "https://api-v2.opencopilot.so/backend",
-    socketUrl: config.socketUrl ?? "https://api-v2.opencopilot.so",
-    botToken: config.token,
     headers: config.headers ?? {},
     queryParams: config.queryParams ?? {},
     pathParams: config.pathParams ?? {},
