@@ -43,5 +43,7 @@ export const ptLocale: TranslatableMessages = {
     "close-widget": "Fechar widget",
     "got-any-questions": "Tem alguma dúvida? Converse conosco!",
     "typical-response-time": "Geralmente respondemos em menos de 1 minuto",
-    "session-closed-lead": "Seu problema foi resolvido!"
+    "session-closed-lead": "Seu problema foi resolvido!",
+    "create-new-ticket": "Criar novo ticket",
+    exit: "Sair",
 };

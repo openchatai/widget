@@ -42,5 +42,7 @@ export const arLocale: TranslatableMessages = {
   "close-widget": "إغلاق الودجة",
   "got-any-questions": "هل لديك أي أسئلة؟ تحدث معنا!",
   "typical-response-time": "عادة ما نرد في أقل من دقيقة واحدة",
-  "session-closed-lead": "تم حل مشكلتك!"
+  "session-closed-lead": "تم حل مشكلتك!",
+  exit: "خروج",
+  "create-new-ticket": "إنشاء تذكرة جديدة",
 };

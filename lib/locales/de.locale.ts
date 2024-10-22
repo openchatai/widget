@@ -43,4 +43,6 @@ export const deLocale: TranslatableMessages = {
   "reset-conversation-confirm": "Möchten Sie die Konversation wirklich zurücksetzen?",
   "close-widget": "Widget schließen",
   "session-closed-lead": "Ihr Problem wurde gelöst!",
+  "create-new-ticket": "Neues Ticket erstellen",
+  exit: "Beenden",
 };
