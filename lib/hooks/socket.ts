@@ -14,6 +14,7 @@ type useSocketReturn = {
   socket: Socket | null;
   socketState: SocketState;
   disconnect: () => void;
+  useListen: (event: string, callback: (data: any) => void, deps?: DependencyList) => void
 };
 
 export function useSocket(
@@ -54,6 +55,16 @@ export function useSocket(
     };
   }, [url]);
 
+  const useListen = (event: string, callback: (data: any) => void, deps: DependencyList = []) => {
+    useEffect(() => {
+      if (!socket) return;
+      socket.on(event, callback);
+      return () => {
+        socket.off(event, callback);
+      };
+    }, [socket, event, callback, ...deps]);
+  };
+
   useEffect(() => {
     if (!socket) return;
     socket.on("connect", onConnect);
@@ -86,5 +97,6 @@ export function useSocket(
     socket,
     socketState,
     disconnect,
+    useListen
   };
 }
