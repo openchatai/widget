@@ -1,0 +1,1 @@
+export declare const cssVars = "\n[--primary:211_65%_59%]\n[--foreground:0_0%_0%]\n[--background:0_0%_100%]\n[--secondary:0_0%_96%]\n[--primary-foreground:217_72%_18%]\n[--accent:0_0_22%]\n[--dark:0_0%_0%]\n";

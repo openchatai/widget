@@ -7,6 +7,7 @@
     "access": "public"
   },
   "scripts": {
+    "prepare": "vite build",
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
