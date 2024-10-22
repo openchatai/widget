@@ -1,5 +1,5 @@
 import { LangType } from "@lib/locales";
-import { useLocale } from "@lib/providers";
+import { useConfigData, useLocale } from "@lib/providers";
 import {
   MessageType,
   UserMessageType,
@@ -7,13 +7,6 @@ import {
 } from "@lib/types";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
-import {
-  createSession,
-  getChatSessionById,
-  getInitData,
-} from "@lib/utils/getters";
-import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
-import { AxiosInstance } from "axios";
 import { produce } from "immer";
 import {
   ReactNode,
@@ -21,20 +14,18 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import useSWR from "swr";
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
 import { type ChatSessionType, SessionStatus, type StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
-import { useAxiosInstance } from "./useAxiosInstance";
 import { useSyncedState } from "./useSyncState";
+import { useAsyncFn } from "./useAsyncFn";
+
+type HookState = "loading" | "error" | "idle";
 
 type useChatOptions = {
-  socketUrl: string;
-  apiUrl: string;
-  botToken: string;
   headers: Record<string, string>;
   queryParams: Record<string, string>;
   pathParams: Record<string, string>;
@@ -48,12 +39,10 @@ type ChatState = {
   lastUpdated: number | null;
   messages: MessageType[];
   keyboard: { options: string[] } | null;
+  hookState: HookState
 };
 
 type ActionType =
-  | {
-    type: "INIT";
-  }
   | {
     type: "ADD_RESPONSE_MESSAGE";
     payload: MessageType;
@@ -81,12 +70,17 @@ type ActionType =
   }
   | {
     type: "RESET";
-  } | {
+  }
+  | {
     type: "SET_DELIVERED_AT",
     payload: {
       clientMessageId: string;
       deliveredAt: string;
     }
+  }
+  | {
+    type: "SET_HOOK_STATE"
+    payload: HookState
   }
 
 function chatReducer(state: ChatState, action: ActionType) {
@@ -95,12 +89,7 @@ function chatReducer(state: ChatState, action: ActionType) {
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
     };
-
     switch (action.type) {
-      case "INIT": {
-        setLastupdated();
-        break;
-      }
       case "ADD_RESPONSE_MESSAGE": {
         draft.messages.push(action.payload);
         setLastupdated();
@@ -117,6 +106,7 @@ function chatReducer(state: ChatState, action: ActionType) {
         draft.messages = [];
         draft.lastUpdated = null;
         draft.keyboard = null;
+        draft.hookState = "idle"
         break;
       }
 
@@ -172,7 +162,6 @@ type MessagePayload = {
   };
 };
 
-type HookState = "loading" | "error" | "idle";
 
 interface SendMessageInput extends Record<string, unknown> {
   content: {
@@ -192,9 +181,6 @@ interface HookSettings {
 }
 
 function useAbstractChat({
-  apiUrl,
-  socketUrl,
-  botToken,
   defaultHookSettings,
   onSessionDestroy,
   headers,
@@ -202,8 +188,15 @@ function useAbstractChat({
   pathParams,
   userData,
   language,
-}: useChatOptions): UseAbstractchatReturnType {
+}: useChatOptions) {
+  const [chatState, dispatch] = useReducer(chatReducer, {
+    lastUpdated: null,
+    messages: [],
+    keyboard: null,
+    hookState: "idle"
+  });
   const locale = useLocale();
+  const { botToken, http, socketUrl } = useConfigData();
   const [settings, _setSettings] = useSyncedState(
     "[SETTINGS]:[OPEN]",
     {
@@ -212,10 +205,6 @@ function useAbstractChat({
     },
     "local",
   );
-  const axiosInstance = useAxiosInstance({
-    apiUrl,
-    botToken,
-  });
 
   const [session, setSession] = useSyncedState<ChatSessionType>(
     SESSION_KEY(botToken, userData?.external_id ? userData?.external_id : userData?.email),
@@ -223,20 +212,22 @@ function useAbstractChat({
     settings?.persistSession ? "local" : "memory",
   );
 
-  async function refreshSession(sessionId: string) {
-    let response = await getChatSessionById(axiosInstance, sessionId);
+  const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
+    if (!session) {
+      return;
+    }
+    let response = await http.apis.fetchSession(session.id);
     if (response.data) {
       setSession(response.data);
     }
     return response.data;
-  }
+  }, [session])
 
   useEffect(() => {
-    if (!session?.id) return;
-    refreshSession(session.id)
+    refreshSession()
   }, [])
 
-  const { socket, socketState } = useSocket(socketUrl, {
+  const { socket, socketState, useListen } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
     closeOnBeforeunload: true,
@@ -279,66 +270,20 @@ function useAbstractChat({
 
   }, [socket, session, botToken, userData]);
 
-  useEffect(() => {
-    if (session) {
 
-      socket?.on("heartbeat:ack", (data: { success: boolean }) => {
-        if (data.success) {
-          debug("heartbeat ack")
-        }
-      })
-
-      return () => {
-        socket?.off("heartbeat:ack");
-      }
+  useListen("heartbeat:ack", (data: { success: boolean }) => {
+    if (data.success) {
+      debug("heartbeat ack")
     }
-  }, [session]);
-
+  }, [session])
 
   const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
     _setSettings(Object.assign({}, settings, data));
   };
 
-  const [chatState, dispatch] = useReducer(chatReducer, {
-    lastUpdated: null,
-    messages: [],
-    keyboard: null
-  });
-
-
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState, locale.get),
     1000,
-  );
-
-  const initialData = useSWR(
-    ["initialData", botToken],
-    async ([_, _token]) => {
-      const { data } = await getInitData(axiosInstance, session?.id);
-      return {
-        history: data ? historyToWidgetMessages(data.history) : [],
-        faq: data?.faq ?? [],
-        initial_questions: data?.initial_questions ?? [],
-        logo: data?.logo ?? "",
-      }
-    },
-    {
-      onSuccess(data) {
-        dispatch({
-          type: "PREPEND_HISTORY",
-          payload: data.history,
-        });
-      },
-      fallbackData: {
-        history: [],
-        faq: [],
-        initial_questions: [],
-        logo: "",
-      },
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateOnMount: true,
-    },
   );
 
   const handleConnect = useCallback(() => {
@@ -377,7 +322,7 @@ function useAbstractChat({
 
   function recreateSession() {
     clearSession();
-    createSession(axiosInstance, botToken).then(({ data }) => {
+    http.apis.createSession(botToken).then(({ data }) => {
       setSession(data);
       joinSession(data.id);
     });
@@ -460,23 +405,19 @@ function useAbstractChat({
     });
   }, [])
 
+
+  useListen("structured_message", handleIncomingMessage)
   useEffect(() => {
     if (!socket) return;
-    socket.on("structured_message", handleIncomingMessage);
     socket.on("user_message_broadcast", handleUserMessageBroadcast)
     socket.on("ack:chat_message:delivered", handleDeliveredAck)
     socket.on("info", handleInfo);
     return () => {
-      socket.off("structured_message");
       socket.off("info");
       socket.off("user_message_broadcast")
       socket.off("ack:chat_message:delivered")
     };
-  }, [handleIncomingMessage, handleInfo, handleUserMessageBroadcast, socket]);
-
-  useEffect(() => {
-    dispatch({ type: "INIT" });
-  }, []);
+  }, [handleInfo, handleUserMessageBroadcast, socket]);
 
   const noMessages = chatState.messages.length === 0;
 
@@ -492,7 +433,7 @@ function useAbstractChat({
 
     if (!session && noMessages) {
       try {
-        const { data: newSession } = await createSession(axiosInstance, botToken);
+        const { data: newSession } = await http.apis.createSession(botToken);
         if (newSession) {
           setSession(newSession);
           joinSession(newSession.id);
@@ -546,13 +487,13 @@ function useAbstractChat({
             serverId: null
           },
         });
+        dispatch({ type: "SET_HOOK_STATE", payload: "loading" })
         if (chatState.keyboard) {
           dispatch({
             type: "SET_KEYBOARD",
             payload: null
           });
         }
-
         socket.emit("send_chat", payload);
         return payload;
       } catch (error) {
@@ -579,48 +520,17 @@ function useAbstractChat({
     version: pkg.version,
     state: chatState,
     session: session ?? null,
-
     // Derived // 
     isSessionClosed: session?.status === SessionStatus.CLOSED_RESOLVED || session?.status === SessionStatus.CLOSED_UNRESOLVED,
     noMessages,
-    initialData: initialData?.data ?? null,
-    // ------- //
-
     recreateSession,
     clearSession,
     sendMessage,
     info,
     settings,
     setSettings,
-    axiosInstance,
     handleKeyboard,
-    hookState: "idle"
   };
 }
 
-interface InitialData {
-  logo: string;
-  faq: [];
-  initial_questions: string[];
-  history: MessageType[];
-}
-
-interface UseAbstractchatReturnType {
-  version: string;
-  state: ChatState,
-  session: ChatSessionType | null;
-  isSessionClosed: boolean;
-  recreateSession: () => void;
-  clearSession: () => void;
-  sendMessage: (input: SendMessageInput) => Promise<MessagePayload | null>;
-  noMessages: boolean;
-  info: ReactNode;
-  hookState: HookState;
-  initialData: InitialData | null;
-  settings: HookSettings | null;
-  setSettings: (data: NonNullable<Partial<HookSettings>>) => void;
-  axiosInstance: AxiosInstance;
-  handleKeyboard: (option: string) => void;
-}
-
-export { useAbstractChat, type SendMessageInput, type HookState, type UseAbstractchatReturnType };
+export { useAbstractChat, type SendMessageInput, type HookState };
