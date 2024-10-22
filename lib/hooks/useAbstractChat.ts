@@ -280,6 +280,8 @@ function useAbstractChat({
   }, [socket, session, botToken, userData]);
 
   useEffect(() => {
+    debug('✨ Welcome to Open Widget');
+    
     if (session) {
 
       socket?.on("heartbeat:ack", (data: { success: boolean }) => {

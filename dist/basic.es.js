@@ -4,7 +4,7 @@ import * as _ from "@radix-ui/react-popover";
 import { SettingsIcon as H, XIcon as S, RotateCcw as A, CircleDashed as q, SendHorizonal as V, MessageSquareDot as $, X as G } from "lucide-react";
 import * as K from "react";
 import f, { useRef as R, useEffect as F, useState as L, useMemo as J, useId as Q, forwardRef as Z } from "react";
-import { c as ee, A as te, a as ne, b as w, u as k, d as se, C as ae, B as z, e as P, f as O } from "./ChatProvider-DmntKGg_.js";
+import { c as ee, A as te, a as ne, b as w, u as k, d as se, C as ae, B as z, e as P, f as O } from "./ChatProvider-8l9QHwET.js";
 import { motion as I, AnimatePresence as U } from "framer-motion";
 import * as j from "@radix-ui/react-switch";
 import * as E from "@radix-ui/react-tooltip";
