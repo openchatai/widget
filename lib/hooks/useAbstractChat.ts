@@ -575,6 +575,8 @@ function useAbstractChat({
     });
   }, [dispatch, sendMessage, socket,]);
 
+  console.log('✨ Welcome to Open Widget');
+
   return {
     version: pkg.version,
     state: chatState,
