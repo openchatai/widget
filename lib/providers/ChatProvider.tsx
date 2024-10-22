@@ -13,11 +13,6 @@ function ChatProvider({
 }) {
   const config = useConfigData();
   const chat = useAbstractChat({
-    headers: config.headers ?? {},
-    queryParams: config.queryParams ?? {},
-    pathParams: config.pathParams ?? {},
-    userData: config.user ?? {},
-    language: config.language,
     defaultHookSettings: {
       persistSession: config.settings?.persistSession ?? true,
       useSoundEffects: config.settings?.useSoundEffects ?? false,
