@@ -18,15 +18,9 @@ export function BotResponseWrapper({
           alt="Agent Icon"
         />
       </Avatar>
-      <div className="w-fit min-w-[50%]">
+      <div className="w-fit min-w-[80%]">
         <div
-          className="bg-primary p-2.5 min-w-fit text-white rounded-lg"
-          style={{
-            background: "white",
-            boxShadow: "0px 8px 12px rgba(0, 0, 0, 0.04)",
-            borderRadius: "6px",
-            color: "black",
-          }}
+          className="bg-primary rounded-lg bg-white shadow-sm p-2.5 min-w-fit"
         >
           {children}
         </div>
