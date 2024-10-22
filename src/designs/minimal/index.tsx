@@ -1,4 +1,3 @@
-import { Toaster } from "@lib/components/toaster";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion"
 import { MessageCircleMoreIcon, XIcon } from "lucide-react";
@@ -36,7 +35,6 @@ const MinimalWidget = forwardRef<
                 </Router>
             </AnimatePresence>
         </div>
-        <Toaster />
     </div>
 });
 

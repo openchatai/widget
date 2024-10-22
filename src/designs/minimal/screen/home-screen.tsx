@@ -1,4 +1,3 @@
-import { toast } from '@lib/hooks/use-toast';
 import { m } from 'framer-motion';
 import { Bot, Send } from 'lucide-react'
 import { Link } from 'wouter';
@@ -35,14 +34,6 @@ export function HomeScreen() {
                 </div>
             </header>
             <main className='flex-1'>
-                <button onClick={() => {
-                    toast({
-                        title: "what the full",
-                        variant: "danger"
-                    })
-                }}>
-                    toast
-                </button>
             </main>
             <footer className='px-4'>
                 <Link
