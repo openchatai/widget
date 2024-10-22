@@ -18,13 +18,16 @@
     "test:watch": "vitest --watch",
     "cs": "changeset",
     "csv": "changeset version",
-    "csp": "changeset publish"
+    "csp": "changeset publish",
+    "type-check": "tsc --noEmit"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",
     "react": "^18.3.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.27.9",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
@@ -40,7 +43,6 @@
     "postcss": "^8.4.41",
     "postcss-prefix-selector": "^1.16.1",
     "react": "^18.3.1",
-    "@biomejs/biome": "1.9.4",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
     "remark-gfm": "^4.0.0",
@@ -54,7 +56,6 @@
     "vite-plugin-dts": "4.0.3",
     "vite-plugin-externalize-deps": "^0.8.0",
     "vite-tsconfig-paths": "^5.0.1",
-    "@changesets/cli": "^2.27.9",
     "vitest": "^2.0.5"
   },
   "files": [
