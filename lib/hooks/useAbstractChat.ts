@@ -152,7 +152,7 @@ function chatReducer(state: ChatState, action: ActionType) {
   });
 }
 
-const SESSION_KEY = (botToken: string, userEmail?: string) => `[OPEN_SESSION_${botToken}]` + userEmail ? `_${userEmail} : ""` : "";
+const SESSION_KEY = (botToken: string, external_id?: string) => `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`;
 
 type MessagePayload = {
   id: string;
@@ -218,7 +218,7 @@ function useAbstractChat({
   });
 
   const [session, setSession] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, userData?.external_id),
+    SESSION_KEY(botToken, userData?.external_id ? userData?.external_id : userData?.email),
     undefined,
     settings?.persistSession ? "local" : "memory",
   );
