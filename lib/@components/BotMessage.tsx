@@ -1,24 +1,24 @@
 import { useConfigData } from "@lib/providers/ConfigDataProvider";
-import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { BotMessageType } from "@lib/types";
-import { ComponentType, useMemo } from "react";
+import React, { ComponentType } from "react";
 
-export function BotMessage({
-  message,
-}: {
+interface BotMessageProps<W extends React.ElementType> {
   message: BotMessageType;
-}) {
+  Wrapper?: W;
+  wrapperProps?: Omit<React.ComponentProps<W>, "children">;
+}
+
+export function BotMessage<W extends React.ElementType>({
+  message,
+  Wrapper,
+  wrapperProps,
+}: BotMessageProps<W>) {
   const config = useConfigData();
 
-  const components = useMemo(
-    () =>
-      new ComponentRegistry({
-        components: config.components,
-      }),
-    [config],
+  const component = config.componentStore.getComponent(
+    message.component,
+    config.debug
   );
-
-  const component = components.getComponent(message.component, config.debug);
 
   if (!component) {
     return null;
@@ -29,12 +29,14 @@ export function BotMessage({
     id: string;
   }>;
 
+  if (!Wrapper) {
+    return <Component data={message.data} id={message.id} key={message.id} />;
+  }
+
   return (
-    <Component
-      {...message}
-      data={message.data ?? {}}
-      id={message.id}
-      key={message.id}
-    />
+    // @ts-ignore
+    <Wrapper {...wrapperProps}>
+      <Component data={message.data} id={message.id} key={message.id} />
+    </Wrapper>
   );
 }
