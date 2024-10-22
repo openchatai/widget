@@ -1,5 +1,0 @@
----
-"@openchatai/widget": minor
----
-
-improvements

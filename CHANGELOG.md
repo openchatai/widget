@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.0
+
+### Minor Changes
+
+- af0d886: improvements
+
 ## 1.3.10
 
 ### Patch Changes
