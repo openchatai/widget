@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.3.10
+
+### Patch Changes
+
+- df4d748: fixing the session persistance
+
 ## 1.3.9
 
 ### Patch Changes
