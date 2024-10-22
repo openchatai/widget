@@ -12119,7 +12119,7 @@ const Uo = _t.use || ((e) => {
 }, ey = Jg($g), ty = "@openchatai/widget", ny = "1.3.9", ry = "module", iy = {
   access: "public"
 }, oy = {
-  prepare: "",
+  prepare: "vite build",
   clean: "rm -rf ./dist ./dist-embed",
   "clean:dist": "rm -rf ./dist ./dist-embed",
   prepublishOnly: "pnpm clean && pnpm test && pnpm batman",
@@ -16731,7 +16731,7 @@ function Kw({
       payload: null
     });
   }, [_, ae, m]);
-  return {
+  return console.log("✨ Welcome to Open Widget"), {
     version: qo.version,
     state: O,
     session: p ?? null,
