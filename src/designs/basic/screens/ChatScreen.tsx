@@ -1,4 +1,3 @@
-import { DefaultTextComponentProps } from "@lib/@components";
 import { BotMessage } from "@lib/@components/BotMessage";
 import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
 import {
@@ -12,9 +11,10 @@ import { UserMessage } from "@lib/components/messages";
 import { Switch } from "@lib/components/switch";
 import { TooltipProvider } from "@lib/components/tooltip";
 import { useChat, useConfigData, useLocale } from "@lib/providers";
-import { ComponentRegistry } from "@lib/providers/componentRegistry";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  AlertTriangle,
+  CheckCheckIcon,
   CircleDashed,
   RotateCcw,
   SendHorizonal,
@@ -25,7 +25,6 @@ import React, {
   ComponentType,
   useEffect,
   useId,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -35,7 +34,7 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, hookState, isSessionClosed } = useChat();
+  const { sendMessage, info, isSessionClosed, hookState } = useChat();
   const layoutId = useId();
   const locale = useLocale();
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +56,7 @@ function ChatFooter() {
     setInput("");
   }
 
+  const isLoading = hookState.state === "loading";
 
   return (
     <div className="p-2 rounded-lg relative">
@@ -90,7 +90,7 @@ function ChatFooter() {
       >
         <input
           ref={inputRef}
-          disabled={hookState === "loading" || isSessionClosed}
+          disabled={isLoading || isSessionClosed}
           value={input}
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
@@ -106,13 +106,13 @@ function ChatFooter() {
         <div>
           <button
             onClick={handleInputSubmit}
-            disabled={hookState === "loading"}
+            disabled={isLoading}
             className="rounded-lg border p-[7px] text-white bg-primary shrink-0 disabled:opacity-50"
             style={{
               background: "#1883FF",
             }}
           >
-            {hookState === "loading" ? (
+            {isLoading ? (
               <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
             ) : (
               <SendHorizonal className="size-3.5 rtl:-scale-100" />
@@ -125,32 +125,40 @@ function ChatFooter() {
 }
 
 function SessionClosedDialog() {
-  const { isSessionClosed } = useChat();
+  const { isSessionClosed, session, recreateSession } = useChat();
   const locale = useLocale();
-  return <Dialog open={isSessionClosed}>
-    <DialogContent>
-      <header>
-        <h2 className="text-base font-semibold" dir="auto">
-          {locale.get("session-closed-lead")}
-        </h2>
-      </header>
-    </DialogContent>
-  </Dialog>
+
+  if (session && !session.isSessionClosed) return null;
+
+  return (
+    <Dialog open={isSessionClosed}>
+      <DialogContent>
+        <header className="flex items-center gap-1">
+          <CheckCheckIcon className="size-5 text-emerald-500" />
+          <h2 className="text-base font-semibold" dir="auto">
+            {locale.get("session-closed-lead")}
+          </h2>
+        </header>
+        <footer className="grid mt-2">
+          <button
+            onClick={recreateSession}
+            className="text-sm font-medium hover:brightness-110 whitespace-nowrap px-3 py-2 bg-primary text-white rounded-md"
+          >
+            {locale.get("create-new-ticket")}
+          </button>
+        </footer>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 export function ChatScreen() {
-  const {
-    initialData,
-    state,
-    sendMessage,
-    noMessages,
-    hookState,
-    handleKeyboard,
-  } = useChat();
-  const config = useConfigData();
+  const { state, sendMessage, noMessages, handleKeyboard, hookState } =
+    useChat();
+  const { componentStore, initialMessages, preludeSWR, ...config } =
+    useConfigData();
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-
-  const loading = hookState === "loading";
+  const initialQuestions = preludeSWR.data?.initial_questions;
 
   function handleNewMessage() {
     setTimeout(() => {
@@ -160,27 +168,14 @@ export function ChatScreen() {
       }
     }, 0);
   }
+
   useEffect(() => {
     handleNewMessage();
   }, [state.messages]);
 
-  const components = useMemo(
-    () =>
-      new ComponentRegistry({
-        components: config.components,
-      }),
-    [config],
-  );
-
-  const LoadingComponent = components.getComponent(
-    "loading",
-    config.debug,
+  const LoadingComponent = componentStore.getComponent(
+    "loading"
   ) as ComponentType;
-
-  const DefaultTextComponent = components.getComponent(
-    "text",
-    config.debug,
-  ) as React.ComponentType<DefaultTextComponentProps>;
 
   return (
     <TooltipProvider>
@@ -195,11 +190,9 @@ export function ChatScreen() {
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
 
           <div
-            className="flex flex-col w-full flex-1 bg-background rounded-t-xl shadow overflow-auto"
+            className="flex rounded-xl shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto"
             style={{
               background: "#FAFBFB",
-              boxShadow: "0px -8px 20px rgba(0, 0, 0, 0.12)",
-              borderRadius: " 16px 16px 0px 0px",
             }}
           >
             <div
@@ -207,27 +200,34 @@ export function ChatScreen() {
               ref={messagesContainerRef}
               className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
             >
-              {config.initialMessages?.map((message, index) => (
-                <BotResponseWrapper bot={config.bot} key={index}>
-                  <DefaultTextComponent
-                    component="TEXT"
-                    data={{ message }}
-                    id={`${index}`}
-                    type="FROM_BOT"
-                    serverId={null}
-                  />
-                </BotResponseWrapper>
+              {initialMessages?.map((message, index) => (
+                <BotMessage
+                  key={index}
+                  message={{
+                    component: "text",
+                    data: { message },
+                    id: "000",
+                    serverId: null,
+                    type: "FROM_BOT",
+                    bot: config.bot,
+                  }}
+                  Wrapper={BotResponseWrapper}
+                  wrapperProps={{ bot: config.bot }}
+                />
               )) ?? (
-                  <BotResponseWrapper bot={config.bot}>
-                    <DefaultTextComponent
-                      component="TEXT"
-                      data={{ message: "Hello, how can I help?" }}
-                      id="123"
-                      type="FROM_BOT"
-                      serverId={null}
-                    />
-                  </BotResponseWrapper>
-                )}
+                <BotMessage
+                  message={{
+                    component: "text",
+                    data: { message: "Hello, how can I help?" },
+                    id: "000",
+                    serverId: null,
+                    type: "FROM_BOT",
+                    bot: config.bot,
+                  }}
+                  Wrapper={BotResponseWrapper}
+                  wrapperProps={{ bot: config.bot }}
+                />
+              )}
               {state.messages.map((message, i) => {
                 if (message.type === "FROM_USER") {
                   return (
@@ -237,34 +237,36 @@ export function ChatScreen() {
                   );
                 } else if (message.type === "FROM_BOT") {
                   if (message.component == "CHAT_EVENT") {
-                    return <BotMessage message={message} key={message.id} />
+                    return <BotMessage message={message} key={message.id} />;
                   }
                   return (
-                    <BotResponseWrapper bot={message.bot} key={message.id}>
-                      <BotMessage message={message} />
-                    </BotResponseWrapper>
+                    <BotMessage
+                      message={message}
+                      Wrapper={BotResponseWrapper}
+                      wrapperProps={{ bot: message.bot }}
+                    />
                   );
                 }
                 return null;
               })}
-
-              {loading && <LoadingComponent />}
+              {hookState.state === "loading" && <LoadingComponent />}
             </div>
 
             <footer>
-
-              {state.keyboard && <React.Fragment>
-                <Keyboard
-                  options={state.keyboard.options}
-                  onKeyboardClick={handleKeyboard} />
-              </React.Fragment>
-              }
+              {state.keyboard && (
+                <React.Fragment>
+                  <Keyboard
+                    options={state.keyboard.options}
+                    onKeyboardClick={handleKeyboard}
+                  />
+                </React.Fragment>
+              )}
 
               <React.Fragment>
                 {noMessages && (
                   <React.Fragment>
                     <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
-                      {initialData?.initial_questions?.map((iq, index) => (
+                      {initialQuestions?.map((iq, index) => (
                         <button
                           key={index}
                           dir="auto"
@@ -284,12 +286,11 @@ export function ChatScreen() {
 
                 <ChatFooter />
               </React.Fragment>
-
             </footer>
           </div>
         </div>
+        <SessionClosedDialog />
       </div>
-
     </TooltipProvider>
   );
 }
@@ -377,7 +378,10 @@ function HeaderChatRunning() {
                     >
                       {locale.get("yes")}
                     </button>
-                    <DialogClose dir="auto" className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm">
+                    <DialogClose
+                      dir="auto"
+                      className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm"
+                    >
                       {locale.get("no")}
                     </DialogClose>
                   </div>
@@ -408,7 +412,9 @@ function HeaderChatDidNotStart() {
           </DialogTrigger>
           <DialogContent>
             <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold" dir="auto">{locale.get("close-widget")}</h2>
+              <h2 className="text-sm font-semibold" dir="auto">
+                {locale.get("close-widget")}
+              </h2>
               <DialogClose className="bg-transparent text-accent p-2 font-semibold">
                 <XIcon className="size-4" />
               </DialogClose>
@@ -487,7 +493,8 @@ function HeaderChatDidNotStart() {
                     </button>
                     <DialogClose
                       dir="auto"
-                      className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm">
+                      className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm"
+                    >
                       {locale.get("no")}
                     </DialogClose>
                   </div>

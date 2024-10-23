@@ -1,10 +1,4 @@
-import { ChatHistoryMessageType, ChatSessionType } from "@lib/types/schemas";
-import { AxiosInstance } from "axios";
-
-export async function createSession(instance: AxiosInstance, botToken: string) {
-  return instance.post<ChatSessionType>("/chat-session/" + botToken);
-}
-
+import { ChatHistoryMessageType } from "@lib/types/schemas";
 
 interface DayOfficeHours {
   from: string;
@@ -23,6 +17,13 @@ export const workingDays = [
   "Everyday",
 ] as const;
 
+export type PreludeData = {
+  initial_questions: string[];
+  ai_enabled: boolean,
+  office_hours: WorkingHours;
+  office_hours_timezone: string;
+};
+
 type Day = typeof workingDays[number];
 
 export type WorkingHours = {
@@ -35,22 +36,3 @@ export type InitialData = {
   initial_questions: string[];
   history: ChatHistoryMessageType[];
 };
-
-export async function getInitData(instance: AxiosInstance, sessionId?: string) {
-  return instance.get<InitialData | undefined | null>("/chat/init", {
-    headers: {
-      "X-Session-Id": sessionId,
-    },
-  });
-}
-
-export async function getChatSessionById(
-  instance: AxiosInstance,
-  sessionId: string,
-) {
-  return instance.get<ChatSessionType>("/chat-session/one/" + sessionId);
-}
-
-export async function getOfficeHours(instance: AxiosInstance) {
-  return instance.get<WorkingHours>("/copilot/office-hours/public");
-}

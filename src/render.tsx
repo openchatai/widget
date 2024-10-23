@@ -15,7 +15,9 @@ export function render(rootId: string, component: React.JSX.Element) {
     const _root = createRoot(rootElement);
     if (_root) {
         _root.render(
-            component
+            <React.StrictMode>
+                {component}
+            </React.StrictMode>
         );
     }
 }

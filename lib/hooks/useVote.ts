@@ -1,24 +1,18 @@
-import { useChat } from "@lib/providers/ChatProvider";
 import { useAsyncFn } from "./useAsyncFn";
+import { useConfigData } from "@lib/providers";
 
 export function useUpvote(id: string, onSuccess?: () => void) {
-  const { axiosInstance } = useChat();
+  const { http } = useConfigData();
   return useAsyncFn(
-    async () =>
-      axiosInstance.post<{
-        message: string;
-      }>(`/chat/vote/${id}`),
-    [axiosInstance, id, onSuccess],
+    async () => http.apis.upvote(id).then(onSuccess),
+    [http.options, id, onSuccess]
   );
 }
 
 export function useDownvote(id: string, onSuccess?: () => void) {
-  const { axiosInstance } = useChat();
+  const { http } = useConfigData();
   return useAsyncFn(
-    async () =>
-      axiosInstance.delete<{
-        message: string;
-      }>(`/chat/vote/${id}`),
-    [axiosInstance, id, onSuccess],
+    async () => http.apis.downvote(id).then(onSuccess),
+    [http.options, id]
   );
 }

@@ -6,7 +6,7 @@ import { useChat } from "@lib/providers";
 import { cn } from "@lib/utils/cn";
 import { cssVars } from "../constants";
 
-function WidgetPopover(props: { triggerId?: string }) {
+function WidgetPopover() {
   const [isOpen, setIsOpened] = React.useState(false);
 
   const handleClick = () => {
@@ -24,7 +24,7 @@ function WidgetPopover(props: { triggerId?: string }) {
         align="end"
         style={{ zIndex: 10000000 }}
       >
-        <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter" />
+        <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter shadow-lg" />
       </PopoverPrimitive.Content>
 
       <PopoverPrimitive.PopoverTrigger
