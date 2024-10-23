@@ -37,13 +37,13 @@ export function IframedWidgetPopover() {
         <Iframe data-chat-widget className="rounded-xl">
           <style>
             {`
-                        html, body {
-                        height: 100%;
-                        width: 100%;
-                        margin: 0;
-                        padding: 0;
-                        font-size: 16px;
-                            }
+            html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+                }
 `}
           </style>
           <style>{styles}</style>

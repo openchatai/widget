@@ -13,7 +13,6 @@ import { TooltipProvider } from "@lib/components/tooltip";
 import { useChat, useConfigData, useLocale } from "@lib/providers";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  AlertTriangle,
   CheckCheckIcon,
   CircleDashed,
   RotateCcw,
@@ -34,7 +33,7 @@ const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, isSessionClosed, hookState } = useChat();
+  const { sendMessage, info, session, hookState } = useChat();
   const layoutId = useId();
   const locale = useLocale();
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +89,7 @@ function ChatFooter() {
       >
         <input
           ref={inputRef}
-          disabled={isLoading || isSessionClosed}
+          disabled={isLoading || session?.isSessionClosed}
           value={input}
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
@@ -125,13 +124,13 @@ function ChatFooter() {
 }
 
 function SessionClosedDialog() {
-  const { isSessionClosed, session, recreateSession } = useChat();
+  const { session, recreateSession } = useChat();
   const locale = useLocale();
 
-  if (session && !session.isSessionClosed) return null;
+  if (session && session.isSessionClosed) return null;
 
   return (
-    <Dialog open={isSessionClosed}>
+    <Dialog open={session?.isSessionClosed}>
       <DialogContent>
         <header className="flex items-center gap-1">
           <CheckCheckIcon className="size-5 text-emerald-500" />
