@@ -15,6 +15,7 @@ import {
 import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
 import {
+  AIClosureType,
   type ChatSessionType,
   SessionStatus,
   type StructuredSocketMessageType,
@@ -184,6 +185,7 @@ function useSession({ persist }: { persist: boolean }) {
     ..._session,
     isSessionClosed: _session.status !== SessionStatus.OPEN,
     isAssignedToAi: _session.assignee_id === 555,
+    isHandedOff: _session.ai_closure_type === AIClosureType.handed_off,
   } : null;
 
   const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
@@ -253,7 +255,7 @@ function useAbstractChat({
   })
 
   const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
-  
+
   const { socket, socketState, useListen } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
@@ -265,12 +267,12 @@ function useAbstractChat({
       clientVersion: pkg.version,
     },
   });
-  
+
   function setHookState(
     state: HookState
   ) {
     // we don't need loading states when the session is handed off
-    if (!session || session?.isAssignedToAi){
+    if (!session || session?.isAssignedToAi || !session.isHandedOff) {
       _setHookState(state);
     }
   }
@@ -492,8 +494,10 @@ function useAbstractChat({
             joinSession(newSession.id);
             chatSession = {
               ...newSession,
+              // will be updated anyway when the hook rerenders
               isSessionClosed: newSession.status !== SessionStatus.OPEN,
               isAssignedToAi: newSession.assignee_id === 555,
+              isHandedOff: false
             }
           } else {
             throw new Error("Failed to create session");
