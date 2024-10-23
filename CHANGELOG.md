@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.1
+
+### Patch Changes
+
+- 8ab01c1: fix the loading states
+
 ## 1.4.0
 
 ### Minor Changes
