@@ -173,7 +173,7 @@ interface HookSettings {
 }
 
 function useSession({ persist }: { persist: boolean }) {
-  const { botToken, http, socketUrl, user, ...config } = useConfigData();
+  const { botToken, http, user } = useConfigData();
 
   const [_session, setSession, clearBucket] = useSyncedState<ChatSessionType>(
     SESSION_KEY(botToken, user?.external_id ? user?.external_id : user?.email),
@@ -185,7 +185,8 @@ function useSession({ persist }: { persist: boolean }) {
     ..._session,
     isSessionClosed: _session.status !== SessionStatus.OPEN,
     isAssignedToAi: _session.assignee_id === 555 || _session.ai_closure_type === null,
-    isHandedOff: _session.ai_closure_type === AIClosureType.handed_off,
+    isAssignedToHuman: _session.assignee_id !== 555 && _session.ai_closure_type === null,
+    isPendingHuman: _session.assignee_id === 555 && _session.ai_closure_type === AIClosureType.handed_off,
   } : null;
 
   const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
@@ -255,6 +256,16 @@ function useAbstractChat({
   })
 
   const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
+  
+  const disableLoading = !session || session.isAssignedToHuman || session.isPendingHuman;
+
+  function setHookState(
+    state: HookState
+  ) {
+    if (!disableLoading) {
+      _setHookState(state);
+    }
+  }
 
   const { socket, socketState, useListen } = useSocket(socketUrl, {
     autoConnect: true,
@@ -267,15 +278,6 @@ function useAbstractChat({
       clientVersion: pkg.version,
     },
   });
-
-  function setHookState(
-    state: HookState
-  ) {
-    // we don't need loading states when the session is handed off
-    if (!session || session?.isAssignedToAi) {
-      _setHookState(state);
-    }
-  }
 
   // create timeout to reset the hook state
   useEffect(() => {
@@ -403,9 +405,13 @@ function useAbstractChat({
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onChatEvent(message, _ctx) {
+        refreshSession()
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
+        if (message.type === "FROM_BOT" && message?.component === "handoff") {
+          refreshSession()
+        }
         setHookState({
           state: "idle",
         });
@@ -497,7 +503,8 @@ function useAbstractChat({
               // will be updated anyway when the hook rerenders
               isSessionClosed: newSession.status !== SessionStatus.OPEN,
               isAssignedToAi: newSession.assignee_id === 555,
-              isHandedOff: false
+              isAssignedToHuman: false,
+              isPendingHuman: false
             }
           } else {
             throw new Error("Failed to create session");
