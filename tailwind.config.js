@@ -10,13 +10,13 @@ export default {
         max: 9999
       },
       colors: {
-        primary: "hsl(var(--primary))",
-        foreground: "hsl(var(--foreground))",
-        background: "hsl(var(--background))",
-        "primary-foreground": "hsl(var(--primary-foreground))",
-        accent: "hsl(var(--accent))",
-        secondary: "hsl(var(--secondary))",
-        dark: "hsl(var(--dark))",
+        primary: "hsl(var(--opn-primary))",
+        foreground: "hsl(var(--opn-foreground))",
+        background: "hsl(var(--opn-background))",
+        "primary-foreground": "hsl(var(--opn-primary-foreground))",
+        accent: "hsl(var(--opn-accent))",
+        secondary: "hsl(var(--opn-secondary))",
+        dark: "hsl(var(--opn-dark))",
       },
     },
     fontFamily: {

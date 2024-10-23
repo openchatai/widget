@@ -89,11 +89,12 @@ function ChatFooter() {
       >
         <input
           ref={inputRef}
-          disabled={isLoading || session?.isSessionClosed}
+          disabled={isLoading}
           value={input}
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
           autoFocus
+          tabIndex={0}
           onKeyDown={async (event) => {
             if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
@@ -126,8 +127,9 @@ function ChatFooter() {
 function SessionClosedDialog() {
   const { session, recreateSession } = useChat();
   const locale = useLocale();
-
-  if (session && session.isSessionClosed) return null;
+  
+  // there is a session and it's closed
+  if (session && session.isSessionClosed !== true) return null;
 
   return (
     <Dialog open={session?.isSessionClosed}>
@@ -167,7 +169,6 @@ export function ChatScreen() {
       }
     }, 0);
   }
-
   useEffect(() => {
     handleNewMessage();
   }, [state.messages]);
