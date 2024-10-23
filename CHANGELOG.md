@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.4
+
+### Patch Changes
+
+- a39a56c: update the iframed widget
+
 ## 1.4.3
 
 ### Patch Changes
