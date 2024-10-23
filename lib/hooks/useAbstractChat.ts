@@ -184,7 +184,7 @@ function useSession({ persist }: { persist: boolean }) {
   const session = _session ? {
     ..._session,
     isSessionClosed: _session.status !== SessionStatus.OPEN,
-    isAssignedToAi: _session.assignee_id === 555,
+    isAssignedToAi: _session.assignee_id === 555 || _session.ai_closure_type === null,
     isHandedOff: _session.ai_closure_type === AIClosureType.handed_off,
   } : null;
 
@@ -272,7 +272,7 @@ function useAbstractChat({
     state: HookState
   ) {
     // we don't need loading states when the session is handed off
-    if (!session || session?.isAssignedToAi || !session.isHandedOff) {
+    if (!session || session?.isAssignedToAi) {
       _setHookState(state);
     }
   }
