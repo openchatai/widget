@@ -1,9 +1,9 @@
 export const cssVars = `
-[--primary:211_65%_59%]
-[--foreground:0_0%_0%]
-[--background:0_0%_100%]
-[--secondary:0_0%_96%]
-[--primary-foreground:217_72%_18%]
-[--accent:0_0_22%]
-[--dark:0_0%_0%]
+[--opn-primary:211_65%_59%]
+[--opn-foreground:0_0%_0%]
+[--opn-background:0_0%_100%]
+[--opn-secondary:0_0%_96%]
+[--opn-primary-foreground:217_72%_18%]
+[--opn-accent:0_0_22%]
+[--opn-dark:0_0%_0%]
 `;

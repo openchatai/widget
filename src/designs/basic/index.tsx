@@ -29,12 +29,12 @@ function WidgetPopover() {
 
       <PopoverPrimitive.PopoverTrigger
         data-chat-widget
-        className={`${cssVars} shadow-lg bottom-2 right-4 z-[200] fixed p-3 font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90`}
+        className={`${cssVars} shadow-lg hover:brightness-105 size-fit bottom-2 right-4 z-[200] fixed font-inter rounded-full text-white bg-dark transition-transform duration-300 ease-in-out transform active:scale-90`}
         onClick={handleClick}
       >
         <div
           className={cn(
-            "size-6 transition-transform duration-300 ease-in-out",
+            "p-3 transition-transform duration-300 relative ease-in-out",
             { "transform scale-110": isOpen },
           )}
         >
@@ -43,6 +43,7 @@ function WidgetPopover() {
           ) : (
             <X className="size-6" />
           )}
+          <span className="absolute top-0 right-0 size-3 bg-red-500 border-2 border-white rounded-full" />
         </div>
       </PopoverPrimitive.PopoverTrigger>
     </PopoverPrimitive.Root>
@@ -75,7 +76,6 @@ const Widget = forwardRef<
 });
 
 Widget.displayName = "Widget";
-
 
 export {
   WidgetPopover,

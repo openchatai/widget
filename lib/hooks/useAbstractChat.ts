@@ -45,40 +45,40 @@ type ChatState = {
 
 type ActionType =
   | {
-      type: "ADD_RESPONSE_MESSAGE";
-      payload: MessageType;
-    }
+    type: "ADD_RESPONSE_MESSAGE";
+    payload: MessageType;
+  }
   | {
-      type: "APPEND_USER_MESSAGE";
-      payload: UserMessageType;
-    }
+    type: "APPEND_USER_MESSAGE";
+    payload: UserMessageType;
+  }
   | {
-      type: "PREPEND_HISTORY";
-      payload: MessageType[];
-    }
+    type: "PREPEND_HISTORY";
+    payload: MessageType[];
+  }
   | {
-      type: "SET_SERVER_ID";
-      payload: {
-        clientMessageId: string;
-        ServerMessageId: number;
-      };
-    }
-  | {
-      type: "SET_KEYBOARD";
-      payload: {
-        options: string[];
-      } | null;
-    }
-  | {
-      type: "RESET";
-    }
-  | {
-      type: "SET_DELIVERED_AT";
-      payload: {
-        clientMessageId: string;
-        deliveredAt: string;
-      };
+    type: "SET_SERVER_ID";
+    payload: {
+      clientMessageId: string;
+      ServerMessageId: number;
     };
+  }
+  | {
+    type: "SET_KEYBOARD";
+    payload: {
+      options: string[];
+    } | null;
+  }
+  | {
+    type: "RESET";
+  }
+  | {
+    type: "SET_DELIVERED_AT";
+    payload: {
+      clientMessageId: string;
+      deliveredAt: string;
+    };
+  };
 
 function chatReducer(state: ChatState, action: ActionType) {
   return produce(state, (draft) => {
@@ -171,6 +171,46 @@ interface HookSettings {
   useSoundEffects?: boolean;
 }
 
+function useSession({ persist }: { persist: boolean }) {
+  const { botToken, http, socketUrl, user, ...config } = useConfigData();
+
+  const [_session, setSession, clearBucket] = useSyncedState<ChatSessionType>(
+    SESSION_KEY(botToken, user?.external_id ? user?.external_id : user?.email),
+    undefined,
+    persist ? "local" : "memory"
+  );
+
+  const session = _session ? {
+    ..._session,
+    isSessionClosed: _session.status !== SessionStatus.OPEN,
+    isAssignedToAi: _session.assignee_id === 555,
+  } : null;
+
+  const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
+    if (!session) {
+      return;
+    }
+    let response = await http.apis.fetchSession(session.id);
+    if (response.data) {
+      setSession(response.data);
+    }
+    return response.data;
+  }, [session, http, setSession]);
+
+  function deleteSession() {
+    setSession(null);
+    clearBucket()
+  }
+
+  return {
+    session,
+    refreshSession,
+    refreshSessionState,
+    deleteSession,
+    setSession
+  }
+}
+
 function useAbstractChat({
   defaultHookSettings,
   onSessionDestroy,
@@ -195,22 +235,6 @@ function useAbstractChat({
     _setSettings(Object.assign({}, settings, data));
   };
 
-  const [_session, setSession] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, user?.external_id ? user?.external_id : user?.email),
-    undefined,
-    settings?.persistSession ? "local" : "memory"
-  );
-
-  const session = useMemo(() => {
-    if (_session) {
-      return {
-        ..._session,
-        isSessionClosed: _session.status !== SessionStatus.OPEN,
-        isAssignedToBot: _session.assignee_id === 555,
-      };
-    }
-    return null;
-  }, [_session]);
 
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
@@ -224,19 +248,12 @@ function useAbstractChat({
     []
   );
 
-  // fetch chat history on startup
-  const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
-    if (!session) {
-      return;
-    }
-    let response = await http.apis.fetchSession(session.id);
-    if (response.data) {
-      setSession(response.data);
-    }
-    return response.data;
-  }, [session, http, setSession]);
+  const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
+    persist: settings?.persistSession ?? false
+  })
 
   const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
+  
   const { socket, socketState, useListen } = useSocket(socketUrl, {
     autoConnect: true,
     transports: ["websocket"],
@@ -248,13 +265,14 @@ function useAbstractChat({
       clientVersion: pkg.version,
     },
   });
-
+  
   function setHookState(
-    state: HookState | ((prevState: HookState) => HookState)
+    state: HookState
   ) {
-    _setHookState((prev) =>
-      typeof state === "function" ? state(prev) : state
-    );
+    // we don't need loading states when the session is handed off
+    if (!session || session?.isAssignedToAi){
+      _setHookState(state);
+    }
   }
 
   // create timeout to reset the hook state
@@ -356,7 +374,7 @@ function useAbstractChat({
 
   function clearSession() {
     socket?.emit("leave_session", { session_id: session?.id });
-    setSession(null);
+    deleteSession();
     dispatch({ type: "RESET" });
     onSessionDestroy?.();
   }
@@ -464,7 +482,7 @@ function useAbstractChat({
       setHookState({
         state: "loading",
       });
-      let chatSession = _session;
+      let chatSession = session;
 
       if (!session && noMessages) {
         try {
@@ -472,7 +490,11 @@ function useAbstractChat({
           if (newSession) {
             setSession(newSession);
             joinSession(newSession.id);
-            chatSession = newSession;
+            chatSession = {
+              ...newSession,
+              isSessionClosed: newSession.status !== SessionStatus.OPEN,
+              isAssignedToAi: newSession.assignee_id === 555,
+            }
           } else {
             throw new Error("Failed to create session");
           }
@@ -560,10 +582,8 @@ function useAbstractChat({
   return {
     version: pkg.version,
     state: chatState,
-    session: session ?? null,
+    session,
     unstable__canSend,
-    // Derived //
-    isSessionClosed: session?.status !== SessionStatus.OPEN,
     noMessages,
     fetchHistoryState,
     refreshSessionState,
