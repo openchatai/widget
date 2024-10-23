@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.2
+
+### Patch Changes
+
+- 8f088ad: handle when the status of ticket doesn't change
+
 ## 1.4.1
 
 ### Patch Changes
