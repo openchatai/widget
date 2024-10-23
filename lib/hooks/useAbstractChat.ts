@@ -45,40 +45,40 @@ type ChatState = {
 
 type ActionType =
   | {
-      type: "ADD_RESPONSE_MESSAGE";
-      payload: MessageType;
-    }
+    type: "ADD_RESPONSE_MESSAGE";
+    payload: MessageType;
+  }
   | {
-      type: "APPEND_USER_MESSAGE";
-      payload: UserMessageType;
-    }
+    type: "APPEND_USER_MESSAGE";
+    payload: UserMessageType;
+  }
   | {
-      type: "PREPEND_HISTORY";
-      payload: MessageType[];
-    }
+    type: "PREPEND_HISTORY";
+    payload: MessageType[];
+  }
   | {
-      type: "SET_SERVER_ID";
-      payload: {
-        clientMessageId: string;
-        ServerMessageId: number;
-      };
-    }
-  | {
-      type: "SET_KEYBOARD";
-      payload: {
-        options: string[];
-      } | null;
-    }
-  | {
-      type: "RESET";
-    }
-  | {
-      type: "SET_DELIVERED_AT";
-      payload: {
-        clientMessageId: string;
-        deliveredAt: string;
-      };
+    type: "SET_SERVER_ID";
+    payload: {
+      clientMessageId: string;
+      ServerMessageId: number;
     };
+  }
+  | {
+    type: "SET_KEYBOARD";
+    payload: {
+      options: string[];
+    } | null;
+  }
+  | {
+    type: "RESET";
+  }
+  | {
+    type: "SET_DELIVERED_AT";
+    payload: {
+      clientMessageId: string;
+      deliveredAt: string;
+    };
+  };
 
 function chatReducer(state: ChatState, action: ActionType) {
   return produce(state, (draft) => {
@@ -201,16 +201,12 @@ function useAbstractChat({
     settings?.persistSession ? "local" : "memory"
   );
 
-  const session = useMemo(() => {
-    if (_session) {
-      return {
-        ..._session,
-        isSessionClosed: _session.status !== SessionStatus.OPEN,
-        isAssignedToBot: _session.assignee_id === 555,
-      };
-    }
-    return null;
-  }, [_session]);
+  // intentional to leave it without useMemo
+  const session = _session ? {
+    ..._session,
+    isSessionClosed: _session.status !== SessionStatus.OPEN,
+    isAssignedToBot: _session.assignee_id === 555,
+  } : null
 
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
@@ -252,9 +248,11 @@ function useAbstractChat({
   function setHookState(
     state: HookState | ((prevState: HookState) => HookState)
   ) {
-    _setHookState((prev) =>
-      typeof state === "function" ? state(prev) : state
-    );
+    if (_session?.assignee_id === 555) {
+      _setHookState((prev) =>
+        typeof state === "function" ? state(prev) : state
+      );
+    }
   }
 
   // create timeout to reset the hook state
@@ -557,13 +555,12 @@ function useAbstractChat({
     };
   }, [session]);
 
+
   return {
     version: pkg.version,
     state: chatState,
-    session: session ?? null,
+    session,
     unstable__canSend,
-    // Derived //
-    isSessionClosed: session?.status !== SessionStatus.OPEN,
     noMessages,
     fetchHistoryState,
     refreshSessionState,
