@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.5
+
+### Patch Changes
+
+- 751fb36: implementing sound effects, better ui
+
 ## 1.4.4
 
 ### Patch Changes
