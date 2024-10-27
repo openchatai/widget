@@ -46,4 +46,5 @@ export const ptLocale: TranslatableMessages = {
     "session-closed-lead": "Seu problema foi resolvido!",
     "create-new-ticket": "Criar novo ticket",
     exit: "Sair",
+    "reset-conversation": "Redefinir conversa",
 };

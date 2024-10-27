@@ -31,6 +31,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
+    "@types/lodash.set": "^4.3.9",
     "@types/node": "^20.14.8",
     "@types/react": "^18.3.4",
     "@types/react-dom": "^18.3.0",
@@ -94,9 +95,12 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "framer-motion": "^11.3.30",
     "immer": "^10.1.1",
+    "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
+    "use-sound": "^4.0.3",
     "wouter": "^3.3.5",
     "zod": "^3.23.8"
   }

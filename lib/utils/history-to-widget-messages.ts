@@ -13,9 +13,8 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
                     content: msg.message,
                     id: msg.id.toString(),
                     session_id: msg.session_id ?? "",
-                    timestamp: msg.created_at ?? "",
                     serverId: msg.id.toString(),
-                    deliveredAt: null,
+                    deliveredAt: msg.created_at,
                 });
             }
         }
