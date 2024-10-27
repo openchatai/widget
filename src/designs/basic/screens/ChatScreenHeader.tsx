@@ -103,9 +103,6 @@ function InfoSection() {
     const locale = useLocale();
     return (
         <div className="flex items-center justify-center flex-col">
-            <div className="flex items-center justify-center -space-x-2">
-                <img src={HeroImage} alt="Hero image" className="w-1/2" />
-            </div>
             <h2
                 className="text-lg font-semibold text-background text-center"
                 dir="auto"
@@ -131,7 +128,7 @@ function InfoSection() {
 // Refactored Header Components
 function HeaderChatRunning() {
     return (
-        <header className="p-3 gap-2 flex flex-col" style={{ paddingBottom: "1rem" }}>
+        <header className="p-3 gap-2 flex flex-col pb-4">
             <div className="w-full flex items-center justify-between">
                 <SettingsDialog />
                 <HeroImageDisplay />
@@ -144,7 +141,7 @@ function HeaderChatRunning() {
 function HeaderChatDidNotStart() {
 
     return (
-        <header className="p-3 gap-2 flex flex-col" style={{ paddingBottom: "2rem" }}>
+        <header className="p-3 gap-2 flex flex-col pb-8">
             <div className="w-full flex items-center justify-between">
                 <SettingsDialog />
                 <HeroImageDisplay />

@@ -241,9 +241,16 @@ function useAbstractChat({
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
       if (session) {
-        const { data: redata } = await http.apis.fetchHistory(sessionId);
-        const messages = historyToWidgetMessages(redata ?? []);
-        return messages;
+        try {
+          const { data: redata } = await http.apis.fetchHistory(sessionId);
+          if (Array.isArray(redata)) {
+            const messages = historyToWidgetMessages(redata ?? []);
+            return messages;
+          }
+        } catch (error) {
+          console.error(error)
+          return []
+        }
       }
       return [];
     },

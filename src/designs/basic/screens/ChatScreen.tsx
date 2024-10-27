@@ -176,7 +176,6 @@ export function ChatScreen() {
   const LoadingComponent = componentStore.getComponent(
     "loading"
   ) as ComponentType;
-
   return (
     <TooltipProvider delayDuration={100}>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
