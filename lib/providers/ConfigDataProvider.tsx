@@ -49,9 +49,7 @@ export function ConfigDataProvider({
 
   const _data = useMemo(() => {
     const soundEffectFiles = {
-      messageDelivered: "https://cloud.opencopilot.so/sfx/notification1.mp3",
-      messageArrived: "https://cloud.opencopilot.so/sfx/notification2.mp3",
-      ticketResolved: "https://cloud.opencopilot.so/sfx/notification3.mp3",
+      messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3",
       ...data.soundEffectFiles,
     };
     return {
