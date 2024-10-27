@@ -46,4 +46,5 @@ export const nlLocale: TranslatableMessages = {
   "session-closed-lead": "Your issue has been resolved!",
   "create-new-ticket": "Nieuw ticket aanmaken",
   exit: "Afsluiten",
+  "reset-conversation": "Gesprek resetten",
 };

@@ -45,4 +45,5 @@ export const arLocale: TranslatableMessages = {
   "session-closed-lead": "تم حل مشكلتك!",
   exit: "خروج",
   "create-new-ticket": "إنشاء تذكرة جديدة",
+  "reset-conversation": "إعادة تعيين المحادثة",
 };

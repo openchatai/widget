@@ -44,6 +44,7 @@ export const enLocale = {
   "session-closed-lead": "Your issue has been resolved!",
   "create-new-ticket": "Create new ticket",
   exit: "Exit",
+  "reset-conversation": "Reset conversation",
 };
 
 export type TranslationKeysType = keyof typeof enLocale;

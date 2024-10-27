@@ -26,6 +26,8 @@ import { representSocketState } from "./socketState";
 import { useSyncedState } from "./useSyncState";
 import { useAsyncFn } from "./useAsyncFn";
 import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
+import lodashSet from "lodash.set";
+import { useWidgetSoundEffects } from "@lib/providers/use-widget-sfx";
 
 type HookState = {
   state: "loading" | "error" | "idle";
@@ -131,7 +133,17 @@ function chatReducer(state: ChatState, action: ActionType) {
         draft.keyboard = action.payload;
         break;
       }
-
+      case "SET_DELIVERED_AT": {
+        const message = draft.messages.find(message => {
+          if (message.type === "FROM_USER" && message.id === action.payload?.clientMessageId) {
+            return true;
+          }
+        })
+        if (message?.type === "FROM_USER") {
+          lodashSet(message, "deliveredAt", action.payload.deliveredAt);
+        }
+        break;
+      }
       default:
         break;
     }
@@ -215,7 +227,6 @@ function useSession({ persist }: { persist: boolean }) {
 }
 
 function useAbstractChat({
-  defaultHookSettings,
   onSessionDestroy,
   language,
 }: useChatOptions) {
@@ -225,26 +236,21 @@ function useAbstractChat({
     keyboard: null,
   });
   const locale = useLocale();
-  const { botToken, http, socketUrl, user, ...config } = useConfigData();
-  const [settings, _setSettings] = useSyncedState(
-    "[SETTINGS]:[OPEN]",
-    {
-      persistSession: defaultHookSettings?.persistSession ?? false,
-      useSoundEffects: defaultHookSettings?.useSoundEffects ?? false,
-    },
-    "local"
-  );
-  const setSettings = (data: NonNullable<Partial<typeof settings>>) => {
-    _setSettings(Object.assign({}, settings, data));
-  };
-
-
+  const { botToken, http, socketUrl, user, widgetSettings, defaultSettings, ...config } = useConfigData();
+  const { messageArrivedSound } = useWidgetSoundEffects();
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
       if (session) {
-        const { data: redata } = await http.apis.fetchHistory(sessionId);
-        const messages = historyToWidgetMessages(redata ?? []);
-        return messages;
+        try {
+          const { data: redata } = await http.apis.fetchHistory(sessionId);
+          if (Array.isArray(redata)) {
+            const messages = historyToWidgetMessages(redata ?? []);
+            return messages;
+          }
+        } catch (error) {
+          console.error(error)
+          return []
+        }
       }
       return [];
     },
@@ -252,11 +258,11 @@ function useAbstractChat({
   );
 
   const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
-    persist: settings?.persistSession ?? false
+    persist: widgetSettings?.persistSession ?? defaultSettings.persistSession
   })
 
   const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
-  
+
   const disableLoading = !session || session.isAssignedToHuman || session.isPendingHuman;
 
   function setHookState(
@@ -403,6 +409,11 @@ function useAbstractChat({
           state: "idle",
         });
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
+        try {
+          messageArrivedSound?.[0]() // play
+        } catch (error) {
+          console.error(error)
+        }
       },
       onChatEvent(message, _ctx) {
         refreshSession()
@@ -467,7 +478,7 @@ function useAbstractChat({
     });
   }, []);
 
-  // this will just resend the user message again to the widget with everyhing
+  // this will just resend the user message again to the widget with everything
   const handleDeliveredAck = useCallback((payload: MessagePayload) => {
     dispatch({
       type: "SET_DELIVERED_AT",
@@ -538,7 +549,6 @@ function useAbstractChat({
               type: "FROM_USER",
               id: msgId,
               content: content.text,
-              timestamp: new Date().toISOString(),
               session_id: chatSession.id,
               user: payload.user,
               deliveredAt: null,
@@ -602,8 +612,6 @@ function useAbstractChat({
     clearSession,
     sendMessage,
     info,
-    settings,
-    setSettings,
     handleKeyboard,
     hookState,
   };

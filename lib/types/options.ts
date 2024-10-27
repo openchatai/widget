@@ -24,6 +24,9 @@ export type WidgetOptions = {
     persistSession?: boolean;
     useSoundEffects?: boolean;
   },
+  soundEffectFiles?: {
+    messageArrived?: string;
+  },
   socketUrl?: string;
   defaultOpen?: boolean;
   debug?: boolean;

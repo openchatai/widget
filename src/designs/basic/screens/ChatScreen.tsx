@@ -2,23 +2,17 @@ import { BotMessage } from "@lib/@components/BotMessage";
 import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogTrigger,
 } from "@lib/components/dialog";
 import { Keyboard } from "@lib/components/keyboard";
 import { UserMessage } from "@lib/components/messages";
-import { Switch } from "@lib/components/switch";
-import { TooltipProvider } from "@lib/components/tooltip";
+import { TooltipProvider, } from "@lib/components/tooltip";
 import { useChat, useConfigData, useLocale } from "@lib/providers";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CheckCheckIcon,
   CircleDashed,
-  RotateCcw,
   SendHorizonal,
-  SettingsIcon,
-  XIcon,
 } from "lucide-react";
 import React, {
   ComponentType,
@@ -27,15 +21,41 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { HeaderChatDidNotStart, HeaderChatRunning } from "./ChatScreenHeader";
 
-const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
+function Info() {
+  const { info } = useChat();
+  const layoutId = useId();
+
+  return <div className="relative w-full top-0 overflow-hidden h-5 px-1">
+    <AnimatePresence>
+      {info && (
+        <motion.div
+          key={info.toString()}
+          className="absolute w-full text-xs text-accent/60"
+          layoutId={layoutId}
+          animate={{ opacity: 1, translateY: 0 }}
+          exit={{ opacity: 0, translateY: "-100%" }}
+          initial={{ opacity: 0, translateY: "-100%" }}
+          transition={{
+            duration: 0.2,
+            ease: "easeInOut",
+          }}
+          style={{ top: 0 }}
+        >
+          {info}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
+}
 
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, info, session, hookState } = useChat();
-  const layoutId = useId();
+  const { sendMessage, hookState } = useChat();
   const locale = useLocale();
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
     setInput(value);
@@ -59,27 +79,7 @@ function ChatFooter() {
 
   return (
     <div className="p-2 rounded-lg relative">
-      <div className="relative w-full top-0 overflow-hidden h-5 px-1">
-        <AnimatePresence>
-          {info && (
-            <motion.div
-              key={info.toString()}
-              className="absolute w-full text-xs text-accent/60"
-              layoutId={layoutId}
-              animate={{ opacity: 1, translateY: 0 }}
-              exit={{ opacity: 0, translateY: "-100%" }}
-              initial={{ opacity: 0, translateY: "-100%" }}
-              transition={{
-                duration: 0.2,
-                ease: "easeInOut",
-              }}
-              style={{ top: 0 }}
-            >
-              {info}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <Info />
       <div
         className="flex rounded-lg items-center gap-2 bg-white border px-2 py-1.5"
         style={{
@@ -127,7 +127,7 @@ function ChatFooter() {
 function SessionClosedDialog() {
   const { session, recreateSession } = useChat();
   const locale = useLocale();
-  
+
   // there is a session and it's closed
   if (session && session.isSessionClosed !== true) return null;
 
@@ -176,9 +176,8 @@ export function ChatScreen() {
   const LoadingComponent = componentStore.getComponent(
     "loading"
   ) as ComponentType;
-
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
         <div
           className="w-full mesh-gradient rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
@@ -188,7 +187,6 @@ export function ChatScreen() {
           }}
         >
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
-
           <div
             className="flex rounded-xl shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto"
             style={{
@@ -215,23 +213,23 @@ export function ChatScreen() {
                   wrapperProps={{ bot: config.bot }}
                 />
               )) ?? (
-                <BotMessage
-                  message={{
-                    component: "text",
-                    data: { message: "Hello, how can I help?" },
-                    id: "000",
-                    serverId: null,
-                    type: "FROM_BOT",
-                    bot: config.bot,
-                  }}
-                  Wrapper={BotResponseWrapper}
-                  wrapperProps={{ bot: config.bot }}
-                />
-              )}
-              {state.messages.map((message, i) => {
+                  <BotMessage
+                    message={{
+                      component: "text",
+                      data: { message: "Hello, how can I help?" },
+                      id: "000",
+                      serverId: null,
+                      type: "FROM_BOT",
+                      bot: config.bot,
+                    }}
+                    Wrapper={BotResponseWrapper}
+                    wrapperProps={{ bot: config.bot }}
+                  />
+                )}
+              {state.messages.map((message) => {
                 if (message.type === "FROM_USER") {
                   return (
-                    <UserMessage key={message.id} user={config.user}>
+                    <UserMessage key={message.id} message={message} user={config.user}>
                       {message.content}
                     </UserMessage>
                   );
@@ -251,7 +249,6 @@ export function ChatScreen() {
               })}
               {hookState.state === "loading" && <LoadingComponent />}
             </div>
-
             <footer>
               {state.keyboard && (
                 <React.Fragment>
@@ -292,242 +289,5 @@ export function ChatScreen() {
         <SessionClosedDialog />
       </div>
     </TooltipProvider>
-  );
-}
-
-function HeaderChatRunning() {
-  const { session, clearSession, settings, setSettings } = useChat();
-  const locale = useLocale();
-  return (
-    <header
-      className="p-3 gap-2 flex flex-col"
-      style={{
-        paddingBottom: "1rem",
-      }}
-    >
-      <div className="w-full flex items-center justify-between">
-        <Dialog>
-          <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
-            <SettingsIcon className="size-5" />
-          </DialogTrigger>
-          <DialogContent>
-            <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold" dir="auto">
-                {locale.get("settings")}
-              </h2>
-              <DialogClose className="bg-transparent text-accent p-1 font-semibold">
-                <XIcon className="size-4" />
-              </DialogClose>
-            </div>
-
-            <div className="p-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="persist-session::open" dir="auto">
-                  {locale.get("persist-session")}
-                </label>
-                <Switch
-                  id="persist-session::open"
-                  disabled={!!session}
-                  checked={settings?.persistSession}
-                  onCheckedChange={(c) => {
-                    setSettings({ persistSession: c });
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="sfx::open" dir="auto">
-                  {locale.get("sound-effects")}
-                </label>
-                <Switch
-                  id="sfx::open"
-                  disabled={!!session}
-                  checked={settings?.useSoundEffects}
-                  onCheckedChange={(c) => {
-                    setSettings({ useSoundEffects: c });
-                  }}
-                />
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <div className="flex items-center justify-center -space-x-2">
-          <img src={HeroImage} alt="Hero image" className="w-[122px]" />
-        </div>
-        <Dialog>
-          {({ setOpen }) => {
-            return (
-              <>
-                <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
-                  <RotateCcw className="size-5" />
-                </DialogTrigger>
-                <DialogContent>
-                  <div className="p-4">
-                    <h2 className="text-sm" dir="auto">
-                      {locale.get("reset-conversation-confirm")}
-                    </h2>
-                  </div>
-                  <div className="p-4 space-x-3 flex items-center justify-end">
-                    <button
-                      dir="auto"
-                      onClick={() => {
-                        clearSession();
-                        setOpen(false);
-                      }}
-                      className="bg-rose-400 text-white px-2 py-1 rounded-lg text-sm"
-                    >
-                      {locale.get("yes")}
-                    </button>
-                    <DialogClose
-                      dir="auto"
-                      className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm"
-                    >
-                      {locale.get("no")}
-                    </DialogClose>
-                  </div>
-                </DialogContent>
-              </>
-            );
-          }}
-        </Dialog>
-      </div>
-    </header>
-  );
-}
-
-function HeaderChatDidNotStart() {
-  const { session, clearSession, settings, setSettings } = useChat();
-  const locale = useLocale();
-  return (
-    <header
-      className="p-3 gap-2 flex flex-col"
-      style={{
-        paddingBottom: "2rem",
-      }}
-    >
-      <div className="w-full flex items-center justify-between">
-        <Dialog>
-          <DialogTrigger className="p-1.5 hidden rounded-full bg-accent/60 text-background">
-            <XIcon className="size-5" />
-          </DialogTrigger>
-          <DialogContent>
-            <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold" dir="auto">
-                {locale.get("close-widget")}
-              </h2>
-              <DialogClose className="bg-transparent text-accent p-2 font-semibold">
-                <XIcon className="size-4" />
-              </DialogClose>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog>
-          <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
-            <SettingsIcon className="size-5" />
-          </DialogTrigger>
-          <DialogContent>
-            <div className="p-3 flex items-center justify-between">
-              <h2 className="text-sm font-semibold" dir="auto">
-                {locale.get("settings")}
-              </h2>
-              <DialogClose className="bg-transparent text-accent p-1 font-semibold">
-                <XIcon className="size-4" />
-              </DialogClose>
-            </div>
-
-            <div className="p-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <label htmlFor="persist-session::open" dir="auto">
-                  {locale.get("persist-session")}
-                </label>
-                <Switch
-                  id="persist-session::open"
-                  disabled={!!session}
-                  checked={settings?.persistSession}
-                  onCheckedChange={(c) => {
-                    setSettings({ persistSession: c });
-                  }}
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <label htmlFor="sfx::open" dir="auto">
-                  {locale.get("sound-effects")}
-                </label>
-                <Switch
-                  id="sfx::open"
-                  disabled={!!session}
-                  checked={settings?.useSoundEffects}
-                  onCheckedChange={(c) => {
-                    setSettings({ useSoundEffects: c });
-                  }}
-                />
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog>
-          {({ setOpen }) => {
-            return (
-              <>
-                <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background">
-                  <RotateCcw className="size-5" />
-                </DialogTrigger>
-                <DialogContent>
-                  <div className="p-4">
-                    <h2 className="text-sm" dir="auto">
-                      {locale.get("reset-conversation-confirm")}
-                    </h2>
-                  </div>
-                  <div className="p-4 gap-2 flex items-center justify-end">
-                    <button
-                      onClick={() => {
-                        clearSession();
-                        setOpen(false);
-                      }}
-                      dir="auto"
-                      className="bg-rose-400 text-white px-2 py-1 rounded-lg text-sm"
-                    >
-                      {locale.get("yes")}
-                    </button>
-                    <DialogClose
-                      dir="auto"
-                      className="bg-transparent text-accent border px-2 py-1 rounded-lg text-sm"
-                    >
-                      {locale.get("no")}
-                    </DialogClose>
-                  </div>
-                </DialogContent>
-              </>
-            );
-          }}
-        </Dialog>
-      </div>
-      <div className="flex items-center justify-center flex-col">
-        <div className="flex items-center justify-center -space-x-2">
-          <img src={HeroImage} alt="Hero image" className="w-1/2" />
-        </div>
-        <h2
-          className="text-lg font-semibold text-background text-center"
-          dir="auto"
-          style={{
-            textShadow: "0px 2px 8px rgba(0, 0, 0, 0.12)",
-          }}
-        >
-          {locale.get("got-any-questions")}
-        </h2>
-
-        <span
-          className="text-sm text-white text-center"
-          dir="auto"
-          style={{
-            textShadow: "0px 2px 8px rgba(0, 0, 0, 0.12)",
-          }}
-        >
-          {locale.get("typical-response-time")}
-        </span>
-      </div>
-    </header>
   );
 }
