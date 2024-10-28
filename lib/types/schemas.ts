@@ -45,12 +45,12 @@ export enum MessageTypeEnum {
 
 export const chatSessionSchema = z.object({
     id: z.string(),
+    copilot_id: z.string(),
+    assignee_id: z.number().nullable(),
     status: z.nativeEnum(SessionStatus),
     channel: z.nativeEnum(SessionChannel),
-    assignee_id: z.number().nullable(),
     summary: z.string().nullable(),
-    copilot_id: z.string(),
-    last_seen_at: z.date().nullable(),
+    last_seen_at: z.date().nullable().optional(),
     is_online: z.number(),
     ai_closure_type: z.nativeEnum(AIClosureType).nullable(),
     language: z.string().nullable(),
@@ -64,7 +64,7 @@ export const chatSessionSchema = z.object({
             email: z.string(),
             avatar_url: z.string().optional(),
         })
-        .nullable(),
+        .nullable().optional(),
     sentiment: z.nativeEnum(SentimentEnum).nullable(),
 });
 

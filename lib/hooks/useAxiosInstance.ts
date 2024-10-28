@@ -29,7 +29,7 @@ export function useAxiosInstance(options: Options) {
        * @param sessionId
        */
       fetchSession: (sessionId: string) => {
-        return instance.get<ChatSessionType>(`/chat-session/one/${sessionId}`);
+        return instance.get<ChatSessionType>(`widget/session/${sessionId}`);
       },
 
       fetchPreludeData: () => {

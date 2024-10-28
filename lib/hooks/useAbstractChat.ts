@@ -257,9 +257,9 @@ function useAbstractChat({
     },
     []
   );
-
+  const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
   const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
-    persist: widgetSettings?.persistSession ?? defaultSettings.persistSession
+    persist: shouldPersistSession
   })
 
   const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
