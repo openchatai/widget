@@ -411,7 +411,7 @@ function useAbstractChat({
         });
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
         try {
-          messageArrivedSound?.[0]() // play
+          messageArrivedSound.play()
         } catch (error) {
           console.error(error)
         }

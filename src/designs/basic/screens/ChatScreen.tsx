@@ -211,6 +211,7 @@ export function ChatScreen() {
                 />
               )) ?? (
                   <BotMessage
+                    key={"0001"}
                     message={{
                       component: "text",
                       data: { message: "Hello, how can I help?" },
@@ -236,6 +237,7 @@ export function ChatScreen() {
                   }
                   return (
                     <BotMessage
+                      key={message.id}
                       message={message}
                       Wrapper={BotResponseWrapper}
                       wrapperProps={{ bot: message.bot }}

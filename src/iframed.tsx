@@ -1,6 +1,6 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import Iframe from "@uiw/react-iframe";
-import { MessageSquareDot, X, XIcon } from "lucide-react";
+import { MessageSquareDot, XIcon } from "lucide-react";
 import { useState } from "react";
 import styles from "../lib/index.css?inline";
 import { Widget } from "./designs/basic";

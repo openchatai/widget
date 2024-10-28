@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>opencopilot | Test</title>
+    <script src="../../dist-embed/script.js"></script>
+</head>
+<body>
+    <h2>Test only</h2>
+    <script>
+        const allOptions = {
+            token: "<<your bot token>>",
+            user: {
+                email: "user's email",
+                /// ...any properties
+            }, // optional
+            bot: {
+                name: "bot's name",
+                avatar: "bot's avatar",
+                /// ...any properties
+            }, // optional
+            language: "en", // default en
+            settings: {
+                persistSession: true, // default false
+                useSoundEffects: true, // default false
+            },
+            initialMessages: ["How can we help you?"],
+        };
+        initOpenScript(allOptions)
+    </script>
+</body>
+</html>
