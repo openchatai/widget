@@ -1,6 +1,6 @@
-import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@lib/components/dialog';
-import { Switch } from '@lib/components/switch';
-import { useChat, useConfigData, useLocale } from '@lib/providers';
+import { useChat, useConfigData, useLocale } from '@lib/index';
+import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@ui/dialog';
+import { Switch } from '@ui/switch';
 import { RotateCcw, SettingsIcon, XIcon } from 'lucide-react';
 
 const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";

@@ -1,7 +1,7 @@
-import { Avatar, AvatarImage } from "@lib/components/avatar";
 import { WidgetOptions } from "@lib/types";
 import React from "react";
 import AgentIcon from "../static/agent-icon.png";
+import { Avatar, AvatarImage } from "@ui/avatar";
 
 export function BotResponseWrapper({
   children,

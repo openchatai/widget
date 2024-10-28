@@ -1,5 +1,6 @@
 import { LangType } from "@lib/locales";
-import { useConfigData, useLocale } from "@lib/providers";
+import { useLocale } from "../providers/LocalesProvider";
+import { useConfigData } from "../providers/ConfigDataProvider"
 import { MessageType, UserMessageType } from "@lib/types";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
@@ -256,9 +257,9 @@ function useAbstractChat({
     },
     []
   );
-
+  const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
   const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
-    persist: widgetSettings?.persistSession ?? defaultSettings.persistSession
+    persist: shouldPersistSession
   })
 
   const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
@@ -410,7 +411,7 @@ function useAbstractChat({
         });
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
         try {
-          messageArrivedSound?.[0]() // play
+          messageArrivedSound.play()
         } catch (error) {
           console.error(error)
         }

@@ -1,5 +1,5 @@
+import { useConfigData } from "../providers/ConfigDataProvider";
 import { useAsyncFn } from "./useAsyncFn";
-import { useConfigData } from "@lib/providers";
 
 export function useUpvote(id: string, onSuccess?: () => void) {
   const { http } = useConfigData();

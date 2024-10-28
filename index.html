@@ -12,15 +12,17 @@
   <script>
     const socketUrl = "http://localhost:8080";
     const apiUrl = "http://localhost:8080/backend";
-    let initlized = false;
     window.addEventListener("DOMContentLoaded", () => {
-      if (initlized) return;
       initOpenScript({
         token: "8ce19d99a6a2a2c31d4e7946fc3aaed8",
         apiUrl: apiUrl,
         socketUrl: socketUrl,
         language: "en",
-        initialMessage: ["Hey man!", "How can we help you?"],
+        initialMessages: ["Hey man!", "How can we help you?"],
+        settings: {
+          persistSession: true,
+          useSoundEffects: true
+        },
         user: {
           email: "john@doe.com",
           avatarUrl: "https://i.pravatar.cc/300",
@@ -38,7 +40,6 @@
         debug: false,
         organizationName: "Demo inc.",
       }, "default"); // default or iframed
-      initlized = true;
     }, "iframed");
   </script>
 </body>

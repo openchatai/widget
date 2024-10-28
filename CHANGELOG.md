@@ -1,5 +1,17 @@
 # @openchatai/widget
 
+## 1.4.8
+
+### Patch Changes
+
+- a8b00f0: remove halwer
+
+## 1.4.7
+
+### Patch Changes
+
+- 8e7d5b8: remove unused session, history properties
+
 ## 1.4.6
 
 ### Patch Changes

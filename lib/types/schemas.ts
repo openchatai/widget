@@ -22,11 +22,6 @@ export enum AIClosureType {
     handed_off = 'handed_off',
 }
 
-export enum AIBillingType {
-    hard = 'hard',
-    light = 'light',
-}
-
 export enum SentimentEnum {
     happy = 'happy',
     neutral = 'neutral',
@@ -49,39 +44,18 @@ export enum MessageTypeEnum {
 }
 
 export const chatSessionSchema = z.object({
+    id: z.string(),
+    copilot_id: z.string(),
+    assignee_id: z.number().nullable(),
     status: z.nativeEnum(SessionStatus),
     channel: z.nativeEnum(SessionChannel),
-    assignee_id: z.number().nullable(),
     summary: z.string().nullable(),
-    classification: z.string().nullable(),
-    contact_id: z.string().nullable(),
-    copilot_id: z.string(),
-    email: z.string().nullable(),
-    email_thread_id: z.string().nullable(),
-    group_id: z.string().nullable(),
-    id: z.string(),
-    is_notification_enabled: z.number(),
-    short_token: z.string().nullable(),
-    last_seen_at: z.date().nullable(),
+    last_seen_at: z.date().nullable().optional(),
     is_online: z.number(),
     ai_closure_type: z.nativeEnum(AIClosureType).nullable(),
-    ai_billing_type: z.nativeEnum(AIBillingType).nullable(),
     language: z.string().nullable(),
     last_message: z.string().nullable(),
     last_message_at: z.date().nullable(),
-    short_link: z.string().nullable(),
-    meta: z.custom<any>().and(
-        z.object({
-            title: z.string().optional(),
-            whatsappToNumber: z.string().optional(),
-            recordingUrl: z.string().optional(),
-            title_generation_type: z.enum(['user', 'system']).nullable(),
-            summary: z.string().optional(),
-            phoneNumber: z.string().optional(),
-        }),
-    ),
-    mobileNumber: z.string().nullable(),
-    queryOrgId: z.string().nullable(),
     created_at: z.date(),
     updated_at: z.date(),
     assignee: z
@@ -90,29 +64,21 @@ export const chatSessionSchema = z.object({
             email: z.string(),
             avatar_url: z.string().optional(),
         })
-        .nullable(),
-    fallback_channel: z.enum(['email', 'sms']).nullable(),
+        .nullable().optional(),
     sentiment: z.nativeEnum(SentimentEnum).nullable(),
-    ticket_number: z.number(),
-    ai_phone_call_sid: z.string().nullable(),
-    ai_phone_call_recording_url: z.string().nullable(),
 });
 
 export const chatHistoryMessageSchema = z.object({
+    id: z.number(),
     message: z.string().nullable(),
     type: z.string().nullable(),
     agent_avatar: z.string().nullable(),
     agent_id: z.number().nullable(),
     agent_name: z.string().nullable(),
-    api_called: z.boolean().nullable(),
     chatbot_id: z.string().nullable(),
     created_at: z.string(),
-    debug_json: z.any().nullable(),
-    extra_params: z.any(),
     from_user: z.boolean().nullable(),
     handoff_happened_during_office_hours: z.boolean().nullable(),
-    id: z.number(),
-    knowledgebase_called: z.boolean().nullable(),
     session_id: z.string(),
     updated_at: z.string().nullable(),
 })

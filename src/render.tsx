@@ -11,7 +11,6 @@ export function render(rootId: string, component: React.JSX.Element) {
         rootElement.setAttribute("data-chat-widget", "");
         document.body.appendChild(rootElement);
     }
-
     const _root = createRoot(rootElement);
     if (_root) {
         _root.render(

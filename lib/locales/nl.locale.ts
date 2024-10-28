@@ -1,6 +1,5 @@
-import { TranslatableMessages } from "@lib/types";
+import { TranslatableMessages } from ".";
 
-// language -> Dutch
 export const nlLocale: TranslatableMessages = {
   ok: "OK",
   "yes": "Ja",

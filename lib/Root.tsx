@@ -1,7 +1,8 @@
 import React from "react";
-import { ChatProvider, LocaleProvider } from "./providers";
 import { ConfigDataProvider } from "./providers/ConfigDataProvider";
 import { WidgetOptions } from "./types";
+import { LocaleProvider } from "./providers/LocalesProvider";
+import { ChatProvider } from "./providers/ChatProvider";
 
 export function WidgetRoot({
     children,
