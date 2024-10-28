@@ -2,12 +2,13 @@ import { ChatHistoryMessageType, ChatSessionType } from "@lib/types/schemas";
 import { PreludeData, WorkingHours } from "@lib/utils";
 import axios from "axios";
 import { useMemo } from "react";
-
+import { version } from "../../package.json"
 type Options = {
   apiUrl: string;
   botToken: string;
 };
 const BotTokenHeader = "X-Bot-Token";
+const WidgetVersionHeader = "X-Widget-Version";
 
 export function useAxiosInstance(options: Options) {
   const instance = useMemo(() => {
@@ -15,6 +16,8 @@ export function useAxiosInstance(options: Options) {
       baseURL: options.apiUrl,
       headers: {
         [BotTokenHeader]: options.botToken,
+        [WidgetVersionHeader]: version,
+        "X-Use-Guard": true
       },
     });
   }, [options]);
