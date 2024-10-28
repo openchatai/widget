@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.8
+
+### Patch Changes
+
+- a8b00f0: remove halwer
+
 ## 1.4.7
 
 ### Patch Changes
