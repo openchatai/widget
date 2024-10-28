@@ -1,4 +1,3 @@
-import { cn } from "@lib/utils/cn";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import Iframe from "@uiw/react-iframe";
 import { MessageSquareDot, X, XIcon } from "lucide-react";
@@ -6,6 +5,7 @@ import { useState } from "react";
 import styles from "../lib/index.css?inline";
 import { Widget } from "./designs/basic";
 import { cssVars } from "./designs/constants";
+import { cn } from "./utils";
 
 export function IframedWidgetPopover() {
   const [isOpen, setIsOpened] = useState(false);

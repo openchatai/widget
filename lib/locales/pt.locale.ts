@@ -1,6 +1,5 @@
-import { TranslatableMessages } from "@lib/types";
+import { TranslatableMessages } from ".";
 
-// language: portuguese
 export const ptLocale: TranslatableMessages = {
     ok: "OK",
     "yes": "Sim",

@@ -1,4 +1,4 @@
-import { TranslatableMessages } from "@lib/types";
+import { TranslatableMessages } from ".";
 
 export const arLocale: TranslatableMessages = {
   ok: "حسنا",

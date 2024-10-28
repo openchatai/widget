@@ -1,13 +1,6 @@
 import { BotMessage } from "@lib/@components/BotMessage";
 import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
-import {
-  Dialog,
-  DialogContent,
-} from "@lib/components/dialog";
-import { Keyboard } from "@lib/components/keyboard";
-import { UserMessage } from "@lib/components/messages";
-import { TooltipProvider, } from "@lib/components/tooltip";
-import { useChat, useConfigData, useLocale } from "@lib/providers";
+import { useChat, useConfigData, useLocale } from "@lib/index";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CheckCheckIcon,
@@ -22,6 +15,10 @@ import React, {
   useState,
 } from "react";
 import { HeaderChatDidNotStart, HeaderChatRunning } from "./ChatScreenHeader";
+import { Dialog, DialogContent } from "@ui/dialog";
+import { TooltipProvider } from "@ui/tooltip";
+import { UserMessage } from "@ui/messages";
+import { Keyboard } from "@ui/keyboard";
 
 function Info() {
   const { info } = useChat();

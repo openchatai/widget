@@ -1,5 +1,5 @@
-import { useConfigData } from ".";
 import useSound from 'use-sound';
+import { useConfigData } from './ConfigDataProvider';
 
 
 function useWidgetSoundEffects() {

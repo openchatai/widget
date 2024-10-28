@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import { UserMessageType, WidgetOptions } from "../types";
 import { Avatar, AvatarImage } from "./avatar";
 import { formatDistance } from "date-fns";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 import { Check, CheckCheck } from 'lucide-react';
+import { UserMessageType, WidgetOptions } from "@lib/types";
 
 export function UserMessage({
   children,

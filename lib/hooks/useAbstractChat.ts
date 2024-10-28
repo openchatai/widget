@@ -1,5 +1,6 @@
 import { LangType } from "@lib/locales";
-import { useConfigData, useLocale } from "@lib/providers";
+import { useLocale } from "../providers/LocalesProvider";
+import { useConfigData } from "../providers/ConfigDataProvider"
 import { MessageType, UserMessageType } from "@lib/types";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";

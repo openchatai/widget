@@ -1,10 +1,10 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { MessageCircleQuestionIcon, MessageSquareDot, X, XIcon } from "lucide-react";
+import { MessageSquareDot, XIcon } from "lucide-react";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
-import { useChat } from "@lib/providers";
-import { cn } from "@lib/utils/cn";
+import { useChat } from "@lib/index";
 import { cssVars } from "../constants";
+import { cn } from "src/utils";
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = React.useState(false);
