@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.10
+
+### Patch Changes
+
+- 9631623: fix a styling issue, more enhancements
+
 ## 1.4.9
 
 ### Patch Changes
