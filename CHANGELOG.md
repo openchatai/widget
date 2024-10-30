@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.9
+
+### Patch Changes
+
+- cc3972f: collect data
+
 ## 1.4.8
 
 ### Patch Changes
