@@ -342,9 +342,7 @@ function useAbstractChat({
   useListen(
     "heartbeat:ack",
     (data: { success: boolean }) => {
-      if (data.success) {
-        debug("heartbeat ack");
-      }
+      // 
     },
     [session]
   );
