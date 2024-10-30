@@ -174,8 +174,15 @@ export const structuredSocketMessageSchema = z.discriminatedUnion("type", [
     timestamp: z.string(),
     agent: agentSchema,
 }));
-
+export const consumerSchema = z.object({
+    id: z.string(),
+    copilot_id: z.string(),
+    name: z.string().nullable(),
+    created_at: z.string(),
+    avatar_url: z.string().nullable(),
+});
+type ConsumerType = z.infer<typeof consumerSchema>
 type ChatSessionType = z.infer<typeof chatSessionSchema>;
 type StructuredSocketMessageType = z.infer<typeof structuredSocketMessageSchema>;
 type ChatHistoryMessageType = z.infer<typeof chatHistoryMessageSchema>;
-export type { ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType };
+export type { ConsumerType, ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType };

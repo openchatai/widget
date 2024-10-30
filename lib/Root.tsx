@@ -3,6 +3,7 @@ import { ConfigDataProvider } from "./providers/ConfigDataProvider";
 import { WidgetOptions } from "./types";
 import { LocaleProvider } from "./providers/LocalesProvider";
 import { ChatProvider } from "./providers/ChatProvider";
+import { ContactProvider } from "./providers/ContactProvider";
 
 export function WidgetRoot({
     children,
@@ -13,9 +14,11 @@ export function WidgetRoot({
 }) {
     return (
         <ConfigDataProvider data={options}>
-            <LocaleProvider>
-                <ChatProvider>{children}</ChatProvider>
-            </LocaleProvider>
+            <ContactProvider>
+                <LocaleProvider>
+                    <ChatProvider>{children}</ChatProvider>
+                </LocaleProvider>
+            </ContactProvider>
         </ConfigDataProvider>
     );
 }

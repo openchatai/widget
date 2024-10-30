@@ -1,5 +1,6 @@
 import { BotResponseWrapper } from "@lib/@components";
 import { useAsyncFn, useConfigData } from "@lib/index";
+import { useContact } from "@lib/providers/ContactProvider";
 import { Input } from "@ui/input";
 import { Loader } from "lucide-react";
 import React from "react";
@@ -11,12 +12,15 @@ interface CollectDataFormProps {
         email: string;
     }
 }
+
 const schema = z.object({
     name: z.string(),
     email: z.string().email(),
 });
+
 export function CollectDataForm(props: CollectDataFormProps) {
     const config = useConfigData();
+    const contact = useContact()
     const [_state, handleSubmit] = useAsyncFn(async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const values = new FormData(event.currentTarget);
@@ -24,8 +28,8 @@ export function CollectDataForm(props: CollectDataFormProps) {
         if (!data.success) {
             return;
         }
-        console.log(data.data);
-    })
+        await contact.createContactAsync(data.data);
+    }, [contact.createContactAsync]);
 
     return (
         <BotResponseWrapper bot={config.bot} className="w-full">
@@ -44,12 +48,14 @@ export function CollectDataForm(props: CollectDataFormProps) {
                 <button
                     data-loading={_state.loading}
                     data-error={!!_state.error}
-                    type="submit"
                     disabled={_state.loading}
-                    className="text-sm hover:brightness-110 disabled:grayscale active:brightness-110 transition-all font-medium rounded-lg bg-primary text-white px-3 py-1.5 flex items-center"
+                    type="submit"
+                    className="text-sm group text-center relative hover:brightness-110 disabled:grayscale active:brightness-110 transition-all font-medium rounded-lg bg-primary text-white px-3 py-1.5 flex items-center justify-center"
                 >
-                    <span>Send</span>
-                    {_state.loading && <Loader className="w-4 h-4 ml-1 animate-spin" />}
+                    <span className="group-data-[loading='true']:opacity-0">Send</span>
+                    {_state.loading && <div className="absolute inset-0 flex items-center justify-center">
+                        <Loader className="size-5 animate-spin" />
+                    </div>}
                 </button>
             </form>
         </BotResponseWrapper>

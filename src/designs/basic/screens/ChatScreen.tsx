@@ -143,14 +143,17 @@ function SessionClosedDialog() {
     </Dialog>
   );
 }
-
-export function ChatScreen() {
+function ChatRenderer() {
   const { state, sendMessage, noMessages, handleKeyboard, hookState } =
     useChat();
   const { componentStore, initialMessages, preludeSWR, ...config } =
     useConfigData();
+
+  const LoadingComponent = componentStore.getComponent(
+    "loading"
+  ) as ComponentType;
+
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const initialQuestions = preludeSWR.data?.initial_questions;
 
   function handleNewMessage() {
     setTimeout(() => {
@@ -164,90 +167,98 @@ export function ChatScreen() {
     handleNewMessage();
   }, [state.messages]);
 
-  const LoadingComponent = componentStore.getComponent(
-    "loading"
-  ) as ComponentType;
+
+  return <div
+    data-messages
+    ref={messagesContainerRef}
+    className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
+  >
+    {initialMessages?.map((message, index) => (
+      <BotMessage
+        key={index}
+        message={{
+          component: "text",
+          data: { message },
+          id: "000",
+          serverId: null,
+          type: "FROM_BOT",
+          bot: config.bot,
+        }}
+        Wrapper={BotResponseWrapper}
+        wrapperProps={{ bot: config.bot }}
+      />
+    )) ?? (
+        <BotMessage
+          key={"0001"}
+          message={{
+            component: "text",
+            data: { message: "Hello, how can I help?" },
+            id: "000",
+            serverId: null,
+            type: "FROM_BOT",
+            bot: config.bot,
+          }}
+          Wrapper={BotResponseWrapper}
+          wrapperProps={{ bot: config.bot }}
+        />
+      )}
+    {
+      config.collectUserData && (
+        <CollectDataForm />
+      )
+    }
+    {state.messages.map((message) => {
+      if (message.type === "FROM_USER") {
+        return (
+          <UserMessage key={message.id} message={message} user={config.user}>
+            {message.content}
+          </UserMessage>
+        );
+      } else if (message.type === "FROM_BOT") {
+        if (message.component == "CHAT_EVENT") {
+          return <BotMessage message={message} key={message.id} />;
+        }
+        return (
+          <BotMessage
+            key={message.id}
+            message={message}
+            Wrapper={BotResponseWrapper}
+            wrapperProps={{ bot: message.bot }}
+          />
+        );
+      }
+      return null;
+    })}
+    {hookState.state === "loading" && <LoadingComponent />}
+  </div>
+}
+
+
+export function ChatScreen() {
+  const { state, sendMessage, noMessages, handleKeyboard } = useChat();
+  const { preludeSWR } = useConfigData();
+  const initialQuestions = preludeSWR.data?.initial_questions;
+
   return (
     <TooltipProvider delayDuration={100}>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
         <div
-          className="w-full mesh-gradient rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
+          className="w-full rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
           style={{
             background:
               "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
           }}
         >
+
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
+
           <div
-            className="flex rounded-xl shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto"
-            style={{
-              background: "#FAFBFB",
-            }}
-          >
-            <div
-              data-messages
-              ref={messagesContainerRef}
-              className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
-            >
-              {initialMessages?.map((message, index) => (
-                <BotMessage
-                  key={index}
-                  message={{
-                    component: "text",
-                    data: { message },
-                    id: "000",
-                    serverId: null,
-                    type: "FROM_BOT",
-                    bot: config.bot,
-                  }}
-                  Wrapper={BotResponseWrapper}
-                  wrapperProps={{ bot: config.bot }}
-                />
-              )) ?? (
-                  <BotMessage
-                    key={"0001"}
-                    message={{
-                      component: "text",
-                      data: { message: "Hello, how can I help?" },
-                      id: "000",
-                      serverId: null,
-                      type: "FROM_BOT",
-                      bot: config.bot,
-                    }}
-                    Wrapper={BotResponseWrapper}
-                    wrapperProps={{ bot: config.bot }}
-                  />
-                )}
-              {
-                config.collectUserData && (
-                  <CollectDataForm />
-                )
-              }
-              {state.messages.map((message) => {
-                if (message.type === "FROM_USER") {
-                  return (
-                    <UserMessage key={message.id} message={message} user={config.user}>
-                      {message.content}
-                    </UserMessage>
-                  );
-                } else if (message.type === "FROM_BOT") {
-                  if (message.component == "CHAT_EVENT") {
-                    return <BotMessage message={message} key={message.id} />;
-                  }
-                  return (
-                    <BotMessage
-                      key={message.id}
-                      message={message}
-                      Wrapper={BotResponseWrapper}
-                      wrapperProps={{ bot: message.bot }}
-                    />
-                  );
-                }
-                return null;
-              })}
-              {hookState.state === "loading" && <LoadingComponent />}
-            </div>
+            className="flex rounded-xl bg-slate-50 shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto">
+
+            <ChatRenderer />
+
             <footer>
+
               {state.keyboard && (
                 <React.Fragment>
                   <Keyboard
@@ -281,6 +292,7 @@ export function ChatScreen() {
 
                 <ChatFooter />
               </React.Fragment>
+
             </footer>
           </div>
         </div>

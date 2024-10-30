@@ -1,4 +1,4 @@
-import type { MakeKeysNotNullable, WidgetOptions } from "@lib/types";
+import type { WidgetOptions } from "@lib/types";
 import { type ReactNode, useMemo } from "react";
 import { createSafeContext } from "../utils/create-safe-context";
 import { LocaleProvider } from "./LocalesProvider";
@@ -7,15 +7,37 @@ import { PreludeData } from "@lib/utils";
 import useSWR, { SWRResponse } from "swr";
 import { ComponentRegistry } from "./componentRegistry";
 
-type NonNullableSomeConfigKeys = MakeKeysNotNullable<
-  WidgetOptions,
-  "language" | "apiUrl" | "socketUrl" | "headers" | "pathParams" | "queryParams" | "soundEffectFiles"
->;
+function useNormalizeOptions(data: WidgetOptions) {
+  return useMemo(() => {
+    const soundEffectFiles = {
+      messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3",
+      ...data.soundEffectFiles,
+    };
+    return {
+      ...data,
+      apiUrl: data.apiUrl ?? "https://api-v2.opencopilot.so/backend",
+      socketUrl: data.socketUrl ?? "https://api-v2.opencopilot.so",
+      language: data.language ?? DEFAULT_LANG,
+      botToken: data.token,
+      headers: data.headers ?? {},
+      pathParams: data.pathParams ?? {},
+      queryParams: data.queryParams ?? {},
+      user: data.user ?? {},
+      soundEffectFiles,
+      defaultSettings: {
+        persistSession: data.settings?.persistSession ?? false,
+        useSoundEffects: data.settings?.useSoundEffects ?? false,
+      }
+    };
+  }, [data]);
+}
+
 type WidgetSettings = {
   persistSession: boolean;
   useSoundEffects: boolean;
 }
-interface ConfigData extends NonNullableSomeConfigKeys {
+
+interface ConfigData extends ReturnType<typeof useNormalizeOptions> {
   http: ReturnType<typeof useAxiosInstance>;
   botToken: string;
   preludeSWR: SWRResponse<PreludeData | undefined, any>;
@@ -47,27 +69,7 @@ export function ConfigDataProvider({
     [data]
   );
 
-  const _data = useMemo(() => {
-    const soundEffectFiles = {
-      messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3",
-      ...data.soundEffectFiles,
-    };
-    return {
-      ...data,
-      apiUrl: data.apiUrl ?? "https://api-v2.opencopilot.so/backend",
-      socketUrl: data.socketUrl ?? "https://api-v2.opencopilot.so",
-      language: data.language ?? DEFAULT_LANG,
-      botToken: data.token,
-      headers: data.headers ?? {},
-      pathParams: data.pathParams ?? {},
-      queryParams: data.queryParams ?? {},
-      soundEffectFiles,
-      defaultSettings: {
-        persistSession: data.settings?.persistSession ?? false,
-        useSoundEffects: data.settings?.useSoundEffects ?? false,
-      }
-    };
-  }, [data]);
+  const _data = useNormalizeOptions(data);
 
   const http = useAxiosInstance({
     apiUrl: _data.apiUrl,
@@ -77,6 +79,8 @@ export function ConfigDataProvider({
   const preludeSWR = useSWR([http.options], async () => {
     const { data } = await http.apis.fetchPreludeData();
     return data;
+  }, {
+    errorRetryCount: 3,
   });
 
   const [widgetSettings, _setSettings] = useSyncedState("open_settings", _data.defaultSettings, "local");
