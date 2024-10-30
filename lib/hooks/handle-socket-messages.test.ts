@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { StructuredSocketMessageType } from "../types/schemas";
+import { MessageTypeEnum, StructuredSocketMessageType } from "../types/schemas";
 import { handleSocketMessages } from "./handle-socket-messages";
 
 describe("handle-socket-messages", () => {
@@ -11,6 +11,7 @@ describe("handle-socket-messages", () => {
     const onForm = vi.fn();
     const onVote = vi.fn();
     const onInfo = vi.fn();
+    const onAny = vi.fn();
 
     beforeEach(() => {
         onBotMessage.mockReset();
@@ -21,6 +22,21 @@ describe("handle-socket-messages", () => {
         onForm.mockReset();
         onVote.mockReset();
         onInfo.mockReset();
+        onAny.mockReset();
+    });
+
+    const createContext = (message: StructuredSocketMessageType) => ({
+        _message: message,
+        _config: { bot: { name: "Bot", is_ai: true, id: null, profile_picture: "" } },
+            onBotMessage,
+            onSessionUpdate,
+            onOptions,
+            onChatEvent,
+            onUi,
+            onForm,
+            onVote,
+        onInfo,
+        onAny
     });
 
     it("should process a message", () => {
@@ -35,19 +51,9 @@ describe("handle-socket-messages", () => {
             server_session_id: "123",
             timestamp: "2024-09-30T17:28:21.000Z",
             is_stream_chunk: false,
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onBotMessage,
-            onSessionUpdate,
-            onOptions,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
@@ -57,24 +63,15 @@ describe("handle-socket-messages", () => {
         expect(onForm).not.toHaveBeenCalled();
         expect(onVote).not.toHaveBeenCalled();
         expect(onInfo).not.toHaveBeenCalled();
-    })
+        expect(onAny).toHaveBeenCalled();
+    });
 
     it("should process vote", () => {
         const _message = <StructuredSocketMessageType>{
             type: "vote",
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
@@ -84,25 +81,16 @@ describe("handle-socket-messages", () => {
         expect(onForm).not.toHaveBeenCalled();
         expect(onVote).toHaveBeenCalled();
         expect(onInfo).not.toHaveBeenCalled();
-    })
+        expect(onAny).toHaveBeenCalled();
+});
 
     it("should process info", () => {
         const _message = <StructuredSocketMessageType>{
             type: "info",
             value: "hello back!"
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
@@ -112,7 +100,8 @@ describe("handle-socket-messages", () => {
         expect(onForm).not.toHaveBeenCalled();
         expect(onVote).not.toHaveBeenCalled();
         expect(onInfo).toHaveBeenCalled();
-    })
+        expect(onAny).toHaveBeenCalled();
+    });
 
     it("should process ui", () => {
         const _message = <StructuredSocketMessageType>{
@@ -139,19 +128,9 @@ describe("handle-socket-messages", () => {
                 content: "hello back!",
                 incoming_message_id: "123",
             }
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
@@ -161,7 +140,8 @@ describe("handle-socket-messages", () => {
         expect(onVote).not.toHaveBeenCalled();
         expect(onInfo).not.toHaveBeenCalled();
         expect(onUi).toHaveBeenCalled();
-    })
+        expect(onAny).toHaveBeenCalled();
+    });
 
     it("should process form", () => {
         const _message = <StructuredSocketMessageType>{
@@ -174,19 +154,9 @@ describe("handle-socket-messages", () => {
                     bodyParams: {},
                 },
             },
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
@@ -196,6 +166,7 @@ describe("handle-socket-messages", () => {
         expect(onForm).toHaveBeenCalled();
         expect(onVote).not.toHaveBeenCalled();
         expect(onInfo).not.toHaveBeenCalled();
+        expect(onAny).toHaveBeenCalled();
     });
 
     it("should process session update", () => {
@@ -204,19 +175,9 @@ describe("handle-socket-messages", () => {
             value: {},
             server_session_id: "123",
             timestamp: "2024-09-30T17:28:21.000Z",
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onOptions).not.toHaveBeenCalled();
@@ -226,6 +187,7 @@ describe("handle-socket-messages", () => {
         expect(onVote).not.toHaveBeenCalled();
         expect(onInfo).not.toHaveBeenCalled();
         expect(onSessionUpdate).toHaveBeenCalled();
+        expect(onAny).toHaveBeenCalled();
     });
 
     it("should process options", () => {
@@ -239,19 +201,9 @@ describe("handle-socket-messages", () => {
             },
             server_session_id: "123",
             timestamp: "2024-09-30T17:28:21.000Z",
-        }
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onChatEvent).not.toHaveBeenCalled();
@@ -261,36 +213,29 @@ describe("handle-socket-messages", () => {
         expect(onInfo).not.toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
         expect(onOptions).toHaveBeenCalled();
+        expect(onAny).toHaveBeenCalled();
     });
 
     it("should process chat event", () => {
-        const _message = <StructuredSocketMessageType>{
+        const baseAgent = {
+            is_ai: true,
+            name: "Open",
+            id: null
+        };
+
+        const _message: StructuredSocketMessageType = {
             type: "chat_event",
-            value: {
-                event: "agent_took_session_from_ai",
-                message: "Agent Ahmad Falta took over the chat from the AI agent"
-            },
-            server_session_id: "123",
+            agent: baseAgent,
             timestamp: "2024-09-30T17:28:21.000Z",
-            agent: {
-                is_ai: true,
-                name: "Open",
-                id: null
-            }
-        }
+            value: {
+                message: "Agent Ahmad Falta took over the chat from the AI agent",
+                event: MessageTypeEnum.AGENT_JOINED
+            },
+        };
 
-        handleSocketMessages({
-            _message,
-            onSessionUpdate,
-            onOptions,
-            onBotMessage,
-            onChatEvent,
-            onUi,
-            onForm,
-            onVote,
-            onInfo
-        });
+        handleSocketMessages(createContext(_message));
 
+        expect(onChatEvent).toHaveBeenCalled();
         expect(onBotMessage).not.toHaveBeenCalled();
         expect(onUi).not.toHaveBeenCalled();
         expect(onForm).not.toHaveBeenCalled();
@@ -298,6 +243,6 @@ describe("handle-socket-messages", () => {
         expect(onInfo).not.toHaveBeenCalled();
         expect(onSessionUpdate).not.toHaveBeenCalled();
         expect(onOptions).not.toHaveBeenCalled();
-        expect(onChatEvent).toHaveBeenCalled();
+        expect(onAny).toHaveBeenCalled();
     });
 });

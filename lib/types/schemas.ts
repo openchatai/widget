@@ -34,13 +34,10 @@ export enum MessageTypeEnum {
     HANDOFF_TO_ZENDESK = 'handoff_to_zendesk',
     AGENT_MESSAGE = 'agent_message',
     AGENT_JOINED = 'agent_joined',
-    AGENT_COMMENT = 'agent_comment',
     AGENT_TOOK_SESSION_FROM_AI = 'agent_took_session_from_ai',
     AI_DECIDED_TO_RESOLVE_THE_ISSUE = 'ai_decided_to_resolve_the_issue',
     EMAIL_DRAFT_MESSAGE = 'email_draft_message',
     FOLLOWUP = 'followup',
-    AI_ASSUMED_THE_SESSION_RESOLVED = 'ai_assumed_the_session_resolved',
-    CONTACT_RESOLVED_THE_SESSION = 'user_confirmed_the_session_resolved',
 }
 
 export const chatSessionSchema = z.object({
