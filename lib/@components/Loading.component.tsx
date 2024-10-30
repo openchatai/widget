@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback } from "@ui/avatar";
 import { motion, AnimatePresence } from "framer-motion";
+
 export function BotLoadingComponent() {
   return (
     <AnimatePresence>
