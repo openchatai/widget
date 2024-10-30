@@ -50,19 +50,19 @@ function WidgetPopover() {
 
       <PopoverPrimitive.PopoverTrigger
         data-chat-widget
-        className={`${cssVars} shadow-lg hover:brightness-105 size-fit bottom-2 right-4 transition-all z-[200] fixed font-inter rounded-full text-white bg-primary duration-300 ease-in-out transform active:scale-90`}
+        className={`${cssVars} shadow-lg hover:brightness-105 size-fit bottom-5 right-5 transition-all z-[200] fixed font-inter rounded-full text-white bg-primary duration-300 ease-in-out transform active:scale-90`}
         onClick={handleClick}
       >
         <div
           className={cn(
-            "p-3 transition-transform duration-300 relative ease-in-out",
+            "p-3.5 transition-transform duration-300 relative ease-in-out",
             { "transform scale-110": isOpen },
           )}
         >
           {!isOpen ? (
-            <MessageSquareDot className="size-6" />
+            <MessageSquareDot className="size-7" />
           ) : (
-            <XIcon className="size-6" />
+            <XIcon className="size-7" />
           )}
           <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-white rounded-full" />
         </div>

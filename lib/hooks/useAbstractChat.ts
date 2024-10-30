@@ -1,7 +1,7 @@
 import { LangType } from "@lib/locales";
 import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
-import { MessageType, UserMessageType } from "@lib/types";
+import { MessageType, UserMessageType, UserObject } from "@lib/types";
 import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
 import { produce } from "immer";
@@ -151,8 +151,6 @@ function chatReducer(state: ChatState, action: ActionType) {
   });
 }
 
-const SESSION_KEY = (botToken: string, external_id?: string) =>
-  `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`;
 
 type MessagePayload = {
   id: string;
@@ -185,11 +183,19 @@ interface HookSettings {
   useSoundEffects?: boolean;
 }
 
-function useSession({ persist }: { persist: boolean }) {
+function useSession({
+  persist,
+  sessionKey = (botToken, { external_id }) => `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`
+}: {
+  persist: boolean,
+  sessionKey?: (
+    botToken: string,
+    user: UserObject
+  ) => string
+}) {
   const { botToken, http, user } = useConfigData();
-
   const [_session, setSession, clearBucket] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, user?.external_id ? user?.external_id : user?.email),
+    sessionKey(botToken, user),
     undefined,
     persist ? "local" : "memory"
   );
@@ -236,13 +242,14 @@ function useAbstractChat({
   const locale = useLocale();
   const { botToken, http, socketUrl, user, widgetSettings, defaultSettings, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
+
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
       if (session) {
         try {
           const { data: redata } = await http.apis.fetchHistory(sessionId);
           if (Array.isArray(redata)) {
-            const messages = historyToWidgetMessages(redata ?? []);
+            const messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
             return messages;
           }
         } catch (error) {
@@ -252,7 +259,7 @@ function useAbstractChat({
       }
       return [];
     },
-    []
+    [config.bot]
   );
   const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
   const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({

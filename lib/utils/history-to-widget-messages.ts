@@ -1,11 +1,15 @@
 import { MessageType } from "@lib/types";
 import { ChatHistoryMessageType } from "../types/schemas";
 import { genId } from "./genId";
+import { NormalizedWidgetOptions } from "@lib/providers/ConfigDataProvider";
 
-function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
+function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
+    { bot }: Pick<NormalizedWidgetOptions, "bot">
+) {
     const messages: MessageType[] = [];
     for (let i = 0; i < mgs.length; i++) {
         const msg = mgs[i];
+
         if (msg.from_user === true) {
             if (msg.message && msg.message.length > 0) {
                 messages.push({
@@ -18,6 +22,7 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
                 });
             }
         }
+
         else {
             switch (msg.type) {
                 case "message":
@@ -32,8 +37,10 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
                         timestamp: msg.created_at ?? "",
                         original: msg,
                         agent: {
+                            id: msg.agent_id?.toString() ?? null,
                             is_ai: true,
-                            name: msg.agent_name ?? "",
+                            profile_picture: msg.agent_avatar ?? bot.profile_picture,
+                            name: msg.agent_name ?? bot.name,
                         }
                     });
                     break;
@@ -49,9 +56,10 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
                         timestamp: msg.created_at ?? "",
                         original: msg,
                         agent: {
+                            id: msg.agent_id?.toString() ?? null,
                             is_ai: false,
                             name: msg.agent_name ?? "",
-                            agent_avatar: msg.agent_avatar ?? "",
+                            profile_picture: msg.agent_avatar ?? "",
                         }
                     });
                     break;
@@ -69,7 +77,9 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[]) {
                         timestamp: msg.created_at ?? "",
                         agent: {
                             is_ai: true,
+                            id: msg.agent_id?.toString() ?? null,
                             name: msg.agent_name ?? "",
+                            profile_picture: msg.agent_avatar ?? "",
                         }
                     });
             }
