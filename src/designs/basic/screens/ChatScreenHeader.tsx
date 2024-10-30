@@ -1,6 +1,7 @@
 import { useChat, useConfigData, useLocale } from '@lib/index';
 import { Dialog, DialogClose, DialogContent, DialogTrigger } from '@ui/dialog';
 import { Switch } from '@ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/tooltip';
 import { RotateCcw, SettingsIcon, XIcon } from 'lucide-react';
 
 const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
@@ -10,9 +11,16 @@ function SettingsDialog() {
     const locale = useLocale();
     return (
         <Dialog>
-            <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
-                <SettingsIcon className="size-5" />
-            </DialogTrigger>
+            <Tooltip>
+                <TooltipContent>
+                    {locale.get("settings")}
+                </TooltipContent>
+                <TooltipTrigger asChild>
+                    <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
+                        <SettingsIcon className="size-5" />
+                    </DialogTrigger>
+                </TooltipTrigger>
+            </Tooltip>
             <DialogContent>
                 <div className="p-3 flex items-center justify-between">
                     <h2 className="text-sm font-semibold" dir="auto">
@@ -65,9 +73,16 @@ function ConfirmationDialog() {
         <Dialog>
             {({ setOpen }) => (
                 <>
-                    <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
-                        <RotateCcw className="size-5" />
-                    </DialogTrigger>
+                    <Tooltip>
+                        <TooltipContent>
+                            {locale.get("reset-conversation")}
+                        </TooltipContent>
+                        <TooltipTrigger asChild>
+                            <DialogTrigger className="p-1.5 rounded-full bg-accent/60 text-background flex-shrink-0">
+                                <RotateCcw className="size-5" />
+                            </DialogTrigger>
+                        </TooltipTrigger>
+                    </Tooltip>
                     <DialogContent>
                         <div className="p-4">
                             <h2 className="text-sm" dir="auto">

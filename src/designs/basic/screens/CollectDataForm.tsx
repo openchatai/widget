@@ -22,9 +22,6 @@ export function CollectDataForm() {
 
     return (
         <BotResponseWrapper bot={config.bot} className="w-full">
-            <p className="text-xs mb-3 text-gray-600">
-                Please provide your name and email so we can help you better.
-            </p>
             <form onSubmit={async (event) => {
                 event.preventDefault();
                 const formData = new FormData(event.currentTarget);

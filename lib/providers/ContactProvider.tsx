@@ -9,11 +9,12 @@ import { useAsyncFn } from "react-use";
 type T = ConsumerType;
 
 function _useContact() {
-    const { http, botToken, user, collectUserData } = useConfigData();
-    const [contact, setContact] = useSyncedState<T | null>(`${botToken}:consumer:[OPEN]`, null, "session");
-
+    const { http, botToken, user, collectUserData, widgetSettings } = useConfigData();
+    const [contact, setContact] = useSyncedState<T | null>(`${botToken}:consumer:${user.external_id}`, null, "local");
+    console.log(contact)
     const [creatingContactState, createContactAsync] = useAsyncFn(async (user: UserObject) => {
         try {
+            if (!user || !user.email) return null;
             const dumpContactResponse = await http.apis.dumpContact(user);
             if (dumpContactResponse?.data?.id) {
                 setContact(dumpContactResponse.data);

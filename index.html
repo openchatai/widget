@@ -18,20 +18,12 @@
         apiUrl: apiUrl,
         socketUrl: socketUrl,
         language: "en",
-        initialMessages: ["How can we help you?"],
+        initialMessages: ["How can we help you?", "Please provide your name and email so we can help you better."],
         settings: {
           persistSession: true,
           useSoundEffects: true
         },
         collectUserData: true,
-        user: {
-          email: "john@doe.com",
-          avatarUrl: "https://i.pravatar.cc/300",
-          name: "John Doe",
-          customData: {
-            "X-auth": "Hello-Header"
-          }
-        },
         headers: {
           "X-auth": "Hello-Header"
         },

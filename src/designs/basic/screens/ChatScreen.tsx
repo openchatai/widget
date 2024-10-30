@@ -16,7 +16,7 @@ import React, {
 } from "react";
 import { HeaderChatDidNotStart, HeaderChatRunning } from "./ChatScreenHeader";
 import { Dialog, DialogContent } from "@ui/dialog";
-import { TooltipProvider } from "@ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui/tooltip";
 import { UserMessage } from "@ui/messages";
 import { Keyboard } from "@ui/keyboard";
 import { CollectDataForm } from "./CollectDataForm";
@@ -103,17 +103,24 @@ function ChatFooter() {
           placeholder={locale.get("write-a-message")}
         />
         <div>
-          <button
-            onClick={handleInputSubmit}
-            disabled={isLoading || shouldCollectDataFirst}
-            className="rounded-lg p-2 hover:brightness-110 transition-all text-white bg-primary shrink-0 disabled:opacity-50"
-          >
-            {isLoading ? (
-              <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
-            ) : (
-              <SendHorizonal className="size-3.5 rtl:-scale-100" />
-            )}
-          </button>
+          <Tooltip>
+            <TooltipContent>
+              {locale.get("send-message")}
+            </TooltipContent>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleInputSubmit}
+                disabled={isLoading || shouldCollectDataFirst}
+                className="rounded-lg p-2 hover:brightness-110 transition-all text-white bg-primary shrink-0 disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
+                ) : (
+                  <SendHorizonal className="size-3.5 rtl:-scale-100" />
+                )}
+              </button>
+            </TooltipTrigger>
+          </Tooltip>
         </div>
       </div>
     </div>
