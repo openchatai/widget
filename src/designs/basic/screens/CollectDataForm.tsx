@@ -14,13 +14,11 @@ const schema = z.object({
 
 export function CollectDataForm() {
     const config = useConfigData();
-    const { contact, createContactAsync } = useContact();
+    const { contact, createContactAsync, shouldCollectData } = useContact();
 
     const [_state, handleSubmit] = useAsyncFn(async (data: z.infer<typeof schema>) => {
         return createContactAsync(data)
     }, [createContactAsync, contact]);
-
-    const dontCollectData = contact?.id !== undefined;
 
     return (
         <BotResponseWrapper bot={config.bot} className="w-full">
@@ -39,7 +37,7 @@ export function CollectDataForm() {
                 <div className="space-y-1">
                     <label className="required font-medium text-xs text-gray-600" htmlFor="collect-data:form:name">Name</label>
                     <Input
-                        disabled={dontCollectData}
+                        disabled={!shouldCollectData.should}
                         required className="peer"
                         defaultValue={contact?.name ?? ""}
                         id="collect-data:form:name"
@@ -48,7 +46,7 @@ export function CollectDataForm() {
                 <div className="space-y-1">
                     <label className="required font-medium text-xs text-gray-600" htmlFor="collect-data:form:email">Email</label>
                     <Input
-                        disabled={dontCollectData}
+                        disabled={!shouldCollectData.should}
                         defaultValue={contact?.email ?? ""}
                         required
                         id="collect-data:form:email"
@@ -57,7 +55,7 @@ export function CollectDataForm() {
                 <button
                     data-loading={_state.loading}
                     data-error={!!_state.error}
-                    disabled={_state.loading || dontCollectData}
+                    disabled={_state.loading || !shouldCollectData.should}
                     type="submit"
                     className="text-sm group text-center relative hover:brightness-110 disabled:grayscale active:brightness-110 transition-all font-medium rounded-lg bg-primary text-white px-3 py-1.5 flex items-center justify-center"
                 >

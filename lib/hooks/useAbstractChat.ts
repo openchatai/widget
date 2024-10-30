@@ -202,16 +202,13 @@ function useSession({ persist }: { persist: boolean }) {
     isPendingHuman: _session.assignee_id === 555 && _session.ai_closure_type === AIClosureType.handed_off,
   } : null;
 
-  const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
-    if (!session) {
-      return;
-    }
-    let response = await http.apis.fetchSession(session.id);
+  const [refreshSessionState, refreshSession] = useAsyncFn(async (sId: string) => {
+    let response = await http.apis.fetchSession(sId);
     if (response.data) {
       setSession(response.data);
     }
     return response.data;
-  }, [session, http, setSession]);
+  }, [http, setSession]);
 
   function deleteSession() {
     setSession(null);
@@ -275,10 +272,9 @@ function useAbstractChat({
   }
 
   const { socket, socketState, useListen } = useSocket(socketUrl, {
-    autoConnect: true,
     transports: ["websocket"],
     closeOnBeforeunload: true,
-    retries: 3,
+    autoConnect: true,
     query: {
       botToken,
       sessionId: session?.id,
@@ -304,7 +300,8 @@ function useAbstractChat({
 
   useEffect(() => {
     async function init() {
-      const sisi = await refreshSession();
+      if (!session) return;
+      const sisi = await refreshSession(session?.id);
       if (sisi) {
         const history = await fetchHistory(sisi.id);
         if (history) {
@@ -418,12 +415,12 @@ function useAbstractChat({
         }
       },
       onChatEvent(message, _ctx) {
-        refreshSession()
+        session && refreshSession(session.id)
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
         if (message.type === "FROM_BOT" && message?.component === "handoff") {
-          refreshSession()
+          session && refreshSession(session.id)
         }
         setHookState({
           state: "idle",
@@ -490,8 +487,7 @@ function useAbstractChat({
       },
     });
   }, []);
-
-  useListen("structured_message", handleIncomingMessage);
+  useListen("structured_message", handleIncomingMessage)
   useListen("ack:chat_message:delivered", handleDeliveredAck);
   useListen("info", handleInfo);
   useListen("user_message_broadcast", handleUserMessageBroadcast);
@@ -504,7 +500,6 @@ function useAbstractChat({
         state: "loading",
       });
       let chatSession = session;
-
       if (!session && noMessages) {
         try {
           const { data: newSession } = await http.apis.createSession(botToken);

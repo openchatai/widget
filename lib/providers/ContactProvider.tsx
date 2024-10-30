@@ -1,5 +1,5 @@
 import { createSafeContext } from "@lib/utils/create-safe-context";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useMemo } from "react";
 import { useConfigData } from "./ConfigDataProvider";
 import { useSyncedState } from "@lib/hooks";
 import { ConsumerType } from "@lib/types/schemas";
@@ -9,7 +9,7 @@ import { useAsyncFn } from "react-use";
 type T = ConsumerType;
 
 function _useContact() {
-    const { http, botToken, user, } = useConfigData();
+    const { http, botToken, user, collectUserData } = useConfigData();
     const [contact, setContact] = useSyncedState<T | null>(`${botToken}:consumer:[OPEN]`, null, "session");
 
     const [creatingContactState, createContactAsync] = useAsyncFn(async (user: UserObject) => {
@@ -31,10 +31,22 @@ function _useContact() {
         }
     }, [user, botToken]);
 
+    const shouldCollectData = useMemo(() => {
+        if (!contact?.id && collectUserData) {
+            return {
+                should: true,
+                reason: "No contact id and collectUserData is true"
+            }
+        }
+        return {
+            should: false,
+        }
+    }, [contact])
     return {
         creatingContactState,
         createContactAsync,
-        contact
+        contact,
+        shouldCollectData
     }
 }
 
