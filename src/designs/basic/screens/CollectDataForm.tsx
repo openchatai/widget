@@ -1,5 +1,5 @@
 import { useAsyncFn } from "react-use";
-import { useContact } from "@lib/providers/ContactProvider";
+import { useContact } from "@lib/index";
 import { Input } from "@ui/input";
 import { Loader } from "lucide-react";
 import { z } from "zod";

@@ -20,7 +20,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui/to
 import { UserMessage } from "@ui/messages";
 import { Keyboard } from "@ui/keyboard";
 import { CollectDataForm } from "./CollectDataForm";
-import { useContact } from "@lib/providers/ContactProvider";
+import { useContact } from "@lib/index";
+
 
 function Info() {
   const { info } = useChat();
