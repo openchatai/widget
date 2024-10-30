@@ -2,13 +2,16 @@ import { WidgetOptions } from "@lib/types";
 import React from "react";
 import AgentIcon from "../static/agent-icon.png";
 import { Avatar, AvatarImage } from "@ui/avatar";
+import { cn } from "src/utils";
 
 export function BotResponseWrapper({
   children,
   bot,
+  className
 }: {
   children: React.ReactNode;
   bot: WidgetOptions["bot"];
+  className?: string
 }) {
   return (
     <div className="flex flex-row items-end w-full gap-2">
@@ -18,7 +21,7 @@ export function BotResponseWrapper({
           alt="Agent Icon"
         />
       </Avatar>
-      <div className="w-fit min-w-[80%]">
+      <div className={cn("w-fit min-w-[80%]", className)}>
         <div
           className="bg-primary rounded-lg bg-white shadow-sm p-2.5 min-w-fit"
         >

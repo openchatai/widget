@@ -278,6 +278,7 @@ function useAbstractChat({
     autoConnect: true,
     transports: ["websocket"],
     closeOnBeforeunload: true,
+    retries: 3,
     query: {
       botToken,
       sessionId: session?.id,

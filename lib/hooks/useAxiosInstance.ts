@@ -25,6 +25,9 @@ export function useAxiosInstance(options: Options) {
   const apis = useMemo(
     () => ({
       createSession: (botToken: string) => {
+        if (!botToken) {
+          throw new Error("Bot token is required");
+        }
         return instance.post<ChatSessionType>("/chat-session/" + botToken);
       },
       /**
@@ -32,6 +35,9 @@ export function useAxiosInstance(options: Options) {
        * @param sessionId
        */
       fetchSession: (sessionId: string) => {
+        if (!sessionId){
+          throw new Error("Session id is required");
+        }
         return instance.get<ChatSessionType>(`widget/session/${sessionId}`);
       },
 
@@ -46,6 +52,9 @@ export function useAxiosInstance(options: Options) {
       },
 
       fetchHistory: (sessionId: string) => {
+        if (!sessionId){
+          throw new Error("Session id is required");
+        }
         return instance.get<ChatHistoryMessageType[]>(
           `widget/session/history/${sessionId}`
         );

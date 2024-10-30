@@ -19,6 +19,7 @@ import { Dialog, DialogContent } from "@ui/dialog";
 import { TooltipProvider } from "@ui/tooltip";
 import { UserMessage } from "@ui/messages";
 import { Keyboard } from "@ui/keyboard";
+import { CollectDataForm } from "./CollectDataForm";
 
 function Info() {
   const { info } = useChat();
@@ -78,11 +79,7 @@ function ChatFooter() {
     <div className="p-2 rounded-lg relative">
       <Info />
       <div
-        className="flex rounded-lg items-center gap-2 bg-white border px-2 py-1.5"
-        style={{
-          border: "1px solid rgba(19, 34, 68, 0.08)",
-          boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.04)",
-        }}
+        className="flex rounded-lg shadow-sm items-center gap-2 bg-white border border-gray-200 focus-within:border-gray-300 px-2 transition-all py-1.5"
       >
         <input
           ref={inputRef}
@@ -104,10 +101,7 @@ function ChatFooter() {
           <button
             onClick={handleInputSubmit}
             disabled={isLoading}
-            className="rounded-lg border p-[7px] text-white bg-primary shrink-0 disabled:opacity-50"
-            style={{
-              background: "#1883FF",
-            }}
+            className="rounded-lg p-2 hover:brightness-110 transition-all text-white bg-primary shrink-0 disabled:opacity-50"
           >
             {isLoading ? (
               <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
@@ -224,6 +218,11 @@ export function ChatScreen() {
                     wrapperProps={{ bot: config.bot }}
                   />
                 )}
+              {
+                config.collectUserData && (
+                  <CollectDataForm />
+                )
+              }
               {state.messages.map((message) => {
                 if (message.type === "FROM_USER") {
                   return (

@@ -24,6 +24,7 @@ export type WidgetOptions = {
     persistSession?: boolean;
     useSoundEffects?: boolean;
   },
+  collectUserData?: boolean;
   soundEffectFiles?: {
     messageArrived?: string;
   },
