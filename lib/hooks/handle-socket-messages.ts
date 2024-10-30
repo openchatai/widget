@@ -2,10 +2,12 @@ import { MessageType } from "@lib/types";
 import { genId } from "@lib/utils/genId";
 import { Socket } from "socket.io-client";
 import { StructuredSocketMessageType } from "../types/schemas";
+import { NormalizedWidgetOptions } from "@lib/providers/ConfigDataProvider";
 
 interface Context<SocketMessage = StructuredSocketMessageType> {
     _message: SocketMessage;
     _socket?: Socket | null;
+    _config: Pick<NormalizedWidgetOptions, "bot">;
 
     onChatEvent?: (message: MessageType, _ctx: Context<SocketMessage>) => void;
 
@@ -41,12 +43,11 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     component: "TEXT",
                     id: genId(15),
                     serverId: null,
-                    bot: response.agent,
                     timestamp: response.timestamp,
                     data: {
                         message: response.value,
                     },
-                    agent: response.agent,
+                    agent: response.agent.is_ai ? _ctx._config.bot : response.agent,
                 }, _ctx);
                 break;
             }
@@ -83,7 +84,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     data: uiVal.request_response,
                     serverId: null,
                     id: genId(),
-                    bot: response.agent,
                     timestamp: response.timestamp,
                 }, _ctx);
                 break;
@@ -97,7 +97,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     data: formVal,
                     serverId: null,
                     id: genId(),
-                    bot: response.agent,
                     timestamp: response.timestamp,
                 }, _ctx);
                 break;

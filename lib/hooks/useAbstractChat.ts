@@ -400,6 +400,7 @@ function useAbstractChat({
     handleSocketMessages({
       _message: socketMsg,
       _socket: socket,
+      _config: { bot: config.bot },
       onSessionUpdate(message, _ctx) {
         setSession(message.value.session);
       },
