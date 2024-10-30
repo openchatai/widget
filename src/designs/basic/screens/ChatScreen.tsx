@@ -74,6 +74,11 @@ function ChatFooter() {
       content: {
         text: input,
       },
+      user: {
+        email: contact?.email || undefined,
+        name: contact?.name || undefined,
+        avatarUrl: contact?.avatar_url || undefined,
+      }
     });
 
     setInput("");

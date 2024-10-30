@@ -2,7 +2,6 @@ import { LangType } from "@lib/locales";
 import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
 import { MessageType, UserMessageType, UserObject } from "@lib/types";
-import { debug } from "@lib/utils/debug";
 import { genId } from "@lib/utils/genId";
 import { produce } from "immer";
 import {
@@ -176,6 +175,7 @@ interface SendMessageInput extends Record<string, unknown> {
   };
   id?: string;
   language?: useChatOptions["language"];
+  user?: UserObject
 }
 
 interface HookSettings {
@@ -240,9 +240,8 @@ function useAbstractChat({
     keyboard: null,
   });
   const locale = useLocale();
-  const { botToken, http, socketUrl, user, widgetSettings, defaultSettings, ...config } = useConfigData();
+  const { botToken, http, socketUrl, widgetSettings, defaultSettings, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
-
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
       if (session) {
@@ -328,7 +327,7 @@ function useAbstractChat({
         sessionId: currentSessionId,
         client: "widget",
         botToken,
-        user: user,
+        user: config.user,
         timestamp: Date.now(),
       };
 
@@ -344,7 +343,7 @@ function useAbstractChat({
     return () => {
       clearInterval(interval);
     };
-  }, [socket, session, botToken, user]);
+  }, [socket, session, botToken, config.user]);
 
   useListen(
     "heartbeat:ack",
@@ -501,7 +500,7 @@ function useAbstractChat({
   const noMessages = chatState.messages.length === 0;
 
   const [__, sendMessage] = useAsyncFn(
-    async ({ content, ...data }: SendMessageInput) => {
+    async ({ content, user, ...data }: SendMessageInput) => {
       setHookState({
         state: "loading",
       });
@@ -541,7 +540,10 @@ function useAbstractChat({
           pathParams,
           query_params: queryParams,
           queryParams,
-          user,
+          user: {
+            ...config.user,
+            ...user
+          },
           language,
           ...data,
         };
@@ -573,7 +575,7 @@ function useAbstractChat({
       }
       return null;
     },
-    [setHookState, session, socket, user, config, botToken, language]
+    [setHookState, session, socket, config.user, config, botToken, language]
   );
 
   const handleKeyboard = useCallback(
