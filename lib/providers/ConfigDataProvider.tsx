@@ -24,6 +24,7 @@ function useNormalizeOptions(data: WidgetOptions) {
       queryParams: data.queryParams ?? {},
       user: data.user ?? {},
       soundEffectFiles,
+      collectUserData: data.collectUserData ?? false,
       defaultSettings: {
         persistSession: data.settings?.persistSession ?? false,
         useSoundEffects: data.settings?.useSoundEffects ?? false,

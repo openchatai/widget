@@ -180,6 +180,7 @@ export const consumerSchema = z.object({
     name: z.string().nullable(),
     created_at: z.string(),
     avatar_url: z.string().nullable(),
+    email: z.string().nullable(),
 });
 type ConsumerType = z.infer<typeof consumerSchema>
 type ChatSessionType = z.infer<typeof chatSessionSchema>;

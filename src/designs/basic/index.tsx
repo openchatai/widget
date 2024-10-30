@@ -5,6 +5,7 @@ import { ChatScreen } from "./screens/ChatScreen";
 import { useChat } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
+import { AnimatePresence, motion } from "framer-motion";
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = React.useState(false);
@@ -15,17 +16,37 @@ function WidgetPopover() {
 
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
-      <PopoverPrimitive.Content
-        onInteractOutside={(ev) => ev.preventDefault()}
-        side="top"
-        sideOffset={10}
-        data-chat-widget
-        asChild
-        align="end"
-        style={{ zIndex: 10000000 }}
-      >
-        <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter shadow-lg" />
-      </PopoverPrimitive.Content>
+      <AnimatePresence>
+        {
+          isOpen && (<PopoverPrimitive.Content
+            forceMount
+            onInteractOutside={(ev) => ev.preventDefault()}
+            side="top"
+            sideOffset={10}
+            data-chat-widget
+            asChild
+            align="end"
+            style={{ zIndex: 10000000 }}
+          >
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              style={{ transformOrigin: "bottom right" }}
+              transition={{
+                type: "spring",
+                duration: 0.5,
+              }}
+              variants={{
+                hidden: { opacity: 0, scale: 0.4 },
+                visible: { opacity: 1, scale: 1 },
+              }}
+            >
+              <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter shadow-lg" />
+            </motion.div>
+          </PopoverPrimitive.Content>)
+        }
+      </AnimatePresence>
 
       <PopoverPrimitive.PopoverTrigger
         data-chat-widget

@@ -20,6 +20,7 @@ import { TooltipProvider } from "@ui/tooltip";
 import { UserMessage } from "@ui/messages";
 import { Keyboard } from "@ui/keyboard";
 import { CollectDataForm } from "./CollectDataForm";
+import { useContact } from "@lib/providers/ContactProvider";
 
 function Info() {
   const { info } = useChat();
@@ -52,7 +53,11 @@ function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, hookState } = useChat();
+  const { collectUserData } = useConfigData()
   const locale = useLocale();
+  const { contact } = useContact();
+
+  const shouldCollectDataFirst = collectUserData && !contact?.id;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
@@ -83,7 +88,7 @@ function ChatFooter() {
       >
         <input
           ref={inputRef}
-          disabled={isLoading}
+          disabled={isLoading || shouldCollectDataFirst}
           value={input}
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
@@ -100,7 +105,7 @@ function ChatFooter() {
         <div>
           <button
             onClick={handleInputSubmit}
-            disabled={isLoading}
+            disabled={isLoading || shouldCollectDataFirst}
             className="rounded-lg p-2 hover:brightness-110 transition-all text-white bg-primary shrink-0 disabled:opacity-50"
           >
             {isLoading ? (
@@ -143,11 +148,10 @@ function SessionClosedDialog() {
     </Dialog>
   );
 }
+
 function ChatRenderer() {
-  const { state, sendMessage, noMessages, handleKeyboard, hookState } =
-    useChat();
-  const { componentStore, initialMessages, preludeSWR, ...config } =
-    useConfigData();
+  const { state, hookState } = useChat();
+  const { componentStore, initialMessages, preludeSWR, ...config } = useConfigData();
 
   const LoadingComponent = componentStore.getComponent(
     "loading"
@@ -163,10 +167,10 @@ function ChatRenderer() {
       }
     }, 0);
   }
+
   useEffect(() => {
     handleNewMessage();
   }, [state.messages]);
-
 
   return <div
     data-messages
@@ -202,11 +206,11 @@ function ChatRenderer() {
           wrapperProps={{ bot: config.bot }}
         />
       )}
+
     {
-      config.collectUserData && (
-        <CollectDataForm />
-      )
+      config.collectUserData && <CollectDataForm />
     }
+
     {state.messages.map((message) => {
       if (message.type === "FROM_USER") {
         return (

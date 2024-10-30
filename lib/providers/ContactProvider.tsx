@@ -1,9 +1,10 @@
 import { createSafeContext } from "@lib/utils/create-safe-context";
 import { ReactNode, useEffect } from "react";
 import { useConfigData } from "./ConfigDataProvider";
-import { useAsyncFn, useSyncedState } from "@lib/hooks";
+import { useSyncedState } from "@lib/hooks";
 import { ConsumerType } from "@lib/types/schemas";
 import { UserObject } from "@lib/types";
+import { useAsyncFn } from "react-use";
 
 type T = ConsumerType;
 
@@ -17,6 +18,7 @@ function _useContact() {
             if (dumpContactResponse?.data?.id) {
                 setContact(dumpContactResponse.data);
             }
+            return dumpContactResponse?.data;
         } catch (error) {
             console.error(error);
         }
