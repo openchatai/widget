@@ -1,23 +1,22 @@
-import { WidgetOptions } from "@lib/types";
 import React from "react";
-import AgentIcon from "../static/agent-icon.png";
 import { Avatar, AvatarImage } from "@ui/avatar";
 import { cn } from "src/utils";
+import { BotMessageType } from "@lib/types";
 
 export function BotResponseWrapper({
   children,
-  bot,
+  agent,
   className
 }: {
   children: React.ReactNode;
-  bot: WidgetOptions["bot"];
+  agent: BotMessageType['agent']
   className?: string
 }) {
   return (
     <div className="flex flex-row items-end w-full gap-2">
       <Avatar className="flex items-center size-7 border-0">
         <AvatarImage
-          src={bot?.avatarUrl ?? AgentIcon}
+          src={agent?.profile_picture ?? ""}
           alt="Agent Icon"
         />
       </Avatar>

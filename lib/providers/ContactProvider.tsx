@@ -11,7 +11,6 @@ type T = ConsumerType;
 function _useContact() {
     const { http, botToken, user, collectUserData, widgetSettings } = useConfigData();
     const [contact, setContact] = useSyncedState<T | null>(`${botToken}:consumer:${user.external_id}`, null, "local");
-    console.log(contact)
     const [creatingContactState, createContactAsync] = useAsyncFn(async (user: UserObject) => {
         try {
             if (!user || !user.email) return null;

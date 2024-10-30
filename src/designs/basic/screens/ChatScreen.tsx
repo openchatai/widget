@@ -193,10 +193,9 @@ function ChatRenderer() {
           id: "000",
           serverId: null,
           type: "FROM_BOT",
-          bot: config.bot,
         }}
         Wrapper={BotResponseWrapper}
-        wrapperProps={{ bot: config.bot }}
+        wrapperProps={{ agent: config.bot }}
       />
     )) ?? (
         <BotMessage
@@ -207,15 +206,18 @@ function ChatRenderer() {
             id: "000",
             serverId: null,
             type: "FROM_BOT",
-            bot: config.bot,
+            agent: config.bot
           }}
           Wrapper={BotResponseWrapper}
-          wrapperProps={{ bot: config.bot }}
+          wrapperProps={{ agent: config.bot }}
         />
       )}
 
     {
-      config.collectUserData && <CollectDataForm />
+      config.collectUserData &&
+      <BotResponseWrapper agent={config.bot} className="w-full">
+        <CollectDataForm />
+      </BotResponseWrapper>
     }
 
     {state.messages.map((message) => {
@@ -234,7 +236,7 @@ function ChatRenderer() {
             key={message.id}
             message={message}
             Wrapper={BotResponseWrapper}
-            wrapperProps={{ bot: message.bot }}
+            wrapperProps={{ agent: message.agent }}
           />
         );
       }

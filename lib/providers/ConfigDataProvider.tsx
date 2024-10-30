@@ -6,6 +6,8 @@ import { useAxiosInstance, useSyncedState } from "@lib/hooks";
 import { PreludeData } from "@lib/utils";
 import useSWR, { SWRResponse } from "swr";
 import { ComponentRegistry } from "./componentRegistry";
+import AgentIcon from "../static/agent-icon.png";
+import { AgentType } from "@lib/types/schemas";
 
 function useNormalizeOptions(data: WidgetOptions) {
   return useMemo(() => {
@@ -13,8 +15,17 @@ function useNormalizeOptions(data: WidgetOptions) {
       messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3",
       ...data.soundEffectFiles,
     };
+
+    const bot: AgentType = {
+      id: "555",
+      is_ai: true,
+      profile_picture: data.bot?.avatarUrl || AgentIcon,
+      name: data.bot?.name || "Bot",
+    }
+
     return {
       ...data,
+      bot,
       apiUrl: data.apiUrl ?? "https://api-v2.opencopilot.so/backend",
       socketUrl: data.socketUrl ?? "https://api-v2.opencopilot.so",
       language: data.language ?? DEFAULT_LANG,
@@ -28,11 +39,11 @@ function useNormalizeOptions(data: WidgetOptions) {
       defaultSettings: {
         persistSession: data.settings?.persistSession ?? false,
         useSoundEffects: data.settings?.useSoundEffects ?? false,
-      }
+      },
     };
   }, [data]);
 }
-
+export type NormalizedWidgetOptions = ReturnType<typeof useNormalizeOptions>;
 type WidgetSettings = {
   persistSession: boolean;
   useSoundEffects: boolean;
@@ -71,7 +82,7 @@ export function ConfigDataProvider({
   );
 
   const _data = useNormalizeOptions(data);
-
+  console.log(data, _data)
   const http = useAxiosInstance({
     apiUrl: _data.apiUrl,
     botToken: _data.token,
