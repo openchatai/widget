@@ -30,7 +30,7 @@ export function UserMessage({
         <Tooltip>
           <TooltipTrigger asChild disabled={!formattedDt}>
             <div
-              className="bg-primary p-2.5 relative min-w-fit text-secondary hover:brightness-110 rounded-lg leading-snug font-medium text-sm">
+              className="bg-primary p-2.5 relative min-w-fit text-secondary hover:brightness-110 rounded-lg rounded-br-none leading-snug font-medium text-sm">
               {children}
               {
                 formattedDt ? <CheckCheck className="absolute text-secondary bottom-1 right-1 size-4" /> : <Check className="absolute text-foreground bottom-1 right-1 size-4" />
