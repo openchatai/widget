@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.12
+
+### Patch Changes
+
+- 604ac03: fixing bugs, major styling upgrade
+
 ## 1.4.11
 
 ### Patch Changes
