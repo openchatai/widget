@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.14
+
+### Patch Changes
+
+- 22c5687: animation changes, also persist open state
+
 ## 1.4.13
 
 ### Patch Changes
