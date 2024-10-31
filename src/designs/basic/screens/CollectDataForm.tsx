@@ -27,16 +27,16 @@ export function CollectDataForm() {
                 await handleSubmit(result.data);
             }
         }} className="grid gap-2 grid-cols-1">
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
                 <label className="required font-medium text-xs text-secondary-foreground" htmlFor="collect-data:form:name">Name</label>
                 <Input
                     disabled={!shouldCollectData.should}
-                    required className="peer"
+                    required
                     defaultValue={contact?.name ?? ""}
                     id="collect-data:form:name"
                     name="name" />
             </div>
-            <div className="space-y-1">
+            <div className="flex flex-col gap-1">
                 <label className="required font-medium text-xs text-secondary-foreground" htmlFor="collect-data:form:email">Email</label>
                 <Input
                     disabled={!shouldCollectData.should}

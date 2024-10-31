@@ -63,7 +63,7 @@ const Widget = forwardRef<
         data-version={chat.version} data-chat-widget
         style={cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset })}
         className={cn(
-          "rounded-xl size-full overflow-hidden isolate relative font-inter",
+          "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
           className,
         )}
       >
