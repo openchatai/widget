@@ -18,19 +18,12 @@
         apiUrl: apiUrl,
         socketUrl: socketUrl,
         language: "en",
-        initialMessages: ["Hey man!", "How can we help you?"],
+        initialMessages: ["How can we help you?", "Please provide your name and email so we can help you better."],
         settings: {
           persistSession: true,
           useSoundEffects: true
         },
-        user: {
-          email: "john@doe.com",
-          avatarUrl: "https://i.pravatar.cc/300",
-          name: "John Doe",
-          customData: {
-            "X-auth": "Hello-Header"
-          }
-        },
+        collectUserData: true,
         headers: {
           "X-auth": "Hello-Header"
         },
@@ -38,9 +31,11 @@
           "X-auth": "Hello-World"
         },
         debug: false,
-        organizationName: "Demo inc.",
+        bot: {
+          avatarUrl: "https://yt3.ggpht.com/6pKAhwXP0jLQyNidcMM-rjfVAzrqJuI5lDsrqOguhfx1xFDyu7D9ish3lC17OEfWuEyZshrz=s48-c-k-c0x00ffffff-no-rj"
+        },
       }, "default"); // default or iframed
-    }, "iframed");
+    });
   </script>
 </body>
 

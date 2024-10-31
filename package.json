@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.4.8",
+  "version": "1.4.11",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -100,6 +100,7 @@
     "immer": "^10.1.1",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
+    "react-use": "^17.5.1",
     "zod": "^3.23.8"
   }
 }

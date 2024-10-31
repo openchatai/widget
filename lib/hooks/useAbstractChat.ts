@@ -1,8 +1,7 @@
 import { LangType } from "@lib/locales";
 import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
-import { MessageType, UserMessageType } from "@lib/types";
-import { debug } from "@lib/utils/debug";
+import { MessageType, UserMessageType, UserObject } from "@lib/types";
 import { genId } from "@lib/utils/genId";
 import { produce } from "immer";
 import {
@@ -25,7 +24,7 @@ import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
 import { useSyncedState } from "./useSyncState";
-import { useAsyncFn } from "./useAsyncFn";
+import { useAsyncFn } from "react-use";
 import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
 import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@lib/providers/use-widget-sfx";
@@ -151,8 +150,6 @@ function chatReducer(state: ChatState, action: ActionType) {
   });
 }
 
-const SESSION_KEY = (botToken: string, external_id?: string) =>
-  `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`;
 
 type MessagePayload = {
   id: string;
@@ -178,6 +175,7 @@ interface SendMessageInput extends Record<string, unknown> {
   };
   id?: string;
   language?: useChatOptions["language"];
+  user?: UserObject
 }
 
 interface HookSettings {
@@ -185,11 +183,19 @@ interface HookSettings {
   useSoundEffects?: boolean;
 }
 
-function useSession({ persist }: { persist: boolean }) {
+function useSession({
+  persist,
+  sessionKey = (botToken, { external_id }) => `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`
+}: {
+  persist: boolean,
+  sessionKey?: (
+    botToken: string,
+    user: UserObject
+  ) => string
+}) {
   const { botToken, http, user } = useConfigData();
-
   const [_session, setSession, clearBucket] = useSyncedState<ChatSessionType>(
-    SESSION_KEY(botToken, user?.external_id ? user?.external_id : user?.email),
+    sessionKey(botToken, user),
     undefined,
     persist ? "local" : "memory"
   );
@@ -202,16 +208,13 @@ function useSession({ persist }: { persist: boolean }) {
     isPendingHuman: _session.assignee_id === 555 && _session.ai_closure_type === AIClosureType.handed_off,
   } : null;
 
-  const [refreshSessionState, refreshSession] = useAsyncFn(async () => {
-    if (!session) {
-      return;
-    }
-    let response = await http.apis.fetchSession(session.id);
+  const [refreshSessionState, refreshSession] = useAsyncFn(async (sId: string) => {
+    let response = await http.apis.fetchSession(sId);
     if (response.data) {
       setSession(response.data);
     }
     return response.data;
-  }, [session, http, setSession]);
+  }, [http, setSession]);
 
   function deleteSession() {
     setSession(null);
@@ -237,7 +240,7 @@ function useAbstractChat({
     keyboard: null,
   });
   const locale = useLocale();
-  const { botToken, http, socketUrl, user, widgetSettings, defaultSettings, ...config } = useConfigData();
+  const { botToken, http, socketUrl, widgetSettings, defaultSettings, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
@@ -245,7 +248,7 @@ function useAbstractChat({
         try {
           const { data: redata } = await http.apis.fetchHistory(sessionId);
           if (Array.isArray(redata)) {
-            const messages = historyToWidgetMessages(redata ?? []);
+            const messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
             return messages;
           }
         } catch (error) {
@@ -255,7 +258,7 @@ function useAbstractChat({
       }
       return [];
     },
-    []
+    [config.bot]
   );
   const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
   const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
@@ -275,9 +278,9 @@ function useAbstractChat({
   }
 
   const { socket, socketState, useListen } = useSocket(socketUrl, {
-    autoConnect: true,
     transports: ["websocket"],
     closeOnBeforeunload: true,
+    autoConnect: true,
     query: {
       botToken,
       sessionId: session?.id,
@@ -303,7 +306,8 @@ function useAbstractChat({
 
   useEffect(() => {
     async function init() {
-      const sisi = await refreshSession();
+      if (!session) return;
+      const sisi = await refreshSession(session?.id);
       if (sisi) {
         const history = await fetchHistory(sisi.id);
         if (history) {
@@ -323,7 +327,7 @@ function useAbstractChat({
         sessionId: currentSessionId,
         client: "widget",
         botToken,
-        user: user,
+        user: config.user,
         timestamp: Date.now(),
       };
 
@@ -339,14 +343,12 @@ function useAbstractChat({
     return () => {
       clearInterval(interval);
     };
-  }, [socket, session, botToken, user]);
+  }, [socket, session, botToken, config.user]);
 
   useListen(
     "heartbeat:ack",
     (data: { success: boolean }) => {
-      if (data.success) {
-        debug("heartbeat ack");
-      }
+      // 
     },
     [session]
   );
@@ -402,6 +404,7 @@ function useAbstractChat({
     handleSocketMessages({
       _message: socketMsg,
       _socket: socket,
+      _config: { bot: config.bot },
       onSessionUpdate(message, _ctx) {
         setSession(message.value.session);
       },
@@ -417,12 +420,12 @@ function useAbstractChat({
         }
       },
       onChatEvent(message, _ctx) {
-        refreshSession()
+        session && refreshSession(session.id)
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
         if (message.type === "FROM_BOT" && message?.component === "handoff") {
-          refreshSession()
+          session && refreshSession(session.id)
         }
         setHookState({
           state: "idle",
@@ -489,8 +492,7 @@ function useAbstractChat({
       },
     });
   }, []);
-
-  useListen("structured_message", handleIncomingMessage);
+  useListen("structured_message", handleIncomingMessage)
   useListen("ack:chat_message:delivered", handleDeliveredAck);
   useListen("info", handleInfo);
   useListen("user_message_broadcast", handleUserMessageBroadcast);
@@ -498,12 +500,11 @@ function useAbstractChat({
   const noMessages = chatState.messages.length === 0;
 
   const [__, sendMessage] = useAsyncFn(
-    async ({ content, ...data }: SendMessageInput) => {
+    async ({ content, user, ...data }: SendMessageInput) => {
       setHookState({
         state: "loading",
       });
       let chatSession = session;
-
       if (!session && noMessages) {
         try {
           const { data: newSession } = await http.apis.createSession(botToken);
@@ -539,7 +540,10 @@ function useAbstractChat({
           pathParams,
           query_params: queryParams,
           queryParams,
-          user,
+          user: {
+            ...config.user,
+            ...user
+          },
           language,
           ...data,
         };
@@ -571,7 +575,7 @@ function useAbstractChat({
       }
       return null;
     },
-    [setHookState, session, socket, user, config, botToken, language]
+    [setHookState, session, socket, config.user, config, botToken, language]
   );
 
   const handleKeyboard = useCallback(

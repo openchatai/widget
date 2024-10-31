@@ -1,6 +1,6 @@
 import type { LangType } from "@lib/locales";
 import React from "react";
-import type { ComponentType } from ".";
+import type { ComponentType } from "./components";
 
 export type UserObject = {
   external_id?: string;
@@ -18,22 +18,18 @@ export type WidgetOptions = {
   queryParams?: Record<string, string>;
   pathParams?: Record<string, string>;
   initialMessages: string[];
-  triggerSelector?: string;
   apiUrl?: string;
   settings?: {
     persistSession?: boolean;
     useSoundEffects?: boolean;
   },
+  collectUserData?: boolean;
   soundEffectFiles?: {
     messageArrived?: string;
   },
   socketUrl?: string;
-  defaultOpen?: boolean;
   debug?: boolean;
   language?: LangType;
-  warnBeforeClose?: boolean;
-  onClose?: () => void;
-  organizationName?: string;
   containerProps?: React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement

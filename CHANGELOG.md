@@ -1,5 +1,23 @@
 # @openchatai/widget
 
+## 1.4.11
+
+### Patch Changes
+
+- 74a7709: send the contact data also
+
+## 1.4.10
+
+### Patch Changes
+
+- 9631623: fix a styling issue, more enhancements
+
+## 1.4.9
+
+### Patch Changes
+
+- cc3972f: collect data
+
 ## 1.4.8
 
 ### Patch Changes

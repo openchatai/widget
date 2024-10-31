@@ -9,3 +9,4 @@ export { useConfigData } from "./providers/ConfigDataProvider"
 export { useChat } from "./providers/ChatProvider"
 export { useLocale } from "./providers/LocalesProvider";
 export { useWidgetSoundEffects } from "./providers/use-widget-sfx"
+export { useContact } from "./providers/ContactProvider"

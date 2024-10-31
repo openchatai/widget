@@ -16,9 +16,12 @@ import React, {
 } from "react";
 import { HeaderChatDidNotStart, HeaderChatRunning } from "./ChatScreenHeader";
 import { Dialog, DialogContent } from "@ui/dialog";
-import { TooltipProvider } from "@ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui/tooltip";
 import { UserMessage } from "@ui/messages";
 import { Keyboard } from "@ui/keyboard";
+import { CollectDataForm } from "./CollectDataForm";
+import { useContact } from "@lib/index";
+
 
 function Info() {
   const { info } = useChat();
@@ -51,7 +54,11 @@ function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, hookState } = useChat();
+  const { collectUserData } = useConfigData()
   const locale = useLocale();
+  const { contact } = useContact();
+
+  const shouldCollectDataFirst = collectUserData && !contact?.id;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
@@ -67,6 +74,11 @@ function ChatFooter() {
       content: {
         text: input,
       },
+      user: {
+        email: contact?.email || undefined,
+        name: contact?.name || undefined,
+        avatarUrl: contact?.avatar_url || undefined,
+      }
     });
 
     setInput("");
@@ -78,15 +90,11 @@ function ChatFooter() {
     <div className="p-2 rounded-lg relative">
       <Info />
       <div
-        className="flex rounded-lg items-center gap-2 bg-white border px-2 py-1.5"
-        style={{
-          border: "1px solid rgba(19, 34, 68, 0.08)",
-          boxShadow: "0px 8px 20px rgba(0, 0, 0, 0.04)",
-        }}
+        className="flex rounded-lg shadow-sm items-center gap-2 bg-white border border-gray-200 focus-within:border-gray-300 px-2 transition-all py-1.5"
       >
         <input
           ref={inputRef}
-          disabled={isLoading}
+          disabled={isLoading || shouldCollectDataFirst}
           value={input}
           className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
           onChange={handleInputChange}
@@ -101,20 +109,24 @@ function ChatFooter() {
           placeholder={locale.get("write-a-message")}
         />
         <div>
-          <button
-            onClick={handleInputSubmit}
-            disabled={isLoading}
-            className="rounded-lg border p-[7px] text-white bg-primary shrink-0 disabled:opacity-50"
-            style={{
-              background: "#1883FF",
-            }}
-          >
-            {isLoading ? (
-              <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
-            ) : (
-              <SendHorizonal className="size-3.5 rtl:-scale-100" />
-            )}
-          </button>
+          <Tooltip>
+            <TooltipContent>
+              {locale.get("send-message")}
+            </TooltipContent>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleInputSubmit}
+                disabled={isLoading || shouldCollectDataFirst}
+                className="rounded-lg p-2 hover:brightness-110 transition-all text-white bg-primary shrink-0 disabled:opacity-50"
+              >
+                {isLoading ? (
+                  <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
+                ) : (
+                  <SendHorizonal className="size-3.5 rtl:-scale-100" />
+                )}
+              </button>
+            </TooltipTrigger>
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -150,13 +162,15 @@ function SessionClosedDialog() {
   );
 }
 
-export function ChatScreen() {
-  const { state, sendMessage, noMessages, handleKeyboard, hookState } =
-    useChat();
-  const { componentStore, initialMessages, preludeSWR, ...config } =
-    useConfigData();
+function ChatRenderer() {
+  const { state, hookState } = useChat();
+  const { componentStore, initialMessages, preludeSWR, ...config } = useConfigData();
+
+  const LoadingComponent = componentStore.getComponent(
+    "loading"
+  ) as ComponentType;
+
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const initialQuestions = preludeSWR.data?.initial_questions;
 
   function handleNewMessage() {
     setTimeout(() => {
@@ -166,89 +180,104 @@ export function ChatScreen() {
       }
     }, 0);
   }
+
   useEffect(() => {
     handleNewMessage();
   }, [state.messages]);
 
-  const LoadingComponent = componentStore.getComponent(
-    "loading"
-  ) as ComponentType;
+  return <div
+    data-messages
+    ref={messagesContainerRef}
+    className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
+  >
+    {initialMessages?.map((message, index) => (
+      <BotMessage
+        key={index}
+        message={{
+          component: "text",
+          data: { message },
+          id: "000",
+          serverId: null,
+          type: "FROM_BOT",
+        }}
+        Wrapper={BotResponseWrapper}
+        wrapperProps={{ agent: config.bot }}
+      />
+    )) ?? (
+        <BotMessage
+          key={"0001"}
+          message={{
+            component: "text",
+            data: { message: "Hello, how can I help?" },
+            id: "000",
+            serverId: null,
+            type: "FROM_BOT",
+            agent: config.bot
+          }}
+          Wrapper={BotResponseWrapper}
+          wrapperProps={{ agent: config.bot }}
+        />
+      )}
+
+    {
+      config.collectUserData &&
+      <BotResponseWrapper agent={config.bot} className="w-full">
+        <CollectDataForm />
+      </BotResponseWrapper>
+    }
+
+    {state.messages.map((message) => {
+      if (message.type === "FROM_USER") {
+        return (
+          <UserMessage key={message.id} message={message} user={config.user}>
+            {message.content}
+          </UserMessage>
+        );
+      } else if (message.type === "FROM_BOT") {
+        if (message.component == "CHAT_EVENT") {
+          return <BotMessage message={message} key={message.id} />;
+        }
+        return (
+          <BotMessage
+            key={message.id}
+            message={message}
+            Wrapper={BotResponseWrapper}
+            wrapperProps={{ agent: message.agent }}
+          />
+        );
+      }
+      return null;
+    })}
+    {hookState.state === "loading" && <LoadingComponent />}
+  </div>
+}
+
+
+export function ChatScreen() {
+  const { state, sendMessage, noMessages, handleKeyboard } = useChat();
+  const { preludeSWR } = useConfigData();
+  const initialQuestions = preludeSWR.data?.initial_questions;
+
   return (
     <TooltipProvider delayDuration={100}>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
         <div
-          className="w-full mesh-gradient rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
+          className="w-full rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
           style={{
             background:
               "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
           }}
         >
+
           {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
+
           <div
-            className="flex rounded-xl shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto"
-            style={{
-              background: "#FAFBFB",
-            }}
-          >
-            <div
-              data-messages
-              ref={messagesContainerRef}
-              className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
-            >
-              {initialMessages?.map((message, index) => (
-                <BotMessage
-                  key={index}
-                  message={{
-                    component: "text",
-                    data: { message },
-                    id: "000",
-                    serverId: null,
-                    type: "FROM_BOT",
-                    bot: config.bot,
-                  }}
-                  Wrapper={BotResponseWrapper}
-                  wrapperProps={{ bot: config.bot }}
-                />
-              )) ?? (
-                  <BotMessage
-                    key={"0001"}
-                    message={{
-                      component: "text",
-                      data: { message: "Hello, how can I help?" },
-                      id: "000",
-                      serverId: null,
-                      type: "FROM_BOT",
-                      bot: config.bot,
-                    }}
-                    Wrapper={BotResponseWrapper}
-                    wrapperProps={{ bot: config.bot }}
-                  />
-                )}
-              {state.messages.map((message) => {
-                if (message.type === "FROM_USER") {
-                  return (
-                    <UserMessage key={message.id} message={message} user={config.user}>
-                      {message.content}
-                    </UserMessage>
-                  );
-                } else if (message.type === "FROM_BOT") {
-                  if (message.component == "CHAT_EVENT") {
-                    return <BotMessage message={message} key={message.id} />;
-                  }
-                  return (
-                    <BotMessage
-                      key={message.id}
-                      message={message}
-                      Wrapper={BotResponseWrapper}
-                      wrapperProps={{ bot: message.bot }}
-                    />
-                  );
-                }
-                return null;
-              })}
-              {hookState.state === "loading" && <LoadingComponent />}
-            </div>
+            className="flex rounded-xl bg-slate-50 shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto">
+
+            <ChatRenderer />
+
             <footer>
+
               {state.keyboard && (
                 <React.Fragment>
                   <Keyboard
@@ -282,6 +311,7 @@ export function ChatScreen() {
 
                 <ChatFooter />
               </React.Fragment>
+
             </footer>
           </div>
         </div>

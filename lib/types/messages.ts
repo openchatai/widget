@@ -1,5 +1,4 @@
-import { WidgetOptions } from "./options";
-import { ChatHistoryMessageType } from "./schemas";
+import { AgentType, ChatHistoryMessageType } from "./schemas";
 
 export type UserMessageType = {
   type: "FROM_USER";
@@ -22,15 +21,10 @@ export type BotMessageType<TData = unknown> = {
   type: "FROM_BOT";
   component: string;
   data: TData;
-  bot?: WidgetOptions["bot"];
   serverId: number | null;
   timestamp?: string;
   original?: ChatHistoryMessageType;
-  agent?: {
-    name?: string;
-    is_ai: boolean;
-    agent_avatar?: string;
-  };
+  agent?: AgentType;
 };
 
 export type MessageType = UserMessageType | BotMessageType

@@ -1,8 +1,9 @@
-import { ChatHistoryMessageType, ChatSessionType } from "@lib/types/schemas";
+import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@lib/types/schemas";
 import { PreludeData, WorkingHours } from "@lib/utils";
 import axios from "axios";
 import { useMemo } from "react";
 import { version } from "../../package.json"
+import { UserObject } from "@lib/types";
 type Options = {
   apiUrl: string;
   botToken: string;
@@ -25,6 +26,9 @@ export function useAxiosInstance(options: Options) {
   const apis = useMemo(
     () => ({
       createSession: (botToken: string) => {
+        if (!botToken) {
+          throw new Error("Bot token is required");
+        }
         return instance.post<ChatSessionType>("/chat-session/" + botToken);
       },
       /**
@@ -32,6 +36,9 @@ export function useAxiosInstance(options: Options) {
        * @param sessionId
        */
       fetchSession: (sessionId: string) => {
+        if (!sessionId) {
+          throw new Error("Session id is required");
+        }
         return instance.get<ChatSessionType>(`widget/session/${sessionId}`);
       },
 
@@ -46,6 +53,9 @@ export function useAxiosInstance(options: Options) {
       },
 
       fetchHistory: (sessionId: string) => {
+        if (!sessionId) {
+          throw new Error("Session id is required");
+        }
         return instance.get<ChatHistoryMessageType[]>(
           `widget/session/history/${sessionId}`
         );
@@ -62,6 +72,13 @@ export function useAxiosInstance(options: Options) {
           message: string;
         }>(`/chat/vote/${id}`);
       },
+
+      /**
+       * given the userData object we will create or update the contact + get the related conversations/tickets/sessions
+       */
+      dumpContact: (userData: UserObject) => {
+        return instance.post<ConsumerType>("/widget/contact/upsert", userData)
+      }
     }),
     [instance]
   );
