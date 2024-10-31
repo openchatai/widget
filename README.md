@@ -33,20 +33,10 @@ type WidgetOptions = {
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
   initialMessages: string;
-  triggerSelector?: string;
   apiUrl: string;
   socketUrl: string;
-  defaultOpen?: boolean;
   debug?: boolean;
   language?: LangType;
-  warnBeforeClose?: boolean;
-  onClose?: () => void;
-  organizationName?: string;
-  onHandoff?: (handout: HandoffPayloadType) => void;
-  containerProps?: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >;
   user?: {
     name?: string;
     email?: string;
