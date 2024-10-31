@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.13
+
+### Patch Changes
+
+- 1e6ffed: fixed text color
+
 ## 1.4.12
 
 ### Patch Changes
