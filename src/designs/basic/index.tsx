@@ -1,17 +1,17 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
-import { useChat, useConfigData } from "@lib/index";
+import { useChat, useConfigData, useSyncedState } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { PopoverTrigger } from "./PopoverTrigger";
 
 function WidgetPopover() {
-  const [isOpen, setIsOpened] = React.useState(false);
+  const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
 
   return (
-    <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
+    <PopoverPrimitive.Root open={isOpen ?? false} onOpenChange={setIsOpened}>
       <AnimatePresence>
         {
           isOpen && (<PopoverPrimitive.Content
@@ -22,28 +22,34 @@ function WidgetPopover() {
             data-chat-widget
             asChild
             align="end"
-            style={{ zIndex: 10000000 }}
           >
             <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              style={{ transformOrigin: "bottom right" }}
+              style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
               transition={{
                 type: "spring",
                 duration: 0.5,
               }}
+              className="max-h-[85dvh] w-[350px] h-[600px]"
               variants={{
-                hidden: { opacity: 0, scale: 0.4 },
-                visible: { opacity: 1, scale: 1 },
+                hidden: {
+                  rotate: "-10deg",
+                  opacity: 0,
+                },
+                visible: {
+                  rotate: 0,
+                  opacity: 1,
+                },
               }}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
             >
-              <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter shadow-lg" />
+              <Widget className="overflow-hidden shadow-lg font-inter" />
             </motion.div>
           </PopoverPrimitive.Content>)
         }
       </AnimatePresence>
-      <PopoverTrigger isOpen={isOpen} />
+      <PopoverTrigger isOpen={isOpen ?? false} />
     </PopoverPrimitive.Root>
   );
 }
