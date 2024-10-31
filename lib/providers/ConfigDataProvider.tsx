@@ -3,8 +3,6 @@ import { type ReactNode, useMemo } from "react";
 import { createSafeContext } from "../utils/create-safe-context";
 import { LocaleProvider } from "./LocalesProvider";
 import { useAxiosInstance, useSyncedState } from "@lib/hooks";
-import { PreludeData } from "@lib/utils";
-import useSWR, { SWRResponse } from "swr";
 import { ComponentRegistry } from "./componentRegistry";
 import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@lib/types/schemas";
@@ -62,7 +60,6 @@ type WidgetSettings = {
 interface ConfigData extends ReturnType<typeof useNormalizeOptions> {
   http: ReturnType<typeof useAxiosInstance>;
   botToken: string;
-  preludeSWR: SWRResponse<PreludeData | undefined, any>;
   componentStore: ComponentRegistry;
   widgetSettings: WidgetSettings | null;
   setSettings: (settings: Partial<WidgetSettings>) => void;
@@ -96,13 +93,7 @@ export function ConfigDataProvider({
     apiUrl: _data.apiUrl,
     botToken: _data.token,
   });
-
-  const preludeSWR = useSWR([http.options], async () => {
-    const { data } = await http.apis.fetchPreludeData();
-    return data;
-  }, {
-    errorRetryCount: 3,
-  });
+  
 
   const [widgetSettings, _setSettings] = useSyncedState("open_settings", _data.defaultSettings, "local");
 
@@ -113,7 +104,7 @@ export function ConfigDataProvider({
 
   return (
     <ConfigDataSafeProvider
-      value={{ ..._data, http, preludeSWR, componentStore, widgetSettings, setSettings }}
+      value={{ ..._data, http, componentStore, widgetSettings, setSettings }}
     >
       <LocaleProvider>{children}</LocaleProvider>
     </ConfigDataSafeProvider>

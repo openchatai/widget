@@ -21,6 +21,7 @@ import { CollectDataForm } from "./CollectDataForm";
 import { useContact } from "@lib/index";
 import { BasicHeader } from "./BasicHeader";
 import { SessionClosedDialog } from "./SessionClosedDialog";
+import { usePreludeData } from "@lib/providers/usePreludeData";
 
 function Info() {
   const { info } = useChat();
@@ -137,7 +138,7 @@ function ChatFooter() {
 
 function ChatRenderer() {
   const { state, hookState } = useChat();
-  const { componentStore, initialMessages, preludeSWR, ...config } = useConfigData();
+  const { componentStore, initialMessages, ...config } = useConfigData();
 
   const LoadingComponent = componentStore.getComponent(
     "loading"
@@ -228,7 +229,8 @@ function ChatRenderer() {
 
 export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
-  const { preludeSWR, theme } = useConfigData();
+  const { theme } = useConfigData();
+  const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
 
   return (

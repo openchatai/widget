@@ -2,7 +2,9 @@ import { Dialog, DialogTrigger } from "@ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
 import { RotateCcw, SettingsIcon } from "lucide-react";
 import { ClearSessionDialogContent, SettingsDialogContent } from "./DialogContents";
-import { useConfigData, useLocale } from "@lib/index";
+import { useLocale } from "@lib/index";
+import { usePreludeData } from "@lib/providers/usePreludeData";
+import { Skeleton } from "@ui/skeleton";
 
 function SettingsDialog() {
     const locale = useLocale();
@@ -45,16 +47,22 @@ function ResetConversationDialog() {
         </Dialog>
     );
 }
-function BasicHeader() {
-    const { preludeSWR } = useConfigData()
 
+function BasicHeader() {
+    const { data, isLoading } = usePreludeData();
     return (
         <header className="p-1 border-b border-border bg-background">
-            <div className="flex items-center">
+            <div className="flex items-center gap-2">
                 <SettingsDialog />
-                <h2 className="flex-1">
-                    {preludeSWR.data?.organization_name}
-                </h2>
+                <div className="flex-1">
+                    {
+                        isLoading ? <Skeleton className="h-4 w-2/3" /> : (
+                            <h2 className="font-semibold">
+                                {data?.organization_name}
+                            </h2>
+                        )
+                    }
+                </div>
                 <ResetConversationDialog />
             </div>
         </header>
