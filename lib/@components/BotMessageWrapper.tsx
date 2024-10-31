@@ -22,7 +22,7 @@ export function BotResponseWrapper({
       </Avatar>
       <div className={cn("w-fit min-w-[80%]", className)}>
         <div
-          className="bg-primary rounded-lg bg-white shadow-sm p-2.5 min-w-fit"
+          className="rounded-lg rounded-bl-none bg-secondary shadow-sm p-2.5 min-w-fit"
         >
           {children}
         </div>

@@ -3,7 +3,6 @@ import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
 import { useChat, useConfigData, useLocale } from "@lib/index";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  CheckCheckIcon,
   CircleDashed,
   SendHorizonal,
 } from "lucide-react";
@@ -14,14 +13,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { HeaderChatDidNotStart, HeaderChatRunning } from "./ChatScreenHeader";
-import { Dialog, DialogContent } from "@ui/dialog";
+import { CompactHeader } from "./ChatScreenHeader";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui/tooltip";
-import { UserMessage } from "@ui/messages";
+import { UserMessage } from "@ui/userMessage";
 import { Keyboard } from "@ui/keyboard";
 import { CollectDataForm } from "./CollectDataForm";
 import { useContact } from "@lib/index";
-
+import { BasicHeader } from "./BasicHeader";
+import { SessionClosedDialog } from "./SessionClosedDialog";
 
 function Info() {
   const { info } = useChat();
@@ -32,7 +31,7 @@ function Info() {
       {info && (
         <motion.div
           key={info.toString()}
-          className="absolute w-full text-xs text-accent/60"
+          className="absolute w-full text-xs text-accent-foreground"
           layoutId={layoutId}
           animate={{ opacity: 1, translateY: 0 }}
           exit={{ opacity: 0, translateY: "-100%" }}
@@ -54,9 +53,9 @@ function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, hookState } = useChat();
-  const { collectUserData } = useConfigData()
-  const locale = useLocale();
+  const { collectUserData, theme } = useConfigData()
   const { contact } = useContact();
+  const locale = useLocale();
 
   const shouldCollectDataFirst = collectUserData && !contact?.id;
 
@@ -88,15 +87,18 @@ function ChatFooter() {
 
   return (
     <div className="p-2 rounded-lg relative">
-      <Info />
+      {
+        !theme.hideInfoBar && <Info />
+      }
+
       <div
-        className="flex rounded-lg shadow-sm items-center gap-2 bg-white border border-gray-200 focus-within:border-gray-300 px-2 transition-all py-1.5"
+        className="flex rounded-lg shadow-sm items-center gap-2 bg-foreground border border-border px-2 transition-all py-1.5"
       >
         <input
           ref={inputRef}
           disabled={isLoading || shouldCollectDataFirst}
           value={input}
-          className="flex-1 outline-none p-1 text-accent text-sm bg-transparent !placeholder-text-sm placeholder-font-100 placeholder:text-primary-foreground/50"
+          className="flex-1 outline-none p-1 text-accent-foreground text-sm bg-transparent placeholder:text-opacity-50"
           onChange={handleInputChange}
           autoFocus
           tabIndex={0}
@@ -117,7 +119,7 @@ function ChatFooter() {
               <button
                 onClick={handleInputSubmit}
                 disabled={isLoading || shouldCollectDataFirst}
-                className="rounded-lg p-2 hover:brightness-110 transition-all text-white bg-primary shrink-0 disabled:opacity-50"
+                className="rounded-lg p-2 hover:brightness-110 transition-all text-foreground bg-primary shrink-0 disabled:opacity-50"
               >
                 {isLoading ? (
                   <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
@@ -130,35 +132,6 @@ function ChatFooter() {
         </div>
       </div>
     </div>
-  );
-}
-
-function SessionClosedDialog() {
-  const { session, recreateSession } = useChat();
-  const locale = useLocale();
-
-  // there is a session and it's closed
-  if (session && session.isSessionClosed !== true) return null;
-
-  return (
-    <Dialog open={session?.isSessionClosed}>
-      <DialogContent>
-        <header className="flex items-center gap-1">
-          <CheckCheckIcon className="size-5 text-emerald-500" />
-          <h2 className="text-base font-semibold" dir="auto">
-            {locale.get("session-closed-lead")}
-          </h2>
-        </header>
-        <footer className="grid mt-2">
-          <button
-            onClick={recreateSession}
-            className="text-sm font-medium hover:brightness-110 whitespace-nowrap px-3 py-2 bg-primary text-white rounded-md"
-          >
-            {locale.get("create-new-ticket")}
-          </button>
-        </footer>
-      </DialogContent>
-    </Dialog>
   );
 }
 
@@ -255,29 +228,26 @@ function ChatRenderer() {
 
 export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
-  const { preludeSWR } = useConfigData();
+  const { preludeSWR, theme } = useConfigData();
   const initialQuestions = preludeSWR.data?.initial_questions;
 
   return (
     <TooltipProvider delayDuration={100}>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
         <div
-          className="w-full rounded-xl h-full justify-between rounded-t-xl flex flex-col relative"
+          className="w-full h-full justify-between flex flex-col relative"
           style={{
             background:
               "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
           }}
         >
-
-          {noMessages ? <HeaderChatDidNotStart /> : <HeaderChatRunning />}
+          {theme.headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
 
           <div
-            className="flex rounded-xl bg-slate-50 shadow-lg flex-col w-full flex-1 rounded-t-xl overflow-auto">
-
+            data-header-style={theme.headerStyle}
+            className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-2xl flex-col w-full flex-1 overflow-auto">
             <ChatRenderer />
-
             <footer>
-
               {state.keyboard && (
                 <React.Fragment>
                   <Keyboard

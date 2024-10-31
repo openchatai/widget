@@ -1,4 +1,4 @@
-import type { WidgetOptions } from "@lib/types";
+import type { WidgetOptions, WidgetThemeOptions } from "@lib/types";
 import { type ReactNode, useMemo } from "react";
 import { createSafeContext } from "../utils/create-safe-context";
 import { LocaleProvider } from "./LocalesProvider";
@@ -9,12 +9,21 @@ import { ComponentRegistry } from "./componentRegistry";
 import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@lib/types/schemas";
 
+const defaultTheme: WidgetThemeOptions = {
+  headerStyle: "compact",
+  primaryColor: "hsl(211,65%,59%)",
+  hideInfoBar: false,
+  triggerOffset: "20px"
+}
+
 function useNormalizeOptions(data: WidgetOptions) {
   return useMemo(() => {
     const soundEffectFiles = {
       messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3",
       ...data.soundEffectFiles,
     };
+
+    const theme = Object.assign({}, defaultTheme, data.theme ?? {})
 
     const bot: AgentType = {
       id: "555",
@@ -34,6 +43,7 @@ function useNormalizeOptions(data: WidgetOptions) {
       pathParams: data.pathParams ?? {},
       queryParams: data.queryParams ?? {},
       user: data.user ?? {},
+      theme,
       soundEffectFiles,
       collectUserData: data.collectUserData ?? false,
       defaultSettings: {
@@ -82,7 +92,6 @@ export function ConfigDataProvider({
   );
 
   const _data = useNormalizeOptions(data);
-  console.log(data, _data)
   const http = useAxiosInstance({
     apiUrl: _data.apiUrl,
     botToken: _data.token,

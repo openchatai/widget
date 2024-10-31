@@ -22,6 +22,7 @@ export type PreludeData = {
   ai_enabled: boolean,
   office_hours: WorkingHours;
   office_hours_timezone: string;
+  organization_name: string
 };
 
 type Day = typeof workingDays[number];

@@ -10,13 +10,22 @@ export default {
         max: 9999
       },
       colors: {
-        primary: "hsl(var(--opn-primary))",
+        primary: "var(--opn-primary)",
+
         foreground: "hsl(var(--opn-foreground))",
         background: "hsl(var(--opn-background))",
-        "primary-foreground": "hsl(var(--opn-primary-foreground))",
+
         accent: "hsl(var(--opn-accent))",
+        "accent-foreground": "hsl(var(--opn-accent-foreground))",
+
         secondary: "hsl(var(--opn-secondary))",
-        dark: "hsl(var(--opn-dark))",
+        "secondary-foreground": "hsl(var(--opn-secondary-foreground))",
+
+        destructive: "hsl(var(--opn-destructive))",
+        "destructive-foreground": "hsl(var(--opn-destructive-foreground))",
+
+        "input": "hsl(var(--opn-input))",
+        "border": "hsl(var(--opn-border))"
       },
     },
     fontFamily: {
