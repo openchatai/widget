@@ -12,7 +12,12 @@ function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
         <PopoverPrimitive.PopoverTrigger
             data-chat-widget
             style={{...cssVars({ primary: theme.primaryColor }, {triggerOffset: theme.triggerOffset}), right: theme.triggerOffset, bottom: theme.triggerOffset}}
-            className="shadow-lg hover:brightness-110 size-fit z-[200] fixed font-inter rounded-full text-secondary bg-primary"
+            className={cn(
+                "shadow-lg hover:brightness-110 size-fit z-[200] fixed font-inter rounded-full",
+                "bg-gradient-to-tr from-zinc-900 to-black text-white",
+                "transition-all duration-300 hover:shadow-xl",
+                "ring-4 ring-black/10"
+            )}
         >
             <motion.div
                 whileTap={{ scale: 0.94 }}
