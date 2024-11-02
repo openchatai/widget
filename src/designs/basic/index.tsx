@@ -29,7 +29,7 @@ function WidgetPopover() {
                 type: "spring",
                 duration: 0.5,
               }}
-              className="max-h-[85dvh] w-[350px] h-[600px]"
+              className="max-h-[85dvh] w-[350px] h-[500px]"
               variants={{
                 hidden: {
                   rotate: "-10deg",
