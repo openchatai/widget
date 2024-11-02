@@ -22,6 +22,7 @@ import { useContact } from "@lib/index";
 import { BasicHeader } from "./BasicHeader";
 import { SessionClosedDialog } from "./SessionClosedDialog";
 import { usePreludeData } from "@lib/providers/usePreludeData";
+import { WelcomeScreen } from "./WelcomeScreen";
 
 function Info() {
   const { info } = useChat();
@@ -231,23 +232,24 @@ export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
   const { theme } = useConfigData();
   const preludeSWR = usePreludeData();
+  const { contact } = useContact();
   const initialQuestions = preludeSWR.data?.initial_questions;
+
+  // Show welcome screen if no contact exists
+  if (!contact?.id) {
+    return <WelcomeScreen />;
+  }
 
   return (
     <TooltipProvider delayDuration={100}>
       <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
-        <div
-          className="w-full h-full justify-between flex flex-col relative"
-          style={{
-            background:
-              "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
-          }}
-        >
+        <div className="w-full h-full flex flex-col relative">
           {theme.headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
-
+          
           <div
             data-header-style={theme.headerStyle}
-            className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-2xl flex-col w-full flex-1 overflow-auto">
+            className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-3xl flex-col w-full flex-1 overflow-auto relative"
+          >
             <ChatRenderer />
             <footer>
               {state.keyboard && (
@@ -283,7 +285,6 @@ export function ChatScreen() {
 
                 <ChatFooter />
               </React.Fragment>
-
             </footer>
           </div>
         </div>
