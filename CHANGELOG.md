@@ -1,5 +1,23 @@
 # @openchatai/widget
 
+## 1.4.14
+
+### Patch Changes
+
+- 22c5687: animation changes, also persist open state
+
+## 1.4.13
+
+### Patch Changes
+
+- 1e6ffed: fixed text color
+
+## 1.4.12
+
+### Patch Changes
+
+- 604ac03: fixing bugs, major styling upgrade
+
 ## 1.4.11
 
 ### Patch Changes

@@ -10,3 +10,4 @@ export { useChat } from "./providers/ChatProvider"
 export { useLocale } from "./providers/LocalesProvider";
 export { useWidgetSoundEffects } from "./providers/use-widget-sfx"
 export { useContact } from "./providers/ContactProvider"
+export { usePreludeData } from "./providers/usePreludeData"

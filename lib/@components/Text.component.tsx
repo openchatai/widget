@@ -12,15 +12,13 @@ export function BotTextResponse({
   type,
 }: DefaultTextComponentProps) {
   return (
-    <div>
-      <MemoizedReactMarkdown
-        data-type={type}
-        data-id={id}
-        remarkPlugins={[remarkGfm]}
-        className="leading-snug font-medium text-sm"
-      >
-        {data.message}
-      </MemoizedReactMarkdown>
-    </div>
+    <MemoizedReactMarkdown
+      data-type={type}
+      data-id={id}
+      remarkPlugins={[remarkGfm]}
+      className="leading-snug font-medium text-sm"
+    >
+      {data.message}
+    </MemoizedReactMarkdown>
   );
 }

@@ -15,10 +15,10 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                 messages.push({
                     type: "FROM_USER",
                     content: msg.message,
-                    id: msg.id.toString(),
+                    id: msg.id?.toString() || genId(),
                     session_id: msg.session_id ?? "",
-                    serverId: msg.id.toString(),
-                    deliveredAt: msg.created_at,
+                    serverId: msg.id?.toString() || genId(),
+                    deliveredAt: msg.created_at || "",
                 });
             }
         }
@@ -32,16 +32,16 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                         data: {
                             message: msg.message ?? "",
                         },
-                        id: msg.id.toString() ?? genId(),
-                        serverId: msg.id ?? genId(),
-                        timestamp: msg.created_at ?? "",
+                        id: msg.id?.toString() || genId(),
+                        serverId: msg.id,
+                        timestamp: msg.created_at || "",
                         original: msg,
                         agent: {
                             id: msg.agent_id?.toString() ?? null,
                             is_ai: true,
-                            profile_picture: msg.agent_avatar ?? bot.profile_picture,
-                            name: msg.agent_name ?? bot.name,
-                        }
+                            profile_picture: msg.agent_avatar || bot.profile_picture,
+                            name: msg.agent_name || bot.name,
+                        },
                     });
                     break;
                 case "agent_message":
@@ -51,16 +51,16 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                         data: {
                             message: msg.message ?? "",
                         },
-                        id: msg.id.toString() ?? genId(),
-                        serverId: msg.id ?? genId(),
-                        timestamp: msg.created_at ?? "",
+                        id: msg.id?.toString() || genId(),
+                        serverId: msg.id,
+                        timestamp: msg.created_at || "",
                         original: msg,
                         agent: {
                             id: msg.agent_id?.toString() ?? null,
                             is_ai: false,
-                            name: msg.agent_name ?? "",
-                            profile_picture: msg.agent_avatar ?? "",
-                        }
+                            name: msg.agent_name || "",
+                            profile_picture: msg.agent_avatar || "",
+                        },
                     });
                     break;
                 default:
@@ -69,18 +69,18 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                         component: "CHAT_EVENT",
                         data: {
                             event: msg.type,
-                            message: msg.message
+                            message: msg.message ?? "",
                         },
-                        id: msg.id.toString() ?? genId(),
-                        serverId: msg.id ?? genId(),
+                        id: msg.id?.toString() || genId(),
+                        serverId: msg.id,
                         original: msg,
-                        timestamp: msg.created_at ?? "",
+                        timestamp: msg.created_at || "",
                         agent: {
                             is_ai: true,
                             id: msg.agent_id?.toString() ?? null,
-                            name: msg.agent_name ?? "",
-                            profile_picture: msg.agent_avatar ?? "",
-                        }
+                            name: msg.agent_name || "",
+                            profile_picture: msg.agent_avatar || "",
+                        },
                     });
             }
         }

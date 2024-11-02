@@ -29,13 +29,13 @@ export function BotMessage<W extends React.ElementType>({
 
 
   if (!Wrapper) {
-    return <Component data={message.data} id={message.id} key={message.id} />;
+    return <Component {...message} id={message.id} key={message.id} />;
   }
 
   return (
     // @ts-ignore
     <Wrapper {...wrapperProps} key={message.id}>
-      <Component data={message.data} id={message.id} />
+      <Component {...message} id={message.id} />
     </Wrapper>
   );
 }

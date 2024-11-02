@@ -27,17 +27,17 @@ export function CollectDataForm() {
                 await handleSubmit(result.data);
             }
         }} className="grid gap-2 grid-cols-1">
-            <div className="space-y-1">
-                <label className="required font-medium text-xs text-gray-600" htmlFor="collect-data:form:name">Name</label>
+            <div className="flex flex-col gap-1">
+                <label className="required font-medium text-xs text-secondary-foreground" htmlFor="collect-data:form:name">Name</label>
                 <Input
                     disabled={!shouldCollectData.should}
-                    required className="peer"
+                    required
                     defaultValue={contact?.name ?? ""}
                     id="collect-data:form:name"
                     name="name" />
             </div>
-            <div className="space-y-1">
-                <label className="required font-medium text-xs text-gray-600" htmlFor="collect-data:form:email">Email</label>
+            <div className="flex flex-col gap-1">
+                <label className="required font-medium text-xs text-secondary-foreground" htmlFor="collect-data:form:email">Email</label>
                 <Input
                     disabled={!shouldCollectData.should}
                     defaultValue={contact?.email ?? ""}
@@ -50,7 +50,7 @@ export function CollectDataForm() {
                 data-error={!!_state.error}
                 disabled={_state.loading || !shouldCollectData.should}
                 type="submit"
-                className="text-sm group text-center relative hover:brightness-110 disabled:grayscale active:brightness-110 transition-all font-medium rounded-lg bg-primary text-white px-3 py-1.5 flex items-center justify-center"
+                className="text-sm group text-center bg-primary text-background disabled:opacity-50 relative hover:brightness-110 active:brightness-110 transition-all font-medium rounded-lg px-3 py-1.5 flex items-center justify-center"
             >
                 <span className="group-data-[loading='true']:opacity-0">Send</span>
                 {_state.loading && <div className="absolute inset-0 flex items-center justify-center">

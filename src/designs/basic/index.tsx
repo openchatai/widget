@@ -1,21 +1,17 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { MessageSquareDot, XIcon } from "lucide-react";
 import React, { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
-import { useChat } from "@lib/index";
+import { useChat, useConfigData, useSyncedState } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
+import { PopoverTrigger } from "./PopoverTrigger";
 
 function WidgetPopover() {
-  const [isOpen, setIsOpened] = React.useState(false);
-
-  const handleClick = () => {
-    setIsOpened(!isOpen);
-  };
+  const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
 
   return (
-    <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
+    <PopoverPrimitive.Root open={isOpen ?? false} onOpenChange={setIsOpened}>
       <AnimatePresence>
         {
           isOpen && (<PopoverPrimitive.Content
@@ -26,47 +22,34 @@ function WidgetPopover() {
             data-chat-widget
             asChild
             align="end"
-            style={{ zIndex: 10000000 }}
           >
             <motion.div
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
-              style={{ transformOrigin: "bottom right" }}
+              style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
               transition={{
                 type: "spring",
                 duration: 0.5,
               }}
+              className="max-h-[85dvh] w-[350px] h-[600px]"
               variants={{
-                hidden: { opacity: 0, scale: 0.4 },
-                visible: { opacity: 1, scale: 1 },
+                hidden: {
+                  rotate: "-10deg",
+                  opacity: 0,
+                },
+                visible: {
+                  rotate: 0,
+                  opacity: 1,
+                },
               }}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
             >
-              <Widget className="max-h-[85dvh] w-[350px] h-[600px] font-inter shadow-lg" />
+              <Widget className="overflow-hidden shadow-lg font-inter" />
             </motion.div>
           </PopoverPrimitive.Content>)
         }
       </AnimatePresence>
-
-      <PopoverPrimitive.PopoverTrigger
-        data-chat-widget
-        className={`${cssVars} shadow-lg hover:brightness-105 size-fit bottom-5 right-5 transition-all z-[200] fixed font-inter rounded-full text-white bg-primary duration-300 ease-in-out transform active:scale-90`}
-        onClick={handleClick}
-      >
-        <div
-          className={cn(
-            "p-3.5 transition-transform duration-300 relative ease-in-out",
-            { "transform scale-110": isOpen },
-          )}
-        >
-          {!isOpen ? (
-            <MessageSquareDot className="size-7" />
-          ) : (
-            <XIcon className="size-7" />
-          )}
-          <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-white rounded-full" />
-        </div>
-      </PopoverPrimitive.PopoverTrigger>
+      <PopoverTrigger isOpen={isOpen ?? false} />
     </PopoverPrimitive.Root>
   );
 }
@@ -75,16 +58,18 @@ const Widget = forwardRef<
   HTMLDivElement,
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
-  const chat = useChat()
+  const chat = useChat();
+  const { theme } = useConfigData()
+
   return (
     <div style={{ display: "contents" }} data-chat-widget>
       <div
         {...props}
         ref={_ref}
         data-version={chat.version} data-chat-widget
+        style={cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset })}
         className={cn(
-          "rounded-xl size-full overflow-hidden isolate relative font-inter",
-          cssVars,
+          "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
           className,
         )}
       >

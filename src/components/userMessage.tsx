@@ -30,18 +30,14 @@ export function UserMessage({
         <Tooltip>
           <TooltipTrigger asChild disabled={!formattedDt}>
             <div
-              className="bg-primary p-2.5 relative min-w-fit text-white hover:brightness-110 rounded-lg leading-snug font-medium text-sm"
-              style={{
-                boxShadow: "0px 8px 12px rgba(0, 0, 0, 0.04)",
-              }}
-            >
+              className="bg-primary p-2.5 relative min-w-fit text-secondary hover:brightness-110 rounded-lg rounded-br-none leading-snug font-medium text-sm">
               {children}
               {
-                formattedDt ? <CheckCheck className="absolute text-white bottom-1 right-1 size-4" /> : <Check className="absolute text-white bottom-1 right-1 size-4" />
+                formattedDt ? <CheckCheck className="absolute text-secondary bottom-1 right-1 size-4" /> : <Check className="absolute text-foreground bottom-1 right-1 size-4" />
               }
             </div>
           </TooltipTrigger>
-          <TooltipContent side="bottom" className="p-1 bg-gray-500">
+          <TooltipContent side="bottom">
             <span className="text-[.7rem] font-medium">
               {formattedDt}
             </span>

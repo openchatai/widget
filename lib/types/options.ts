@@ -11,14 +11,21 @@ export type UserObject = {
   avatarUrl?: string;
 }
 
+export interface WidgetThemeOptions {
+  headerStyle: "compact" | "basic";
+  primaryColor: string;
+  hideInfoBar: boolean;
+  triggerOffset: string;
+}
+
 export type WidgetOptions = {
   token: string;
-  theme?: "basic" | "default",
   headers?: Record<string, string>;
   queryParams?: Record<string, string>;
   pathParams?: Record<string, string>;
   initialMessages: string[];
   apiUrl?: string;
+  theme?: Partial<WidgetThemeOptions>;
   settings?: {
     persistSession?: boolean;
     useSoundEffects?: boolean;

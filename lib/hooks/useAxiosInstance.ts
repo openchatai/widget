@@ -42,8 +42,8 @@ export function useAxiosInstance(options: Options) {
         return instance.get<ChatSessionType>(`widget/session/${sessionId}`);
       },
 
-      fetchPreludeData: () => {
-        return instance.get<PreludeData | undefined>("/widget/prelude");
+      fetchPreludeData: async () => {
+        return (await instance.get<PreludeData | undefined>("/widget/prelude")).data;
       },
       /**
        * get the organization office working hours.
