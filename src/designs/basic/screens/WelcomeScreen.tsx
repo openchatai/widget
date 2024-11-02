@@ -11,7 +11,7 @@ const schema = z.object({
     email: z.string().email(),
 });
 
-const INTERCOM_LOGO = "https://downloads.intercomcdn.com/i/o/509470/ec31507001774ead046f5d33/27a34b11d26329835b4f4e60adb46ec7.png";
+const INTERCOM_LOGO = "https://wjccschools.org/wp-content/uploads/2024/09/Securly.png";
 const SUPPORT_AVATAR = "https://static.intercomassets.com/avatars/5800742/square_128/meprof-removebg__2_-removebg-preview-1730042688.png";
 
 export function WelcomeScreen() {
@@ -122,7 +122,7 @@ export function WelcomeScreen() {
                             href="https://opencopilot.so" 
                             target="_blank" 
                             rel="noopener noreferrer"
-                            className="font-medium text-foreground hover:underline"
+                            className="font-bold italic text-black hover:underline"
                         >
                             Open
                         </a>

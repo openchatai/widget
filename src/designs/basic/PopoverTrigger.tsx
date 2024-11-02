@@ -3,29 +3,61 @@ import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { MessageSquareDot, XIcon } from "lucide-react";
+import { motion } from "framer-motion";
 
 function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
-    const { theme } = useConfigData()
+    const { theme } = useConfigData();
 
-    return <PopoverPrimitive.PopoverTrigger
-        data-chat-widget
-        style={{...cssVars({ primary: theme.primaryColor },{triggerOffset: theme.triggerOffset}), right: theme.triggerOffset, bottom: theme.triggerOffset}}
-        className="shadow-lg hover:brightness-110 size-fit transition-all z-[200] fixed font-inter rounded-full text-secondary bg-primary duration-300 ease-in-out transform active:scale-90"
-    >
-        <div
-            className={cn(
-                "p-3.5 transition-transform duration-300 relative ease-in-out",
-                { "transform scale-110": isOpen },
-            )}
+    return (
+        <PopoverPrimitive.PopoverTrigger
+            data-chat-widget
+            style={{...cssVars({ primary: theme.primaryColor }, {triggerOffset: theme.triggerOffset}), right: theme.triggerOffset, bottom: theme.triggerOffset}}
+            className="shadow-lg hover:brightness-110 size-fit z-[200] fixed font-inter rounded-full text-secondary bg-primary"
         >
-            {!isOpen ? (
-                <MessageSquareDot className="size-7" />
-            ) : (
-                <XIcon className="size-7" />
-            )}
-            <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-white rounded-full" />
-        </div>
-    </PopoverPrimitive.PopoverTrigger>
+            <motion.div
+                whileTap={{ scale: 0.94 }}
+                transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 17
+                }}
+                className="p-3.5 relative"
+            >
+                <motion.div
+                    initial={false}
+                    animate={{
+                        scale: isOpen ? 0 : 1,
+                        opacity: isOpen ? 0 : 1
+                    }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25
+                    }}
+                >
+                    <MessageSquareDot className="size-7" />
+                </motion.div>
+                
+                <motion.div
+                    initial={false}
+                    animate={{
+                        scale: isOpen ? 1 : 0,
+                        opacity: isOpen ? 1 : 0
+                    }}
+                    transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 25
+                    }}
+                    className="absolute inset-0 flex items-center justify-center"
+                >
+                    <XIcon className="size-7" />
+                </motion.div>
+                
+                <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-white rounded-full" />
+            </motion.div>
+        </PopoverPrimitive.PopoverTrigger>
+    );
 }
 
 export { PopoverTrigger }

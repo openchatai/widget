@@ -12,9 +12,9 @@ function WidgetPopover() {
 
   return (
     <PopoverPrimitive.Root open={isOpen ?? false} onOpenChange={setIsOpened}>
-      <AnimatePresence>
-        {
-          isOpen && (<PopoverPrimitive.Content
+      <AnimatePresence mode="wait">
+        {isOpen && (
+          <PopoverPrimitive.Content
             forceMount
             onInteractOutside={(ev) => ev.preventDefault()}
             side="top"
@@ -25,29 +25,32 @@ function WidgetPopover() {
           >
             <motion.div
               style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
+              initial={{ opacity: 0, scale: 0.3, y: 20 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1,
+                y: 0,
+              }}
+              exit={{ 
+                opacity: 0,
+                scale: 0.3,
+                y: 20,
+                transition: {
+                  duration: 0.2,
+                  ease: "easeInOut"
+                }
+              }}
               transition={{
                 type: "spring",
-                duration: 0.5,
+                damping: 25,
+                stiffness: 300,
               }}
               className="max-h-[85dvh] w-[350px] h-[500px]"
-              variants={{
-                hidden: {
-                  rotate: "-10deg",
-                  opacity: 0,
-                },
-                visible: {
-                  rotate: 0,
-                  opacity: 1,
-                },
-              }}
-              initial="hidden"
-              animate="visible"
-              exit="hidden"
             >
               <Widget className="overflow-hidden shadow-lg font-inter" />
             </motion.div>
-          </PopoverPrimitive.Content>)
-        }
+          </PopoverPrimitive.Content>
+        )}
       </AnimatePresence>
       <PopoverTrigger isOpen={isOpen ?? false} />
     </PopoverPrimitive.Root>
