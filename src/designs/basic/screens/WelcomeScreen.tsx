@@ -107,13 +107,27 @@ export function WelcomeScreen() {
 
                     <Button 
                         disabled={loading}
-                        className="w-full bg-gradient-to-r from-primary to-primary/80 hover:brightness-105 text-background shadow-lg shadow-primary/20 border-0"
+                        className="w-full bg-black hover:bg-black/90 text-white shadow-lg border-0"
                         size="lg"
                     >
                         {loading ? locale.get("starting-chat") : locale.get("start-chat")}
                         <SendHorizontal className="size-4 ml-2" />
                     </Button>
                 </form>
+
+                <div className="mt-4 text-center">
+                    <span className="text-xs text-muted-foreground">
+                        Powered by{" "}
+                        <a 
+                            href="https://opencopilot.so" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="font-medium text-foreground hover:underline"
+                        >
+                            Open
+                        </a>
+                    </span>
+                </div>
             </div>
         </motion.div>
     );
