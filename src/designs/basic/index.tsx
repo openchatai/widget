@@ -1,7 +1,7 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import React, { ComponentPropsWithoutRef, forwardRef } from "react";
+import React, { ComponentPropsWithoutRef, forwardRef, useState } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
-import { useChat, useConfigData, useSyncedState } from "@lib/index";
+import { useChat, useConfigData, useSyncedState, useContact } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,6 +9,8 @@ import { PopoverTrigger } from "./PopoverTrigger";
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
+  const { contact } = useContact();
+  const isWelcomeScreen = !contact?.id;
 
   return (
     <PopoverPrimitive.Root open={isOpen ?? false} onOpenChange={setIsOpened}>
@@ -45,7 +47,12 @@ function WidgetPopover() {
                 damping: 25,
                 stiffness: 300,
               }}
-              className="max-h-[85dvh] w-[350px] h-[500px]"
+              className={cn(
+                "w-[350px]",
+                isWelcomeScreen ? "h-[500px]" : "h-[600px]",
+                "max-h-[85dvh]",
+                "border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-xl"
+              )}
             >
               <Widget className="overflow-hidden shadow-lg font-inter" />
             </motion.div>
@@ -62,14 +69,15 @@ const Widget = forwardRef<
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
   const chat = useChat();
-  const { theme } = useConfigData()
+  const { theme } = useConfigData();
 
   return (
     <div style={{ display: "contents" }} data-chat-widget>
       <div
         {...props}
         ref={_ref}
-        data-version={chat.version} data-chat-widget
+        data-version={chat.version}
+        data-chat-widget
         style={cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset })}
         className={cn(
           "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",

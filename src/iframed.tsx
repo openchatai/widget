@@ -23,6 +23,8 @@ export function IframedWidgetPopover() {
           zIndex: 10000000,
           textShadow: "rgba(0, 0, 0, 0.2) 0px 5px 40px",
           boxShadow: "rgba(0, 0, 0, 0.2) 0px 5px 40px",
+          border: "1px solid rgb(228, 228, 231)",
+          borderRadius: "0.75rem",
         }}
         data-chat-widget
         align="end"

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Avatar, AvatarImage } from "./avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { formatDistance } from "date-fns";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 import { Check, CheckCheck } from 'lucide-react';
@@ -25,27 +25,29 @@ export function UserMessage({
   }, [message.deliveredAt]);
 
   return (
-    <div className="flex flex-row w-full gap-1 justify-end items-end group">
-      <div className="w-fit min-w-[50%]">
-        <Tooltip>
-          <TooltipTrigger asChild disabled={!formattedDt}>
-            <div
-              className="bg-primary p-2.5 relative min-w-fit text-secondary hover:brightness-110 rounded-lg rounded-br-none leading-snug font-medium text-sm">
-              {children}
-              {
-                formattedDt ? <CheckCheck className="absolute text-secondary bottom-1 right-1 size-4" /> : <Check className="absolute text-foreground bottom-1 right-1 size-4" />
-              }
+    <div className="flex flex-row w-full gap-2 justify-end items-start group">
+      <div className="flex flex-col items-end gap-1 relative">
+        <div className="max-w-[85%] min-w-[60px]">
+          <div className="bg-zinc-900 dark:bg-zinc-800 p-3 text-white hover:bg-zinc-800 dark:hover:bg-zinc-700/90 rounded-2xl leading-relaxed text-sm">
+            {children}
+          </div>
+          {formattedDt && (
+            <div className="flex items-center gap-1 mt-1 text-[10px] text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <span>{formattedDt}</span>
+              <CheckCheck className="size-3" />
             </div>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            <span className="text-[.7rem] font-medium">
-              {formattedDt}
-            </span>
-          </TooltipContent>
-        </Tooltip>
+          )}
+        </div>
       </div>
-      <Avatar className="size-7">
-        <AvatarImage src={user?.avatarUrl} />
+      <Avatar className="size-8 ring-2 ring-white dark:ring-zinc-900 shadow-sm">
+        <AvatarImage 
+          src={user?.avatarUrl} 
+          className="object-cover"
+          alt={user?.name || 'User avatar'}
+        />
+        <AvatarFallback className="bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-xs font-medium">
+          {user?.name?.slice(0, 2)?.toUpperCase() || 'U'}
+        </AvatarFallback>
       </Avatar>
     </div>
   );
