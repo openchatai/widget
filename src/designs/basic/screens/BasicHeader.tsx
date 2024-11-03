@@ -51,7 +51,7 @@ function ResetConversationDialog() {
 function BasicHeader() {
     const { data, isLoading } = usePreludeData();
     return (
-        <header className="p-1 border-b border-border bg-background">
+        <header className="p-2 border-b border-border bg-background">
             <div className="flex items-center gap-2">
                 <SettingsDialog />
                 <div className="flex-1">
