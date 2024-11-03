@@ -14,13 +14,10 @@ export function BotLoadingComponent() {
             <AvatarFallback />
           </Avatar>
         </div>
-        <div className="w-1/2 min-w-[80%]">
-          <div className="bg-secondary/70 p-4 rounded-lg animate-pulse space-y-2">
-            <span
-              className="block w-5/6 h-4 bg-secondary rounded-md" />
-            <span
-              className="block w-4/6 h-4 bg-secondary rounded-md" />
-          </div>
+        <div className="flex items-center [&_span]:bg-secondary-foreground [&_span]:size-1 gap-1 p-3 rounded-lg rounded-bl-none bg-secondary">
+          <span className="rounded-full animate-bounce [animation-delay:-0.3s]" />
+          <span className="rounded-full animate-bounce [animation-delay:-0.15s]" />
+          <span className="rounded-full animate-bounce" />
         </div>
       </motion.div>
     </AnimatePresence>

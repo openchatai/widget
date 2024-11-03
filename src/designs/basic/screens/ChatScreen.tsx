@@ -222,7 +222,7 @@ function ChatRenderer() {
       }
       return null;
     })}
-    {hookState.state === "loading" && <LoadingComponent />}
+    {hookState.state !== "loading" && <LoadingComponent />}
   </div>
 }
 

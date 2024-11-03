@@ -16,7 +16,7 @@ export function BotTextResponse({
       data-type={type}
       data-id={id}
       remarkPlugins={[remarkGfm]}
-      className="leading-snug font-medium text-sm"
+      className="leading-snug font-medium text-sm prose prose-sm prose-slate"
     >
       {data.message}
     </MemoizedReactMarkdown>
