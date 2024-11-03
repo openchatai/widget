@@ -46,7 +46,7 @@ export function WelcomeScreen() {
         <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="h-full flex flex-col bg-background relative overflow-hidden rounded-xl border border-border/40"
+            className="h-full flex flex-col bg-background relative overflow-hidden rounded-xl"
         >
             <div 
                 className="absolute inset-0 z-0"
@@ -59,7 +59,7 @@ export function WelcomeScreen() {
                 }}
             />
             
-            <div className="flex-1 px-6 pt-12 flex flex-col justify-start text-left space-y-4 relative z-10">
+            <div className="flex-1 px-4 pt-12 flex flex-col justify-start text-left space-y-4 relative z-10">
                 <div className="flex items-center justify-between w-full mb-2">
                     <img 
                         src={INTERCOM_LOGO} 
@@ -89,7 +89,7 @@ export function WelcomeScreen() {
                 </div>
             </div>
 
-            <div className="p-6 bg-background shadow-xl relative z-10 rounded-t-3xl -mt-6">
+            <div className="p-4 bg-background shadow-xl relative z-10 rounded-t-3xl -mt-6">
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div className="space-y-2">
                         <Input
@@ -111,7 +111,7 @@ export function WelcomeScreen() {
                         size="lg"
                     >
                         {loading ? locale.get("starting-chat") : locale.get("start-chat")}
-                        <SendHorizontal className="size-4 ml-2" />
+                        <SendHorizontal className="size-4" />
                     </Button>
                 </form>
 

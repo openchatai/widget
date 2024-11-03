@@ -139,8 +139,8 @@ const DialogContent = React.forwardRef<
             initial={{ opacity: 0, y: 20, x: "-50%" }}
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: 20, x: "-50%" }}
-            transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="bg-background rounded-xl grid grid-cols-1 gap-2 border border-border max-w-[90%] bottom-2 w-full absolute left-1/2 p-3 z-[25]"
+            // transition={{ type: "spring", damping: 20, stiffness: 300 }}
+            className="bg-background rounded-xl grid grid-cols-1 gap-2 border border-border w-[calc(100%-2rem)] bottom-4 absolute left-1/2 p-3 z-[25]"
             ref={_ref}
             {...props}
           >

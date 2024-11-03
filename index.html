@@ -7,14 +7,14 @@
   <title>Openchat AI-Copilot</title>
 </head>
 
-<body>
+<body style="height: 100vh; background-color: white;">
   <script type="module" src="src/index.tsx"></script>
   <script>
     const socketUrl = "http://localhost:8080";
     const apiUrl = "http://localhost:8080/backend";
     window.addEventListener("DOMContentLoaded", () => {
       initOpenScript({
-        token: "86bc7ec1ade7fc97fd500fe3ec08ed6e",
+        token: "7f79efa80c0c2ccb7c854901db85b4c0",
         apiUrl: apiUrl,
         socketUrl: socketUrl,
         language: "en",
@@ -37,7 +37,7 @@
         bot: {
           avatarUrl: "https://yt3.ggpht.com/6pKAhwXP0jLQyNidcMM-rjfVAzrqJuI5lDsrqOguhfx1xFDyu7D9ish3lC17OEfWuEyZshrz=s48-c-k-c0x00ffffff-no-rj"
         },
-      }, "default"); // default or iframed
+      }, "iframed"); // default or iframed
     });
   </script>
 </body>

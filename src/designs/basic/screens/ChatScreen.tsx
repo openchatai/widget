@@ -74,7 +74,7 @@ function ChatFooter() {
 
   return (
     <div className="p-3">
-      <div className="flex rounded-lg items-center gap-2 bg-white dark:bg-zinc-900 border-[1.5px] border-zinc-200 dark:border-zinc-800 px-3 transition-all py-2 shadow-[0_2px_4px_rgba(0,0,0,0.04)]">
+      <div className="flex rounded-xl items-center gap-2 bg-white dark:bg-zinc-900 border-[1.5px] border-zinc-200 dark:border-zinc-800 p-2 transition-all shadow-[0_2px_4px_rgba(0,0,0,0.04)]">
         <input
           ref={inputRef}
           disabled={isLoading || shouldCollectDataFirst}

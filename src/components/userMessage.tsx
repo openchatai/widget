@@ -28,7 +28,7 @@ export function UserMessage({
     <div className="flex flex-row w-full gap-2 justify-end items-start group">
       <div className="flex flex-col items-end gap-1 relative">
         <div className="max-w-[85%] min-w-[60px]">
-          <div className="bg-zinc-900 dark:bg-zinc-800 p-3 text-white hover:bg-zinc-800 dark:hover:bg-zinc-700/90 rounded-2xl leading-relaxed text-sm">
+          <div className="bg-zinc-900 dark:bg-zinc-800 p-3 text-white hover:bg-zinc-800 dark:hover:bg-zinc-700/90 rounded-xl leading-relaxed text-sm">
             {children}
           </div>
           {formattedDt && (
