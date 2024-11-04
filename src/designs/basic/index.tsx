@@ -12,7 +12,9 @@ function WidgetPopover() {
 
   return (
     <PopoverPrimitive.Root open={isOpen ?? false} onOpenChange={setIsOpened}>
-      <AnimatePresence>
+      <AnimatePresence
+        mode="wait"
+      >
         {
           isOpen && (<PopoverPrimitive.Content
             forceMount

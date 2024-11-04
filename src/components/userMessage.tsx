@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Avatar, AvatarImage } from "./avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { formatDistance } from "date-fns";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 import { Check, CheckCheck } from 'lucide-react';
@@ -25,7 +25,7 @@ export function UserMessage({
   }, [message.deliveredAt]);
 
   return (
-    <div className="flex flex-row w-full gap-1 justify-end items-end group">
+    <div className="flex flex-row w-full gap-2 justify-end items-start group">
       <div className="w-fit min-w-[50%]">
         <Tooltip>
           <TooltipTrigger asChild disabled={!formattedDt}>
@@ -46,6 +46,9 @@ export function UserMessage({
       </div>
       <Avatar className="size-7">
         <AvatarImage src={user?.avatarUrl} />
+        <AvatarFallback>
+          {user?.name?.[0] || "U"}
+        </AvatarFallback>
       </Avatar>
     </div>
   );

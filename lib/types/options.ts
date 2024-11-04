@@ -41,7 +41,10 @@ export type WidgetOptions = {
     React.HTMLAttributes<HTMLDivElement>,
     HTMLDivElement
   >;
-  user?: UserObject
+  user?: UserObject;
+  assets?: {
+    organizationLogo?: string;
+  },
   bot?: {
     name?: string;
     avatarUrl?: string;
