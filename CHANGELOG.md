@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.24
+
+### Patch Changes
+
+- 95287f3: don't send a message when the consumer data get submitted
+
 ## 1.4.23
 
 ### Patch Changes
