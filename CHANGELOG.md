@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.17
+
+### Patch Changes
+
+- efb38e4: setting background none to links, some websites does that weird styling
+
 ## 1.4.16
 
 ### Patch Changes
