@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.18
+
+### Patch Changes
+
+- e8bacb9: remove branding
+
 ## 1.4.17
 
 ### Patch Changes
