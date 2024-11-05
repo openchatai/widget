@@ -3,11 +3,12 @@ import { Dialog, DialogContent } from "@ui/dialog";
 import { CheckCheckIcon } from "lucide-react";
 
 export function SessionClosedDialog() {
-    const { session, recreateSession } = useChat();
+    const { session, recreateSession, hookState } = useChat();
     const locale = useLocale();
 
     // there is a session and it's closed
     if (session && session.isSessionClosed !== true) return null;
+    if (hookState.state === "loading") return null // don't show while loading.
 
     return (
         <Dialog open={session?.isSessionClosed}>
