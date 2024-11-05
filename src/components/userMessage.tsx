@@ -26,7 +26,7 @@ export function UserMessage({
   return (
     <div className="flex flex-row w-full gap-2 justify-end items-start group">
       <div className="flex flex-col items-end gap-1 relative">
-        <div className="max-w-[85%] min-w-[60px]">
+        <div className="max-w-[85%] min-w-fit">
           <div className="bg-primary p-3 text-white rounded-xl leading-relaxed text-sm">
             {children}
           </div>
