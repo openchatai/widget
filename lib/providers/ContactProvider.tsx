@@ -9,8 +9,8 @@ import { useAsyncFn } from "react-use";
 type T = ConsumerType;
 
 function _useContact() {
-    const { http, botToken, user, collectUserData, widgetSettings } = useConfigData();
-    const [contact, setContact] = useSyncedState<T | null>(`${botToken}:consumer:${user.external_id}`, null, "local");
+    const { http, botToken, user, collectUserData } = useConfigData();
+    const [contact, setContact] = useSyncedState<T | null>(`${botToken}:contact:${user.external_id}`, null, "local");
     const [creatingContactState, createContactAsync] = useAsyncFn(async (user: UserObject) => {
         try {
             if (!user || !user.email) return null;
