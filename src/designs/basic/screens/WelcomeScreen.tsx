@@ -106,7 +106,7 @@ export function WelcomeScreen() {
                             href="https://opencopilot.so"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-bold italic text-primary hover:underline"
+                            className="font-bold italic text-primary !bg-none hover:underline"
                         >
                             Open
                         </a>
