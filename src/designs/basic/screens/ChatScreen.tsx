@@ -1,7 +1,6 @@
 import { BotMessage } from "@lib/@components/BotMessage";
 import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
 import { useChat, useConfigData, useLocale } from "@lib/index";
-import { AnimatePresence, motion } from "framer-motion";
 import {
   CircleDashed,
   SendHorizonal,
@@ -24,41 +23,15 @@ import { usePreludeData } from "@lib/providers/usePreludeData";
 import { useShouldCollectUserData } from "src/hooks/useShouldCollectData";
 import { WelcomeScreen } from "./WelcomeScreen";
 
-function Info() {
-  const { info } = useChat();
-  const layoutId = useId();
-
-  return <div className="relative w-full top-0 overflow-hidden h-5 px-1">
-    <AnimatePresence>
-      {info && (
-        <motion.div
-          key={info.toString()}
-          className="absolute w-full text-xs text-accent-foreground"
-          layoutId={layoutId}
-          animate={{ opacity: 1, translateY: 0 }}
-          exit={{ opacity: 0, translateY: "-100%" }}
-          initial={{ opacity: 0, translateY: "-100%" }}
-          transition={{
-            duration: 0.2,
-            ease: "easeInOut",
-          }}
-          style={{ top: 0 }}
-        >
-          {info}
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
-}
-
 function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, hookState } = useChat();
-  const { theme } = useConfigData()
+  const { collectUserData } = useConfigData()
   const { contact } = useContact();
   const locale = useLocale();
-  const { shouldCollectDataFirst } = useShouldCollectUserData()
+
+  const shouldCollectDataFirst = collectUserData && !contact?.id;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
@@ -87,19 +60,13 @@ function ChatFooter() {
   const isLoading = hookState.state === "loading";
 
   return (
-    <div className="p-2 rounded-lg relative">
-      {
-        !theme.hideInfoBar && <Info />
-      }
-
-      <div
-        className="flex rounded-lg shadow-sm items-center gap-2 bg-foreground border border-border px-2 transition-all py-1.5"
-      >
+    <div className="p-3">
+      <div className="flex rounded-xl items-center gap-2 bg-white border-[1.5px] border-zinc-200  p-2 transition-all shadow-[0_2px_4px_rgba(0,0,0,0.04)]">
         <input
           ref={inputRef}
           disabled={isLoading || shouldCollectDataFirst}
           value={input}
-          className="flex-1 outline-none p-1 text-accent-foreground text-sm bg-transparent placeholder:text-opacity-50"
+          className="flex-1 outline-none py-0.5 text-zinc-900 text-sm bg-transparent placeholder:text-zinc-400"
           onChange={handleInputChange}
           autoFocus
           tabIndex={0}
@@ -111,24 +78,24 @@ function ChatFooter() {
           }}
           placeholder={locale.get("write-a-message")}
         />
-        <div>
+        <div className="flex-shrink-0">
           <Tooltip>
-            <TooltipContent>
-              {locale.get("send-message")}
-            </TooltipContent>
             <TooltipTrigger asChild>
               <button
                 onClick={handleInputSubmit}
                 disabled={isLoading || shouldCollectDataFirst}
-                className="rounded-lg p-2 hover:brightness-110 transition-all text-foreground bg-primary shrink-0 disabled:opacity-50"
+                className="rounded-md p-2 hover:brightness-90 transition-all text-foreground bg-primary disabled:opacity-50"
               >
                 {isLoading ? (
-                  <CircleDashed className="size-3.5 animate-spin animate-iteration-infinite" />
+                  <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
                 ) : (
-                  <SendHorizonal className="size-3.5 rtl:-scale-100" />
+                  <SendHorizonal className="size-4 rtl:-scale-100" />
                 )}
               </button>
             </TooltipTrigger>
+            <TooltipContent side="top" sideOffset={8}>
+              {locale.get("send-message")}
+            </TooltipContent>
           </Tooltip>
         </div>
       </div>
@@ -164,26 +131,28 @@ function ChatRenderer() {
     ref={messagesContainerRef}
     className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
   >
-    {initialMessages?.map((message, index) => (
-      <BotMessage
-        key={index}
-        message={{
-          component: "text",
-          data: { message },
-          id: "000",
-          serverId: null,
-          type: "FROM_BOT",
-        }}
-        Wrapper={BotResponseWrapper}
-        wrapperProps={{ agent: config.bot }}
-      />
-    )) ?? (
+
+    {state.messages.length === 0 && (
+      initialMessages?.map((message, index) => (
         <BotMessage
-          key={"0001"}
+          key={index}
+          message={{
+            component: "text",
+            data: { message },
+            id: `initial-${index}`,
+            serverId: null,
+            type: "FROM_BOT",
+          }}
+          Wrapper={BotResponseWrapper}
+          wrapperProps={{ agent: config.bot }}
+        />
+      )) ?? (
+        <BotMessage
+          key={"default-welcome"}
           message={{
             component: "text",
             data: { message: "Hello, how can I help?" },
-            id: "000",
+            id: "default-welcome",
             serverId: null,
             type: "FROM_BOT",
             agent: config.bot
@@ -191,8 +160,8 @@ function ChatRenderer() {
           Wrapper={BotResponseWrapper}
           wrapperProps={{ agent: config.bot }}
         />
-      )}
-
+      )
+    )}
     {state.messages.map((message) => {
       if (message.type === "FROM_USER") {
         return (

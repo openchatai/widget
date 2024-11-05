@@ -62,27 +62,28 @@ const Widget = forwardRef<
   ComponentPropsWithoutRef<"div">
 >(({ className, ...props }, _ref) => {
   const chat = useChat();
-  const { theme } = useConfigData()
+  const { theme } = useConfigData();
 
   return (
-    <div style={{ display: "contents" }} data-chat-widget>
-      <div
-        {...props}
-        ref={_ref}
-        data-version={chat.version} data-chat-widget
-        style={cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset })}
-        className={cn(
-          "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
-          className,
-        )}
-      >
-        <div className="size-full absolute antialiased font-inter">
-          <TooltipProvider delayDuration={100}>
+    <TooltipProvider>
+      <div style={{ display: "contents" }} data-chat-widget>
+        <div
+          {...props}
+          ref={_ref}
+          data-version={chat.version}
+          data-chat-widget
+          style={cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset })}
+          className={cn(
+            "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
+            className,
+          )}
+        >
+          <div className="size-full absolute antialiased font-inter">
             <ChatScreen />
-          </TooltipProvider>
+          </div>
         </div>
       </div>
-    </div>
+    </TooltipProvider>
   );
 });
 

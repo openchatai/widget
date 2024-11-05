@@ -10,7 +10,6 @@ import { AgentType } from "@lib/types/schemas";
 const defaultTheme: WidgetThemeOptions = {
   headerStyle: "compact",
   primaryColor: "hsl(211,65%,59%)",
-  hideInfoBar: false,
   triggerOffset: "20px"
 }
 

@@ -26,10 +26,12 @@ export function WelcomeScreen() {
 
         if (result.success) {
             await createContactAsync(result.data);
-            await sendMessage({
-                content: { text: locale.get("hello-greeting") },
-                user: result.data
-            });
+            setTimeout(async () => {
+                await sendMessage({
+                    content: { text: locale.get("hello-greeting") },
+                    user: result.data
+                });
+            }, 1000)
         }
     })
 
