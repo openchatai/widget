@@ -46,4 +46,11 @@ export const arLocale: TranslatableMessages = {
   exit: "خروج",
   "create-new-ticket": "إنشاء تذكرة جديدة",
   "reset-conversation": "إعادة تعيين المحادثة",
+  "welcome-title": "مرحبًا بك في دردشة الدعم الخاصة بنا",
+  "welcome-description": "نحن هنا للمساعدة! ابدأ محادثة وسنرد عليك في أقرب وقت ممكن.",
+  "your-name": "اسمك",
+  "your-email": "عنوان بريدك الإلكتروني",
+  "start-chat": "تحدث إلى الدعم",
+  "starting-chat": "جاري الاتصال...",
+  "hello-greeting": "مرحبًا! كيف يمكننا مساعدتك اليوم؟",
 };

@@ -1,5 +1,47 @@
 # @openchatai/widget
 
+## 1.4.22
+
+### Patch Changes
+
+- f5eb463: fixing some styling issues
+
+## 1.4.21
+
+### Patch Changes
+
+- 236e797: --
+
+## 1.4.20
+
+### Patch Changes
+
+- bcc4d82: talk to support button should respect the widget theme
+
+## 1.4.19
+
+### Patch Changes
+
+- 41bcf3f: minor styling fix
+
+## 1.4.18
+
+### Patch Changes
+
+- e8bacb9: remove branding
+
+## 1.4.17
+
+### Patch Changes
+
+- efb38e4: setting background none to links, some websites does that weird styling
+
+## 1.4.16
+
+### Patch Changes
+
+- b417b51: new welcome screen
+
 ## 1.4.15
 
 ### Patch Changes

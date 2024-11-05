@@ -14,7 +14,6 @@ export type UserObject = {
 export interface WidgetThemeOptions {
   headerStyle: "compact" | "basic";
   primaryColor: string;
-  hideInfoBar: boolean;
   triggerOffset: string;
 }
 
@@ -37,10 +36,6 @@ export type WidgetOptions = {
   socketUrl?: string;
   debug?: boolean;
   language?: LangType;
-  containerProps?: React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLDivElement>,
-    HTMLDivElement
-  >;
   user?: UserObject;
   assets?: {
     organizationLogo?: string;
