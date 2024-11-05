@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.20
+
+### Patch Changes
+
+- bcc4d82: talk to support button should respect the widget theme
+
 ## 1.4.19
 
 ### Patch Changes
