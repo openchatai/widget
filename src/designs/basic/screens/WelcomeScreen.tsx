@@ -91,7 +91,7 @@ export function WelcomeScreen() {
 
                     <Button
                         disabled={handleSubmitState.loading}
-                        className="w-full bg-black hover:bg-black/90 text-white shadow-lg border-0"
+                        className="w-full bg-primary text-foreground hover:brightness-110 text-white shadow-lg border-0"
                         size="lg"
                     >
                         {handleSubmitState.loading ? locale.get("starting-chat") : locale.get("start-chat")}
