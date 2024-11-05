@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.16
+
+### Patch Changes
+
+- b417b51: new welcome screen
+
 ## 1.4.15
 
 ### Patch Changes
