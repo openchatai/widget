@@ -51,7 +51,7 @@ export const enLocale = {
   "your-email": "Your email address",
   "start-chat": "Talk to support",
   "starting-chat": "Connecting...",
-  "hello-greeting": "Hi there! How can we help you today?",
+  "hello-greeting": "Hi there!",
 };
 
 export type TranslationKeysType = keyof typeof enLocale;
