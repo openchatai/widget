@@ -1,11 +1,12 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import React, { ComponentPropsWithoutRef, forwardRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
 import { useChat, useConfigData, useSyncedState } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { PopoverTrigger } from "./PopoverTrigger";
+import { TooltipProvider } from "@ui/tooltip";
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
@@ -76,7 +77,9 @@ const Widget = forwardRef<
         )}
       >
         <div className="size-full absolute antialiased font-inter">
-          <ChatScreen />
+          <TooltipProvider delayDuration={100}>
+            <ChatScreen />
+          </TooltipProvider>
         </div>
       </div>
     </div>

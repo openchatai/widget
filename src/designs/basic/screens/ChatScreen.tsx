@@ -14,14 +14,15 @@ import React, {
   useState,
 } from "react";
 import { CompactHeader } from "./ChatScreenHeader";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
 import { UserMessage } from "@ui/userMessage";
 import { Keyboard } from "@ui/keyboard";
-import { CollectDataForm } from "./CollectDataForm";
 import { useContact } from "@lib/index";
 import { BasicHeader } from "./BasicHeader";
 import { SessionClosedDialog } from "./SessionClosedDialog";
 import { usePreludeData } from "@lib/providers/usePreludeData";
+import { useShouldCollectUserData } from "src/hooks/useShouldCollectData";
+import { WelcomeScreen } from "./WelcomeScreen";
 
 function Info() {
   const { info } = useChat();
@@ -54,11 +55,10 @@ function ChatFooter() {
   const [input, setInput] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const { sendMessage, hookState } = useChat();
-  const { collectUserData, theme } = useConfigData()
+  const { theme } = useConfigData()
   const { contact } = useContact();
   const locale = useLocale();
-
-  const shouldCollectDataFirst = collectUserData && !contact?.id;
+  const { shouldCollectDataFirst } = useShouldCollectUserData()
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
@@ -193,13 +193,6 @@ function ChatRenderer() {
         />
       )}
 
-    {
-      config.collectUserData &&
-      <BotResponseWrapper agent={config.bot} className="w-full">
-        <CollectDataForm />
-      </BotResponseWrapper>
-    }
-
     {state.messages.map((message) => {
       if (message.type === "FROM_USER") {
         return (
@@ -226,69 +219,66 @@ function ChatRenderer() {
   </div>
 }
 
-
 export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
   const { theme } = useConfigData();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
-
+  const { shouldCollectDataFirst } = useShouldCollectUserData();
+  if (shouldCollectDataFirst) return <WelcomeScreen />
   return (
-    <TooltipProvider delayDuration={100}>
-      <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
-        <div
-          className="w-full h-full justify-between flex flex-col relative"
-          style={{
-            background:
-              "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
-          }}
-        >
-          {theme.headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
+    <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
+      <div
+        className="w-full h-full justify-between flex flex-col relative"
+        style={{
+          background:
+            "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
+        }}
+      >
+        {theme.headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
 
-          <div
-            data-header-style={theme.headerStyle}
-            className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-2xl flex-col w-full flex-1 overflow-auto">
-            <ChatRenderer />
-            <footer>
-              {state.keyboard && (
+        <div
+          data-header-style={theme.headerStyle}
+          className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-2xl flex-col w-full flex-1 overflow-auto">
+          <ChatRenderer />
+          <footer>
+            {state.keyboard && (
+              <React.Fragment>
+                <Keyboard
+                  options={state.keyboard.options}
+                  onKeyboardClick={handleKeyboard}
+                />
+              </React.Fragment>
+            )}
+
+            <React.Fragment>
+              {noMessages && (
                 <React.Fragment>
-                  <Keyboard
-                    options={state.keyboard.options}
-                    onKeyboardClick={handleKeyboard}
-                  />
+                  <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
+                    {initialQuestions?.map((iq, index) => (
+                      <button
+                        key={index}
+                        dir="auto"
+                        className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
+                        onClick={() => {
+                          sendMessage({
+                            content: { text: iq },
+                          });
+                        }}
+                      >
+                        {iq}
+                      </button>
+                    ))}
+                  </div>
                 </React.Fragment>
               )}
+              <ChatFooter />
+            </React.Fragment>
 
-              <React.Fragment>
-                {noMessages && (
-                  <React.Fragment>
-                    <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
-                      {initialQuestions?.map((iq, index) => (
-                        <button
-                          key={index}
-                          dir="auto"
-                          className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
-                          onClick={() => {
-                            sendMessage({
-                              content: { text: iq },
-                            });
-                          }}
-                        >
-                          {iq}
-                        </button>
-                      ))}
-                    </div>
-                  </React.Fragment>
-                )}
-
-                <ChatFooter />
-              </React.Fragment>
-
-            </footer>
-          </div>
+          </footer>
         </div>
-        <SessionClosedDialog />
       </div>
-    </TooltipProvider>
+      <SessionClosedDialog />
+    </div>
   );
 }
