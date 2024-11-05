@@ -29,7 +29,7 @@ function WidgetPopover() {
             <motion.div
               style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
               initial={{ opacity: 0, scale: 0.3, y: 20 }}
-              className="max-h-[85dvh] w-[350px] h-[600px] shadow-xl rounded-xl overflow-hidden"
+              className="max-h-[85dvh] w-[350px] h-fit shadow-xl rounded-xl overflow-hidden"
               variants={{
                 hidden: {
                   rotate: "-10deg",
@@ -60,7 +60,7 @@ function WidgetPopover() {
                 }
               }}
             >
-              <Widget className="overflow-hidden shadow-lg font-inter" />
+              <Widget className="overflow-hidden h-[600px] shadow-lg font-inter" />
             </motion.div>
           </PopoverPrimitive.Content>)
         }

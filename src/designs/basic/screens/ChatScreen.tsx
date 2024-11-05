@@ -194,7 +194,9 @@ export function ChatScreen() {
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
   const { shouldCollectDataFirst } = useShouldCollectUserData();
-  if (shouldCollectDataFirst) return <WelcomeScreen />
+  
+  if (shouldCollectDataFirst) return <WelcomeScreen />;
+
   return (
     <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
       <div
