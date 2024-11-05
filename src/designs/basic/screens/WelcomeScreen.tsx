@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useChat, useConfigData, useContact, useLocale, usePreludeData } from "@lib/index";
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
