@@ -1,5 +1,5 @@
 import React from "react";
-import { useChat, useConfigData, useContact, useLocale, usePreludeData } from "@lib/index";
+import { useConfigData, useContact, useLocale, usePreludeData } from "@lib/index";
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 import { SendHorizontal } from "lucide-react";
@@ -16,22 +16,14 @@ export function WelcomeScreen() {
     const locale = useLocale();
     const { data: preludeData } = usePreludeData()
     const { createContactAsync } = useContact();
-    const { sendMessage } = useChat();
     const { assets } = useConfigData()
     const [handleSubmitState, handleSubmit] = useAsyncFn(async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const data = Object.fromEntries(formData.entries());
         const result = schema.safeParse(data);
-
         if (result.success) {
             await createContactAsync(result.data);
-            setTimeout(async () => {
-                await sendMessage({
-                    content: { text: locale.get("hello-greeting") },
-                    user: result.data
-                });
-            }, 1000)
         }
     })
 
