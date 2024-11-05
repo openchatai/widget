@@ -98,20 +98,6 @@ export function WelcomeScreen() {
                         <SendHorizontal className="size-4" />
                     </Button>
                 </form>
-
-                <div className="mt-4 text-center">
-                    <span className="text-xs text-muted-foreground">
-                        Powered by{" "}
-                        <a
-                            href="https://opencopilot.so"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="font-bold italic text-primary !bg-none hover:underline"
-                        >
-                            Open
-                        </a>
-                    </span>
-                </div>
             </div>
         </motion.div>
     );
