@@ -3,8 +3,8 @@ import Iframe from '@uiw/react-iframe';
 import { useState } from 'react';
 import styles from '../lib/index.css?inline';
 import { Widget } from './designs/basic';
-import { PopoverTrigger } from './designs/basic/PopoverTrigger';
 import { AnimatePresence, motion } from 'framer-motion';
+import { PopoverTrigger } from './designs/_shared/PopoverTrigger';
 
 export function IframedWidgetPopover() {
   const [isOpen, setIsOpened] = useState(false);

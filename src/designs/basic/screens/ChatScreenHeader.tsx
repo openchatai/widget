@@ -2,7 +2,7 @@ import { useChat, useLocale } from '@lib/index';
 import { Dialog, DialogTrigger } from '@ui/dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/tooltip';
 import { RotateCcw, SettingsIcon } from 'lucide-react';
-import { ClearSessionDialogContent, SettingsDialogContent } from './DialogContents';
+import { ClearSessionDialogContent, SettingsDialogContent } from 'src/designs/_shared/DialogContents';
 
 const HeroImage = "https://cloud.opencopilot.so/widget/hero-image.png";
 
