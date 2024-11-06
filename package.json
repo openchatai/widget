@@ -104,6 +104,7 @@
     "lucide-react": "^0.436.0",
     "react-use": "^17.5.1",
     "tinycolor2": "^1.6.0",
+    "wouter": "^3.3.5",
     "zod": "^3.23.8"
   }
 }

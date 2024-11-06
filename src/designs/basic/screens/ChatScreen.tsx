@@ -7,8 +7,8 @@ import {
 } from "lucide-react";
 import React, {
   ComponentType,
+  ReactNode,
   useEffect,
-  useId,
   useRef,
   useState,
 } from "react";
@@ -17,11 +17,10 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
 import { UserMessage } from "@ui/userMessage";
 import { Keyboard } from "@ui/keyboard";
 import { useContact } from "@lib/index";
-import { BasicHeader } from "./BasicHeader";
 import { SessionClosedDialog } from "./SessionClosedDialog";
 import { usePreludeData } from "@lib/providers/usePreludeData";
-import { useShouldCollectUserData } from "src/hooks/useShouldCollectData";
-import { WelcomeScreen } from "./WelcomeScreen";
+import { BasicHeader } from "src/designs/_shared/BasicHeader";
+import { cn } from "src/utils";
 
 function ChatFooter() {
   const [input, setInput] = useState("");
@@ -188,17 +187,13 @@ function ChatRenderer() {
   </div>
 }
 
-export function ChatScreen() {
+export function ChatScreen({ headerStyle = 'compact', className, header }: { headerStyle?: "basic" | "compact", className?: string, header?: ReactNode }) {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
-  const { theme } = useConfigData();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
-  const { shouldCollectDataFirst } = useShouldCollectUserData();
-  
-  if (shouldCollectDataFirst) return <WelcomeScreen />;
 
   return (
-    <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
+    <div className={cn("flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0 w-full h-full", className)}>
       <div
         className="w-full h-full justify-between flex flex-col relative"
         style={{
@@ -206,10 +201,10 @@ export function ChatScreen() {
             "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
         }}
       >
-        {theme.headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
+        {header ? header : headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
 
         <div
-          data-header-style={theme.headerStyle}
+          data-header-style={headerStyle}
           className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-2xl flex-col w-full flex-1 overflow-auto">
           <ChatRenderer />
           <footer>
@@ -221,7 +216,6 @@ export function ChatScreen() {
                 />
               </React.Fragment>
             )}
-
             <React.Fragment>
               {noMessages && (
                 <React.Fragment>

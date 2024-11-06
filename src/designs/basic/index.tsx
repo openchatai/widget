@@ -5,8 +5,10 @@ import { useChat, useConfigData, useSyncedState } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { PopoverTrigger } from "./PopoverTrigger";
 import { TooltipProvider } from "@ui/tooltip";
+import { PopoverTrigger } from "../_shared/PopoverTrigger";
+import { useShouldCollectUserData } from "src/hooks/useShouldCollectData";
+import { WelcomeScreen } from "../_shared/screens/WelcomeScreen";
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
@@ -76,6 +78,7 @@ const Widget = forwardRef<
 >(({ className, ...props }, _ref) => {
   const chat = useChat();
   const { theme } = useConfigData();
+  const { shouldCollectDataFirst } = useShouldCollectUserData();
 
   return (
     <TooltipProvider>
@@ -92,7 +95,9 @@ const Widget = forwardRef<
           )}
         >
           <div className="size-full absolute antialiased font-inter">
-            <ChatScreen />
+            {
+              shouldCollectDataFirst ? (<WelcomeScreen />) : <ChatScreen headerStyle={theme.headerStyle} />
+            }
           </div>
         </div>
       </div>
