@@ -55,7 +55,6 @@ export function IframedWidgetPopover() {
           </motion.div>
         )}
       </AnimatePresence>
-
       <PopoverTrigger isOpen={isOpen} />
     </PopoverPrimitive.Root>
   );
