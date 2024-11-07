@@ -11,7 +11,7 @@ function SettingsDialog() {
     return (
         <Dialog>
             <Tooltip>
-                <TooltipContent>
+                <TooltipContent side="bottom">
                     {locale.get("settings")}
                 </TooltipContent>
                 <TooltipTrigger asChild>
@@ -32,7 +32,7 @@ function ResetConversationDialog() {
             {({ setOpen }) => (
                 <>
                     <Tooltip>
-                        <TooltipContent>
+                        <TooltipContent side="bottom">
                             {locale.get("reset-conversation")}
                         </TooltipContent>
                         <TooltipTrigger asChild>

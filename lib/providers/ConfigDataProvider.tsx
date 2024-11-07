@@ -8,7 +8,7 @@ import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@lib/types/schemas";
 
 const defaultTheme: WidgetThemeOptions = {
-  headerStyle: "compact",
+  headerStyle: "basic",
   primaryColor: "hsl(211,65%,59%)",
   triggerOffset: "20px"
 }

@@ -29,7 +29,7 @@ function WidgetPopover() {
             <motion.div
               style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
               initial={{ opacity: 0, scale: 0.3, y: 20 }}
-              className="max-h-[85dvh] w-[350px] h-fit shadow-xl rounded-xl overflow-hidden"
+              className="max-h-[85dvh] w-[350px] h-fit shadow-lg rounded-2xl border"
               variants={{
                 hidden: {
                   rotate: "-10deg",
