@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.25
+
+### Patch Changes
+
+- c18ec9b: update styles
+
 ## 1.4.24
 
 ### Patch Changes
