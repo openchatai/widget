@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.26
+
+### Patch Changes
+
+- 83a1064: iframed by default for the embeded widget
+
 ## 1.4.25
 
 ### Patch Changes
