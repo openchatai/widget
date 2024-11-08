@@ -54,6 +54,7 @@ function IframedWidgetPopover() {
           animate={
             isOpen ? 'visible' : 'hidden'
           }
+          initial="hidden"
           variants={{
             hidden: { opacity: 0, y: 16, transitionEnd: { display: 'none' } },
             visible: { opacity: 1, y: 0, display: 'block' },
