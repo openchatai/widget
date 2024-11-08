@@ -11,9 +11,9 @@ function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
     return (
         <PopoverPrimitive.PopoverTrigger
             data-chat-widget
-            style={{ ...cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset }), right: theme.triggerOffset, bottom: theme.triggerOffset }}
+            style={{ fontSize: "16px",zIndex: 10000, ...cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset }), right: theme.triggerOffset, bottom: theme.triggerOffset }}
             className={cn(
-                "shadow-lg hover:brightness-110 size-fit z-[200] fixed font-inter rounded-full",
+                "shadow-lg hover:brightness-110 size-fit fixed font-inter rounded-full",
                 "bg-gradient-to-tr bg-primary text-white",
                 "transition-all duration-300 hover:shadow-xl",
                 "ring-4 ring-black/5"
