@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.30
+
+### Patch Changes
+
+- 084a956: hidden by default
+
 ## 1.4.29
 
 ### Patch Changes
