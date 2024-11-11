@@ -11,12 +11,12 @@ function ChatProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const config = useConfigData();
+  const {settings} = useConfigData();
   const chat = useAbstractChat({
     defaultHookSettings: {
-      persistSession: config.settings?.persistSession ?? true,
-      useSoundEffects: config.settings?.useSoundEffects ?? false,
-    }
+      persistSession: settings?.persistSession ?? true,
+      useSoundEffects: settings?.useSoundEffects ?? false,
+    },
   });
   return <SafeProvider value={chat}>{children}</SafeProvider>;
 }

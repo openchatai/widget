@@ -37,7 +37,6 @@ type HookState = {
 type useChatOptions = {
   onSessionDestroy?: () => void;
   defaultHookSettings?: HookSettings;
-  language?: LangType;
 };
 
 type ChatState = {
@@ -174,7 +173,7 @@ interface SendMessageInput extends Record<string, unknown> {
     text: string;
   };
   id?: string;
-  language?: useChatOptions["language"];
+  language?: string;
   user?: UserObject
 }
 
@@ -232,7 +231,6 @@ function useSession({
 
 function useAbstractChat({
   onSessionDestroy,
-  language,
 }: useChatOptions) {
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
@@ -240,7 +238,7 @@ function useAbstractChat({
     keyboard: null,
   });
   const locale = useLocale();
-  const { botToken, http, socketUrl, widgetSettings, defaultSettings, ...config } = useConfigData();
+  const { botToken, http, socketUrl, widgetSettings, defaultSettings,language, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
@@ -286,6 +284,7 @@ function useAbstractChat({
       sessionId: session?.id,
       client: "widget",
       clientVersion: pkg.version,
+      language,
     },
   });
 
