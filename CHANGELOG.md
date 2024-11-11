@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.31
+
+### Patch Changes
+
+- e5922e9: fix the language thingy
+
 ## 1.4.30
 
 ### Patch Changes
