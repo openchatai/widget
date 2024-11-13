@@ -228,7 +228,25 @@ function useSession({
     setSession
   }
 }
+function usehookState() {
+  const [hookState, setHookState] =  useState<HookState>({ state: "idle" });
 
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (hookState.state === "loading") {
+      timeout = setTimeout(() => {
+        setHookState({
+          state: "idle",
+        });
+      }, 10 * 1000);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [hookState]);
+
+  return [hookState, setHookState] as const;
+}
 function useAbstractChat({
   onSessionDestroy,
 }: useChatOptions) {
@@ -263,7 +281,7 @@ function useAbstractChat({
     persist: shouldPersistSession
   })
 
-  const [hookState, _setHookState] = useState<HookState>({ state: "idle" });
+  const [hookState, _setHookState] = usehookState();
 
   const disableLoading = !session || session.isAssignedToHuman || session.isPendingHuman;
 
@@ -287,21 +305,6 @@ function useAbstractChat({
       language,
     },
   });
-
-  // create timeout to reset the hook state
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (hookState.state === "loading") {
-      timeout = setTimeout(() => {
-        setHookState({
-          state: "idle",
-        });
-      }, 7000);
-    }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [hookState]);
 
   useEffect(() => {
     async function init() {
@@ -338,7 +341,6 @@ function useAbstractChat({
         sendHeartbeat();
       }, 50 * 1000); // 50 seconds
     }
-
     return () => {
       clearInterval(interval);
     };
@@ -357,24 +359,25 @@ function useAbstractChat({
     1000
   );
 
-  const handleConnect = useCallback(() => {
+  const handleConnect = () => {
     if (session && socket) {
       socket.emit("join_session", { session_id: session.id });
     }
-  }, [session?.id, socket]);
+  }
 
-  const handleReconnect = useCallback(() => {
+  const handleReconnect = () => {
     if (session && socket) {
       socket.emit("join_session", { session_id: session.id });
     }
-  }, [socket]);
+  }
 
   useEffect(() => {
-    socket?.on("connect", handleConnect);
-    socket?.on("reconnect", handleReconnect);
+    if (!socket) return;
+    socket.on("connect", handleConnect);
+    socket.on("reconnect", handleReconnect);
     return () => {
-      socket?.off("connect", handleConnect);
-      socket?.off("reconnect", handleReconnect);
+      socket.off("connect", handleConnect);
+      socket.off("reconnect", handleReconnect);
     };
   }, [handleConnect, socket, handleReconnect]);
 

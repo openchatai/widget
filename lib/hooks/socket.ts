@@ -75,13 +75,13 @@ export function useSocket(
     socket.on("reconnect_error", onReconnectError);
     socket.on("reconnect_failed", onReconnectFailed);
     return () => {
-      socket.off("connect");
-      socket.off("disconnect");
-      socket.off("connect_error");
-      socket.off("reconnect");
-      socket.off("reconnecting");
-      socket.off("reconnect_error");
-      socket.off("reconnect_failed");
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("connect_error", onConnectError);
+      socket.off("reconnect", onReconnect);
+      socket.off("reconnecting", onReconnecting);
+      socket.off("reconnect_error", onReconnectError);
+      socket.off("reconnect_failed", onReconnectFailed);
     };
   }, [
     onConnect,
