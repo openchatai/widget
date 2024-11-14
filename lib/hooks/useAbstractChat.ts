@@ -80,6 +80,9 @@ type ActionType =
       clientMessageId: string;
       deliveredAt: string;
     };
+  } | {
+    type: "SET_MESSAGES",
+    payload: MessageType[];
   };
 
 function chatReducer(state: ChatState, action: ActionType) {
@@ -141,6 +144,10 @@ function chatReducer(state: ChatState, action: ActionType) {
         if (message?.type === "FROM_USER") {
           lodashSet(message, "deliveredAt", action.payload.deliveredAt);
         }
+        break;
+      }
+      case "SET_MESSAGES": {
+        draft.messages = action.payload
         break;
       }
       default:
@@ -229,7 +236,7 @@ function useSession({
   }
 }
 function usehookState() {
-  const [hookState, setHookState] =  useState<HookState>({ state: "idle" });
+  const [hookState, setHookState] = useState<HookState>({ state: "idle" });
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -256,7 +263,7 @@ function useAbstractChat({
     keyboard: null,
   });
   const locale = useLocale();
-  const { botToken, http, socketUrl, widgetSettings, defaultSettings,language, ...config } = useConfigData();
+  const { botToken, http, socketUrl, widgetSettings, defaultSettings, language, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
@@ -380,6 +387,29 @@ function useAbstractChat({
       socket.off("reconnect", handleReconnect);
     };
   }, [handleConnect, socket, handleReconnect]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    async function messagesPooling() {
+      let messages: Array<MessageType> = [];
+      if (!session) return;
+      try {
+        const { data: redata } = await http.apis.fetchHistory(session.id);
+        if (Array.isArray(redata)) {
+          messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
+        }
+      } catch (error) {
+        messages = []
+      };
+      if (messages.length > 0) {
+        dispatch({ type: "SET_MESSAGES", payload: messages });
+      }
+    }
+    interval = setInterval(messagesPooling, 5 * 1000);
+    return () => {
+      clearInterval(interval)
+    }
+  }, []);
 
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
