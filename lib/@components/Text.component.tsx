@@ -16,6 +16,13 @@ export function BotTextResponse({
       data-type={type}
       data-id={id}
       remarkPlugins={[remarkGfm]}
+      components={{
+        a: ({ children, ...props }) => {
+          return <a target="_top" {...props}>
+            {children}
+          </a>
+        }
+      }}
       className="leading-snug font-medium text-sm prose prose-a:decoration-primary prose-a:underline prose-sm prose-slate"
     >
       {data.message}

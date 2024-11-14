@@ -388,28 +388,28 @@ function useAbstractChat({
     };
   }, [handleConnect, socket, handleReconnect]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    async function messagesPooling() {
-      let messages: Array<MessageType> = [];
-      if (!session) return;
-      try {
-        const { data: redata } = await http.apis.fetchHistory(session.id);
-        if (Array.isArray(redata)) {
-          messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
-        }
-      } catch (error) {
-        messages = []
-      };
-      if (messages.length > 0) {
-        dispatch({ type: "SET_MESSAGES", payload: messages });
-      }
-    }
-    interval = setInterval(messagesPooling, 5 * 1000);
-    return () => {
-      clearInterval(interval)
-    }
-  }, []);
+  // useEffect(() => {
+  //   let interval: NodeJS.Timeout;
+  //   async function messagesPooling() {
+  //     let messages: Array<MessageType> = [];
+  //     if (!session) return;
+  //     try {
+  //       const { data: redata } = await http.apis.fetchHistory(session.id);
+  //       if (Array.isArray(redata)) {
+  //         messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
+  //       }
+  //     } catch (error) {
+  //       messages = []
+  //     };
+  //     if (messages.length > 0) {
+  //       dispatch({ type: "SET_MESSAGES", payload: messages });
+  //     }
+  //   }
+  //   interval = setInterval(messagesPooling, 5 * 1000);
+  //   return () => {
+  //     clearInterval(interval)
+  //   }
+  // }, [session]);
 
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
