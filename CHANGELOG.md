@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.4.33
+
+### Patch Changes
+
+- e15ffa3: open links in the parent window insted of the containing iframe
+
 ## 1.4.32
 
 ### Patch Changes
