@@ -2,10 +2,14 @@ import { useChat, useChatCompletions, useConfigData, useContact, useLocale } fro
 import * as Popover from "@radix-ui/react-popover";
 import { Button } from "@ui/button";
 import { Command, CommandGroup, CommandItem, CommandList } from 'cmdk';
-import { CircleDashed, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
+import { CircleDashed, FileAudio, FileIcon, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
 import { useDropzone } from 'react-dropzone';
+import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
+import { genId } from "@lib/utils/genId";
+import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 function CompletionsRender({
     completions,
@@ -51,38 +55,56 @@ function CompletionsRender({
 interface FileWithProgress {
     status: "pending" | "uploading" | "success" | "error";
     id: string;
-    file: File
+    file: File;
+    fileUrl?: string;
 }
 
-function FileDisplay({ file, onCancel }: { file: FileWithProgress, onCancel: () => void; }) {
+function FileDisplay({ file: { file }, onCancel }: { file: FileWithProgress, onCancel: () => void; }) {
     const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(
         null
     );
 
     useEffect(() => {
         const reader = new FileReader();
-        if (file.file.type.startsWith("image/")) {
+        if (file.type.startsWith("image/")) {
             reader.onload = () => setFileContent(reader.result);
-            reader.readAsDataURL(file.file);
+            reader.readAsDataURL(file);
         }
     }, [file]);
 
+    const fileType = file.type.split("/")[0];
+
+    let FileDisplay = () => <FileIcon />;
+
+    if (fileType === "image") {
+        FileDisplay = () => <img src={fileContent as string} className="object-cover size-full" alt={file.name} />;
+    }
+
+    else if (fileType === "audio") {
+        FileDisplay = () => <FileAudio />;
+    }
+
     return (
-        <div className="size-11 group rounded-lg shrink-0 overflow-hidden relative">
-            <button
-                className="absolute p-1 rounded-full bg-black/20 text-foreground right-1 bottom-1"
-                onClick={onCancel}
-            >
-                <XIcon className="size-3" />
-            </button>
-            {file.file.type.startsWith("image/") && fileContent && (
-                <img
-                    src={fileContent as string}
-                    alt={file.file.name}
-                    className="object-cover size-full"
-                />
-            )}
-        </div>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 10 }}
+                    className="size-11 flex border items-center justify-center group rounded-lg shrink-0 overflow-hidden relative">
+                    <button
+                        className="absolute p-0.5 rounded-full bg-black/20 text-foreground right-0.5 bottom-0.5"
+                        onClick={onCancel}
+                    >
+                        <XIcon className="size-3" />
+                    </button>
+                    <FileDisplay />
+                </motion.div>
+            </TooltipTrigger>
+            <TooltipContent className="text-xs">
+                {file.name}
+            </TooltipContent>
+        </Tooltip>
     );
 
 }
@@ -167,10 +189,13 @@ export function ChatFooter() {
             if (!response.ok) {
                 throw new Error(`Failed to upload: ${response.statusText}`);
             }
-
+            const data = await response.json() as {
+                url: string;
+            };
+            file.fileUrl = data.url;
             file.status = "success";
             setFiles((prev) => [...prev]);
-        } catch (error) {
+        } catch {
             if (controller.signal.aborted) {
                 // 
             } else {
@@ -187,7 +212,7 @@ export function ChatFooter() {
             file,
             progress: 0,
             status: "pending" as const,
-            id: crypto.randomUUID(),
+            id: genId(10),
         }));
         setFiles((prev) => [...prev, ...newFiles]);
 
@@ -215,22 +240,31 @@ export function ChatFooter() {
     return (
         <div className="p-2 relative space-y-1" {...rdz.getRootProps()}>
             <input {...rdz.getInputProps()} />
-
             <Popover.Root
                 open={showCompletions && shouldShowCompletions}>
                 <Command loop>
                     <Popover.Anchor asChild>
                         <div className="rounded-xl relative gap-2 border border-px border-zinc-200 transition-all shadow-sm">
                             {
-                                files.length > 0 && (<div className="flex items-center gap-1 p-2 border-b">
-                                    {files.map((file) => (
-                                        <FileDisplay
-                                            key={file.id}
-                                            onCancel={() => handleCancelUpload(file.id)}
-                                            file={file}
-                                        />
-                                    ))}
-                                </div>)
+                                files.length > 0 && (
+                                    <motion.div
+                                        animate={{
+                                            transition: {
+                                                staggerChildren: 0.5,
+                                                delayChildren: 0.5
+                                            }
+                                        }}
+                                        className="flex items-center gap-0.5 p-1 border-b">
+                                        {files.map((file) => (
+                                            <AnimatePresence key={file.id}>
+                                                <FileDisplay
+                                                    onCancel={() => handleCancelUpload(file.id)}
+                                                    file={file}
+                                                />
+                                            </AnimatePresence>
+                                        ))}
+                                    </motion.div>
+                                )
                             }
                             <textarea
                                 ref={inputRef}
