@@ -69,17 +69,18 @@ function CompletionsRender({
 
 function ChatFooter() {
   const { collectUserData, http } = useConfigData()
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { sendMessage, hookState, session } = useChat();
+  const { contact } = useContact();
+  const locale = useLocale();
   const { inputText, setInputText, completions, setCompletions } = useChatCompletions(async (input) => {
+    if (session) return null;
     const resp = await http.apis.getCompletions(input);
     if (resp.data.completions) {
       return resp.data.completions;
     }
     return []
   }, 700);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, hookState } = useChat();
-  const { contact } = useContact();
-  const locale = useLocale();
 
   const shouldCollectDataFirst = collectUserData && !contact?.id;
 
@@ -109,7 +110,7 @@ function ChatFooter() {
   const shouldShowCompletions = completions.length > 0;
   const [showCompletions, setShowCompletions] = useState(shouldShowCompletions);
   useEffect(() => {
-    if (inputRef.current){
+    if (inputRef.current) {
       inputRef.current.focus();
     }
   }, []);

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash.debounce";
 import { useAsyncFn } from "react-use";
 
-type CompletionFetcher = (input: string) => Promise<string[]>;
+type CompletionFetcher = (input: string) => Promise<string[] | null>;
 
 export function useChatCompletions(
     fetchCompletions: CompletionFetcher,
@@ -20,8 +20,10 @@ export function useChatCompletions(
                 return cache.get(input)!;
             }
             const completions = await fetchCompletions(input);
-            cache.set(input, completions); // Store in cache
-            setCompletions(completions);
+            if (completions) {
+                cache.set(input, completions);
+                setCompletions(completions);
+            }
             return completions;
         },
         [fetchCompletions, debounceDelay]
