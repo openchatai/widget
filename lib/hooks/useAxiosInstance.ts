@@ -78,6 +78,14 @@ export function useAxiosInstance(options: Options) {
        */
       dumpContact: (userData: UserObject) => {
         return instance.post<ConsumerType>("/widget/contact/upsert", userData)
+      },
+      /**
+       * get the completions for the given input
+       */
+      getCompletions: (input: string) => {
+        return instance.post<{
+          completions: string[];
+        }>(`/widget/chat/completions`, { input });
       }
     }),
     [instance]

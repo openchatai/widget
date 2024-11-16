@@ -1,5 +1,4 @@
 import type { LangType } from "@lib/locales";
-import React from "react";
 import type { ComponentType } from "./components";
 
 export type UserObject = {

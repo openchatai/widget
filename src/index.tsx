@@ -27,7 +27,7 @@ html, body {
 </body>
 </html>`;
 
-function IframedWidgetPopover() {
+export function IframedWidgetPopover() {
   const [isOpen, setIsOpened] = useState(false);
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
@@ -89,7 +89,7 @@ declare global {
 
 window["initOpenScript"] = initOpenScript;
 
-export function initOpenScript(options: WidgetOptions) {
+function initOpenScript(options: WidgetOptions) {
   render(
     defaultRootId,
     <WidgetRoot options={options}>
