@@ -1,14 +1,15 @@
 import { BotMessage } from "@lib/@components/BotMessage";
 import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
-import { useChat, useConfigData, useLocale } from "@lib/index";
+import { useChat, useChatCompletions, useConfigData, useLocale } from "@lib/index";
 import {
   CircleDashed,
   SendHorizonal,
 } from "lucide-react";
 import React, {
+  ComponentProps,
   ComponentType,
   useEffect,
-  useId,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -22,30 +23,79 @@ import { SessionClosedDialog } from "./SessionClosedDialog";
 import { usePreludeData } from "@lib/providers/usePreludeData";
 import { useShouldCollectUserData } from "src/hooks/useShouldCollectData";
 import { WelcomeScreen } from "./WelcomeScreen";
+import * as Popover from "@radix-ui/react-popover";
+import { Command } from 'cmdk';
+
+function CompletionsRender({
+  completions,
+  onSelect,
+  onInteractionOutside
+}: {
+  completions: string[];
+  onSelect: (completion: string) => void;
+  onInteractionOutside?: ComponentProps<typeof Popover.Content>['onInteractOutside'];
+}) {
+  if (completions.length === 0) {
+    return null;
+  }
+  return (
+    <Popover.Content
+      sideOffset={10}
+      style={{
+        width: `var(--radix-popper-anchor-width)`
+      }}
+      asChild
+      onInteractOutside={onInteractionOutside}
+      side="top" align="center"
+      className="bg-background h-fit scroll-smooth max-h-40 border shadow-md w-full rounded-xl p-1 overflow-y-auto z-10">
+      <Command.List>
+        <Command.Group>
+          {completions.map((completion, index) => (
+            <Command.Item
+              key={index}
+              className="p-2
+          data-[selected=true]:bg-secondary data-[selected=true]:text-secondary-foreground
+          cursor-pointer rounded-lg text-sm hover:bg-secondary hover:text-secondary-foreground transition-all"
+              onSelect={() => onSelect(completion)}
+            >
+              {completion}
+            </Command.Item>
+          ))}
+        </Command.Group>
+      </Command.List>
+    </Popover.Content>
+  );
+}
 
 function ChatFooter() {
-  const [input, setInput] = useState("");
+  const { collectUserData, http } = useConfigData()
   const inputRef = useRef<HTMLInputElement>(null);
-  const { sendMessage, hookState } = useChat();
-  const { collectUserData } = useConfigData()
+  const { sendMessage, hookState, session } = useChat();
   const { contact } = useContact();
   const locale = useLocale();
+  const { inputText, setInputText, completions, setCompletions } = useChatCompletions(async (input) => {
+    if (session) return null;
+    const resp = await http.apis.getCompletions(input);
+    if (resp.data.completions) {
+      return resp.data.completions;
+    }
+    return []
+  }, 700);
 
   const shouldCollectDataFirst = collectUserData && !contact?.id;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
-    setInput(value);
+    setInputText(value);
   };
 
-  async function handleInputSubmit() {
-    if (input.trim().length === 0) {
+  async function handleInputSubmit(text: string) {
+    if (text.trim().length === 0) {
       return;
     }
-
     sendMessage({
       content: {
-        text: input,
+        text,
       },
       user: {
         email: contact?.email || undefined,
@@ -53,52 +103,79 @@ function ChatFooter() {
         avatarUrl: contact?.avatar_url || undefined,
       }
     });
-
-    setInput("");
+    setInputText("");
   }
 
   const isLoading = hookState.state === "loading";
-
+  const shouldShowCompletions = completions.length > 0;
+  const [showCompletions, setShowCompletions] = useState(shouldShowCompletions);
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, []);
   return (
-    <div className="p-3">
-      <div className="flex rounded-xl items-center gap-2 bg-white border-[1.5px] border-zinc-200  p-2 transition-all shadow-[0_2px_4px_rgba(0,0,0,0.04)]">
-        <input
-          ref={inputRef}
-          disabled={isLoading || shouldCollectDataFirst}
-          value={input}
-          className="flex-1 outline-none py-0.5 text-zinc-900 text-sm bg-transparent placeholder:text-zinc-400"
-          onChange={handleInputChange}
-          autoFocus
-          tabIndex={0}
-          onKeyDown={async (event) => {
-            if (event.key === "Enter" && !event.shiftKey) {
-              event.preventDefault();
-              await handleInputSubmit();
-            }
-          }}
-          placeholder={locale.get("write-a-message")}
-        />
-        <div className="flex-shrink-0">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={handleInputSubmit}
+    <div className="p-3 relative">
+      <Popover.Root
+        open={showCompletions && shouldShowCompletions}>
+        <Command loop>
+          <Popover.Anchor asChild>
+            <div className="flex rounded-xl items-center gap-2 bg-white border-[1.5px] border-zinc-200 p-2 transition-all shadow-sm">
+              <input
+                ref={inputRef}
+                id='chat-input'
                 disabled={isLoading || shouldCollectDataFirst}
-                className="rounded-md p-2 hover:brightness-90 transition-all text-foreground bg-primary disabled:opacity-50"
-              >
-                {isLoading ? (
-                  <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
-                ) : (
-                  <SendHorizonal className="size-4 rtl:-scale-100" />
-                )}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="top" sideOffset={8}>
-              {locale.get("send-message")}
-            </TooltipContent>
-          </Tooltip>
-        </div>
-      </div>
+                value={inputText}
+                className="flex-1 outline-none py-0.5 text-zinc-900 text-sm bg-transparent placeholder:text-zinc-400"
+                onChange={handleInputChange}
+                onFocus={() => setShowCompletions(true)}
+                onKeyDown={async (event) => {
+                  if (event.key === "Enter" && !event.shiftKey) {
+                    event.preventDefault();
+                    await handleInputSubmit(inputText);
+                  }
+                }}
+                placeholder={locale.get("write-a-message")}
+              />
+              <div className="flex-shrink-0">
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => handleInputSubmit(inputText)}
+                      disabled={isLoading || shouldCollectDataFirst}
+                      className="rounded-md p-2 hover:brightness-90 transition-all text-foreground bg-primary disabled:opacity-50"
+                    >
+                      {isLoading ? (
+                        <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
+                      ) : (
+                        <SendHorizonal className="size-4 rtl:-scale-100" />
+                      )}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top" sideOffset={8}>
+                    {locale.get("send-message")}
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+          </Popover.Anchor>
+          <CompletionsRender
+            completions={completions}
+            onInteractionOutside={(event) => {
+              const target = event.target as HTMLElement;
+              if (target.closest("#chat-input")) {
+                return;
+              }
+              setShowCompletions(false)
+            }}
+            onSelect={(completion) => {
+              setInputText(completion);
+              setCompletions([]);
+              handleInputSubmit(completion);
+            }}
+          />
+        </Command>
+      </Popover.Root>
     </div>
   );
 }
@@ -194,7 +271,7 @@ export function ChatScreen() {
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
   const { shouldCollectDataFirst } = useShouldCollectUserData();
-  
+
   if (shouldCollectDataFirst) return <WelcomeScreen />;
 
   return (
