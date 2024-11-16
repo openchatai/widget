@@ -14,10 +14,12 @@ import { motion } from "framer-motion";
 function CompletionsRender({
     completions,
     onSelect,
-    onInteractionOutside
+    onInteractionOutside,
+    prefix
 }: {
     completions: string[];
     onSelect: (completion: string) => void;
+    prefix?: string;
     onInteractionOutside?: ComponentProps<typeof Popover.Content>['onInteractOutside'];
 }) {
     if (completions.length === 0) {
@@ -41,9 +43,9 @@ function CompletionsRender({
                             className="p-2
             data-[selected=true]:bg-secondary data-[selected=true]:text-secondary-foreground
             cursor-pointer rounded-lg text-sm hover:bg-secondary hover:text-secondary-foreground transition-all"
-                            onSelect={() => onSelect(completion)}
+                            onSelect={() => onSelect(prefix + completion)}
                         >
-                            {completion}
+                            {prefix}{" "}{completion}
                         </CommandItem>
                     ))}
                 </CommandGroup>
@@ -116,7 +118,7 @@ export function ChatFooter() {
     const { contact } = useContact();
     const locale = useLocale();
     const { inputText, setInputText, completions, setCompletions } = useChatCompletions(async (input) => {
-        if (session) return null;
+        if (session) return null; // only in first message
         const resp = await http.apis.getCompletions(input);
         if (resp.data.completions) {
             return resp.data.completions;
@@ -181,9 +183,6 @@ export function ChatFooter() {
                 method: "POST",
                 body: formData,
                 signal: controller.signal,
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest", // Optional header
-                },
             });
 
             if (!response.ok) {
@@ -316,6 +315,7 @@ export function ChatFooter() {
                     </Popover.Anchor>
                     <CompletionsRender
                         completions={completions}
+                        prefix={inputText}
                         onInteractionOutside={(event) => {
                             const target = event.target as HTMLElement;
                             if (target.closest("#chat-input")) {
