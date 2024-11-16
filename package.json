@@ -105,6 +105,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
+    "react-dropzone": "^14.3.5",
     "react-use": "^17.5.1",
     "tinycolor2": "^1.6.0",
     "zod": "^3.23.8"
