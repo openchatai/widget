@@ -1,13 +1,12 @@
-import { useChat, useChatCompletions, useConfigData, useContact, useLocale } from "@lib/index";
+import { FileWithProgress, useChat, useChatCompletions, useConfigData, useContact, useLocale, useUploadFiles } from "@lib/index";
 import * as Popover from "@radix-ui/react-popover";
 import { Button } from "@ui/button";
 import { Command, CommandGroup, CommandItem, CommandList } from 'cmdk';
-import { CircleDashed, FileAudio, FileIcon, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
+import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
 import { useDropzone } from 'react-dropzone';
 import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
-import { genId } from "@lib/utils/genId";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 
@@ -54,37 +53,44 @@ function CompletionsRender({
     );
 }
 
-interface FileWithProgress {
-    status: "pending" | "uploading" | "success" | "error";
-    id: string;
-    file: File;
-    fileUrl?: string;
-}
-
-function FileDisplay({ file: { file }, onCancel }: { file: FileWithProgress, onCancel: () => void; }) {
+function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWithProgress, onCancel: () => void; }) {
     const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(
         null
     );
 
     useEffect(() => {
+        if (!file.type.startsWith("image/")) return;
+
         const reader = new FileReader();
-        if (file.type.startsWith("image/")) {
-            reader.onload = () => setFileContent(reader.result);
-            reader.readAsDataURL(file);
-        }
+        reader.onload = () => setFileContent(reader.result as string);
+        reader.onerror = () => console.error("Error reading file");
+        reader.readAsDataURL(file);
+
+        return () => reader.abort();
     }, [file]);
 
-    const fileType = file.type.split("/")[0];
+    const getStatusIcon = () => {
+        switch (status) {
+            case "uploading":
+                return <Loader2 className="size-4 animate-spin" />;
+            case "error":
+                return <AlertCircle className="size-4 text-red-500" />;
+            default:
+                return null;
+        }
+    };
 
-    let FileDisplay = () => <FileIcon />;
+    const FileContent = () => {
+        const fileType = file.type.split("/")[0];
 
-    if (fileType === "image") {
-        FileDisplay = () => <img src={fileContent as string} className="object-cover size-full" alt={file.name} />;
-    }
-
-    else if (fileType === "audio") {
-        FileDisplay = () => <FileAudio />;
-    }
+        if (fileType === "image" && fileContent) {
+            return <img src={typeof fileContent === 'string' ? fileContent : ''} className="object-cover size-full" alt={file.name} />;
+        }
+        if (fileType === "audio") {
+            return <FileAudio />;
+        }
+        return <FileIcon />;
+    };
 
     return (
         <Tooltip>
@@ -93,18 +99,28 @@ function FileDisplay({ file: { file }, onCancel }: { file: FileWithProgress, onC
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
                     initial={{ opacity: 0, y: 10 }}
-                    className="size-11 flex border items-center justify-center group rounded-lg shrink-0 overflow-hidden relative">
+                    className="size-11 flex border items-center justify-center group rounded-lg shrink-0 overflow-hidden relative"
+                >
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        {getStatusIcon()}
+                    </div>
                     <button
-                        className="absolute p-0.5 rounded-full bg-black/20 text-foreground right-0.5 bottom-0.5"
+                        className="absolute p-0.5 rounded-full bg-black/20 text-foreground right-0.5 bottom-0.5 z-10"
                         onClick={onCancel}
                     >
                         <XIcon className="size-3" />
                     </button>
-                    <FileDisplay />
+                    <div className={status === "uploading" ? "opacity-50" : ""}>
+                        <FileContent />
+                    </div>
                 </motion.div>
             </TooltipTrigger>
             <TooltipContent className="text-xs">
-                {file.name}
+                {status === "error" ? (
+                    <span className="text-red-500">Failed to upload: {error}</span>
+                ) : (
+                    file.name
+                )}
             </TooltipContent>
         </Tooltip>
     );
@@ -112,140 +128,78 @@ function FileDisplay({ file: { file }, onCancel }: { file: FileWithProgress, onC
 }
 
 export function ChatFooter() {
-    const { collectUserData, http } = useConfigData()
+    const { collectUserData, http } = useConfigData();
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const { sendMessage, hookState, session } = useChat();
     const { contact } = useContact();
     const locale = useLocale();
-    const { inputText, setInputText, completions, setCompletions } = useChatCompletions(async (input) => {
-        if (session) return null; // only in first message
-        const resp = await http.apis.getCompletions(input);
-        if (resp.data.completions) {
-            return resp.data.completions;
-        }
-        return []
-    }, 700);
 
-    const shouldCollectDataFirst = collectUserData && !contact?.id;
+    const { inputText, setInputText, completions, setCompletions } = useChatCompletions(
+        async (input) => {
+            if (session) return null;
+            const resp = await http.apis.getCompletions(input);
+            return resp.data.completions || [];
+        },
+        700
+    );
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-        const value = event.currentTarget.value;
-        setInputText(value);
-    };
-
-    async function handleInputSubmit(text: string) {
-        if (text.trim().length === 0) {
-            return;
-        }
-        sendMessage({
-            content: {
-                text,
-            },
-            user: {
-                email: contact?.email || undefined,
-                name: contact?.name || undefined,
-                avatarUrl: contact?.avatar_url || undefined,
-            }
-        });
-        setInputText("");
-    }
-
-    useEffect(() => {
-        if (inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, []);
-
-    const isLoading = hookState.state === "loading";
-    const shouldShowCompletions = completions.length > 0;
-    const [showCompletions, setShowCompletions] = useState(shouldShowCompletions);
-    const [containerRef, dimentions] = useMeasure<HTMLDivElement>();
-    const [files, setFiles] = useState<FileWithProgress[]>([]);
-    const [abortControllers, setAbortControllers] = useState<
-        Record<string, AbortController>
-    >({});
-
-    const uploadFile = async (file: FileWithProgress) => {
-        const controller = new AbortController();
-        setAbortControllers((prev) => ({
-            ...prev,
-            [file.id]: controller,
-        }));
-
-        const formData = new FormData();
-        formData.append("file", file.file);
-
-        try {
-            file.status = "uploading";
-            setFiles((prev) => [...prev]);
-
-            const response = await fetch("/api/upload", {
-                method: "POST",
-                body: formData,
-                signal: controller.signal,
-            });
-
-            if (!response.ok) {
-                throw new Error(`Failed to upload: ${response.statusText}`);
-            }
-            const data = await response.json() as {
-                url: string;
-            };
-            file.fileUrl = data.url;
-            file.status = "success";
-            setFiles((prev) => [...prev]);
-        } catch {
-            if (controller.signal.aborted) {
-                // 
-            } else {
-                file.status = "error";
-            }
-            setFiles((prev) => [...prev]);
-        } finally {
-            delete abortControllers[file.id];
-        }
-    };
+    const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, successFiles } = useUploadFiles();
 
     const handleFileDrop = (acceptedFiles: File[]) => {
-        const newFiles = acceptedFiles.map((file) => ({
-            file,
-            progress: 0,
-            status: "pending" as const,
-            id: genId(10),
-        }));
-        setFiles((prev) => [...prev, ...newFiles]);
+        appendFiles(acceptedFiles);
+    };
 
-        newFiles.forEach((file) => {
-            uploadFile(file);
+    const handleSubmit = async (text: string) => {
+        if (!text.trim()) return;
+
+        await sendMessage({
+            content: {
+                text: text.trim(),
+            },
+            attachments: successFiles.map(f => ({
+                url: f.fileUrl!,
+                type: f.file.type,
+                name: f.file.name
+            }))
         });
+
+        setInputText("");
+        emptyTheFiles();
     };
 
-    const handleCancelUpload = (fileId: string) => {
-        if (abortControllers[fileId]) {
-            abortControllers[fileId].abort();
-            setAbortControllers((prev) => {
-                const { [fileId]: _, ...rest } = prev;
-                return rest;
-            });
-        }
-        setFiles((prev) => prev.filter((file) => file.id !== fileId));
-    };
-
-    const rdz = useDropzone({
+    const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
         onDrop: handleFileDrop,
         noClick: true,
+        maxSize: 5 * 1024 * 1024, // 5MB
+        accept: {
+            text: ['application/pdf', 'text/*'],
+            image: ['image/*'],
+        }
     });
 
+    const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
+    const [showCompletions, setShowCompletions] = useState(false);
+    const isLoading = hookState.state === "loading";
+    const shouldCollectDataFirst = collectUserData && !contact?.id;
+    
+    const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        const clipboardData = event.clipboardData;
+        if (!clipboardData) return;
+        if (clipboardData.files.length > 0) {
+            handleFileDrop(Array.from(clipboardData.files));
+        }
+    }
+
     return (
-        <div className="p-2 relative space-y-1" {...rdz.getRootProps()}>
-            <input {...rdz.getInputProps()} />
+        <div className="p-2 relative space-y-1" {...getRootProps()}>
+            <input {...getInputProps()} />
             <Popover.Root
-                open={showCompletions && shouldShowCompletions}>
+                open={showCompletions && completions.length > 0}>
                 <Command loop>
                     <Popover.Anchor asChild>
                         <div className="rounded-xl relative gap-2 border border-px border-zinc-200 transition-all shadow-sm">
                             {
-                                files.length > 0 && (
+                                allFiles.length > 0 && (
                                     <motion.div
                                         animate={{
                                             transition: {
@@ -254,7 +208,7 @@ export function ChatFooter() {
                                             }
                                         }}
                                         className="flex items-center gap-0.5 p-1 border-b">
-                                        {files.map((file) => (
+                                        {allFiles.map((file) => (
                                             <AnimatePresence key={file.id}>
                                                 <FileDisplay
                                                     onCancel={() => handleCancelUpload(file.id)}
@@ -266,22 +220,23 @@ export function ChatFooter() {
                                 )
                             }
                             <textarea
+                                onPaste={handlePaste}
                                 ref={inputRef}
                                 id='chat-input'
-                                data-padding={dimentions.width}
+                                data-padding={dimensions.width}
                                 disabled={isLoading || shouldCollectDataFirst}
                                 value={inputText}
                                 style={{
-                                    paddingRight: `${dimentions.width}px`
+                                    paddingRight: `${dimensions.width}px`
                                 }}
                                 rows={3}
                                 className={`outline-none w-full p-2 text-zinc-900 text-sm bg-transparent resize-none placeholder:text-zinc-400`}
-                                onChange={handleInputChange}
+                                onChange={e => setInputText(e.target.value)}
                                 onFocus={() => setShowCompletions(true)}
                                 onKeyDown={async (event) => {
                                     if (event.key === "Enter" && !event.shiftKey) {
                                         event.preventDefault();
-                                        await handleInputSubmit(inputText);
+                                        handleSubmit(inputText);
                                     }
                                 }}
                                 placeholder={locale.get("write-a-message")}
@@ -290,15 +245,15 @@ export function ChatFooter() {
                                 ref={containerRef}
                                 className="absolute space-x-1 bottom-1.5 right-1.5 w-fit">
                                 <Button
-                                    onClick={() => {
-                                        rdz.open();
-                                    }}
+                                    onClick={openFileSelect}
                                     size='fit' variant={"outline"}>
                                     <PaperclipIcon className="size-4" />
                                 </Button>
                                 <Button
                                     size='fit'
-                                    onClick={() => handleInputSubmit(inputText)}
+                                    onClick={() => {
+                                        handleSubmit(inputText);
+                                    }}
                                     disabled={isLoading || shouldCollectDataFirst}
                                     className="hover:brightness-90"
                                 >
@@ -311,7 +266,6 @@ export function ChatFooter() {
 
                             </div>
                         </div>
-
                     </Popover.Anchor>
                     <CompletionsRender
                         completions={completions}
@@ -326,7 +280,7 @@ export function ChatFooter() {
                         onSelect={(completion) => {
                             setInputText(completion);
                             setCompletions([]);
-                            handleInputSubmit(completion);
+                            handleSubmit(completion);
                         }}
                     />
                 </Command>

@@ -179,6 +179,11 @@ interface SendMessageInput extends Record<string, unknown> {
   content: {
     text: string;
   };
+  attachments?: Array<{
+    url: string,
+    type: string,
+    name: string,
+  }>,
   id?: string;
   language?: string;
   user?: UserObject
