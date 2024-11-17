@@ -1,7 +1,7 @@
 import { LangType } from "@lib/locales";
 import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
-import { MessageType, UserMessageType, UserObject } from "@lib/types";
+import { AttachmentType, MessageType, UserMessageType, UserObject } from "@lib/types";
 import { genId } from "@lib/utils/genId";
 import { produce } from "immer";
 import {
@@ -179,11 +179,7 @@ interface SendMessageInput extends Record<string, unknown> {
   content: {
     text: string;
   };
-  attachments?: Array<{
-    url: string,
-    type: string,
-    name: string,
-  }>,
+  attachments?: Array<AttachmentType>,
   id?: string;
   language?: string;
   user?: UserObject
@@ -550,7 +546,7 @@ function useAbstractChat({
             joinSession(newSession.id);
             chatSession = {
               ...newSession,
-              // will be updated anyway when the hook rerenders
+              // will be updated anyway when the component rerenders
               isSessionClosed: newSession.status !== SessionStatus.OPEN,
               isAssignedToAi: newSession.assignee_id === 555,
               isAssignedToHuman: false,
@@ -572,6 +568,7 @@ function useAbstractChat({
           id: msgId,
           bot_token: botToken,
           content: content.text,
+          attachments: data.attachments,
           session_id: chatSession.id,
           headers,
           pathParams,
@@ -595,6 +592,7 @@ function useAbstractChat({
               user: payload.user,
               deliveredAt: null,
               serverId: null,
+              attachments: data.attachments,
             },
           });
           if (chatState.keyboard) {

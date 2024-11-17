@@ -7,6 +7,8 @@ import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { PopoverTrigger } from "./PopoverTrigger";
 import { TooltipProvider } from "@ui/tooltip";
+import { Toaster } from 'react-hot-toast';
+import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
@@ -69,6 +71,30 @@ function WidgetPopover() {
     </PopoverPrimitive.Root>
   );
 }
+function WidgetToaster() {
+  return <Toaster
+    position="top-center"
+    containerStyle={{
+      maxHeight: "50%",
+      overflow: "hidden",
+    }}
+    toastOptions={{
+      position: 'top-center',
+      blank: {
+        className: 'text-primary-foreground bg-background max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
+        icon: <BadgeInfo className="size-5 shrink-0 text-primary-foreground" />,
+      },
+      success: {
+        icon: <CheckCircle2Icon className="size-5 shrink-0 text-emerald-600" />,
+        className: 'text-emerald-700 bg-background p-2 max-w-[200px] font-medium rounded-lg border flex items-center gap-1 w-full',
+      },
+      error: {
+        icon: <InfoIcon className="size-5 shrink-0 text-rose-600" />,
+        className: 'text-red-700 bg-background max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
+      },
+    }}
+  />
+}
 
 const Widget = forwardRef<
   HTMLDivElement,
@@ -79,13 +105,12 @@ const Widget = forwardRef<
 
   return (
     <TooltipProvider>
-      <div style={{ display: "contents" }} data-chat-widget>
+      <div style={{ display: "contents", ...cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset }) }} data-chat-widget>
         <div
           {...props}
           ref={_ref}
           data-version={chat.version}
           data-chat-widget
-          style={cssVars({ primary: theme.primaryColor }, { triggerOffset: theme.triggerOffset })}
           className={cn(
             "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
             className,
@@ -95,6 +120,8 @@ const Widget = forwardRef<
             <ChatScreen />
           </div>
         </div>
+
+        <WidgetToaster />
       </div>
     </TooltipProvider>
   );

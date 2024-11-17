@@ -5,10 +5,11 @@ import { Command, CommandGroup, CommandItem, CommandList } from 'cmdk';
 import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
-import { useDropzone } from 'react-dropzone';
-import { Tooltip, TooltipContent, TooltipTrigger } from "@ui/tooltip";
+import { ErrorCode, useDropzone } from 'react-dropzone';
+import { Tooltip, TooltipContent, Tooltippy, TooltipTrigger } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 function CompletionsRender({
     completions,
@@ -143,7 +144,7 @@ export function ChatFooter() {
         700
     );
 
-    const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, successFiles } = useUploadFiles();
+    const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, isUploading, successFiles } = useUploadFiles();
 
     const handleFileDrop = (acceptedFiles: File[]) => {
         appendFiles(acceptedFiles);
@@ -159,7 +160,9 @@ export function ChatFooter() {
             attachments: successFiles.map(f => ({
                 url: f.fileUrl!,
                 type: f.file.type,
-                name: f.file.name
+                name: f.file.name,
+                id: f.id,
+                size: f.file.size
             }))
         });
 
@@ -170,10 +173,14 @@ export function ChatFooter() {
     const { getRootProps, getInputProps, open: openFileSelect } = useDropzone({
         onDrop: handleFileDrop,
         noClick: true,
-        maxSize: 5 * 1024 * 1024, // 5MB
+        onDropRejected() {
+            toast.error('unsupported file type, or the file is too large')
+        },
+        maxSize: 5 * 1024 * 1024,
         accept: {
-            text: ['application/pdf', 'text/*'],
-            image: ['image/*'],
+            'text/*': ['.txt'],
+            'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
+            'application/pdf': ['.pdf'],
         }
     });
 
@@ -181,7 +188,7 @@ export function ChatFooter() {
     const [showCompletions, setShowCompletions] = useState(false);
     const isLoading = hookState.state === "loading";
     const shouldCollectDataFirst = collectUserData && !contact?.id;
-    
+
     const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
         const clipboardData = event.clipboardData;
         if (!clipboardData) return;
@@ -244,26 +251,35 @@ export function ChatFooter() {
                             <div
                                 ref={containerRef}
                                 className="absolute space-x-1 bottom-1.5 right-1.5 w-fit">
-                                <Button
-                                    onClick={openFileSelect}
-                                    size='fit' variant={"outline"}>
-                                    <PaperclipIcon className="size-4" />
-                                </Button>
-                                <Button
-                                    size='fit'
-                                    onClick={() => {
-                                        handleSubmit(inputText);
-                                    }}
-                                    disabled={isLoading || shouldCollectDataFirst}
-                                    className="hover:brightness-90"
+                                <Tooltippy
+                                    position="top-end"
+                                    content="attach files, (maximum size 5mb)"
                                 >
-                                    {isLoading ? (
-                                        <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
-                                    ) : (
-                                        <SendHorizonal className="size-4 rtl:-scale-100" />
-                                    )}
-                                </Button>
+                                    <Button
+                                        onClick={openFileSelect}
+                                        size='fit' variant={"outline"}>
+                                        <PaperclipIcon className="size-4" />
+                                    </Button>
+                                </Tooltippy>
 
+                                <Tooltippy
+                                    content="send message"
+                                >
+                                    <Button
+                                        size='fit'
+                                        onClick={() => {
+                                            handleSubmit(inputText);
+                                        }}
+                                        disabled={isLoading || shouldCollectDataFirst || isUploading}
+                                        className="hover:brightness-90"
+                                    >
+                                        {isLoading ? (
+                                            <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
+                                        ) : (
+                                            <SendHorizonal className="size-4 rtl:-scale-100" />
+                                        )}
+                                    </Button>
+                                </Tooltippy>
                             </div>
                         </div>
                     </Popover.Anchor>
