@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.0
+
+### Minor Changes
+
+- 82efa46: file attachment
+
 ## 1.4.33
 
 ### Patch Changes
