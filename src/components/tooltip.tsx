@@ -29,6 +29,7 @@ TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
 type Side = React.ComponentProps<typeof TooltipContent>['side'];
 type Align = React.ComponentProps<typeof TooltipContent>['align'];
+
 function Tooltippy({ children, content,position }: {
   children: React.ReactNode;
   content: React.ReactNode;
@@ -41,9 +42,9 @@ function Tooltippy({ children, content,position }: {
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
-      <TooltipContent align={align as Align} side={side as Side}>{content}</TooltipContent>
+      <TooltipContent hideWhenDetached collisionPadding={10} avoidCollisions align={align as Align} side={side as Side}>{content}</TooltipContent>
     </Tooltip>
   );
 }
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, Tooltippy };
+export { TooltipProvider, Tooltippy };

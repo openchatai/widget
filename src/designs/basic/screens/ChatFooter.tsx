@@ -6,7 +6,7 @@ import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon,
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
 import { useDropzone } from 'react-dropzone';
-import { Tooltip, TooltipContent, Tooltippy, TooltipTrigger } from "@ui/tooltip";
+import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -94,36 +94,33 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
     };
 
     return (
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 10 }}
-                    initial={{ opacity: 0, y: 10 }}
-                    className="size-11 flex border items-center justify-center group rounded-lg shrink-0 overflow-hidden relative"
+        <Tooltippy
+            content={status === "error" ? (
+                <span className="text-red-500">Failed to upload: {error}</span>
+            ) : (
+                file.name
+            )}
+        >
+            <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                initial={{ opacity: 0, y: 10 }}
+                className="size-11 flex border items-center justify-center group rounded-lg shrink-0 overflow-hidden relative"
+            >
+                <div className="absolute inset-0 flex items-center justify-center">
+                    {getStatusIcon()}
+                </div>
+                <button
+                    className="absolute p-0.5 rounded-full bg-black/20 text-foreground right-0.5 bottom-0.5 z-10"
+                    onClick={onCancel}
                 >
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        {getStatusIcon()}
-                    </div>
-                    <button
-                        className="absolute p-0.5 rounded-full bg-black/20 text-foreground right-0.5 bottom-0.5 z-10"
-                        onClick={onCancel}
-                    >
-                        <XIcon className="size-3" />
-                    </button>
-                    <div className={status === "uploading" ? "opacity-50" : ""}>
-                        <FileContent />
-                    </div>
-                </motion.div>
-            </TooltipTrigger>
-            <TooltipContent className="text-xs">
-                {status === "error" ? (
-                    <span className="text-red-500">Failed to upload: {error}</span>
-                ) : (
-                    file.name
-                )}
-            </TooltipContent>
-        </Tooltip>
+                    <XIcon className="size-3" />
+                </button>
+                <div className={status === "uploading" ? "opacity-50" : ""}>
+                    <FileContent />
+                </div>
+            </motion.div>
+        </Tooltippy>
     );
 
 }
@@ -197,7 +194,7 @@ export function ChatFooter() {
     const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
     const [showCompletions, setShowCompletions] = useState(false);
     const isLoading = hookState.state === "loading";
-    
+
     const shouldCollectDataFirst = collectUserData && !contact?.id;
 
     const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
