@@ -1,12 +1,5 @@
-import { AgentType, ChatHistoryMessageType } from "./schemas";
+import { AgentType, ChatAttachmentType, ChatHistoryMessageType } from "./schemas";
 
-export type AttachmentType = {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  url: string;
-}
 
 export type UserMessageType = {
   type: "FROM_USER";
@@ -15,7 +8,7 @@ export type UserMessageType = {
   session_id: string;
   serverId: string | null;
   deliveredAt: string | null;
-  attachments?: AttachmentType[];
+  attachments?: ChatAttachmentType[];
   user?: {
     name?: string;
     email?: string;
@@ -34,7 +27,7 @@ export type BotMessageType<TData = unknown> = {
   timestamp?: string;
   original?: ChatHistoryMessageType;
   agent?: AgentType;
-  attachments?: AttachmentType[];
+  attachments?: ChatAttachmentType[];
 };
 
 export type MessageType = UserMessageType | BotMessageType

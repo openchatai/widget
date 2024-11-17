@@ -1,7 +1,7 @@
-import { AttachmentType } from '@lib/types';
+import { ChatAttachmentType } from '@lib/types';
 
 type Props = {
-    attachment: AttachmentType;
+    attachment: ChatAttachmentType;
 };
 
 export function RenderAttachment({ attachment }: Props) {

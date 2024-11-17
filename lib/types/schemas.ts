@@ -65,6 +65,22 @@ export const chatSessionSchema = z.object({
     sentiment: z.nativeEnum(SentimentEnum).nullable(),
 });
 
+export type ChatAttachmentType = {
+    id: string;
+    name: string;
+    size: number;
+    type: string;
+    url: string;
+}
+
+export const chatAttachmentSchema = z.object({
+    id: z.string(),
+    name: z.string(),
+    size: z.number(),
+    type: z.string(),
+    url: z.string(),
+}) as z.ZodType<ChatAttachmentType>;
+
 export const chatHistoryMessageSchema = z.object({
     id: z.number(),
     message: z.string().nullable(),
@@ -78,6 +94,7 @@ export const chatHistoryMessageSchema = z.object({
     handoff_happened_during_office_hours: z.boolean().nullable(),
     session_id: z.string(),
     updated_at: z.string().nullable(),
+    attachments: z.array(chatAttachmentSchema).optional(),
 })
 // ---------- socket responses ----------
 

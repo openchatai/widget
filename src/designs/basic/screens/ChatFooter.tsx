@@ -5,7 +5,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from 'cmdk';
 import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
-import { ErrorCode, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { Tooltip, TooltipContent, Tooltippy, TooltipTrigger } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";

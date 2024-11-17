@@ -1,7 +1,7 @@
 import { LangType } from "@lib/locales";
 import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
-import { AttachmentType, MessageType, UserMessageType, UserObject } from "@lib/types";
+import { MessageType, UserMessageType, UserObject } from "@lib/types";
 import { genId } from "@lib/utils/genId";
 import { produce } from "immer";
 import {
@@ -16,6 +16,7 @@ import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
 import {
   AIClosureType,
+  ChatAttachmentType,
   type ChatSessionType,
   SessionStatus,
   type StructuredSocketMessageType,
@@ -179,7 +180,7 @@ interface SendMessageInput extends Record<string, unknown> {
   content: {
     text: string;
   };
-  attachments?: Array<AttachmentType>,
+  attachments?: Array<ChatAttachmentType>,
   id?: string;
   language?: string;
   user?: UserObject
