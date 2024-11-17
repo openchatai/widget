@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.1
+
+### Patch Changes
+
+- 1da13be: allow file attachment when the session is handed off
+
 ## 1.5.0
 
 ### Minor Changes
