@@ -127,7 +127,9 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
     );
 
 }
-const endbleCompletions = false
+
+const endbleCompletions = false;
+
 export function ChatFooter() {
     const { collectUserData, http } = useConfigData();
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -149,7 +151,7 @@ export function ChatFooter() {
 
     const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, isUploading, successFiles } = useUploadFiles();
 
-    const shouldAcceptAttachments = !session?.isAssignedToAi;
+    const shouldAcceptAttachments = session && !session?.isAssignedToAi;
 
     const handleFileDrop = (acceptedFiles: File[]) => {
         if (!shouldAcceptAttachments) {
@@ -195,7 +197,9 @@ export function ChatFooter() {
     const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
     const [showCompletions, setShowCompletions] = useState(false);
     const isLoading = hookState.state === "loading";
+    
     const shouldCollectDataFirst = collectUserData && !contact?.id;
+
     const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
         const clipboardData = event.clipboardData;
         if (!clipboardData) return;
