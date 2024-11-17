@@ -127,7 +127,7 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
     );
 
 }
-
+const endbleCompletions = false
 export function ChatFooter() {
     const { collectUserData, http } = useConfigData();
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -137,16 +137,24 @@ export function ChatFooter() {
 
     const { inputText, setInputText, completions, setCompletions } = useChatCompletions(
         async (input) => {
-            if (session) return null;
-            const resp = await http.apis.getCompletions(input);
-            return resp.data.completions || [];
+            if (endbleCompletions) {
+                if (session) return null;
+                const resp = await http.apis.getCompletions(input);
+                return resp.data.completions || [];
+            }
+            return null
         },
         700
     );
 
     const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, isUploading, successFiles } = useUploadFiles();
 
+    const shouldAcceptAttachments = !session?.isAssignedToAi;
+
     const handleFileDrop = (acceptedFiles: File[]) => {
+        if (!shouldAcceptAttachments) {
+            return;
+        }
         appendFiles(acceptedFiles);
     };
 
@@ -188,7 +196,6 @@ export function ChatFooter() {
     const [showCompletions, setShowCompletions] = useState(false);
     const isLoading = hookState.state === "loading";
     const shouldCollectDataFirst = collectUserData && !contact?.id;
-
     const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
         const clipboardData = event.clipboardData;
         if (!clipboardData) return;
@@ -251,17 +258,20 @@ export function ChatFooter() {
                             <div
                                 ref={containerRef}
                                 className="absolute space-x-1 bottom-1.5 right-1.5 w-fit">
-                                <Tooltippy
-                                    position="top-end"
-                                    content="attach files, (maximum size 5mb)"
-                                >
-                                    <Button
-                                        onClick={openFileSelect}
-                                        size='fit' variant={"outline"}>
-                                        <PaperclipIcon className="size-4" />
-                                    </Button>
-                                </Tooltippy>
-
+                                {
+                                    shouldAcceptAttachments && (
+                                        <Tooltippy
+                                            position="top-end"
+                                            content="attach files, (maximum size 5mb)"
+                                        >
+                                            <Button
+                                                onClick={openFileSelect}
+                                                size='fit' variant={"outline"}>
+                                                <PaperclipIcon className="size-4" />
+                                            </Button>
+                                        </Tooltippy>
+                                    )
+                                }
                                 <Tooltippy
                                     content="send message"
                                 >

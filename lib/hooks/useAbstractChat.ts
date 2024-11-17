@@ -247,7 +247,7 @@ function usehookState() {
         setHookState({
           state: "idle",
         });
-      }, 10 * 1000);
+      }, 15 * 1000);
     }
     return () => {
       clearTimeout(timeout);
