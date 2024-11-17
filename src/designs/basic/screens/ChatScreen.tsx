@@ -121,7 +121,6 @@ export function ChatScreen() {
         }}
       >
         {theme.headerStyle === "compact" ? (<CompactHeader />) : (<BasicHeader />)}
-
         <div
           data-header-style={theme.headerStyle}
           className="flex bg-background shadow-lg data-[header-style=compact]:rounded-t-2xl flex-col w-full flex-1 overflow-auto">
@@ -138,24 +137,22 @@ export function ChatScreen() {
 
             <React.Fragment>
               {noMessages && (
-                <React.Fragment>
-                  <div className="items-center justify-end mb-3 gap-1 flex-wrap p-1">
-                    {initialQuestions?.map((iq, index) => (
-                      <button
-                        key={index}
-                        dir="auto"
-                        className="px-2 py-1.5 border whitespace-nowrap rounded-lg text-sm font-300"
-                        onClick={() => {
-                          sendMessage({
-                            content: { text: iq },
-                          });
-                        }}
-                      >
-                        {iq}
-                      </button>
-                    ))}
-                  </div>
-                </React.Fragment>
+                initialQuestions && <div className="flex items-center flex-row justify-end gap-1 flex-wrap px-2">
+                  {initialQuestions?.map((iq, index) => (
+                    <button
+                      key={index}
+                      dir="auto"
+                      className="p-1.5 border whitespace-nowrap hover:bg-secondary hover:text-secondary-foreground transition-all rounded-xl text-xs font-300"
+                      onClick={() => {
+                        sendMessage({
+                          content: { text: iq },
+                        });
+                      }}
+                    >
+                      {iq}
+                    </button>
+                  ))}
+                </div>
               )}
               <ChatFooter />
             </React.Fragment>
