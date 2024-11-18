@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.2
+
+### Patch Changes
+
+- e552692: ui enhancements
+
 ## 1.5.1
 
 ### Patch Changes
