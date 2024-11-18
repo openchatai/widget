@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.3
+
+### Patch Changes
+
+- ac73291: fix the attachment visiblity
+
 ## 1.5.2
 
 ### Patch Changes
