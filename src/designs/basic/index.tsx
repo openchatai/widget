@@ -122,9 +122,8 @@ const Widget = forwardRef<
           <div className="size-full absolute antialiased font-inter">
             <ChatScreen />
           </div>
+          <WidgetToaster />
         </div>
-
-        <WidgetToaster />
       </div>
     </TooltipProvider>
   );

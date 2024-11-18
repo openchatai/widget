@@ -10,6 +10,7 @@ import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
+import { AIClosureType } from "@lib/types/schemas";
 
 function CompletionsRender({
     completions,
@@ -125,7 +126,7 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
 
 }
 
-const endbleCompletions = false;
+const enableCompletions = false;
 
 export function ChatFooter() {
     const { collectUserData, http } = useConfigData();
@@ -136,7 +137,7 @@ export function ChatFooter() {
 
     const { inputText, setInputText, completions, setCompletions } = useChatCompletions(
         async (input) => {
-            if (endbleCompletions) {
+            if (enableCompletions) {
                 if (session) return null;
                 const resp = await http.apis.getCompletions(input);
                 return resp.data.completions || [];
@@ -148,7 +149,7 @@ export function ChatFooter() {
 
     const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, isUploading, successFiles } = useUploadFiles();
 
-    const shouldAcceptAttachments = session && session?.isAssignedToHuman;
+    const shouldAcceptAttachments = session && (session?.isAssignedToHuman || session.ai_closure_type === AIClosureType.handed_off);
 
     const handleFileDrop = (acceptedFiles: File[]) => {
         if (!shouldAcceptAttachments) {
@@ -158,6 +159,9 @@ export function ChatFooter() {
     };
 
     const handleSubmit = async (text: string) => {
+        if (isUploading) {
+            toast.error('please wait for the file(s) to upload')
+        }
         if (!text.trim()) return;
 
         await sendMessage({
@@ -251,9 +255,6 @@ export function ChatFooter() {
                                 onChange={e => setInputText(e.target.value)}
                                 onFocus={() => setShowCompletions(true)}
                                 onKeyDown={async (event) => {
-                                    if (isUploading) {
-                                        toast.error('please wait for the file(s) to upload')
-                                    }
                                     if (event.key === "Enter" && !event.shiftKey) {
                                         event.preventDefault();
                                         handleSubmit(inputText);
