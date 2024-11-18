@@ -453,9 +453,8 @@ function useAbstractChat({
           console.error(error)
         }
       },
-      onChatEvent(message, _ctx) {
+      onChatEvent() {
         session && refreshSession(session.id)
-        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
         if (message.type === "FROM_BOT" && message?.component === "handoff") {

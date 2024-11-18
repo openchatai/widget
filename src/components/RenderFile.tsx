@@ -1,4 +1,4 @@
-import { ChatAttachmentType } from '@lib/types';
+import { ChatAttachmentType } from "@lib/types/schemas";
 
 type Props = {
     attachment: ChatAttachmentType;
@@ -12,10 +12,7 @@ export function RenderAttachment({ attachment }: Props) {
     const isAudio = type.startsWith('audio/');
 
     return (
-        <div className="flex flex-col
-        [&_*]:rounded-xl
-        [&_*]:border
-        gap-2 p-1 border rounded-xl shadow-sm bg-secondary">
+        <div className="size-fit gap-2 border shrink-0 rounded-xl overflow-hidden">
             {isImage && (
                 <img
                     src={url}
@@ -41,16 +38,16 @@ export function RenderAttachment({ attachment }: Props) {
                 </audio>
             )}
             {!isImage && !isVideo && !isAudio && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 p-2">
                     <a
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-500 underline hover:text-blue-600"
+                        className="text-blue-500 line-clamp-2 underline hover:text-blue-600"
                     >
                         {name}
                     </a>
-                    <span className="text-sm text-gray-500">
+                    <span className="text-sm text-gray-500 whitespace-nowrap">
                         {(size / 1024).toFixed(2)} KB
                     </span>
                 </div>

@@ -28,12 +28,16 @@ export function UserMessage({
     <div className="flex flex-row w-full gap-2 justify-end items-start group">
       <div className="flex flex-col items-end gap-1 relative">
         <div className="max-w-[85%] min-w-fit">
-          {message.attachments?.map((attachment, idx) => (
-            <RenderAttachment attachment={attachment} key={attachment.id} />
-          ))}
           <div className="bg-primary p-3 text-white rounded-xl leading-relaxed text-sm">
             {children}
           </div>
+          {
+            message.attachments && message.attachments.length > 0 && (<div className="flex gap-1 flex-wrap mb-1">
+              {message.attachments?.map((attachment) => (
+                <RenderAttachment attachment={attachment} key={attachment.id} />
+              ))}
+            </div>)
+          }
           {formattedDt && (
             <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <span>{formattedDt}</span>

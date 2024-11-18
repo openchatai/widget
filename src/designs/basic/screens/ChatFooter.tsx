@@ -148,7 +148,7 @@ export function ChatFooter() {
 
     const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, isUploading, successFiles } = useUploadFiles();
 
-    const shouldAcceptAttachments = session && !session?.isAssignedToAi;
+    const shouldAcceptAttachments = session && session?.isAssignedToHuman;
 
     const handleFileDrop = (acceptedFiles: File[]) => {
         if (!shouldAcceptAttachments) {
@@ -181,7 +181,9 @@ export function ChatFooter() {
         onDrop: handleFileDrop,
         noClick: true,
         onDropRejected() {
-            toast.error('unsupported file type, or the file is too large')
+            if (shouldAcceptAttachments) {
+                toast.error('unsupported file type, or the file is too large')
+            }
         },
         maxSize: 5 * 1024 * 1024,
         accept: {
@@ -249,6 +251,9 @@ export function ChatFooter() {
                                 onChange={e => setInputText(e.target.value)}
                                 onFocus={() => setShowCompletions(true)}
                                 onKeyDown={async (event) => {
+                                    if (isUploading) {
+                                        toast.error('please wait for the file(s) to upload')
+                                    }
                                     if (event.key === "Enter" && !event.shiftKey) {
                                         event.preventDefault();
                                         handleSubmit(inputText);
