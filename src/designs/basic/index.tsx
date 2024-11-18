@@ -71,26 +71,29 @@ function WidgetPopover() {
     </PopoverPrimitive.Root>
   );
 }
+
 function WidgetToaster() {
   return <Toaster
     position="top-center"
     containerStyle={{
+      position: "absolute",
+      top: "0",
       maxHeight: "50%",
       overflow: "hidden",
     }}
     toastOptions={{
       position: 'top-center',
       blank: {
-        className: 'text-primary-foreground bg-background max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
+        className: 'text-primary-foreground bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
         icon: <BadgeInfo className="size-5 shrink-0 text-primary-foreground" />,
       },
       success: {
         icon: <CheckCircle2Icon className="size-5 shrink-0 text-emerald-600" />,
-        className: 'text-emerald-700 bg-background p-2 max-w-[200px] font-medium rounded-lg border flex items-center gap-1 w-full',
+        className: 'text-emerald-700 bg-background text-xs p-2 max-w-[200px] font-medium rounded-lg border flex items-center gap-1 w-full',
       },
       error: {
         icon: <InfoIcon className="size-5 shrink-0 text-rose-600" />,
-        className: 'text-red-700 bg-background max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
+        className: 'text-red-700 bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
       },
     }}
   />
