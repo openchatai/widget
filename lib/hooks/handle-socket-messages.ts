@@ -44,6 +44,7 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     id: genId(15),
                     serverId: null,
                     timestamp: response.timestamp,
+                    attachments: response.attachments,
                     data: {
                         message: response.value,
                     },

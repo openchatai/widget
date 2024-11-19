@@ -108,6 +108,7 @@ const agentSchema = z.object({
 const messageSchema = z.object({
     type: z.literal('message'),
     value: z.string(),
+    attachments: z.array(chatAttachmentSchema).optional(),
     is_stream_chunk: z.boolean().optional(),
     server_session_id: z.string(),
     client_message_id: z.string().optional(),
