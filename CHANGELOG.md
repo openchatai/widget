@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.5
+
+### Patch Changes
+
+- 57458a3: remove the timeout from hook state
+
 ## 1.5.4
 
 ### Patch Changes
