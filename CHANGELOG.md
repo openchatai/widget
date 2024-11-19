@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.4
+
+### Patch Changes
+
+- 2781299: render html sometimes
+
 ## 1.5.3
 
 ### Patch Changes
