@@ -237,25 +237,12 @@ function useSession({
     setSession
   }
 }
+
 function usehookState() {
   const [hookState, setHookState] = useState<HookState>({ state: "idle" });
-
-  useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    if (hookState.state === "loading") {
-      timeout = setTimeout(() => {
-        setHookState({
-          state: "idle",
-        });
-      }, 15 * 1000);
-    }
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [hookState]);
-
   return [hookState, setHookState] as const;
 }
+
 function useAbstractChat({
   onSessionDestroy,
 }: useChatOptions) {
