@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "target": "ES2019", // Target modern JavaScript
+        "module": "ESNext", // Use ES Modules
+        "lib": [
+            "ESNext"
+        ], // Include modern ECMAScript features
+        "jsx": "react", // Support JSX syntax
+        "moduleResolution": "node", // Resolve modules using Node.js conventions
+        "declaration": true, // Emit `.d.ts` files
+        "declarationMap": true, // Map declarations for better debugging
+        "rootDir": ".", // Root folder for source files
+        "strict": true, // Enable all strict type-checking options
+        "esModuleInterop": true, // Support importing CommonJS modules
+        "skipLibCheck": true, // Skip type checks on library files for faster builds
+        "resolveJsonModule": true, // Allow importing JSON files
+        "forceConsistentCasingInFileNames": true, // Prevent case-sensitive import errors
+        "allowSyntheticDefaultImports": true, // Allow default imports for modules without them
+        "isolatedModules": true // Required for Babel/Metro compatibility
+    },
+    "include": [
+        "native/**/*.ts"
+    ], // Include source files
+}

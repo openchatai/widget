@@ -56,6 +56,7 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.6",
     "tailwindcss-animate": "^1.0.7",
+    "tsup": "^8.3.5",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
     "vite-plugin-dts": "4.0.3",
@@ -80,14 +81,14 @@
   "sideEffects": false,
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs.js"
     },
     "./basic": {
+      "types": "./dist/basic.d.ts",
       "import": "./dist/basic.es.js",
-      "require": "./dist/basic.cjs.js",
-      "types": "./dist/basic.d.ts"
+      "require": "./dist/basic.cjs.js"
     },
     "./package.json": "./package.json",
     "./dist/*.css": "./dist/*.css"
@@ -107,6 +108,7 @@
     "lucide-react": "^0.436.0",
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
+    "react-native": "^0.76.2",
     "react-use": "^17.5.1",
     "rehype-raw": "^7.0.0",
     "tinycolor2": "^1.6.0",
