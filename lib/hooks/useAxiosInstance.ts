@@ -1,6 +1,6 @@
 import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@lib/types/schemas";
 import { PreludeData, WorkingHours } from "@lib/utils";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 import { version } from "../../package.json"
 import { UserObject } from "@lib/types";
@@ -86,6 +86,28 @@ export function useAxiosInstance(options: Options) {
         return instance.post<{
           completions: string[];
         }>(`/widget/chat/completions`, { input });
+      },
+      /**
+       * @param file 
+       * @param options 
+       */
+      uploadFile: async (file: {
+        id: string;
+        file: File;
+      }, _options?: AxiosRequestConfig) => {
+        const formData = new FormData();
+        formData.append("file", file.file);
+
+        return instance.post<{
+          fileName: string;
+          fileUrl: string;
+          clientFileId: string;
+        }>(`/widget/upload?fileId=${file.id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          ..._options,
+        })
       }
     }),
     [instance]

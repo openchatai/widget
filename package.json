@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.4.33",
+  "version": "1.5.4",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -105,7 +105,10 @@
     "lodash.debounce": "^4.0.8",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
+    "react-dropzone": "^14.3.5",
+    "react-hot-toast": "^2.4.1",
     "react-use": "^17.5.1",
+    "rehype-raw": "^7.0.0",
     "tinycolor2": "^1.6.0",
     "zod": "^3.23.8"
   }

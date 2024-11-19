@@ -16,6 +16,7 @@ import pkg from "../../package.json";
 import { useTimeoutState } from "../hooks/useTimeoutState";
 import {
   AIClosureType,
+  ChatAttachmentType,
   type ChatSessionType,
   SessionStatus,
   type StructuredSocketMessageType,
@@ -179,6 +180,7 @@ interface SendMessageInput extends Record<string, unknown> {
   content: {
     text: string;
   };
+  attachments?: Array<ChatAttachmentType>,
   id?: string;
   language?: string;
   user?: UserObject
@@ -245,7 +247,7 @@ function usehookState() {
         setHookState({
           state: "idle",
         });
-      }, 10 * 1000);
+      }, 15 * 1000);
     }
     return () => {
       clearTimeout(timeout);
@@ -451,9 +453,8 @@ function useAbstractChat({
           console.error(error)
         }
       },
-      onChatEvent(message, _ctx) {
+      onChatEvent() {
         session && refreshSession(session.id)
-        dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
       },
       onUi(message, _ctx) {
         if (message.type === "FROM_BOT" && message?.component === "handoff") {
@@ -545,7 +546,7 @@ function useAbstractChat({
             joinSession(newSession.id);
             chatSession = {
               ...newSession,
-              // will be updated anyway when the hook rerenders
+              // will be updated anyway when the component rerenders
               isSessionClosed: newSession.status !== SessionStatus.OPEN,
               isAssignedToAi: newSession.assignee_id === 555,
               isAssignedToHuman: false,
@@ -567,6 +568,7 @@ function useAbstractChat({
           id: msgId,
           bot_token: botToken,
           content: content.text,
+          attachments: data.attachments,
           session_id: chatSession.id,
           headers,
           pathParams,
@@ -590,6 +592,7 @@ function useAbstractChat({
               user: payload.user,
               deliveredAt: null,
               serverId: null,
+              attachments: data.attachments,
             },
           });
           if (chatState.keyboard) {

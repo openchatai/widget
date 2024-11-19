@@ -8,7 +8,7 @@ type ChatEventComponentProps = ComponentProps<{
 
 
 function ChatEventComponent(props: ChatEventComponentProps) {
-    return <div className="w-full relative py-3">
+    return <div className="w-full relative py-3 my-2">
         <span
             className="absolute top-1/2 left-0 right-0 h-px bg-secondary w-full"
         />

@@ -1,5 +1,35 @@
 # @openchatai/widget
 
+## 1.5.4
+
+### Patch Changes
+
+- 2781299: render html sometimes
+
+## 1.5.3
+
+### Patch Changes
+
+- ac73291: fix the attachment visiblity
+
+## 1.5.2
+
+### Patch Changes
+
+- e552692: ui enhancements
+
+## 1.5.1
+
+### Patch Changes
+
+- 1da13be: allow file attachment when the session is handed off
+
+## 1.5.0
+
+### Minor Changes
+
+- 82efa46: file attachment
+
 ## 1.4.33
 
 ### Patch Changes

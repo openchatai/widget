@@ -1,6 +1,6 @@
 import { useChat, useLocale } from '@lib/index';
 import { Dialog, DialogTrigger } from '@ui/dialog';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@ui/tooltip';
+import { Tooltippy } from '@ui/tooltip';
 import { RotateCcw, SettingsIcon } from 'lucide-react';
 import { ClearSessionDialogContent, SettingsDialogContent } from './DialogContents';
 
@@ -10,16 +10,13 @@ function SettingsDialog() {
     const locale = useLocale();
     return (
         <Dialog>
-            <Tooltip>
-                <TooltipContent side="bottom">
-                    {locale.get("settings")}
-                </TooltipContent>
-                <TooltipTrigger asChild>
-                    <DialogTrigger className="p-1 rounded-full text-secondary bg-black/50 hover:brightness-110 flex-shrink-0">
-                        <SettingsIcon className="size-4" />
-                    </DialogTrigger>
-                </TooltipTrigger>
-            </Tooltip>
+            <Tooltippy
+                content={locale.get("settings")}
+            >
+                <DialogTrigger className="p-1 rounded-full text-secondary bg-black/50 hover:brightness-110 flex-shrink-0">
+                    <SettingsIcon className="size-4" />
+                </DialogTrigger>
+            </Tooltippy>
             <SettingsDialogContent />
         </Dialog>
     );
@@ -39,16 +36,11 @@ function ClearSessionDialog() {
         <Dialog>
             {({ setOpen }) => (
                 <>
-                    <Tooltip>
-                        <TooltipContent side="bottom">
-                            {locale.get("reset-conversation")}
-                        </TooltipContent>
-                        <TooltipTrigger asChild>
-                            <DialogTrigger className="p-1 rounded-full text-secondary bg-black/50 hover:brightness-110 flex-shrink-0">
-                                <RotateCcw className="size-4" />
-                            </DialogTrigger>
-                        </TooltipTrigger>
-                    </Tooltip>
+                    <Tooltippy content={locale.get("reset-conversation")}>
+                        <DialogTrigger className="p-1 rounded-full text-secondary bg-black/50 hover:brightness-110 flex-shrink-0">
+                            <RotateCcw className="size-4" />
+                        </DialogTrigger>
+                    </Tooltippy>
                     <ClearSessionDialogContent setOpen={setOpen} />
                 </>
             )}

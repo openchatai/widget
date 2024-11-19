@@ -1,6 +1,7 @@
 import { ComponentProps } from "@lib/types";
 import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
+import rehypeRaw from 'rehype-raw'
 
 export type DefaultTextComponentProps = ComponentProps<{
   message: string;
@@ -16,6 +17,7 @@ export function BotTextResponse({
       data-type={type}
       data-id={id}
       remarkPlugins={[remarkGfm]}
+      rehypePlugins={[rehypeRaw]}
       components={{
         a: ({ children, ...props }) => {
           return <a target="_top" {...props}>

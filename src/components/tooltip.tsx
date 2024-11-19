@@ -24,6 +24,27 @@ const TooltipContent = React.forwardRef<
     {...props}
   />
 ));
+
 TooltipContent.displayName = TooltipPrimitive.Content.displayName;
 
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };
+type Side = React.ComponentProps<typeof TooltipContent>['side'];
+type Align = React.ComponentProps<typeof TooltipContent>['align'];
+
+function Tooltippy({ children, content,position }: {
+  children: React.ReactNode;
+  content: React.ReactNode;
+  position?: `${NonNullable<Side>}-${NonNullable<Align>}`;
+}) {
+  const [
+    side = "top",
+    align = "center",
+  ] = (position ?? "top-center").split("-");
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipContent hideWhenDetached collisionPadding={10} avoidCollisions align={align as Align} side={side as Side}>{content}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+export { TooltipProvider, Tooltippy };

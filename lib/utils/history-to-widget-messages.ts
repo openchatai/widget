@@ -19,6 +19,7 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                     session_id: msg.session_id ?? "",
                     serverId: msg.id?.toString() || genId(),
                     deliveredAt: msg.created_at || "",
+                    attachments: msg.attachments
                 });
             }
         }
@@ -36,6 +37,7 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                         serverId: msg.id,
                         timestamp: msg.created_at || "",
                         original: msg,
+                        attachments: msg.attachments,
                         agent: {
                             id: msg.agent_id?.toString() ?? null,
                             is_ai: true,

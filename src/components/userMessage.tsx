@@ -2,7 +2,8 @@ import React, { useMemo } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { formatDistance } from "date-fns";
 import { CheckCheck } from 'lucide-react';
-import { UserMessageType, WidgetOptions } from "@lib/types";
+import type { UserMessageType, WidgetOptions } from "@lib/types";
+import { RenderAttachment } from "./RenderFile";
 
 export function UserMessage({
   children,
@@ -10,7 +11,7 @@ export function UserMessage({
 }: {
   children: React.ReactNode;
   user: WidgetOptions["user"];
-  message: UserMessageType
+  message: UserMessageType;
 }) {
   const formattedDt = useMemo(() => {
     if (message.deliveredAt) {
@@ -30,6 +31,13 @@ export function UserMessage({
           <div className="bg-primary p-3 text-white rounded-xl leading-relaxed text-sm">
             {children}
           </div>
+          {
+            message.attachments && message.attachments.length > 0 && (<div className="flex gap-1 flex-wrap mb-1">
+              {message.attachments?.map((attachment) => (
+                <RenderAttachment attachment={attachment} key={attachment.id} />
+              ))}
+            </div>)
+          }
           {formattedDt && (
             <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-zinc-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <span>{formattedDt}</span>
