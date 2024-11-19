@@ -108,6 +108,7 @@
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
     "react-use": "^17.5.1",
+    "rehype-raw": "^7.0.0",
     "tinycolor2": "^1.6.0",
     "zod": "^3.23.8"
   }
