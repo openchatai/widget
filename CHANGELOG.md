@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.8
+
+### Patch Changes
+
+- 78a810d: send contact data
+
 ## 1.5.7
 
 ### Patch Changes
