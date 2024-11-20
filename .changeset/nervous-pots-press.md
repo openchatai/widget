@@ -1,5 +1,0 @@
----
-"@openchatai/widget": patch
----
-
-patch

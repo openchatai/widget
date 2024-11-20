@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.5.8",
+  "version": "1.5.9",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -101,10 +101,10 @@
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.3.30",
-    "immer": "^10.1.1",
     "lodash.debounce": "^4.0.8",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
+    "mutative": "^1.0.11",
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
     "react-use": "^17.5.1",
