@@ -168,6 +168,10 @@ export function ChatFooter() {
             content: {
                 text: text.trim(),
             },
+            user: {
+                email: contact?.email ?? undefined,
+                name: contact?.name ?? undefined,
+            },
             attachments: successFiles.map(f => ({
                 url: f.fileUrl!,
                 type: f.file.type,
@@ -244,6 +248,7 @@ export function ChatFooter() {
                                 onPaste={handlePaste}
                                 ref={inputRef}
                                 id='chat-input'
+                                dir="auto"
                                 data-padding={dimensions.width}
                                 disabled={isLoading || shouldCollectDataFirst}
                                 value={inputText}

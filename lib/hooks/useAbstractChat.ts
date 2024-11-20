@@ -3,7 +3,7 @@ import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
 import { MessageType, UserMessageType, UserObject } from "@lib/types";
 import { genId } from "@lib/utils/genId";
-import { produce } from "immer";
+import { create } from "mutative";
 import {
   ReactNode,
   useCallback,
@@ -87,7 +87,7 @@ type ActionType =
   };
 
 function chatReducer(state: ChatState, action: ActionType) {
-  return produce(state, (draft) => {
+  return create(state, (draft) => {
     const setLastupdated = () => {
       draft.lastUpdated = Date.now();
     };
@@ -259,6 +259,7 @@ function useAbstractChat({
       if (session) {
         try {
           const { data: redata } = await http.apis.fetchHistory(sessionId);
+          if (!redata) return [];
           if (Array.isArray(redata)) {
             const messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
             return messages;
@@ -279,7 +280,7 @@ function useAbstractChat({
 
   const [hookState, _setHookState] = usehookState();
 
-  const disableLoading = !session || session.isAssignedToHuman || session.isPendingHuman;
+  const disableLoading = session?.isAssignedToHuman || session?.isPendingHuman;
 
   function setHookState(
     state: HookState
@@ -377,29 +378,6 @@ function useAbstractChat({
     };
   }, [handleConnect, socket, handleReconnect]);
 
-  // useEffect(() => {
-  //   let interval: NodeJS.Timeout;
-  //   async function messagesPooling() {
-  //     let messages: Array<MessageType> = [];
-  //     if (!session) return;
-  //     try {
-  //       const { data: redata } = await http.apis.fetchHistory(session.id);
-  //       if (Array.isArray(redata)) {
-  //         messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
-  //       }
-  //     } catch (error) {
-  //       messages = []
-  //     };
-  //     if (messages.length > 0) {
-  //       dispatch({ type: "SET_MESSAGES", payload: messages });
-  //     }
-  //   }
-  //   interval = setInterval(messagesPooling, 5 * 1000);
-  //   return () => {
-  //     clearInterval(interval)
-  //   }
-  // }, [session]);
-
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
       session_id,
@@ -491,13 +469,14 @@ function useAbstractChat({
     dispatch({
       type: "APPEND_USER_MESSAGE",
       payload: {
-        user: message.user,
+        user: message?.user,
         type: "FROM_USER",
         deliveredAt: null,
         serverId: null,
         session_id: session?.id ?? "",
         content: message.content,
         id: message.id ?? genId(10),
+        attachments: []
       },
     });
   }, []);

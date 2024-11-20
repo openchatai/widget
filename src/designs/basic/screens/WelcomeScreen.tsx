@@ -72,11 +72,14 @@ export function WelcomeScreen() {
                     <div className="space-y-2">
                         <Input
                             required
+                            dir="auto"
+                            autoFocus
                             placeholder={locale.get("your-name")}
                             name="name"
                         />
                         <Input
                             required
+                            dir="auto"
                             type="email"
                             placeholder={locale.get("your-email")}
                             name="email"

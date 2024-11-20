@@ -9,25 +9,17 @@
 <body>
     <h2>Test only</h2>
     <script>
-        const allOptions = {
-            token: "<<your bot token>>",
-            user: {
-                email: "user's email",
-                /// ...any properties
-            }, // optional
-            bot: {
-                name: "bot's name",
-                avatar: "bot's avatar",
-                /// ...any properties
-            }, // optional
-            language: "en", // default en
-            settings: {
-                persistSession: true, // default false
-                useSoundEffects: true, // default false
-            },
+        window.addEventListener("DOMContentLoaded", () => {
+          initOpenScript({
+            token: "2425341127eef3b9e2c782781cb0bf17",
+            language: "en",
             initialMessages: ["How can we help you?"],
-        };
-        initOpenScript(allOptions)
-    </script>
+            settings: {
+              useSoundEffects: true
+            },
+            collectUserData: true,
+          }, "default");
+        });
+      </script>
 </body>
 </html>

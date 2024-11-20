@@ -56,7 +56,7 @@ export function useAxiosInstance(options: Options) {
         if (!sessionId) {
           throw new Error("Session id is required");
         }
-        return instance.get<ChatHistoryMessageType[]>(
+        return instance.get<ChatHistoryMessageType[] | undefined>(
           `widget/session/history/${sessionId}`
         );
       },
