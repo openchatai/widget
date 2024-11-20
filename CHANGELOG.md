@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.7
+
+### Patch Changes
+
+- 93c322b: ..
+
 ## 1.5.6
 
 ### Patch Changes
