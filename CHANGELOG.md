@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.11
+
+### Patch Changes
+
+- 1ba4482: minify more
+
 ## 1.5.10
 
 ### Patch Changes
