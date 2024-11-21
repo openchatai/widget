@@ -8,6 +8,7 @@ import styles from '../lib/index.css?inline';
 import { Widget } from './designs/basic';
 import { PopoverTrigger } from './designs/basic/PopoverTrigger';
 import { motion } from 'framer-motion';
+import {version} from '../package.json';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -84,10 +85,12 @@ const defaultRootId = "opencopilot-root";
 declare global {
   interface Window {
     initOpenScript: typeof initOpenScript;
+    openCopilotWidgetVersion: string;
   }
 }
 
 window["initOpenScript"] = initOpenScript;
+window['openCopilotWidgetVersion'] = version;
 
 function initOpenScript(options: WidgetOptions) {
   render(
