@@ -34,7 +34,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
     if (response) {
         _ctx.onAny?.(response, _ctx)
     }
-
     switch (response.type) {
         case "message":
             {

@@ -280,13 +280,18 @@ function useAbstractChat({
 
   const [hookState, _setHookState] = usehookState();
 
-  const disableLoading = session?.isAssignedToHuman || session?.isPendingHuman;
 
   function setHookState(
     state: HookState
   ) {
+    const disableLoading = session?.isAssignedToHuman || session?.isPendingHuman;
     if (!disableLoading) {
       _setHookState(state);
+    }
+    else {
+      _setHookState({
+        state: "idle"
+      })
     }
   }
 
@@ -389,6 +394,7 @@ function useAbstractChat({
     deleteSession();
     dispatch({ type: "RESET" });
     onSessionDestroy?.();
+    setHookState({ state: "idle" })
   }
 
   function recreateSession() {
@@ -422,7 +428,7 @@ function useAbstractChat({
         session && refreshSession(session.id)
       },
       onUi(message, _ctx) {
-        if (message.type === "FROM_BOT" && message?.component === "handoff") {
+        if (message.type === "FROM_BOT") {
           session && refreshSession(session.id)
         }
         setHookState({
@@ -442,6 +448,9 @@ function useAbstractChat({
           payload: {
             options: message.value.options,
           },
+        });
+        setHookState({
+          state: "idle",
         });
       },
       onVote(message, _ctx) {
@@ -500,10 +509,10 @@ function useAbstractChat({
 
   const [__, sendMessage] = useAsyncFn(
     async ({ content, user, ...data }: SendMessageInput) => {
+      let chatSession = session;
       setHookState({
         state: "loading",
       });
-      let chatSession = session;
       if (!session && noMessages) {
         try {
           const { data: newSession } = await http.apis.createSession(botToken);

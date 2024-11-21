@@ -1,6 +1,6 @@
 import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@lib/types/schemas";
 import { PreludeData, WorkingHours } from "@lib/utils";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useMemo } from "react";
 import { version } from "../../package.json"
 import { UserObject } from "@lib/types";
@@ -97,7 +97,6 @@ export function useAxiosInstance(options: Options) {
       }, _options?: AxiosRequestConfig) => {
         const formData = new FormData();
         formData.append("file", file.file);
-
         return instance.post<{
           fileName: string;
           fileUrl: string;

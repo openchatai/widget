@@ -86,7 +86,7 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
         const fileType = file.type.split("/")[0];
 
         if (fileType === "image" && fileContent) {
-            return <img src={typeof fileContent === 'string' ? fileContent : ''} className="object-cover size-full" alt={file.name} />;
+            return <img src={typeof fileContent === 'string' ? fileContent : ''} className="object-cover bg-secondary size-full" alt={file.name} />;
         }
         if (fileType === "audio") {
             return <FileAudio />;
@@ -159,6 +159,7 @@ export function ChatFooter() {
     };
 
     const handleSubmit = async (text: string) => {
+        if (hookState.state === "loading") return;
         if (isUploading) {
             toast.error('please wait for the file(s) to upload')
         }

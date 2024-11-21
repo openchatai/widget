@@ -1,18 +1,20 @@
-import react from "@vitejs/plugin-react";
+import reactPlugin from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [react(), tsconfigPaths()],
+  plugins: [reactPlugin(), tsconfigPaths()],
   build: {
     assetsInlineLimit: 10 * 1024,
     emptyOutDir: true,
     rollupOptions: {
       input: "src/index.tsx",
       output: {
-        name: "copilot-widget",
+        sourcemap: true,
+        format: "iife", // Immediately-Invoked Function Expression
         dir: "dist-embed",
         entryFileNames: "script.js",
+        extend: true
       },
     },
   },

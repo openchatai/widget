@@ -11,7 +11,7 @@ function ChatProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const {settings} = useConfigData();
+  const { settings } = useConfigData();
   const chat = useAbstractChat({
     defaultHookSettings: {
       persistSession: settings?.persistSession ?? true,

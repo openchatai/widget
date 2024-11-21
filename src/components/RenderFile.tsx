@@ -1,4 +1,5 @@
 import { ChatAttachmentType } from "@lib/types/schemas";
+import { forwardRef } from "react";
 
 type Props = {
     attachment: ChatAttachmentType;
@@ -15,8 +16,8 @@ export function RenderAttachment({ attachment }: Props) {
         <div className="size-fit gap-2 border shrink-0 rounded-xl overflow-hidden">
             {isImage && (
                 <img
+                    loading="lazy"
                     src={url}
-                    alt={name}
                     className="object-cover size-16"
                 />
             )}
