@@ -7,14 +7,15 @@ export default defineConfig({
   build: {
     assetsInlineLimit: 10 * 1024,
     emptyOutDir: true,
+    sourcemap: true,
+    minify: "terser",
     rollupOptions: {
       input: "src/index.tsx",
       output: {
-        sourcemap: true,
         format: "iife", // Immediately-Invoked Function Expression
         dir: "dist-embed",
         entryFileNames: "script.js",
-        extend: true
+        extend: true,
       },
     },
   },
