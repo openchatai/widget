@@ -1,36 +1,51 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { isReactNative } from "@lib/utils/env";
 
 const IS_SERVER = typeof window === "undefined";
 
 type StorageType = "memory" | "local" | "session";
 
 interface StorageLike {
-  getItem(key: string): string | null;
-  setItem(key: string, value: string): void;
-  removeItem(key: string): void;
+  getItem(key: string): Promise<string | null> | string | null;
+  setItem(key: string, value: string): Promise<void> | void;
+  removeItem(key: string): Promise<void> | void;
 }
 
-const memoryStorage: StorageLike = {
-  getItem: () => null,
-  setItem: () => {
-    // 
+const memoryStorage: Record<string, string> = {};
+
+const memoryStorageLike: StorageLike = {
+  getItem: (key) => memoryStorage[key] || null,
+  setItem: (key, value) => {
+    memoryStorage[key] = value;
   },
-  removeItem: () => {
-    // 
+  removeItem: (key) => {
+    delete memoryStorage[key];
   },
 };
 
 function getStorage(storage: StorageType): StorageLike {
-  if (IS_SERVER) {
-    return memoryStorage;
+  if (IS_SERVER || isReactNative()) {
+    return memoryStorageLike;
   }
   if (storage === "local") {
     return localStorage;
   } else if (storage === "session") {
     return sessionStorage;
   } else {
-    return memoryStorage;
+    return memoryStorageLike;
   }
+}
+
+async function getAsyncStorage(storage: StorageType): Promise<StorageLike> {
+  if (isReactNative()) {
+    return {
+      getItem: async (key) => await AsyncStorage.getItem(key),
+      setItem: async (key, value) => await AsyncStorage.setItem(key, value),
+      removeItem: async (key) => await AsyncStorage.removeItem(key),
+    };
+  }
+  return getStorage(storage);
 }
 
 type DefaultValue<T> = T | (() => T);
@@ -40,31 +55,38 @@ export function useSyncedState<TData>(
   defaultValue?: DefaultValue<TData>,
   storage: StorageType = "session"
 ): [TData | null, (newState: TData | null) => void, () => void] {
-  const bucket = useMemo(() => getStorage(storage), [storage]);
+  const [bucket, setBucket] = useState<StorageLike>(() => memoryStorageLike);
+  const [state, setState] = useState<TData | null>(null);
 
-  const [state, setState] = useState<TData | null>(() => {
-    const storageValue = bucket.getItem(key);
-    if (storageValue !== null) {
-      try {
-        return JSON.parse(storageValue) as TData;
-      } catch (error) {
-        console.error(`Error parsing stored value for key '${key}':`, error);
+  useEffect(() => {
+    const initializeStorage = async () => {
+      const resolvedBucket = await getAsyncStorage(storage);
+      setBucket(resolvedBucket);
+
+      const storageValue = await resolvedBucket.getItem(key);
+      if (storageValue !== null) {
+        try {
+          setState(JSON.parse(storageValue) as TData);
+        } catch (error) {
+          console.error(`Error parsing stored value for key '${key}':`, error);
+        }
+      } else if (typeof defaultValue === "function") {
+        setState((defaultValue as () => TData)());
+      } else {
+        setState(defaultValue ?? null);
       }
-    }
-    if (typeof defaultValue === "function") {
-      return (defaultValue as () => TData)();
-    }
-    return defaultValue ?? null;
-  });
+    };
+    initializeStorage();
+  }, [key, storage, defaultValue]);
 
   const setSyncedState = useCallback(
-    (newState: TData | null) => {
+    async (newState: TData | null) => {
       setState(newState);
       if (newState === null) {
-        bucket.removeItem(key);
+        await bucket.removeItem(key);
       } else {
         try {
-          bucket.setItem(key, JSON.stringify(newState));
+          await bucket.setItem(key, JSON.stringify(newState));
         } catch (error) {
           console.error(
             `Error saving state to storage for key '${key}':`,
@@ -76,22 +98,24 @@ export function useSyncedState<TData>(
     [key, bucket]
   );
 
-  const clear = useCallback(() => {
+  const clear = useCallback(async () => {
     setState(null);
-    bucket.removeItem(key);
+    await bucket.removeItem(key);
   }, [key, bucket]);
 
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === key && e.newValue !== JSON.stringify(state)) {
-        setState(e.newValue ? JSON.parse(e.newValue) : null);
-      }
-    };
+    if (!isReactNative()) {
+      const handleStorageChange = (e: StorageEvent) => {
+        if (e.key === key && e.newValue !== JSON.stringify(state)) {
+          setState(e.newValue ? JSON.parse(e.newValue) : null);
+        }
+      };
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
+      window.addEventListener("storage", handleStorageChange);
+      return () => {
+        window.removeEventListener("storage", handleStorageChange);
+      };
+    }
   }, [key, state]);
 
   return [state, setSyncedState, clear];

@@ -20,6 +20,9 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.2
         version: 1.1.3(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@react-native-async-storage/async-storage':
+        specifier: ^2.1.0
+        version: 2.1.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1))
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -53,6 +56,9 @@ importers:
       react-native:
         specifier: ^0.76.2
         version: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1)
+      react-native-sound:
+        specifier: ^0.11.2
+        version: 0.11.2(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1))
       react-use:
         specifier: ^17.5.1
         version: 17.5.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -156,9 +162,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.14)
-      terser:
-        specifier: ^5.36.0
-        version: 5.36.0
       tsup:
         specifier: ^8.3.5
         version: 8.3.5(@microsoft/api-extractor@7.47.4(@types/node@20.16.12))(jiti@1.21.6)(postcss@8.4.47)(typescript@5.6.3)(yaml@2.6.0)
@@ -1736,6 +1739,11 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
+  '@react-native-async-storage/async-storage@2.1.0':
+    resolution: {integrity: sha512-eAGQGPTAuFNEoIQSB5j2Jh1zm5NPyBRTfjRMfCN0W1OakC5WIB5vsDyIQhUweKN9XOE2/V07lqTMGsL0dGXNkA==}
+    peerDependencies:
+      react-native: ^0.0.0-0 || >=0.65 <1.0
+
   '@react-native/assets-registry@0.76.2':
     resolution: {integrity: sha512-0CTWv/FqJzU1vsyx2JpCkyLSUOePU7DdKgFvtHdwOxFpOw3aBecszqZDGJADYV9WSZQlq6RV0HmIaWycGYCOMA==}
     engines: {node: '>=18'}
@@ -3135,6 +3143,10 @@ packages:
     resolution: {integrity: sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==}
     engines: {node: '>=0.12.0'}
 
+  is-plain-obj@2.1.0:
+    resolution: {integrity: sha512-YWnfyRwxL/+SsrWYfOpUtz5b3YD+nyfkHvjbcanzk8zgyO4ASD67uVMRt8k5bM4lLMDnXfriRhOpemw+NfT1eA==}
+    engines: {node: '>=8'}
+
   is-plain-obj@4.1.0:
     resolution: {integrity: sha512-+Pgi+vMuUNkJyExiMBt5IlFoMyKnr5zhJ4Uspz58WOhBF5QoIZkFyNHIbBAtHwzVAgk5RtndVNsDRN61/mmDqg==}
     engines: {node: '>=12'}
@@ -3446,6 +3458,10 @@ packages:
 
   memoize-one@5.2.1:
     resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+
+  merge-options@3.0.4:
+    resolution: {integrity: sha512-2Sug1+knBjkaMsMgf1ctR1Ujx+Ayku4EdJN4Z+C2+JzoeF7A3OZ9KM2GY0CpQS51NR61LTurMJrRKPhSs3ZRTQ==}
+    engines: {node: '>=10'}
 
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
@@ -4029,6 +4045,11 @@ packages:
     peerDependencies:
       '@types/react': '>=18'
       react: '>=18'
+
+  react-native-sound@0.11.2:
+    resolution: {integrity: sha512-LmGc8lgOK3qecYMVQpyHvww/C+wgT6sWeMpVbOe4NCRGC2yKd4fo4U0KBUo9PO7AqKESO3I/2GZg1/C0+bwiiA==}
+    peerDependencies:
+      react-native: '>=0.8.0'
 
   react-native@0.76.2:
     resolution: {integrity: sha512-mkEBKGOmJxhfq8IOsvmk0QuTzlBt9vS+uo0gwbqfUmEDqoC359v80zhUf94WimYBrBkpRQWFbEu5iqMDHrYzlQ==}
@@ -6728,6 +6749,11 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
+  '@react-native-async-storage/async-storage@2.1.0(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1))':
+    dependencies:
+      merge-options: 3.0.4
+      react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1)
+
   '@react-native/assets-registry@0.76.2': {}
 
   '@react-native/babel-plugin-codegen@0.76.2(@babel/preset-env@7.26.0(@babel/core@7.25.8))':
@@ -8292,6 +8318,8 @@ snapshots:
 
   is-number@7.0.0: {}
 
+  is-plain-obj@2.1.0: {}
+
   is-plain-obj@4.1.0: {}
 
   is-plain-object@2.0.4:
@@ -8746,6 +8774,10 @@ snapshots:
   mdn-data@2.0.14: {}
 
   memoize-one@5.2.1: {}
+
+  merge-options@3.0.4:
+    dependencies:
+      is-plain-obj: 2.1.0
 
   merge-stream@2.0.0: {}
 
@@ -9501,6 +9533,10 @@ snapshots:
       vfile: 6.0.3
     transitivePeerDependencies:
       - supports-color
+
+  react-native-sound@0.11.2(react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1)):
+    dependencies:
+      react-native: 0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1)
 
   react-native@0.76.2(@babel/core@7.25.8)(@babel/preset-env@7.26.0(@babel/core@7.25.8))(@types/react@18.3.11)(react@18.3.1):
     dependencies:

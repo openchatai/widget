@@ -6,7 +6,6 @@ const nativeLibConfig = defineConfig({
     "index": 'lib/index.native.ts',
   },
   outDir: 'dist/native',
-  tsconfig: 'tsconfig.native.json',
   format: ['cjs', 'esm'],
   dts: true,
   clean: true,

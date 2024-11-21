@@ -64,7 +64,7 @@
   },
   "files": [
     "dist",
-    "dist-embed"
+    "package.json"
   ],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
@@ -99,6 +99,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
+    "@react-native-async-storage/async-storage": "^2.1.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
@@ -110,6 +111,7 @@
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
     "react-native": "^0.76.2",
+    "react-native-sound": "^0.11.2",
     "react-use": "^17.5.1",
     "rehype-raw": "^7.0.0",
     "tinycolor2": "^1.6.0",

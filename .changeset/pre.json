@@ -1,0 +1,8 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@openchatai/widget": "1.5.11"
+  },
+  "changesets": []
+}
