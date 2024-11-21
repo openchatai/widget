@@ -92,7 +92,6 @@ export function ConfigDataProvider({
     apiUrl: _data.apiUrl,
     botToken: _data.token,
   });
-  
 
   const [widgetSettings, _setSettings] = useSyncedState("open_settings", _data.defaultSettings, "local");
 

@@ -19,6 +19,7 @@
         "isolatedModules": true // Required for Babel/Metro compatibility
     },
     "include": [
-        "native/**/*.ts"
-    ], // Include source files
+        "**/*.native.ts",
+        "**/*.native.tsx"
+    ],
 }

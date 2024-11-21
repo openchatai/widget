@@ -10,11 +10,9 @@
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
-    "build": "vite build",
     "dev": "vite",
-    "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
-    "batman": "pnpm build && pnpm build:embed",
+    "batman": "pnpm tsup",
     "test:watch": "vitest --watch",
     "cs": "changeset",
     "csv": "changeset version",
@@ -75,23 +73,26 @@
     "name": "openchatai",
     "url": "https://github.com/openchatai"
   },
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js"
+      "types": "./dist/web/index.d.ts",
+      "import": "./dist/web/index.js",
+      "require": "./dist/web/index.cjs",
+      "default": "./dist/web/index.js"
     },
-    "./basic": {
-      "types": "./dist/basic.d.ts",
-      "import": "./dist/basic.es.js",
-      "require": "./dist/basic.cjs.js"
+    "./native": {
+      "types": "./dist/native/index.d.ts",
+      "import": "./dist/native/index.js",
+      "require": "./dist/native/index.cjs",
+      "default": "./dist/native/index.js"
     },
     "./package.json": "./package.json",
-    "./dist/*.css": "./dist/*.css"
+    "./dist/*.css": {
+      "default": "./dist/web/index.css"
+    }
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",

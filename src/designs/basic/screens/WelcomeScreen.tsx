@@ -5,7 +5,7 @@ import { Button } from "@ui/button";
 import { SendHorizontal } from "lucide-react";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { useAsyncFn } from "react-use";
+import useAsyncFn from "react-use/lib/useAsyncFn";
 
 const schema = z.object({
     name: z.string().min(2),

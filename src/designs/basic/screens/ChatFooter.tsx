@@ -4,7 +4,7 @@ import { Button } from "@ui/button";
 import { Command, CommandGroup, CommandItem, CommandList } from 'cmdk';
 import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { ComponentProps, useEffect, useRef, useState } from "react";
-import { useMeasure } from "react-use";
+import useMeasure from "react-use/lib/useMeasure";
 import { useDropzone } from 'react-dropzone';
 import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";

@@ -4,7 +4,7 @@ import { useConfigData } from "./ConfigDataProvider";
 import { useSyncedState } from "@lib/hooks";
 import { ConsumerType } from "@lib/types/schemas";
 import { UserObject } from "@lib/types";
-import { useAsyncFn } from "react-use";
+import useAsyncFn from "react-use/lib/useAsyncFn";
 
 type T = ConsumerType;
 
