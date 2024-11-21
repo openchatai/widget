@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.12-alpha.0
+
+### Patch Changes
+
+- 9a55baa: react native support test 1
+
 ## 1.5.11
 
 ### Patch Changes
