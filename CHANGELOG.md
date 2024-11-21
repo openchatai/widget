@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.10
+
+### Patch Changes
+
+- bf8425d: some ui adjustments
+
 ## 1.5.9
 
 ### Patch Changes
