@@ -1,5 +1,5 @@
 import { useConfigData } from "../providers/ConfigDataProvider";
-import { useAsyncFn } from "react-use";
+import useAsyncFn from "react-use/lib/useAsyncFn";
 
 
 export function useUpvote(id: string, onSuccess?: () => void) {

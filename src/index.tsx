@@ -8,7 +8,7 @@ import styles from '../lib/index.css?inline';
 import { Widget } from './designs/basic';
 import { PopoverTrigger } from './designs/basic/PopoverTrigger';
 import { motion } from 'framer-motion';
-import {version} from '../package.json';
+import { version } from '../package.json';
 
 const initialContent = `<!DOCTYPE html>
 <html>

@@ -10,11 +10,9 @@
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
-    "build": "vite build",
     "dev": "vite",
-    "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
-    "batman": "pnpm build && pnpm build:embed",
+    "batman": "pnpm tsup",
     "test:watch": "vitest --watch",
     "cs": "changeset",
     "csv": "changeset version",
@@ -56,7 +54,7 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.6",
     "tailwindcss-animate": "^1.0.7",
-    "terser": "^5.36.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
     "vite-plugin-dts": "4.0.3",
@@ -75,23 +73,26 @@
     "name": "openchatai",
     "url": "https://github.com/openchatai"
   },
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.es.js",
-  "types": "./dist/index.d.ts",
-  "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/web/index.d.ts",
+      "import": "./dist/web/index.js",
+      "require": "./dist/web/index.cjs",
+      "default": "./dist/web/index.js"
     },
-    "./basic": {
-      "import": "./dist/basic.es.js",
-      "require": "./dist/basic.cjs.js",
-      "types": "./dist/basic.d.ts"
+    "./native": {
+      "types": "./dist/native/index.d.ts",
+      "import": "./dist/native/index.js",
+      "require": "./dist/native/index.cjs",
+      "default": "./dist/native/index.js"
     },
     "./package.json": "./package.json",
-    "./dist/*.css": "./dist/*.css"
+    "./dist/*.css": {
+      "default": "./dist/web/index.css"
+    }
+  },
+  "engines": {
+    "node": ">=12.0.0"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
@@ -108,6 +109,7 @@
     "mutative": "^1.0.11",
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
+    "react-native": "^0.76.2",
     "react-use": "^17.5.1",
     "rehype-raw": "^7.0.0",
     "tinycolor2": "^1.6.0",

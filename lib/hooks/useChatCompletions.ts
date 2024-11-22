@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash.debounce";
-import { useAsyncFn } from "react-use";
+import useAsyncFn from "react-use/lib/useAsyncFn";
 
 type CompletionFetcher = (input: string) => Promise<string[] | null>;
 
