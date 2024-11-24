@@ -4,5 +4,7 @@
   "initialVersions": {
     "@openchatai/widget": "1.5.11"
   },
-  "changesets": []
+  "changesets": [
+    "healthy-goats-fix"
+  ]
 }
