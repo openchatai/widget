@@ -1,9 +1,7 @@
-import { FileWithProgress, useChat, useChatCompletions, useConfigData, useContact, useLocale, useUploadFiles } from "@lib/index";
-import * as Popover from "@radix-ui/react-popover";
+import { FileWithProgress, useChat, useConfigData, useContact, useLocale, useUploadFiles } from "@lib/index";
 import { Button } from "@ui/button";
-import { Command, CommandGroup, CommandItem, CommandList } from 'cmdk';
 import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
-import React, { ComponentProps, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useMeasure } from "react-use";
 import { useDropzone } from 'react-dropzone';
 import { Tooltippy } from "@ui/tooltip";
@@ -11,49 +9,6 @@ import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { AIClosureType } from "@lib/types/schemas";
-
-function CompletionsRender({
-    completions,
-    onSelect,
-    onInteractionOutside,
-    prefix
-}: {
-    completions: string[];
-    onSelect: (completion: string) => void;
-    prefix?: string;
-    onInteractionOutside?: ComponentProps<typeof Popover.Content>['onInteractOutside'];
-}) {
-    if (completions.length === 0) {
-        return null;
-    }
-    return (
-        <Popover.Content
-            sideOffset={10}
-            style={{
-                width: `var(--radix-popper-anchor-width)`
-            }}
-            asChild
-            onInteractOutside={onInteractionOutside}
-            side="top" align="center"
-            className="bg-background h-fit scroll-smooth max-h-40 border shadow-md w-full rounded-xl p-1 overflow-y-auto z-10">
-            <CommandList>
-                <CommandGroup>
-                    {completions.map((completion, index) => (
-                        <CommandItem
-                            key={index}
-                            className="p-2
-            data-[selected=true]:bg-secondary data-[selected=true]:text-secondary-foreground
-            cursor-pointer rounded-lg text-sm hover:bg-secondary hover:text-secondary-foreground transition-all"
-                            onSelect={() => onSelect(prefix + completion)}
-                        >
-                            {prefix}{" "}{completion}
-                        </CommandItem>
-                    ))}
-                </CommandGroup>
-            </CommandList>
-        </Popover.Content>
-    );
-}
 
 function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWithProgress, onCancel: () => void; }) {
     const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(
@@ -126,8 +81,6 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
 
 }
 
-const enableCompletions = false;
-
 export function ChatFooter() {
     const { collectUserData, http } = useConfigData();
     const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -135,17 +88,7 @@ export function ChatFooter() {
     const { contact } = useContact();
     const locale = useLocale();
 
-    const { inputText, setInputText, completions, setCompletions } = useChatCompletions(
-        async (input) => {
-            if (enableCompletions) {
-                if (session) return null;
-                const resp = await http.apis.getCompletions(input);
-                return resp.data.completions || [];
-            }
-            return null
-        },
-        700
-    );
+    const [inputText, setInputText] = useState('');
 
     const { allFiles, emptyTheFiles, handleCancelUpload, appendFiles, isUploading, successFiles } = useUploadFiles();
 
@@ -203,7 +146,6 @@ export function ChatFooter() {
     });
 
     const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
-    const [showCompletions, setShowCompletions] = useState(false);
     const isLoading = hookState.state === "loading";
 
     const shouldCollectDataFirst = collectUserData && !contact?.id;
@@ -219,111 +161,87 @@ export function ChatFooter() {
     return (
         <div className="p-2 relative space-y-1" {...getRootProps()}>
             <input {...getInputProps()} />
-            <Popover.Root
-                open={showCompletions && completions.length > 0}>
-                <Command loop>
-                    <Popover.Anchor asChild>
-                        <div className="rounded-xl relative gap-2 border border-px border-zinc-200 transition-all shadow-sm">
-                            {
-                                allFiles.length > 0 && (
-                                    <motion.div
-                                        animate={{
-                                            transition: {
-                                                staggerChildren: 0.5,
-                                                delayChildren: 0.5
-                                            }
-                                        }}
-                                        className="flex items-center gap-0.5 p-1 border-b">
-                                        {allFiles.map((file) => (
-                                            <AnimatePresence key={file.id}>
-                                                <FileDisplay
-                                                    onCancel={() => handleCancelUpload(file.id)}
-                                                    file={file}
-                                                />
-                                            </AnimatePresence>
-                                        ))}
-                                    </motion.div>
-                                )
-                            }
-                            <textarea
-                                onPaste={handlePaste}
-                                ref={inputRef}
-                                id='chat-input'
-                                dir="auto"
-                                data-padding={dimensions.width}
-                                disabled={isLoading || shouldCollectDataFirst}
-                                value={inputText}
-                                style={{
-                                    paddingRight: `${dimensions.width}px`
-                                }}
-                                rows={3}
-                                className={`outline-none w-full p-2 text-zinc-900 text-sm bg-transparent resize-none placeholder:text-zinc-400`}
-                                onChange={e => setInputText(e.target.value)}
-                                onFocus={() => setShowCompletions(true)}
-                                onKeyDown={async (event) => {
-                                    if (event.key === "Enter" && !event.shiftKey) {
-                                        event.preventDefault();
-                                        handleSubmit(inputText);
-                                    }
-                                }}
-                                placeholder={locale.get("write-a-message")}
-                            />
-                            <div
-                                ref={containerRef}
-                                className="absolute space-x-1 bottom-1.5 right-1.5 w-fit">
-                                {
-                                    shouldAcceptAttachments && (
-                                        <Tooltippy
-                                            position="top-end"
-                                            content="attach files, (maximum size 5mb)"
-                                        >
-                                            <Button
-                                                onClick={openFileSelect}
-                                                size='fit' variant={"outline"}>
-                                                <PaperclipIcon className="size-4" />
-                                            </Button>
-                                        </Tooltippy>
-                                    )
+            <div className="rounded-xl relative gap-2 border border-px border-zinc-200 transition-all shadow-sm">
+                {
+                    allFiles.length > 0 && (
+                        <motion.div
+                            animate={{
+                                transition: {
+                                    staggerChildren: 0.5,
+                                    delayChildren: 0.5
                                 }
-                                <Tooltippy
-                                    content="send message"
-                                >
-                                    <Button
-                                        size='fit'
-                                        onClick={() => {
-                                            handleSubmit(inputText);
-                                        }}
-                                        disabled={isLoading || shouldCollectDataFirst || isUploading}
-                                        className="hover:brightness-90"
-                                    >
-                                        {isLoading ? (
-                                            <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
-                                        ) : (
-                                            <SendHorizonal className="size-4 rtl:-scale-100" />
-                                        )}
-                                    </Button>
-                                </Tooltippy>
-                            </div>
-                        </div>
-                    </Popover.Anchor>
-                    <CompletionsRender
-                        completions={completions}
-                        prefix={inputText}
-                        onInteractionOutside={(event) => {
-                            const target = event.target as HTMLElement;
-                            if (target.closest("#chat-input")) {
-                                return;
-                            }
-                            setShowCompletions(false)
-                        }}
-                        onSelect={(completion) => {
-                            setInputText(completion);
-                            setCompletions([]);
-                            handleSubmit(completion);
-                        }}
-                    />
-                </Command>
-            </Popover.Root>
+                            }}
+                            className="flex items-center gap-0.5 p-1 border-b">
+                            {allFiles.map((file) => (
+                                <AnimatePresence key={file.id}>
+                                    <FileDisplay
+                                        onCancel={() => handleCancelUpload(file.id)}
+                                        file={file}
+                                    />
+                                </AnimatePresence>
+                            ))}
+                        </motion.div>
+                    )
+                }
+                <textarea
+                    onPaste={handlePaste}
+                    ref={inputRef}
+                    id='chat-input'
+                    dir="auto"
+                    data-padding={dimensions.width}
+                    disabled={isLoading || shouldCollectDataFirst}
+                    value={inputText}
+                    style={{
+                        paddingRight: `${dimensions.width}px`
+                    }}
+                    rows={3}
+                    className={`outline-none w-full p-2 text-zinc-900 text-sm bg-transparent resize-none placeholder:text-zinc-400`}
+                    onChange={e => setInputText(e.target.value)}
+                    onKeyDown={async (event) => {
+                        if (event.key === "Enter" && !event.shiftKey) {
+                            event.preventDefault();
+                            handleSubmit(inputText);
+                        }
+                    }}
+                    placeholder={locale.get("write-a-message")}
+                />
+                <div
+                    ref={containerRef}
+                    className="absolute space-x-1 bottom-1.5 right-1.5 w-fit">
+                    {
+                        shouldAcceptAttachments && (
+                            <Tooltippy
+                                position="top-end"
+                                content="attach files, (maximum size 5mb)"
+                            >
+                                <Button
+                                    onClick={openFileSelect}
+                                    size='fit' variant={"outline"}>
+                                    <PaperclipIcon className="size-4" />
+                                </Button>
+                            </Tooltippy>
+                        )
+                    }
+                    <Tooltippy
+                        content="send message"
+                    >
+                        <Button
+                            size='fit'
+                            onClick={() => {
+                                handleSubmit(inputText);
+                            }}
+                            disabled={isLoading || shouldCollectDataFirst || isUploading}
+                            className="hover:brightness-90"
+                        >
+                            {isLoading ? (
+                                <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
+                            ) : (
+                                <SendHorizonal className="size-4 rtl:-scale-100" />
+                            )}
+                        </Button>
+                    </Tooltippy>
+                </div>
+            </div>
         </div >
     );
 }
