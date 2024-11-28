@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.12
+
+### Patch Changes
+
+- dcbeb2e: clean release
+
 ## 1.5.11
 
 ### Patch Changes
