@@ -5,7 +5,6 @@ export type UserMessageType = {
   type: "FROM_USER";
   id: string;
   content: string;
-  session_id: string;
   serverId: string | null;
   deliveredAt: string | null;
   attachments?: ChatAttachmentType[];

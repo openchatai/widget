@@ -189,7 +189,7 @@ export function ChatFooter() {
                     id='chat-input'
                     dir="auto"
                     data-padding={dimensions.width}
-                    disabled={isLoading || shouldCollectDataFirst}
+                    disabled={isLoading}
                     value={inputText}
                     style={{
                         paddingRight: `${dimensions.width}px`

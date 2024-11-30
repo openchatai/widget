@@ -42,19 +42,14 @@ export enum MessageTypeEnum {
 
 export const chatSessionSchema = z.object({
     id: z.string(),
-    copilot_id: z.string(),
+    ai_closure_type: z.nativeEnum(AIClosureType).nullable(),
     assignee_id: z.number().nullable(),
-    status: z.nativeEnum(SessionStatus),
     channel: z.nativeEnum(SessionChannel),
     summary: z.string().nullable(),
-    last_seen_at: z.date().nullable().optional(),
-    is_online: z.number(),
-    ai_closure_type: z.nativeEnum(AIClosureType).nullable(),
+    status: z.nativeEnum(SessionStatus),
     language: z.string().nullable(),
     last_message: z.string().nullable(),
     last_message_at: z.date().nullable(),
-    created_at: z.date(),
-    updated_at: z.date(),
     assignee: z
         .object({
             name: z.string(),
@@ -88,7 +83,6 @@ export const chatHistoryMessageSchema = z.object({
     agent_avatar: z.string().nullable(),
     agent_id: z.number().nullable(),
     agent_name: z.string().nullable(),
-    chatbot_id: z.string().nullable(),
     created_at: z.string(),
     from_user: z.boolean().nullable(),
     handoff_happened_during_office_hours: z.boolean().nullable(),
@@ -191,7 +185,6 @@ export const structuredSocketMessageSchema = z.discriminatedUnion("type", [
 }));
 export const consumerSchema = z.object({
     id: z.string(),
-    copilot_id: z.string(),
     name: z.string().nullable(),
     created_at: z.string(),
     avatar_url: z.string().nullable(),

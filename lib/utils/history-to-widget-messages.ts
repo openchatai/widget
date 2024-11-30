@@ -16,7 +16,6 @@ function historyToWidgetMessages(mgs: ChatHistoryMessageType[],
                     type: "FROM_USER",
                     content: msg.message,
                     id: msg.id?.toString() || genId(),
-                    session_id: msg.session_id ?? "",
                     serverId: msg.id?.toString() || genId(),
                     deliveredAt: msg.created_at || "",
                     attachments: msg.attachments
