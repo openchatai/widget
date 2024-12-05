@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.5.14-alpha.1",
+  "version": "1.5.14-alpha.2",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -10,11 +10,11 @@
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
-    "build": "vite build",
+    "build:lib": "vite build",
     "dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
-    "batman": "pnpm tsup && pnpm build:embed",
+    "batman": "pnpm build:lib && pnpm build:embed",
     "test:watch": "vitest --watch",
     "cs": "changeset",
     "csv": "changeset version",
@@ -59,7 +59,6 @@
     "tailwindcss": "^3.4.6",
     "tailwindcss-animate": "^1.0.7",
     "terser": "^5.36.0",
-    "tsup": "^8.3.5",
     "typescript": "^5.5.4",
     "vite": "^5.4.2",
     "vite-plugin-dts": "4.0.3",

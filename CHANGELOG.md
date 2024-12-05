@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.14-alpha.2
+
+### Patch Changes
+
+- d3c7e67: vite again
+
 ## 1.5.14-alpha.1
 
 ### Patch Changes
