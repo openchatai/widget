@@ -54,7 +54,6 @@ function ChatRenderer() {
             component: "text",
             data: { message },
             id: `initial-${index}`,
-            serverId: null,
             type: "FROM_BOT",
           }}
           Wrapper={BotResponseWrapper}
@@ -67,7 +66,6 @@ function ChatRenderer() {
             component: "text",
             data: { message: "Hello, how can I help?" },
             id: "default-welcome",
-            serverId: null,
             type: "FROM_BOT",
             agent: config.bot
           }}

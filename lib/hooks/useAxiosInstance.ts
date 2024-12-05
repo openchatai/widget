@@ -107,6 +107,11 @@ export function useAxiosInstance(options: Options) {
           },
           ..._options,
         })
+      },
+      getHistoryPooling: async ({ lastMessageTimestamp, sessionId }: { lastMessageTimestamp: string, sessionId: string }) => {
+        const searchParams = new URLSearchParams();
+        searchParams.append("lastMessageTimestamp", lastMessageTimestamp.toString());
+        return instance.get<ChatHistoryMessageType[] | undefined>(`/widget/session/history/${sessionId}/?${searchParams.toString()}`);
       }
     }),
     [instance]

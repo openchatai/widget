@@ -40,8 +40,7 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                 _ctx.onBotMessage?.({
                     type: "FROM_BOT",
                     component: "TEXT",
-                    id: genId(15),
-                    serverId: null,
+                    id: response.server_message_id,
                     timestamp: response.timestamp,
                     attachments: response.attachments,
                     data: {
@@ -60,7 +59,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     component: "CHAT_EVENT",
                     type: "FROM_BOT",
                     id: genId(),
-                    serverId: null,
                     data: {
                         event: response.value.event,
                         message: response.value.message
@@ -82,7 +80,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     type: "FROM_BOT",
                     component: uiVal.name,
                     data: uiVal.request_response,
-                    serverId: null,
                     id: genId(),
                     timestamp: response.timestamp,
                 }, _ctx);
@@ -95,7 +92,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     type: "FROM_BOT",
                     component: "FORM",
                     data: formVal,
-                    serverId: null,
                     id: genId(),
                     timestamp: response.timestamp,
                 }, _ctx);

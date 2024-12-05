@@ -84,6 +84,9 @@ type ActionType =
   } | {
     type: "SET_MESSAGES",
     payload: MessageType[];
+  } | {
+    type: "APPEND_MESSAGES",
+    payload: MessageType[];
   };
 
 function chatReducer(state: ChatState, action: ActionType) {
@@ -120,18 +123,6 @@ function chatReducer(state: ChatState, action: ActionType) {
         setLastupdated();
         break;
       }
-
-      case "SET_SERVER_ID": {
-        const { clientMessageId, ServerMessageId } = action.payload;
-        const message = draft.messages.find(
-          (msg) => msg.id === clientMessageId
-        );
-        if (message) {
-          message.serverId = ServerMessageId;
-        }
-        break;
-      }
-
       case "SET_KEYBOARD": {
         draft.keyboard = action.payload;
         break;
@@ -151,12 +142,19 @@ function chatReducer(state: ChatState, action: ActionType) {
         draft.messages = action.payload
         break;
       }
+      case "APPEND_MESSAGES": {
+      // skip id's that are already in the state
+        const newMessages = action.payload.filter((msg) => {
+          return !draft.messages.some((m) => m.id === msg.id);
+        });
+        draft.messages.push(...newMessages);
+        break;
+      }
       default:
         break;
     }
   });
 }
-
 
 type MessagePayload = {
   id: string;
@@ -238,7 +236,7 @@ function useSession({
   }
 }
 
-function usehookState() {
+function useHookState() {
   const [hookState, setHookState] = useState<HookState>({ state: "idle" });
   return [hookState, setHookState] as const;
 }
@@ -278,7 +276,7 @@ function useAbstractChat({
     persist: shouldPersistSession
   })
 
-  const [hookState, _setHookState] = usehookState();
+  const [hookState, _setHookState] = useHookState();
 
 
   function setHookState(
@@ -474,6 +472,26 @@ function useAbstractChat({
     [setInfo]
   );
 
+  useEffect(() => {
+    if (!session) return;
+    const lastMessageTimestamp = chatState.messages.at(-1)?.timestamp;
+    if (!lastMessageTimestamp) return;
+    const interval = setInterval(() => {
+      http.apis.getHistoryPooling({
+        sessionId: session.id,
+        lastMessageTimestamp,
+      }).then((response) => {
+        response.data && dispatch({
+          type: "APPEND_MESSAGES",
+          payload: historyToWidgetMessages(response.data, { bot: config.bot })
+        })
+      })
+    }, 20 * 1000);
+    return () => {
+      clearInterval(interval);
+    }
+  }, [session, chatState.messages])
+
   const handleUserMessageBroadcast = useCallback((message: MessagePayload) => {
     dispatch({
       type: "APPEND_USER_MESSAGE",
@@ -481,8 +499,6 @@ function useAbstractChat({
         user: message?.user,
         type: "FROM_USER",
         deliveredAt: null,
-        serverId: null,
-        session_id: session?.id ?? "",
         content: message.content,
         id: message.id ?? genId(10),
         attachments: []
@@ -563,10 +579,8 @@ function useAbstractChat({
               type: "FROM_USER",
               id: msgId,
               content: content.text,
-              session_id: chatSession.id,
               user: payload.user,
               deliveredAt: null,
-              serverId: null,
               attachments: data.attachments,
             },
           });

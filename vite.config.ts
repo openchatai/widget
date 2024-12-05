@@ -31,7 +31,6 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        exports: "named",
         intro: `"use client"`,
       },
     },

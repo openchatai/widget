@@ -77,7 +77,7 @@ export const chatAttachmentSchema = z.object({
 }) as z.ZodType<ChatAttachmentType>;
 
 export const chatHistoryMessageSchema = z.object({
-    id: z.number(),
+    publicId: z.string().uuid(),
     message: z.string().nullable(),
     type: z.string().nullable(),
     agent_avatar: z.string().nullable(),
@@ -106,6 +106,7 @@ const messageSchema = z.object({
     is_stream_chunk: z.boolean().optional(),
     server_session_id: z.string(),
     client_message_id: z.string().optional(),
+    server_message_id: z.string(),
 })
 
 const voteSchema = z.object({
