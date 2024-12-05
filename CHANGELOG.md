@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.13
+
+### Patch Changes
+
+- 87fa489: minor package.json update
+
 ## 1.5.12
 
 ### Patch Changes
