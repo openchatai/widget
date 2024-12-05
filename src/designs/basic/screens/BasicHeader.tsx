@@ -1,3 +1,4 @@
+import React from "react";
 import { Dialog, DialogTrigger } from "@ui/dialog";
 import { Tooltippy } from "@ui/tooltip";
 import { RotateCcw, SettingsIcon } from "lucide-react";

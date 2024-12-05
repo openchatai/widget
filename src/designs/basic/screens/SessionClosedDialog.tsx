@@ -1,3 +1,4 @@
+import React from "react";
 import { useChat, useLocale } from "@lib/index";
 import { Dialog, DialogContent } from "@ui/dialog";
 import { CheckCheckIcon } from "lucide-react";

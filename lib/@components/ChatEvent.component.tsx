@@ -1,3 +1,4 @@
+import React from "react";
 import { ComponentProps } from "../types"
 import { MessageTypeEnum } from "../types/schemas";
 

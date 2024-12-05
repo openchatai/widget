@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@openchatai/widget": "1.5.13"
+  },
+  "changesets": [
+    "neat-kiwis-decide",
+    "three-buckets-shop"
+  ]
+}
