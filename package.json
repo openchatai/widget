@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.5.13",
+  "version": "1.5.14-alpha.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -78,20 +78,20 @@
     "name": "openchatai",
     "url": "https://github.com/openchatai"
   },
-  "main": "./dist/index.cjs.js",
-  "module": "./dist/index.es.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
-      "import": "./dist/index.es.js",
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./basic": {
-      "import": "./dist/basic.es.js",
       "types": "./dist/basic.d.ts",
-      "require": "./dist/basic.cjs.js"
+      "import": "./dist/basic.js",
+      "require": "./dist/basic.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*.css": "./dist/*.css"
@@ -102,17 +102,14 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "clsx": "^2.1.1",
-    "cmdk": "^1.0.4",
     "date-fns": "^4.1.0",
     "framer-motion": "^11.3.30",
-    "lodash.debounce": "^4.0.8",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
     "mutative": "^1.0.11",
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
     "react-use": "^17.5.1",
-    "rehype-raw": "^7.0.0",
     "tinycolor2": "^1.6.0",
     "zod": "^3.23.8"
   }

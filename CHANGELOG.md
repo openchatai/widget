@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.14-alpha.0
+
+### Patch Changes
+
+- 48ca9c3: change the default bundler
+
 ## 1.5.13
 
 ### Patch Changes
