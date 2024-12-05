@@ -11,7 +11,8 @@ export default defineConfig({
     dts({
       insertTypesEntry: true
     }),
-    externalizeDeps(), react()],
+    externalizeDeps(),
+    react()],
   server: {
     port: 3005,
   },
@@ -28,11 +29,6 @@ export default defineConfig({
       },
       fileName: (format, entryName) => `${entryName}.${format}.js`,
       formats: ['es', 'cjs'],
-    },
-    rollupOptions: {
-      output: {
-        intro: `"use client"`,
-      },
     },
     outDir: "dist",
   },
