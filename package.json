@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.5.14-alpha.0",
+  "version": "1.5.14-alpha.1",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -78,7 +78,7 @@
     "name": "openchatai",
     "url": "https://github.com/openchatai"
   },
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "sideEffects": false,
