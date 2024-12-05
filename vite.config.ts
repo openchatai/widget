@@ -17,19 +17,4 @@ export default defineConfig({
     port: 3005,
   },
   clearScreen: false,
-  build: {
-    sourcemap: false,
-    minify: true,
-    emptyOutDir: true,
-    reportCompressedSize: false,
-    lib: {
-      entry: {
-        "basic": resolve(__dirname, "src/designs/basic/index.tsx"),
-        "index": resolve(__dirname, "lib/index.tsx"),
-      },
-      fileName: (format, entryName) => `${entryName}.${format}.js`,
-      formats: ['es', 'cjs'],
-    },
-    outDir: "dist",
-  },
 });

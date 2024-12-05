@@ -14,7 +14,7 @@
     "dev": "vite",
     "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
-    "batman": "pnpm build && pnpm build:embed",
+    "batman": "pnpm tsup && pnpm build:embed",
     "test:watch": "vitest --watch",
     "cs": "changeset",
     "csv": "changeset version",
@@ -45,21 +45,22 @@
     "axios": "^1.7.5",
     "class-variance-authority": "^0.7.0",
     "jsdom": "^25.0.1",
+    "mutative": "^1.0.11",
     "postcss": "^8.4.41",
     "postcss-prefix-selector": "^1.16.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^9.0.1",
+    "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.0",
     "socket.io-client": "^4.7.5",
     "swr": "^2.2.5",
     "tailwind-merge": "^2.4.0",
     "tailwindcss": "^3.4.6",
     "tailwindcss-animate": "^1.0.7",
-    "rehype-raw": "^7.0.0",
     "terser": "^5.36.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.5.4",
-    "mutative": "^1.0.11",
     "vite": "^5.4.2",
     "vite-plugin-dts": "4.0.3",
     "vite-plugin-externalize-deps": "^0.8.0",
@@ -84,13 +85,13 @@
   "exports": {
     ".": {
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs.js"
     },
     "./basic": {
       "import": "./dist/basic.es.js",
-      "require": "./dist/basic.cjs.js",
-      "types": "./dist/basic.d.ts"
+      "types": "./dist/basic.d.ts",
+      "require": "./dist/basic.cjs.js"
     },
     "./package.json": "./package.json",
     "./dist/*.css": "./dist/*.css"
