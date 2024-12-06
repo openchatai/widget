@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.15
+
+### Patch Changes
+
+- ffb4b60: .
+
 ## 1.5.14
 
 ### Patch Changes
