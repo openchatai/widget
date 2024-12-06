@@ -11,7 +11,7 @@ import { TooltipProvider } from "@ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
 import { WidgetRoot as OriginalRoot } from "@lib/index";
-import { BotTextResponse } from "@lib/@components";
+import { BotTextResponse, BotMessage, } from "@lib/@components";
 import { useSyncedState } from "@lib/hooks";
 
 function WidgetPopover() {
@@ -150,5 +150,7 @@ Widget.displayName = "Widget";
 export {
   WidgetPopover,
   Widget,
-  WidgetRoot
+  WidgetRoot,
+  BotTextResponse,
+  BotMessage
 }
