@@ -6,6 +6,7 @@
   },
   "changesets": [
     "neat-kiwis-decide",
+    "smart-berries-guess",
     "three-buckets-shop"
   ]
 }
