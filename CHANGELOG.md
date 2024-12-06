@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.16-alpha.0
+
+### Patch Changes
+
+- bce6fed: .
+
 ## 1.5.15
 
 ### Patch Changes
@@ -13,6 +19,7 @@
 - 6b837f2: bundle rehype-raw
 - 48ca9c3: change the default bundler
 - a9c8c7b: .
+
 ## 1.5.14-alpha.2
 
 ### Patch Changes
