@@ -1,5 +1,12 @@
 # @openchatai/widget
 
+## 1.5.16
+
+### Patch Changes
+
+- bce6fed: .
+- d3c7e67: vite again
+
 ## 1.5.16-alpha.0
 
 ### Patch Changes
