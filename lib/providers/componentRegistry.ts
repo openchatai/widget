@@ -1,10 +1,5 @@
+import { BotLoadingComponent, FallbackComponent } from "@lib/@components";
 import type { ComponentType, OptionsType } from "@lib/types";
-import {
-  BotLoadingComponent,
-  BotTextResponse,
-  ChatEventComponent,
-  FallbackComponent,
-} from "../@components";
 
 /**
  * this a singleton  class helps me to easily control the components present/available in the widget.
@@ -13,21 +8,13 @@ import {
 export class ComponentRegistry {
   components: ComponentType[] = [
     {
-      key: "TEXT",
-      component: BotTextResponse,
-    },
-    {
       key: "FALLBACK",
       component: FallbackComponent,
     },
     {
       key: "LOADING",
-      component: BotLoadingComponent,
-    },
-    {
-      key: "CHAT_EVENT",
-      component: ChatEventComponent
-    },
+      component: BotLoadingComponent
+    }
   ] as const;
 
   constructor(opts: OptionsType) {

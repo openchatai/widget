@@ -2,7 +2,7 @@ import React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
-import { useChat, useConfigData, useSyncedState } from "@lib/index";
+import { BotTextResponse, useChat, useConfigData, useSyncedState, WidgetOptions } from "@lib/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
 import { AnimatePresence, motion } from "framer-motion";
@@ -10,6 +10,7 @@ import { PopoverTrigger } from "./PopoverTrigger";
 import { TooltipProvider } from "@ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
+import { WidgetRoot as OriginalRoot } from "@lib/index";
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
 
@@ -129,9 +130,22 @@ const Widget = forwardRef<
   );
 });
 
+function WidgetRoot({ children, options }: { children?: React.ReactNode, options: WidgetOptions }) {
+  return <OriginalRoot options={{
+    ...options,
+    components: [{
+      key: "TEXT",
+      component: BotTextResponse
+    }]
+  }}>
+    {children}
+  </OriginalRoot>
+}
+
 Widget.displayName = "Widget";
 
 export {
   WidgetPopover,
   Widget,
+  WidgetRoot
 }
