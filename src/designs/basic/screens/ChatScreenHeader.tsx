@@ -1,3 +1,4 @@
+import React from "react";
 import { useChat, useLocale } from '@lib/index';
 import { Dialog, DialogTrigger } from '@ui/dialog';
 import { Tooltippy } from '@ui/tooltip';

@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch } from '@ui/switch';
 import { XIcon } from 'lucide-react';
 import { DialogClose, DialogContent } from '@ui/dialog';

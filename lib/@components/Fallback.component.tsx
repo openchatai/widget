@@ -1,3 +1,4 @@
+import React from "react";
 import type { ComponentProps } from "@lib/types";
 
 type Props = ComponentProps<unknown>;

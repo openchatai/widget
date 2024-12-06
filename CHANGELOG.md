@@ -13,6 +13,11 @@
 - 6b837f2: bundle rehype-raw
 - 48ca9c3: change the default bundler
 - a9c8c7b: .
+## 1.5.14-alpha.2
+
+### Patch Changes
+
+- d3c7e67: vite again
 
 ## 1.5.14-alpha.1
 

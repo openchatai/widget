@@ -1,3 +1,4 @@
+import React from "react";
 import { useConfigData } from "@lib/index";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cssVars } from "../constants";

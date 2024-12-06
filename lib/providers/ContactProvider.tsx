@@ -1,3 +1,4 @@
+import React from "react";
 import { createSafeContext } from "@lib/utils/create-safe-context";
 import { ReactNode, useEffect, useMemo } from "react";
 import { useConfigData } from "./ConfigDataProvider";

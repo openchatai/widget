@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@openchatai/widget": "1.5.13"
+  },
+  "changesets": [
+    "neat-kiwis-decide",
+    "smart-berries-guess",
+    "three-buckets-shop"
+  ]
+}

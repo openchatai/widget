@@ -1,3 +1,4 @@
+import React from "react";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
@@ -9,7 +10,6 @@ import { PopoverTrigger } from "./PopoverTrigger";
 import { TooltipProvider } from "@ui/tooltip";
 import { Toaster } from 'react-hot-toast';
 import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
-
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>("[widget-opened]", false, "session");
 

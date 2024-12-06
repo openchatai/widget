@@ -1,3 +1,4 @@
+import React from "react";
 import type { WidgetOptions, WidgetThemeOptions } from "@lib/types";
 import { type ReactNode, useMemo } from "react";
 import { createSafeContext } from "../utils/create-safe-context";
@@ -6,7 +7,6 @@ import { useAxiosInstance, useSyncedState } from "@lib/hooks";
 import { ComponentRegistry } from "./componentRegistry";
 import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@lib/types/schemas";
-
 const defaultTheme: WidgetThemeOptions = {
   headerStyle: "basic",
   primaryColor: "hsl(211,65%,59%)",

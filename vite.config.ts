@@ -18,5 +18,16 @@ export default defineConfig({
   server: {
     port: 3005,
   },
+  build:{
+    outDir: "dist",
+    lib: {
+      name: '@openchatai/widget',
+      formats: ["cjs", "es"],
+      entry: {
+        "basic": resolve(__dirname, "src/designs/basic/index.tsx"),
+        "index": resolve(__dirname, "lib/index.tsx"),
+      }
+    }
+  },
   clearScreen: false,
 });

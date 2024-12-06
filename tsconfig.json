@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": [
       "ES2020",
@@ -11,17 +11,18 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     /* Linting */
     "strict": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@lib/*": [
         "./lib/*"
@@ -33,14 +34,11 @@
   },
   "include": [
     "src",
-    "lib",
-    "types.d.ts",
-    "test"
+    "lib"
   ],
   "exclude": [
     "node_modules",
-    "dist",
-    "build"
+    "dist"
   ],
   "references": [
     {
