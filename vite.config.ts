@@ -11,7 +11,9 @@ export default defineConfig({
     dts({
       insertTypesEntry: true
     }),
-    externalizeDeps(),
+    externalizeDeps({
+      except: ["rehype-raw"]
+    }),
     react()],
   server: {
     port: 3005,
