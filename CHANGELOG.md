@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.20
+
+### Patch Changes
+
+- 108fd44: add sourcemaps
+
 ## 1.5.19
 
 ### Patch Changes
