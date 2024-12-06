@@ -25,7 +25,7 @@ import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
 import { useSyncedState } from "./useSyncState";
-import { useAsyncFn } from "react-use";
+import useAsyncFn from "react-use/lib/useAsyncFn";
 import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
 import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@lib/providers/use-widget-sfx";

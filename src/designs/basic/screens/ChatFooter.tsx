@@ -2,7 +2,7 @@ import { FileWithProgress, useChat, useConfigData, useContact, useLocale, useUpl
 import { Button } from "@ui/button";
 import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { useMeasure } from "react-use";
+import useMeasure from "react-use/lib/useMeasure";
 import { useDropzone } from 'react-dropzone';
 import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
