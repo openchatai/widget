@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.17
+
+### Patch Changes
+
+- c7e82f1: tree shakeable imports
+
 ## 1.5.16
 
 ### Patch Changes
