@@ -241,6 +241,7 @@ function useHookState() {
   return [hookState, setHookState] as const;
 }
 
+// Initialize chat state and reducer
 function useAbstractChat({
   onSessionDestroy,
 }: useChatOptions) {
@@ -249,9 +250,13 @@ function useAbstractChat({
     messages: [],
     keyboard: null,
   });
+
+  // Get locale and configuration data
   const locale = useLocale();
   const { botToken, http, socketUrl, widgetSettings, defaultSettings, language, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
+
+  // Fetch chat history
   const [fetchHistoryState, fetchHistory] = useAsyncFn(
     async (sessionId: string) => {
       if (session) {
@@ -271,14 +276,19 @@ function useAbstractChat({
     },
     [config.bot]
   );
+
+  // Determine if session should be persisted
   const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
+
+  // Manage session state
   const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
     persist: shouldPersistSession
-  })
+  });
 
+  // Manage hook state
   const [hookState, _setHookState] = useHookState();
 
-
+  // Set hook state with optional loading disable
   function setHookState(
     state: HookState
   ) {
@@ -293,6 +303,7 @@ function useAbstractChat({
     }
   }
 
+  // Initialize socket connection
   const { socket, socketState, useListen } = useSocket(socketUrl, {
     transports: ["websocket"],
     closeOnBeforeunload: true,
@@ -306,6 +317,7 @@ function useAbstractChat({
     },
   });
 
+  // Fetch session and history on mount
   useEffect(() => {
     async function init() {
       if (!session) return;
@@ -320,6 +332,7 @@ function useAbstractChat({
     init();
   }, []);
 
+  // Send heartbeat at regular intervals
   useEffect(() => {
     let interval: NodeJS.Timeout;
     if (session && socket) {
@@ -346,19 +359,22 @@ function useAbstractChat({
     };
   }, [socket, session, botToken, config.user]);
 
+  // Listen for heartbeat acknowledgements
   useListen(
     "heartbeat:ack",
     (data: { success: boolean }) => {
-      // 
+      // Handle heartbeat acknowledgement
     },
     [session]
   );
 
+  // Manage socket connection state info
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState, locale.get),
     1000
   );
 
+  // Handle socket connection events
   const handleConnect = () => {
     if (session && socket) {
       socket.emit("join_session", { session_id: session.id });
@@ -371,6 +387,7 @@ function useAbstractChat({
     }
   }
 
+  // Set up socket event listeners
   useEffect(() => {
     if (!socket) return;
     socket.on("connect", handleConnect);
@@ -381,12 +398,14 @@ function useAbstractChat({
     };
   }, [handleConnect, socket, handleReconnect]);
 
+  // Join a session
   function joinSession(session_id: string) {
     socket?.emit("join_session", {
       session_id,
     });
   }
 
+  // Clear the current session
   function clearSession() {
     socket?.emit("leave_session", { session_id: session?.id });
     deleteSession();
@@ -395,6 +414,7 @@ function useAbstractChat({
     setHookState({ state: "idle" })
   }
 
+  // Recreate a new session
   function recreateSession() {
     clearSession();
     http.apis.createSession(botToken).then(({ data }) => {
@@ -403,6 +423,7 @@ function useAbstractChat({
     });
   }
 
+  // Handle incoming messages from the socket
   const handleIncomingMessage = (socketMsg: StructuredSocketMessageType) => {
     handleSocketMessages({
       _message: socketMsg,
@@ -465,6 +486,7 @@ function useAbstractChat({
     });
   };
 
+  // Handle socket info messages
   const handleInfo = useCallback(
     (info: string) => {
       setInfo(info);
@@ -472,6 +494,7 @@ function useAbstractChat({
     [setInfo]
   );
 
+  // Poll for new messages at regular intervals
   useEffect(() => {
     if (!session) return;
     const lastMessageTimestamp = chatState.messages.at(-1)?.timestamp;
@@ -492,6 +515,7 @@ function useAbstractChat({
     }
   }, [session, chatState.messages])
 
+  // Handle user message broadcasts
   const handleUserMessageBroadcast = useCallback((message: MessagePayload) => {
     dispatch({
       type: "APPEND_USER_MESSAGE",
@@ -506,7 +530,7 @@ function useAbstractChat({
     });
   }, []);
 
-  // this will just resend the user message again to the widget with everything
+  // Handle message delivery acknowledgements
   const handleDeliveredAck = useCallback((payload: MessagePayload) => {
     dispatch({
       type: "SET_DELIVERED_AT",
@@ -516,13 +540,17 @@ function useAbstractChat({
       },
     });
   }, []);
+
+  // Set up socket listeners
   useListen("structured_message", handleIncomingMessage)
   useListen("ack:chat_message:delivered", handleDeliveredAck);
   useListen("info", handleInfo);
   useListen("user_message_broadcast", handleUserMessageBroadcast);
 
+  // Check if there are no messages
   const noMessages = chatState.messages.length === 0;
 
+  // Send a message
   const [__, sendMessage] = useAsyncFn(
     async ({ content, user, ...data }: SendMessageInput) => {
       let chatSession = session;
@@ -602,6 +630,7 @@ function useAbstractChat({
     [setHookState, session, socket, config.user, config, botToken, language]
   );
 
+  // Handle keyboard input
   const handleKeyboard = useCallback(
     (option: string) => {
       sendMessage({
@@ -617,6 +646,7 @@ function useAbstractChat({
     [dispatch, sendMessage, socket]
   );
 
+  // Determine if messages can be sent
   const unstable__canSend = useMemo(() => {
     if (session?.isSessionClosed) {
       return {

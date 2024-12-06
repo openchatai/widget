@@ -1,3 +1,4 @@
+import React from 'react';
 type Props = {
     options: string[];
     onKeyboardClick: (option: string) => void;

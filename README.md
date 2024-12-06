@@ -1,20 +1,20 @@
 # The one and only chat widget for open
 
-# How to get started ?
+## How to Get Started
 
-1. Install the Package
+### 1. Install the Package
 
 ```bash
 pnpm add @opencopilot/widget
 ```
 
-2. Import the package
+### 2. Import the package
 
 ```javascript
-import { Widget, WidgetRoot, WidgetPopover } from "@opencopilot/widget";
+import { Widget, WidgetRoot } from "@opencopilot/widget/basic";
 ```
 
-3. Use the Widget
+### 3. Use the Widget
 
 ```javascript
 <div>
@@ -82,7 +82,7 @@ It's a component that you can use to show the widget in a popover fixed to the b
 </div>
 ```
 
-## How can i cahnge the colors of the widget ?
+## How can i Change the colors of the widget ?
 
 these are the css variables that you can change to customize the widget
 you may add these variables to the parent container of the widget
