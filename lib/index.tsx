@@ -1,7 +1,7 @@
-export * from "./@components";
+export type { DefaultTextComponentProps } from "./@components";
 export * from "./types";
 export * from "./utils";
-export * from "./hooks";
+export { useUpvote, useDownvote, useUploadFiles, type FileWithProgress } from "./hooks";
 export { WidgetRoot } from "./Root";
 export { useConfigData } from "./providers/ConfigDataProvider"
 export { useChat } from "./providers/ChatProvider"
