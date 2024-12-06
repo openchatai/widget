@@ -27,7 +27,8 @@ export default defineConfig({
         "basic": resolve(__dirname, "src/designs/basic/index.tsx"),
         "index": resolve(__dirname, "lib/index.tsx"),
       }
-    }
+    },
+    sourcemap: true,
   },
   clearScreen: false,
 });
