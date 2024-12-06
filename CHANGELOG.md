@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.18
+
+### Patch Changes
+
+- b480200: .
+
 ## 1.5.17
 
 ### Patch Changes
