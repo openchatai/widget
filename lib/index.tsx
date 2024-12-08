@@ -1,4 +1,3 @@
-export type { DefaultTextComponentProps } from "./@components";
 export * from "./types";
 export * from "./utils";
 export { useUpvote, useDownvote, useUploadFiles, type FileWithProgress } from "./hooks";

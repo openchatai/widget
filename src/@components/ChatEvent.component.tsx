@@ -1,6 +1,6 @@
 import React from "react";
-import { ComponentProps } from "../types"
-import { MessageTypeEnum } from "../types/schemas";
+import { ComponentProps } from "../../lib/types"
+import { MessageTypeEnum } from "../../lib/types/schemas";
 
 type ChatEventComponentProps = ComponentProps<{
     event: MessageTypeEnum

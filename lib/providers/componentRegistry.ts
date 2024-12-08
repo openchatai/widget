@@ -1,4 +1,3 @@
-import { BotLoadingComponent, FallbackComponent } from "@lib/@components";
 import type { ComponentType, OptionsType } from "@lib/types";
 
 /**
@@ -9,12 +8,12 @@ export class ComponentRegistry {
   components: ComponentType[] = [
     {
       key: "FALLBACK",
-      component: FallbackComponent,
+      component: (data) => "fallback",
     },
     {
       key: "LOADING",
-      component: BotLoadingComponent
-    }
+      component: (data) => "loading",
+    },
   ] as const;
 
   constructor(opts: OptionsType) {

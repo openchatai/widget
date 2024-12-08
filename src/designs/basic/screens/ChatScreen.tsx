@@ -1,5 +1,5 @@
-import { BotMessage } from "@lib/@components/BotMessage";
-import { BotResponseWrapper } from "@lib/@components/BotMessageWrapper";
+import { BotMessage } from "src/@components/BotMessage";
+import { BotResponseWrapper } from "src/@components/BotMessageWrapper";
 import { useChat, useConfigData } from "@lib/index";
 
 import React, {
