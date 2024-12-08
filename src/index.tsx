@@ -1,3 +1,4 @@
+import "./index.css";
 import React from "react";
 import { WidgetOptions } from "../lib/types";
 import { render } from "./render";
