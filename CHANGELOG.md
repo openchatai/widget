@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.21
+
+### Patch Changes
+
+- 2b95020: fix loading
+
 ## 1.5.20
 
 ### Patch Changes
