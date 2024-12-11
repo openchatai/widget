@@ -209,8 +209,8 @@ function useSession({
   const session = _session ? {
     ..._session,
     isSessionClosed: _session.status !== SessionStatus.OPEN,
-    isAssignedToAi: _session.assignee_id === 555 || _session.ai_closure_type === null,
-    isAssignedToHuman: _session.assignee_id !== 555 && _session.ai_closure_type === null,
+    isAssignedToAi: _session.assignee_id === 555,
+    isAssignedToHuman: _session.assignee_id !== 555,
     isPendingHuman: _session.assignee_id === 555 && _session.ai_closure_type === AIClosureType.handed_off,
   } : null;
 
@@ -292,7 +292,7 @@ function useAbstractChat({
   function setHookState(
     state: HookState
   ) {
-    const disableLoading = session?.isAssignedToHuman || session?.isPendingHuman;
+    const disableLoading = session?.isAssignedToHuman || session?.isPendingHuman || session?.isSessionClosed || !session?.isAssignedToAi
     if (!disableLoading) {
       _setHookState(state);
     }
