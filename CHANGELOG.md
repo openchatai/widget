@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.5.23
+
+### Patch Changes
+
+- fdcede4: .
+
 ## 1.5.22
 
 ### Patch Changes
