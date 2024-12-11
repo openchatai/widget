@@ -1,13 +1,9 @@
 import React from "react";
-import { ComponentProps } from "@lib/types";
+import { DefaultTextComponentProps } from "@lib/types";
 import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
 import rehypeRaw from 'rehype-raw'
 import { RenderAttachment } from "@ui/RenderFile";
-
-export type DefaultTextComponentProps = ComponentProps<{
-  message: string;
-}>;
 
 export function BotTextResponse({
   data,
