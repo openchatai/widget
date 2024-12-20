@@ -1,4 +1,4 @@
-import { useAxiosInstance } from "@lib/hooks";
+import { useAxiosInstance } from "@react/hooks";
 import useSWR from "swr";
 import { useConfigData } from "./ConfigDataProvider";
 

@@ -1,5 +1,5 @@
-import { type LangType, getStr } from "@lib/locales";
-import { TranslationKeysType } from "@lib/locales/en.locale";
+import { type LangType, getStr } from "@react/locales";
+import { TranslationKeysType } from "@react/locales/en.locale";
 import React from "react";
 import { createSafeContext } from "../utils/create-safe-context";
 import { useConfigData } from "./ConfigDataProvider";

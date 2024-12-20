@@ -1,4 +1,4 @@
-import { createSafeContext } from "@lib/utils/create-safe-context";
+import { createSafeContext } from "@react/utils/create-safe-context";
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
   ComponentProps,

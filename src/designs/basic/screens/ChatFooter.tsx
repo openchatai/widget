@@ -1,4 +1,4 @@
-import { FileWithProgress, useChat, useConfigData, useContact, useLocale, useUploadFiles } from "@lib/index";
+import { FileWithProgress, useChat, useConfigData, useContact, useLocale, useUploadFiles } from "@react/index";
 import { Button } from "@ui/button";
 import { AlertCircle, CircleDashed, FileAudio, FileIcon, Loader2, PaperclipIcon, SendHorizonal, XIcon } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -8,7 +8,7 @@ import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { AIClosureType } from "@lib/types/schemas";
+import { AIClosureType } from "@core/types";
 
 function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWithProgress, onCancel: () => void; }) {
     const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(
@@ -82,7 +82,7 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
 }
 
 export function ChatFooter() {
-    const { collectUserData, http } = useConfigData();
+    const { collectUserData } = useConfigData();
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const { sendMessage, hookState, session } = useChat();
     const { contact } = useContact();

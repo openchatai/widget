@@ -1,4 +1,4 @@
-import { useConfigData, useContact } from "@lib/index";
+import { useConfigData, useContact } from "@react/index";
 
 export function useShouldCollectUserData() {
     const { contact } = useContact();

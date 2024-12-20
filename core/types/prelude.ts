@@ -1,8 +1,6 @@
 export interface PreludeData {
-    isInOfficeHours: boolean;
-    isOutOfOfficeEnabled: boolean;
-    outOfOfficeMessage?: string;
-    welcomeMessage?: string;
+    initial_questions?: string[];
+    organization_name?: string;
 }
 
 export interface WorkingHours {

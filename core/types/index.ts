@@ -1,3 +1,9 @@
+export * from "./messages"
+export * from "./schemas"
+export * from "./client-emitter"
+export * from "./transport"
+export * from "./helpers"
+
 export interface User {
     external_id?: string
     name?: string
@@ -29,7 +35,3 @@ export interface CoreOptions {
         persistSession?: boolean
     }
 }
-
-export type EventCallback = (data: any) => void
-export type ConnectionStatus = 'connected' | 'disconnected' | 'connecting' | 'error'
-

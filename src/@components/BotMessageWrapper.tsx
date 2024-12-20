@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, AvatarImage } from "@ui/avatar";
 import { cn } from "src/utils";
-import { BotMessageType } from "@lib/types";
+import { BotMessageType } from "@core/types/messages";
 
 export function BotResponseWrapper({
   children,

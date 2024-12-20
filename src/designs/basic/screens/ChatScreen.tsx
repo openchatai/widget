@@ -1,6 +1,6 @@
 import { BotMessage } from "src/@components/BotMessage";
 import { BotResponseWrapper } from "src/@components/BotMessageWrapper";
-import { useChat, useConfigData } from "@lib/index";
+import { useChat, useConfigData } from "@react/index";
 
 import React, {
   ComponentType,
@@ -12,7 +12,7 @@ import { UserMessage } from "@ui/userMessage";
 import { Keyboard } from "@ui/keyboard";
 import { BasicHeader } from "./BasicHeader";
 import { SessionClosedDialog } from "./SessionClosedDialog";
-import { usePreludeData } from "@lib/providers/usePreludeData";
+import { usePreludeData } from "@react/providers/usePreludeData";
 import { useShouldCollectUserData } from "src/hooks/useShouldCollectData";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { ChatFooter } from "./ChatFooter";

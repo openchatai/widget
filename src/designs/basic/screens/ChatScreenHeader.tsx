@@ -1,5 +1,5 @@
 import React from "react";
-import { useChat, useLocale } from '@lib/index';
+import { useChat, useLocale } from '@react/index';
 import { Dialog, DialogTrigger } from '@ui/dialog';
 import { Tooltippy } from '@ui/tooltip';
 import { RotateCcw, SettingsIcon } from 'lucide-react';

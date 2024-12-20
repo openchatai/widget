@@ -1,8 +1,6 @@
-import { LangType } from "@lib/locales";
 import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider"
-import { MessageType, UserMessageType, UserObject } from "@lib/types";
-import { genId } from "@lib/utils/genId";
+import { UserObject } from "@react/types";
 import { create } from "mutative";
 import {
   ReactNode,
@@ -13,22 +11,26 @@ import {
   useState,
 } from "react";
 import pkg from "../../package.json";
-import { useTimeoutState } from "../hooks/useTimeoutState";
+import { useTimeoutState } from "./useTimeoutState";
 import {
   AIClosureType,
   ChatAttachmentType,
   type ChatSessionType,
+  MessageType,
   SessionStatus,
   type StructuredSocketMessageType,
-} from "../types/schemas";
+  UserMessageType,
+} from "@core/types";
 import { handleSocketMessages } from "./handle-socket-messages";
 import { useSocket } from "./socket";
 import { representSocketState } from "./socketState";
 import { useSyncedState } from "./useSyncState";
 import useAsyncFn from "react-use/lib/useAsyncFn";
-import { historyToWidgetMessages } from "@lib/utils/history-to-widget-messages";
+import { mapChatHistoryToMessage } from "@core/utils/history-to-widget-messages";
 import lodashSet from "lodash.set";
-import { useWidgetSoundEffects } from "@lib/providers/use-widget-sfx";
+import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
+import { LangType } from "@react/locales";
+import { genId } from "@core/utils/genId";
 
 type HookState = {
   state: "loading" | "error" | "idle";
@@ -143,7 +145,7 @@ function chatReducer(state: ChatState, action: ActionType) {
         break;
       }
       case "APPEND_MESSAGES": {
-      // skip id's that are already in the state
+        // skip id's that are already in the state
         const newMessages = action.payload.filter((msg) => {
           return !draft.messages.some((m) => m.id === msg.id);
         });
@@ -264,7 +266,7 @@ function useAbstractChat({
           const { data: redata } = await http.apis.fetchHistory(sessionId);
           if (!redata) return [];
           if (Array.isArray(redata)) {
-            const messages = historyToWidgetMessages(redata ?? [], { bot: config.bot });
+            const messages = mapChatHistoryToMessage(redata ?? []);
             return messages;
           }
         } catch (error) {
@@ -472,17 +474,6 @@ function useAbstractChat({
           state: "idle",
         });
       },
-      onVote(message, _ctx) {
-        if (message.server_message_id && message.client_message_id) {
-          dispatch({
-            type: "SET_SERVER_ID",
-            payload: {
-              clientMessageId: message.client_message_id,
-              ServerMessageId: message.server_message_id,
-            },
-          });
-        }
-      },
     });
   };
 
@@ -506,7 +497,7 @@ function useAbstractChat({
       }).then((response) => {
         response.data && dispatch({
           type: "APPEND_MESSAGES",
-          payload: historyToWidgetMessages(response.data, { bot: config.bot })
+          payload: mapChatHistoryToMessage(response.data)
         })
       })
     }, 20 * 1000);

@@ -25,8 +25,8 @@ export default defineConfig({
       formats: ["cjs", "es"],
       entry: {
         "basic": resolve(__dirname, "src/designs/basic/index.tsx"),
-        "index": resolve(__dirname, "lib/index.tsx"),
-        "core/index": resolve(__dirname, "core/index.ts")
+        "react": resolve(__dirname, "react-lib/index.tsx"),
+        "index": resolve(__dirname, "core/index.ts")
       }
     },
     sourcemap: true,

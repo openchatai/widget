@@ -2,7 +2,7 @@ import React from "react";
 import { Switch } from '@ui/switch';
 import { XIcon } from 'lucide-react';
 import { DialogClose, DialogContent } from '@ui/dialog';
-import { useChat, useConfigData, useLocale } from '@lib/index';
+import { useChat, useConfigData, useLocale } from '@react/index';
 
 export function SettingsDialogContent() {
     const { widgetSettings, setSettings } = useConfigData();

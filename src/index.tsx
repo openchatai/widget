@@ -1,7 +1,7 @@
 import "./index.css";
 import styles from './index.css?inline';
 import React from "react";
-import { WidgetOptions } from "../lib/types";
+import { WidgetOptions } from "../react-lib/types";
 import { render } from "./render";
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import Iframe from '@uiw/react-iframe';

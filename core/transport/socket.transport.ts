@@ -1,12 +1,12 @@
 import { io, Socket } from "socket.io-client"
 import { TransportOptions, MessageData } from "../types/transport"
 import { version } from "../../package.json"
-import { genId } from "../../lib/utils/genId"
 import { ClientEmitter } from "../types/client-emitter"
 import { TransportError } from "../errors"
 import { Platform, DefaultPlatform } from "../platform"
 import { StructuredSocketMessageType } from "../types/schemas"
 import { AbstractTransport } from "./abstract.transport"
+import { genId } from "@core/utils/genId"
 
 export class SocketTransport extends AbstractTransport {
     private socket: Socket | null = null
@@ -78,7 +78,7 @@ export class SocketTransport extends AbstractTransport {
                 this.emitter.emit("bot_message", {
                     type: "FROM_BOT",
                     component: "TEXT",
-                    id: botMessage.server_message_id || genId(),
+                    id: botMessage.server_message_id,
                     timestamp: botMessage.timestamp,
                     attachments: botMessage.attachments,
                     data: {

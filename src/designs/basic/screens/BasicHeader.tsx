@@ -3,9 +3,8 @@ import { Dialog, DialogTrigger } from "@ui/dialog";
 import { Tooltippy } from "@ui/tooltip";
 import { RotateCcw, SettingsIcon } from "lucide-react";
 import { ClearSessionDialogContent, SettingsDialogContent } from "./DialogContents";
-import { useLocale } from "@lib/index";
-import { usePreludeData } from "@lib/providers/usePreludeData";
 import { Skeleton } from "@ui/skeleton";
+import { useLocale, usePreludeData } from "@react/index";
 
 function SettingsDialog() {
     const locale = useLocale();

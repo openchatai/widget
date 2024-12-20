@@ -1,5 +1,5 @@
 import React from "react";
-import { ChatAttachmentType } from "@lib/types/schemas";
+import { ChatAttachmentType } from "@core/types";
 
 type Props = {
     attachment: ChatAttachmentType;

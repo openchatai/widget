@@ -1,4 +1,4 @@
-import type { LangType } from "@lib/locales";
+import type { LangType } from "../locales";
 import type { ComponentType } from "./components";
 
 export type UserObject = {

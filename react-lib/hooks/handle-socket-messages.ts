@@ -1,8 +1,7 @@
-import { MessageType } from "@lib/types";
-import { genId } from "@lib/utils/genId";
 import { Socket } from "socket.io-client";
-import { StructuredSocketMessageType } from "../types/schemas";
-import { NormalizedWidgetOptions } from "@lib/providers/ConfigDataProvider";
+import { MessageType, StructuredSocketMessageType } from "@core/types";
+import { NormalizedWidgetOptions } from "@react/providers/ConfigDataProvider";
+import { genId } from "@core/utils/genId";
 
 interface Context<SocketMessage = StructuredSocketMessageType> {
     _message: SocketMessage;
@@ -83,23 +82,6 @@ export function handleSocketMessages(_ctx: Context<StructuredSocketMessageType>)
                     id: genId(),
                     timestamp: response.timestamp,
                 }, _ctx);
-                break;
-            }
-        case "form":
-            {
-                const formVal = response.value;
-                _ctx.onForm?.({
-                    type: "FROM_BOT",
-                    component: "FORM",
-                    data: formVal,
-                    id: genId(),
-                    timestamp: response.timestamp,
-                }, _ctx);
-                break;
-            }
-        case "vote":
-            {
-                _ctx.onVote?.(response, _ctx);
                 break;
             }
         default:

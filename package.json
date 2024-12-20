@@ -100,10 +100,10 @@
       "import": "./dist/basic.js",
       "require": "./dist/basic.cjs"
     },
-    "./core": {
-      "types": "./dist/core/index.d.ts",
-      "import": "./dist/core/index.js",
-      "require": "./dist/core/index.cjs"
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js",
+      "require": "./dist/react.cjs"
     },
     "./package.json": "./package.json",
     "./dist/*.css": "./dist/*.css"

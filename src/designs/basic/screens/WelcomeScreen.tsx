@@ -1,5 +1,5 @@
 import React from "react";
-import { useConfigData, useContact, useLocale, usePreludeData } from "@lib/index";
+import { useConfigData, useContact, useLocale, usePreludeData } from "@react/index";
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 import { SendHorizontal } from "lucide-react";

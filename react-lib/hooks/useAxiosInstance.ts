@@ -1,9 +1,10 @@
-import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@lib/types/schemas";
-import { PreludeData, WorkingHours } from "@lib/utils";
+import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@core/types";
 import axios, { AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useMemo } from "react";
 import { version } from "../../package.json"
-import { UserObject } from "@lib/types";
+import { PreludeData, WorkingHours } from "@core/types/prelude";
+import { UserObject } from "@react/types";
+
 type Options = {
   apiUrl: string;
   botToken: string;

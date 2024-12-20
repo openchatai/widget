@@ -1,5 +1,5 @@
 import React from "react";
-import type { BotMessageType } from "./messages";
+import type { BotMessageType } from "@core/types/messages";
 
 export type ComponentProps<TData> = BotMessageType<TData>;
 

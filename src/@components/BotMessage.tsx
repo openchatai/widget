@@ -1,5 +1,5 @@
-import { useConfigData } from "@lib/providers/ConfigDataProvider";
-import type { BotMessageType } from "@lib/types";
+import { useConfigData } from "@react/providers/ConfigDataProvider";
+import type { BotMessageType } from "@core/types";
 import React, { type ComponentType } from "react";
 
 interface BotMessageProps<W extends React.ElementType> {

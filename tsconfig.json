@@ -20,12 +20,12 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@lib/*": ["./lib/*"],
+      "@react/*": ["./react-lib/*"],
       "@ui/*": ["./src/components/*"],
       "@core/*": ["./core/*"]
     }
   },
-  "include": ["src", "lib", "core"],
+  "include": ["src", "react-lib", "core"],
   "exclude": ["node_modules", "dist"],
   "references": [
     {

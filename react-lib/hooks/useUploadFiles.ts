@@ -1,5 +1,5 @@
-import { useConfigData } from "@lib/providers/ConfigDataProvider";
-import { genId } from "@lib/utils/genId";
+import { useConfigData } from "@react/providers/ConfigDataProvider";
+import { genId } from "@core/utils/genId";
 import { useEffect, useMemo, useState } from "react";
 
 
@@ -60,7 +60,7 @@ function useUploadFiles() {
                     updateFileById(fileItem.id, { progress });
                 }
             });
-            
+
             updateFileById(fileItem.id, {
                 status: "success",
                 fileUrl: response.data.fileUrl,

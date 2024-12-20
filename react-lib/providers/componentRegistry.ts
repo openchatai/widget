@@ -1,4 +1,4 @@
-import type { ComponentType, OptionsType } from "@lib/types";
+import type { ComponentType, OptionsType } from "@react/types";
 
 /**
  * this a singleton  class helps me to easily control the components present/available in the widget.

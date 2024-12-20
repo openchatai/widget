@@ -2,8 +2,9 @@ import React, { useMemo } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "./avatar";
 import { formatDistance } from "date-fns";
 import { CheckCheck } from 'lucide-react';
-import type { UserMessageType, WidgetOptions } from "@lib/types";
 import { RenderAttachment } from "./RenderFile";
+import { WidgetOptions } from "@react/types";
+import { UserMessageType } from "@core/types";
 
 export function UserMessage({
   children,
