@@ -7,6 +7,7 @@ import { SessionManager } from "../session/session-manager"
 import { Platform, DefaultPlatform } from "../platform"
 import { ChatSessionType } from "../types/schemas"
 import mitt from 'mitt'
+import { HttpTransport } from "@core/transport/http.transport"
 
 export class ApiClient {
     private messagingTransport: Transport
@@ -46,6 +47,18 @@ export class ApiClient {
                         api: this.api,
                         sessionManager: this.sessionManager,
                         coreOptions: this.options,
+                    },
+                    this.platform,
+                    this.emitter
+                )
+                break;
+            case "http":
+                this.messagingTransport = new HttpTransport(
+                    {
+                        api: this.api,
+                        sessionManager: this.sessionManager,
+                        coreOptions: this.options,
+                        pollingInterval: this.options.pollingInterval,
                     },
                     this.platform,
                     this.emitter

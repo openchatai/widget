@@ -16,7 +16,7 @@ export interface User {
 export interface CoreOptions {
     token: string
     apiUrl: string
-    transport: 'socket'
+    transport: 'socket' | 'http'
     socketUrl: string
     headers?: Record<string, string>
     queryParams?: Record<string, string>

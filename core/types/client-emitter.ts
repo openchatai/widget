@@ -10,6 +10,7 @@ export type ClientEmitterEvents = {
     bot_message: MessageType
     session_update: ChatSessionType
     keyboard_options: string[]
+    connected: { connected: boolean }
 }
 
 export type ClientEmitter = Emitter<ClientEmitterEvents>

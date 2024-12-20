@@ -9,7 +9,7 @@ export interface Transport {
     isConnected(): boolean
 }
 
-export interface TransportOptions {
+export type TransportOptions = {
     api: ApiCaller
     sessionManager: SessionManager
     coreOptions: CoreOptions

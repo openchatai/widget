@@ -5,13 +5,13 @@ import { ApiCaller } from "../client/api"
 import { Platform, DefaultPlatform } from "../platform"
 import { ClientEmitter } from "../types/client-emitter"
 
-export abstract class AbstractTransport implements Transport {
+export abstract class AbstractTransport<Extra extends Record<string, any> = Record<string, any>> implements Transport {
     protected sessionManager: SessionManager
     protected api: ApiCaller
     protected coreOptions: CoreOptions
 
     constructor(
-        protected options: TransportOptions,
+        protected options: TransportOptions & Extra,
         protected readonly platform: Platform = new DefaultPlatform(),
         protected readonly emitter: ClientEmitter
     ) {
@@ -26,10 +26,4 @@ export abstract class AbstractTransport implements Transport {
     abstract disconnect(): void
     abstract isConnected(): boolean
     abstract sendMessage(messageData: MessageData): Promise<void>
-
-    protected validateSession() {
-        const session = this.sessionManager.currentSession
-        if (!session) throw new Error("No active session")
-        return session
-    }
 } 
