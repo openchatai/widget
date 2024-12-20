@@ -26,47 +26,53 @@
     "react": "^18.3.1",
     "rehype-raw": "^7.0.0"
   },
-  "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "react-use": "^17.5.1",
-    "@changesets/cli": "^2.27.9",
-    "@radix-ui/react-popover": "^1.1.2",
-    "@tailwindcss/typography": "^0.5.15",
-    "@testing-library/dom": "^10.4.0",
-    "@testing-library/jest-dom": "^6.5.0",
-    "@testing-library/react": "^16.0.1",
-    "@types/lodash.debounce": "^4.0.9",
-    "@types/lodash.set": "^4.3.9",
-    "@types/node": "^20.14.8",
-    "@types/react": "^18.3.4",
-    "@types/react-dom": "^18.3.0",
-    "@types/tinycolor2": "^1.4.6",
-    "@uiw/react-iframe": "^1.0.3",
-    "@vitejs/plugin-react": "^4.3.1",
-    "autoprefixer": "^10.4.20",
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "optionalDependencies": {
     "axios": "^1.7.5",
-    "class-variance-authority": "^0.7.0",
-    "jsdom": "^25.0.1",
-    "mutative": "^1.0.11",
-    "postcss": "^8.4.41",
-    "postcss-prefix-selector": "^1.16.1",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-markdown": "^9.0.1",
-    "rehype-raw": "^7.0.0",
-    "remark-gfm": "^4.0.0",
     "socket.io-client": "^4.7.5",
-    "swr": "^2.2.5",
-    "tailwind-merge": "^2.4.0",
-    "tailwindcss": "^3.4.6",
-    "tailwindcss-animate": "^1.0.7",
-    "terser": "^5.36.0",
-    "typescript": "^5.5.4",
-    "vite": "^5.4.2",
-    "vite-plugin-dts": "4.0.3",
-    "vite-plugin-externalize-deps": "^0.8.0",
-    "vite-tsconfig-paths": "^5.0.1",
-    "vitest": "^2.0.5"
+    "zod": "^3.23.8"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "framer-motion": "^11.3.30",
+    "lodash.set": "^4.3.2",
+    "lucide-react": "^0.436.0",
+    "mitt": "^3.0.1",
+    "mutative": "^1.0.11",
+    "react-dropzone": "^14.3.5",
+    "react-hot-toast": "^2.4.1",
+    "tinycolor2": "^1.6.0",
+    "zod": "^3.23.8"
+  },
+  "overrides": {
+    "@openchatai/widget": {
+      "react": {
+        "optional": true,
+        "dependencies": {
+          "react-hot-toast": "^2.4.1",
+          "react-markdown": "^9.0.1",
+          "framer-motion": "^11.3.30",
+          "date-fns": "^4.1.0"
+        }
+      }
+    }
+  },
+  "conditionalDependencies": {
+    "react": {
+      "react-hot-toast": "^2.4.1",
+      "react-markdown": "^9.0.1",
+      "framer-motion": "^11.3.30",
+      "date-fns": "^4.1.0"
+    }
   },
   "files": [
     "dist",
@@ -94,23 +100,54 @@
       "import": "./dist/basic.js",
       "require": "./dist/basic.cjs"
     },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js",
+      "require": "./dist/core/index.cjs"
+    },
     "./package.json": "./package.json",
     "./dist/*.css": "./dist/*.css"
   },
-  "dependencies": {
-    "@radix-ui/react-avatar": "^1.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@radix-ui/react-switch": "^1.1.0",
-    "@radix-ui/react-tooltip": "^1.1.2",
-    "clsx": "^2.1.1",
-    "date-fns": "^4.1.0",
-    "framer-motion": "^11.3.30",
-    "lodash.set": "^4.3.2",
-    "lucide-react": "^0.436.0",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@changesets/cli": "^2.27.9",
+    "@radix-ui/react-popover": "^1.1.2",
+    "@tailwindcss/typography": "^0.5.15",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/lodash.set": "^4.3.9",
+    "@types/node": "^20.14.8",
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
+    "@types/tinycolor2": "^1.4.6",
+    "@uiw/react-iframe": "^1.0.3",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.20",
+    "axios": "^1.7.5",
+    "class-variance-authority": "^0.7.0",
+    "jsdom": "^25.0.1",
     "mutative": "^1.0.11",
-    "react-dropzone": "^14.3.5",
-    "react-hot-toast": "^2.4.1",
-    "tinycolor2": "^1.6.0",
-    "zod": "^3.23.8"
+    "postcss": "^8.4.41",
+    "postcss-prefix-selector": "^1.16.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^9.0.1",
+    "react-use": "^17.5.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.0",
+    "socket.io-client": "^4.7.5",
+    "swr": "^2.2.5",
+    "tailwind-merge": "^2.4.0",
+    "tailwindcss": "^3.4.6",
+    "tailwindcss-animate": "^1.0.7",
+    "terser": "^5.36.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2",
+    "vite-plugin-dts": "4.0.3",
+    "vite-plugin-externalize-deps": "^0.8.0",
+    "vite-tsconfig-paths": "^5.0.1",
+    "vitest": "^2.0.5"
   }
 }

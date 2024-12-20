@@ -18,7 +18,7 @@ export default defineConfig({
   server: {
     port: 3005,
   },
-  build:{
+  build: {
     outDir: "dist",
     lib: {
       name: '@openchatai/widget',
@@ -26,6 +26,7 @@ export default defineConfig({
       entry: {
         "basic": resolve(__dirname, "src/designs/basic/index.tsx"),
         "index": resolve(__dirname, "lib/index.tsx"),
+        "core/index": resolve(__dirname, "core/index.ts")
       }
     },
     sourcemap: true,

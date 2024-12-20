@@ -35,6 +35,9 @@ importers:
       lucide-react:
         specifier: ^0.436.0
         version: 0.436.0(react@18.3.1)
+      mitt:
+        specifier: ^3.0.1
+        version: 3.0.1
       mutative:
         specifier: ^1.0.11
         version: 1.0.11
@@ -47,6 +50,13 @@ importers:
       tinycolor2:
         specifier: ^1.6.0
         version: 1.6.0
+    optionalDependencies:
+      axios:
+        specifier: ^1.7.5
+        version: 1.7.7
+      socket.io-client:
+        specifier: ^4.7.5
+        version: 4.8.1
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -99,9 +109,6 @@ importers:
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
-      axios:
-        specifier: ^1.7.5
-        version: 1.7.7
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -132,9 +139,6 @@ importers:
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.0
-      socket.io-client:
-        specifier: ^4.7.5
-        version: 4.8.1
       swr:
         specifier: ^2.2.5
         version: 2.2.5(react@18.3.1)
@@ -2130,6 +2134,9 @@ packages:
     resolution: {integrity: sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==}
     engines: {node: '>=16 || 14 >=14.17'}
 
+  mitt@3.0.1:
+    resolution: {integrity: sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==}
+
   mlly@1.7.2:
     resolution: {integrity: sha512-tN3dvVHYVz4DhSXinXIk7u9syPYaJvio118uomkovAtWBT+RdbP6Lfh/5Lvo519YMmwBafwlh20IPTXIStscpA==}
 
@@ -3901,7 +3908,8 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@socket.io/component-emitter@3.1.2': {}
+  '@socket.io/component-emitter@3.1.2':
+    optional: true
 
   '@tailwindcss/typography@0.5.15(tailwindcss@3.4.14)':
     dependencies:
@@ -4223,6 +4231,7 @@ snapshots:
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
+    optional: true
 
   bail@2.0.2: {}
 
@@ -4455,8 +4464,10 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
-  engine.io-parser@5.2.3: {}
+  engine.io-parser@5.2.3:
+    optional: true
 
   enquirer@2.4.1:
     dependencies:
@@ -4552,7 +4563,8 @@ snapshots:
       locate-path: 5.0.0
       path-exists: 4.0.0
 
-  follow-redirects@1.15.9: {}
+  follow-redirects@1.15.9:
+    optional: true
 
   foreground-child@3.3.0:
     dependencies:
@@ -5296,6 +5308,8 @@ snapshots:
 
   minipass@7.1.2: {}
 
+  mitt@3.0.1: {}
+
   mlly@1.7.2:
     dependencies:
       acorn: 8.13.0
@@ -5480,7 +5494,8 @@ snapshots:
 
   property-information@6.5.0: {}
 
-  proxy-from-env@1.1.0: {}
+  proxy-from-env@1.1.0:
+    optional: true
 
   pseudomap@1.0.2: {}
 
@@ -5748,6 +5763,7 @@ snapshots:
       - bufferutil
       - supports-color
       - utf-8-validate
+    optional: true
 
   socket.io-parser@4.2.4:
     dependencies:
@@ -5755,6 +5771,7 @@ snapshots:
       debug: 4.3.7
     transitivePeerDependencies:
       - supports-color
+    optional: true
 
   source-map-js@1.2.1: {}
 
@@ -6213,7 +6230,8 @@ snapshots:
       string-width: 5.1.2
       strip-ansi: 7.1.0
 
-  ws@8.17.1: {}
+  ws@8.17.1:
+    optional: true
 
   ws@8.18.0: {}
 
@@ -6221,7 +6239,8 @@ snapshots:
 
   xmlchars@2.2.0: {}
 
-  xmlhttprequest-ssl@2.1.1: {}
+  xmlhttprequest-ssl@2.1.1:
+    optional: true
 
   yallist@2.1.2: {}
 
@@ -6231,6 +6250,7 @@ snapshots:
 
   yaml@2.6.0: {}
 
-  zod@3.23.8: {}
+  zod@3.23.8:
+    optional: true
 
   zwitch@2.0.4: {}
