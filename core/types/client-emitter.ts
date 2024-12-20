@@ -1,12 +1,15 @@
+import { Emitter } from "mitt"
 import { MessageType } from "./messages"
-import { AgentType, ChatAttachmentType, ChatSessionType, MessageTypeEnum } from "./schemas"
-import { Emitter } from 'mitt'
+import { ChatSessionType } from "./schemas"
 
-export interface SocketEventHandlers {
-    [key: string | symbol]: ((...args: any[]) => void)
-    session_update: (session: ChatSessionType) => void
-    session_clear: () => void
-    session_created: (session: ChatSessionType) => void
+export type ClientEmitterEvents = {
+    connection_status: string
+    message_delivered: MessageType
+    user_message: MessageType
+    heartbeat_ack: MessageType
+    bot_message: MessageType
+    session_update: ChatSessionType
+    keyboard_options: string[]
 }
 
-export type ClientEmitter = Emitter<SocketEventHandlers> 
+export type ClientEmitter = Emitter<ClientEmitterEvents>

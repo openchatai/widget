@@ -10,6 +10,7 @@ export interface User {
 export interface CoreOptions {
     token: string
     apiUrl: string
+    transport: 'socket'
     socketUrl: string
     headers?: Record<string, string>
     queryParams?: Record<string, string>
@@ -23,7 +24,6 @@ export interface CoreOptions {
         id?: number | null
         is_ai?: boolean
     }
-    transport?: 'http' | 'socket' | 'both'
     pollingInterval?: number
     settings?: {
         persistSession?: boolean

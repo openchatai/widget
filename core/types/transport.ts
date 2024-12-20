@@ -3,13 +3,10 @@ import type { ApiCaller } from "../client/api"
 import { SessionManager } from "../session/session-manager"
 
 export interface Transport {
-    name: string
     connect(): Promise<void>
     disconnect(): void
     sendMessage(messageData: MessageData): Promise<void>
     isConnected(): boolean
-    joinSession?(sessionId: string): void
-    leaveSession?(sessionId: string): void
 }
 
 export interface TransportOptions {

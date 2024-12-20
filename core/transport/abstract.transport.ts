@@ -3,10 +3,9 @@ import { SessionManager } from "../session/session-manager"
 import { CoreOptions } from "../types"
 import { ApiCaller } from "../client/api"
 import { Platform, DefaultPlatform } from "../platform"
-import { ClientEmitter } from "@core/types/client-emitter"
+import { ClientEmitter } from "../types/client-emitter"
 
 export abstract class AbstractTransport implements Transport {
-    name: string = "abstract-transport"
     protected sessionManager: SessionManager
     protected api: ApiCaller
     protected coreOptions: CoreOptions

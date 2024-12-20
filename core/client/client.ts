@@ -2,7 +2,7 @@ import { CoreOptions } from "../types"
 import { Transport } from "../types/transport"
 import { SocketTransport } from "../transport/socket.transport"
 import { ApiCaller } from "./api"
-import { SocketEventHandlers, ClientEmitter } from "../types/client-emitter"
+import { ClientEmitter, ClientEmitterEvents } from "../types/client-emitter"
 import { SessionManager } from "../session/session-manager"
 import { Platform, DefaultPlatform } from "../platform"
 import { ChatSessionType } from "../types/schemas"
@@ -15,18 +15,20 @@ export class ApiClient {
     private sessionManager: SessionManager
     private _emitter: ClientEmitter
 
-    constructor(options: CoreOptions,
-        private readonly platform: Platform = new DefaultPlatform()) {
+    constructor(
+        options: CoreOptions,
+        private readonly platform: Platform = new DefaultPlatform()
+    ) {
 
         this.options = {
-            transport: 'http',
-            pollingInterval: 3000,
             ...options,
+            transport: 'socket',
+            pollingInterval: 3000,
             headers: {
                 "X-Bot-Token": options.token,
-                "X-Widget-Version": this.platform.env.version,
+                "X-Widget-Version": this.platform.env.version || 'unknown-version',
                 ...options.headers,
-            }
+            },
         }
 
         this.api = new ApiCaller({
@@ -34,19 +36,24 @@ export class ApiClient {
             token: this.options.token,
         })
 
-        this._emitter = mitt<SocketEventHandlers>()
+        this._emitter = mitt<ClientEmitterEvents>()
 
         this.sessionManager = new SessionManager(this.emitter)
-
-        this.messagingTransport = new SocketTransport(
-            {
-                api: this.api,
-                sessionManager: this.sessionManager,
-                coreOptions: this.options,
-            },
-            this.platform,
-            this.emitter
-        )
+        switch (options.transport) {
+            case 'socket':
+                this.messagingTransport = new SocketTransport(
+                    {
+                        api: this.api,
+                        sessionManager: this.sessionManager,
+                        coreOptions: this.options,
+                    },
+                    this.platform,
+                    this.emitter
+                )
+                break;
+            default:
+                throw new Error(`Transport ${options.transport} not supported`)
+        }
     }
 
     async getSession() {

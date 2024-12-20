@@ -1,7 +1,7 @@
 export interface Platform {
     storage?: Storage
     env: {
-        version: string
+        version?: string
     }
     date: {
         now(): number
@@ -12,7 +12,7 @@ export interface Platform {
 // Default platform implementation
 export class DefaultPlatform implements Platform {
     env = {
-        version: process.env.npm_package_version || '1.0.0'
+        version: process.env.npm_package_version
     }
     date = {
         now: () => Date.now(),
