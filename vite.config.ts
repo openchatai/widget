@@ -9,25 +9,26 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     dts({
-      insertTypesEntry: true
+      insertTypesEntry: true,
     }),
     externalizeDeps({
-      except: ["rehype-raw"]
+      except: ["rehype-raw"],
     }),
-    react()],
+    react(),
+  ],
   server: {
     port: 3005,
   },
   build: {
     outDir: "dist",
     lib: {
-      name: '@openchatai/widget',
+      name: "@openchatai/widget",
       formats: ["cjs", "es"],
       entry: {
-        "basic": resolve(__dirname, "src/designs/basic/index.tsx"),
-        "react": resolve(__dirname, "react-lib/index.tsx"),
-        "index": resolve(__dirname, "core/index.ts")
-      }
+        basic: resolve(__dirname, "src/designs/basic/index.tsx"),
+        react: resolve(__dirname, "react-lib/index.tsx"),
+        index: resolve(__dirname, "core/index.ts"),
+      },
     },
     sourcemap: true,
   },

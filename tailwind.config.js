@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       zIndex: {
-        max: 9999
+        max: 9999,
       },
       colors: {
         primary: "var(--opn-primary)",
@@ -24,16 +24,13 @@ export default {
         destructive: "hsl(var(--opn-destructive))",
         "destructive-foreground": "hsl(var(--opn-destructive-foreground))",
 
-        "input": "hsl(var(--opn-input))",
-        "border": "hsl(var(--opn-border))"
+        input: "hsl(var(--opn-input))",
+        border: "hsl(var(--opn-border))",
       },
     },
     fontFamily: {
       inter: ["Inter", "Cairo", "sans-serif"],
     },
   },
-  plugins: [
-    require("tailwindcss-animate"),
-    require("@tailwindcss/typography"),
-  ]
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 };

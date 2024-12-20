@@ -19,7 +19,9 @@
     "cs": "changeset",
     "csv": "changeset version",
     "csp": "changeset publish",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "lint": "biome lint --fix",
+    "format": "biome format --fix"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",
@@ -74,10 +76,7 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": [
-    "dist",
-    "dist-embed"
-  ],
+  "files": ["dist", "dist-embed"],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },
