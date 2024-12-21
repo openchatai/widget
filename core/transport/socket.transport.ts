@@ -6,7 +6,7 @@ import { TransportError } from "../errors"
 import { Platform, DefaultPlatform } from "../platform"
 import { StructuredSocketMessageType } from "../types/schemas"
 import { AbstractTransport } from "./abstract.transport"
-import { genId } from "@core/utils/genId"
+import { genId } from "../utils/genId"
 
 export class SocketTransport extends AbstractTransport {
     private socket: Socket | null = null
@@ -23,12 +23,12 @@ export class SocketTransport extends AbstractTransport {
     async connect(): Promise<void> {
         if (this.socket) return
 
-        this.socket = io(this.coreOptions.socketUrl, {
+        this.socket = io(this.options.coreOptions.socketUrl, {
             query: {
-                token: this.coreOptions.token,
+                token: this.options.coreOptions.token,
                 client: "widget",
                 clientVersion: version,
-                ...this.coreOptions.queryParams,
+                ...this.options.coreOptions.queryParams,
             },
             transports: ["websocket"],
             closeOnBeforeunload: true,
@@ -128,7 +128,6 @@ export class SocketTransport extends AbstractTransport {
 
             this.socket.emit("heartbeat", {
                 timestamp: this.platform.date.now(),
-                ...this.coreOptions.queryParams
             })
         }
 
@@ -136,12 +135,24 @@ export class SocketTransport extends AbstractTransport {
         this.heartbeatInterval = setInterval(sendHeartbeat, 50 * 1000)
     }
 
-    async sendMessage(messageData: MessageData): Promise<void> {
+    removeHeartbeat(): void {
+        if (this.heartbeatInterval) {
+            clearInterval(this.heartbeatInterval)
+            this.heartbeatInterval = undefined
+        }
+    }
+
+    async sendMessage(messageData: MessageData) {
+
         if (!this.socket?.connected) {
             throw new TransportError("Socket not connected")
         }
-        const session = this.sessionManager.currentSession
-        if (!session) throw new Error("No active session")
+
+        const session = await this.sessionManager.getOrCreateSession()
+
+        if (!session) {
+            throw new TransportError("No active session")
+        }
 
         this.socket.emit("send_chat", {
             ...messageData,

@@ -1,44 +1,54 @@
-import { ClientEmitter } from "@core/types/client-emitter"
+import { ClientEmitter } from "../types/client-emitter"
 import { AIClosureType, SessionStatus, ChatSessionType } from "../types/schemas"
+import { ApiCaller } from "../client/api"
+
+type ChatSessionWithStatus = ChatSessionType & {
+    isSessionClosed: boolean
+    isAssignedToAi: boolean
+    isAssignedToHuman: boolean
+    isPendingHuman: boolean
+}
 
 export class SessionManager {
-
+    #currentSession: ChatSessionType | null = null
     constructor(
-        private readonly clientEmitter: ClientEmitter
+        private readonly clientEmitter: ClientEmitter,
+        private readonly httpClient: ApiCaller
     ) {
     }
 
-    private _currentSession: ChatSessionType | null = null
-
-    static create({ session, clientEmitter }: {
-        session: ChatSessionType
-        clientEmitter: ClientEmitter
-    }) {
-        const sessionManager = new SessionManager(clientEmitter)
-        sessionManager.setSession(session)
-        return sessionManager
-    }
-
-    get currentSession() {
+    get currentSession(): ChatSessionWithStatus | null {
+        if (!this.#currentSession) {
+            return null
+        }
         return {
-            ...this._currentSession,
-            isSessionClosed: this._currentSession?.status !== SessionStatus.OPEN,
-            isAssignedToAi: this._currentSession?.assignee_id === 555,
-            isAssignedToHuman: this._currentSession?.assignee_id !== 555,
-            isPendingHuman: this._currentSession?.assignee_id === 555 && this._currentSession?.ai_closure_type === AIClosureType.handed_off,
+            ...this.#currentSession,
+            isSessionClosed: this.#currentSession?.status !== SessionStatus.OPEN,
+            isAssignedToAi: this.#currentSession?.assignee_id === 555,
+            isAssignedToHuman: this.#currentSession?.assignee_id !== 555,
+            isPendingHuman: this.#currentSession?.assignee_id === 555 && this.#currentSession?.ai_closure_type === AIClosureType.handed_off,
         }
     }
 
     setSession(session: ChatSessionType): void {
-        this._currentSession = session
+        this.#currentSession = session
     }
 
     clearSession(): void {
-        this._currentSession = null
+        this.#currentSession = null
     }
 
-    get isSessionOpen(): boolean {
-        return this._currentSession?.status === SessionStatus.OPEN
+    async createSession(): Promise<ChatSessionType> {
+        const session = await this.httpClient.createSession()
+        this.setSession(session)
+        return session
     }
 
+    async getOrCreateSession(): Promise<ChatSessionType> {
+        const session = this.currentSession
+        if (!session) {
+            return this.createSession()
+        }
+        return session
+    }
 }

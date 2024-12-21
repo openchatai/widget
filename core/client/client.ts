@@ -1,5 +1,4 @@
 import { CoreOptions } from "../types"
-import { Transport } from "../types/transport"
 import { SocketTransport } from "../transport/socket.transport"
 import { ApiCaller } from "./api"
 import { ClientEmitter, ClientEmitterEvents } from "../types/client-emitter"
@@ -8,12 +7,13 @@ import { Platform, DefaultPlatform } from "../platform"
 import { ChatSessionType } from "../types/schemas"
 import mitt from 'mitt'
 import { HttpTransport } from "../transport/http.transport"
+import { AbstractTransport } from "../transport/abstract.transport"
 
 export class ApiClient {
-    private messagingTransport: Transport
+    private messagingTransport: AbstractTransport
     private options: Required<CoreOptions>
     private api: ApiCaller
-    private sessionManager: SessionManager
+    private session: SessionManager
     private _emitter: ClientEmitter
 
     constructor(
@@ -46,14 +46,14 @@ export class ApiClient {
 
         this._emitter = mitt<ClientEmitterEvents>()
 
-        this.sessionManager = new SessionManager(this.emitter)
+        this.session = new SessionManager(this.emitter, this.api)
         if (options.transport) {
             switch (options.transport) {
                 case 'socket':
                     this.messagingTransport = new SocketTransport(
                         {
                             api: this.api,
-                            sessionManager: this.sessionManager,
+                            sessionManager: this.session,
                             coreOptions: this.options,
                         },
                         this.platform,
@@ -64,7 +64,7 @@ export class ApiClient {
                     this.messagingTransport = new HttpTransport(
                         {
                             api: this.api,
-                            sessionManager: this.sessionManager,
+                            sessionManager: this.session,
                             coreOptions: this.options,
                             pollingInterval: this.options.pollingInterval,
                         },
@@ -79,7 +79,7 @@ export class ApiClient {
             this.messagingTransport = new SocketTransport(
                 {
                     api: this.api,
-                    sessionManager: this.sessionManager,
+                    sessionManager: this.session,
                     coreOptions: this.options,
                 },
                 this.platform,
@@ -89,20 +89,20 @@ export class ApiClient {
     }
 
     async getSession() {
-        const currentSession = this.sessionManager.currentSession
+        const currentSession = this.session.currentSession
 
         if (currentSession) {
             return currentSession
         }
 
         const newSession = await this.createSession()
-        this.sessionManager.setSession(newSession)
+        this.session.setSession(newSession)
         return newSession
     }
 
     async createSession(): Promise<ChatSessionType> {
         const session = await this.api.createSession()
-        this.sessionManager.setSession(session)
+        this.session.setSession(session)
         return session
     }
 
@@ -114,7 +114,7 @@ export class ApiClient {
         this.messagingTransport.disconnect()
     }
 
-    setTransport(transport: Transport): void {
+    setTransport(transport: AbstractTransport): void {
         this.messagingTransport.disconnect()
         this.messagingTransport = transport
         this.connect()
@@ -127,7 +127,7 @@ export class ApiClient {
     get state() {
         return {
             connected: this.messagingTransport.isConnected(),
-            session: this.sessionManager.currentSession,
+            session: this.session.currentSession,
         }
     }
 }
