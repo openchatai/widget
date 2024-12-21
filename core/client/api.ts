@@ -8,26 +8,18 @@ import { mapChatHistoryToMessage } from "../utils/history-to-widget-messages"
 export class ApiCaller {
     private _http: AxiosInstance
 
-    constructor(options: {
-        apiUrl: string,
-        token: string,
-    }) {
+    constructor(
+        private readonly options: {
+            apiUrl: string,
+            token: string,
+        }) {
         this._http = axios.create({
             baseURL: options.apiUrl,
             headers: {
                 "X-Bot-Token": options.token,
-                "X-Widget-Version": process.env.npm_package_version || '1.0.0',
             },
         })
 
-        this.setupInterceptors()
-    }
-
-    get http() {
-        return this._http
-    }
-
-    private setupInterceptors() {
         this.http.interceptors.response.use(
             response => response,
             error => {
@@ -39,9 +31,13 @@ export class ApiCaller {
         )
     }
 
+    get http() {
+        return this._http
+    }
+
     async createSession() {
         try {
-            const response = await this.http.post<ChatSessionType>(`/chat-session/${this.http.defaults.headers["X-Bot-Token"]}`)
+            const response = await this.http.post<ChatSessionType>(`/chat-session/${this.options.token}`)
             return response.data
         } catch {
             throw new SessionError('Failed to create session')

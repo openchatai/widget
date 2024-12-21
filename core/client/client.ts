@@ -7,11 +7,11 @@ import { SessionManager } from "../session/session-manager"
 import { Platform, DefaultPlatform } from "../platform"
 import { ChatSessionType } from "../types/schemas"
 import mitt from 'mitt'
-import { HttpTransport } from "@core/transport/http.transport"
+import { HttpTransport } from "../transport/http.transport"
 
 export class ApiClient {
     private messagingTransport: Transport
-    private options: CoreOptions
+    private options: Required<CoreOptions>
     private api: ApiCaller
     private sessionManager: SessionManager
     private _emitter: ClientEmitter
@@ -23,13 +23,20 @@ export class ApiClient {
 
         this.options = {
             ...options,
-            transport: 'socket',
-            pollingInterval: 3000,
+            apiUrl: options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
+            socketUrl: options.socketUrl ?? "https://api-v2.opencopilot.so",
+            transport: options.transport ?? 'socket',
+            pollingInterval: options.pollingInterval ?? 3000,
             headers: {
                 "X-Bot-Token": options.token,
-                "X-Widget-Version": this.platform.env.version || 'unknown-version',
                 ...options.headers,
             },
+            queryParams: {},
+            pathParams: {},
+            bot: {},
+            debug: false,
+            language: "en",
+            user: {},
         }
 
         this.api = new ApiCaller({
@@ -40,32 +47,44 @@ export class ApiClient {
         this._emitter = mitt<ClientEmitterEvents>()
 
         this.sessionManager = new SessionManager(this.emitter)
-        switch (options.transport) {
-            case 'socket':
-                this.messagingTransport = new SocketTransport(
-                    {
-                        api: this.api,
-                        sessionManager: this.sessionManager,
-                        coreOptions: this.options,
-                    },
-                    this.platform,
-                    this.emitter
-                )
-                break;
-            case "http":
-                this.messagingTransport = new HttpTransport(
-                    {
-                        api: this.api,
-                        sessionManager: this.sessionManager,
-                        coreOptions: this.options,
-                        pollingInterval: this.options.pollingInterval,
-                    },
-                    this.platform,
-                    this.emitter
-                )
-                break;
-            default:
-                throw new Error(`Transport ${options.transport} not supported`)
+        if (options.transport) {
+            switch (options.transport) {
+                case 'socket':
+                    this.messagingTransport = new SocketTransport(
+                        {
+                            api: this.api,
+                            sessionManager: this.sessionManager,
+                            coreOptions: this.options,
+                        },
+                        this.platform,
+                        this.emitter
+                    )
+                    break;
+                case "http":
+                    this.messagingTransport = new HttpTransport(
+                        {
+                            api: this.api,
+                            sessionManager: this.sessionManager,
+                            coreOptions: this.options,
+                            pollingInterval: this.options.pollingInterval,
+                        },
+                        this.platform,
+                        this.emitter
+                    )
+                    break;
+                default:
+                    throw new Error(`Transport ${options.transport} not supported`)
+            }
+        } else {
+            this.messagingTransport = new SocketTransport(
+                {
+                    api: this.api,
+                    sessionManager: this.sessionManager,
+                    coreOptions: this.options,
+                },
+                this.platform,
+                this.emitter
+            )
         }
     }
 
@@ -103,5 +122,12 @@ export class ApiClient {
 
     get emitter() {
         return this._emitter
+    }
+
+    get state() {
+        return {
+            connected: this.messagingTransport.isConnected(),
+            session: this.sessionManager.currentSession,
+        }
     }
 }

@@ -1,7 +1,7 @@
 export interface Platform {
     storage?: Storage
     env: {
-        version?: string
+        platform: string;
     }
     date: {
         now(): number
@@ -12,10 +12,18 @@ export interface Platform {
 // Default platform implementation
 export class DefaultPlatform implements Platform {
     env = {
-        version: process.env.npm_package_version
+        platform: this.detectPlatform()
     }
+
     date = {
         now: () => Date.now(),
         toISOString: (date: number) => new Date(date).toISOString()
+    }
+
+    private detectPlatform() {
+        if (typeof window !== "undefined") {
+            return "browser"
+        }
+        return "node"
     }
 } 
