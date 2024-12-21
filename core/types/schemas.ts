@@ -174,6 +174,12 @@ export const consumerSchema = z.object({
 type AgentType = z.infer<typeof agentSchema>;
 type ConsumerType = z.infer<typeof consumerSchema>
 type ChatSessionType = z.infer<typeof chatSessionSchema>;
+type ChatSessionWithStatus = ChatSessionType & {
+    isSessionClosed: boolean
+    isAssignedToAi: boolean
+    isAssignedToHuman: boolean
+    isPendingHuman: boolean
+}
 type StructuredSocketMessageType = z.infer<typeof structuredSocketMessageSchema>;
 type ChatHistoryMessageType = z.infer<typeof chatHistoryMessageSchema>;
-export type { AgentType, ConsumerType, ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType };
+export type { AgentType, ConsumerType, ChatSessionType, StructuredSocketMessageType, ChatHistoryMessageType, ChatSessionWithStatus };

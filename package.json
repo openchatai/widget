@@ -48,7 +48,6 @@
     "framer-motion": "^11.3.30",
     "lodash.set": "^4.3.2",
     "lucide-react": "^0.436.0",
-    "mitt": "^3.0.1",
     "mutative": "^1.0.11",
     "react-dropzone": "^14.3.5",
     "react-hot-toast": "^2.4.1",
@@ -76,7 +75,10 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": ["dist", "dist-embed"],
+  "files": [
+    "dist",
+    "dist-embed"
+  ],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },

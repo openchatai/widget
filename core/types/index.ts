@@ -1,6 +1,6 @@
 export * from "./messages"
 export * from "./schemas"
-export * from "./client-emitter"
+export * from "./pub-sub"
 export * from "./transport"
 export * from "./helpers"
 

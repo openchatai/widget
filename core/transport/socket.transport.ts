@@ -1,186 +1,81 @@
-import { io, Socket } from "socket.io-client"
-import { TransportOptions, MessageData } from "../types/transport"
-import { version } from "../../package.json"
-import { ClientEmitter } from "../types/client-emitter"
-import { TransportError } from "../errors"
 import { Platform, DefaultPlatform } from "../platform"
-import { StructuredSocketMessageType } from "../types/schemas"
-import { AbstractTransport } from "./abstract.transport"
-import { genId } from "../utils/genId"
+import { MessageData, TransportOptions } from "../types/transport"
+import { MessagingTransport } from "./transport"
+import { io, Socket } from "socket.io-client"
 
-export class SocketTransport extends AbstractTransport {
+export class SocketTransport extends MessagingTransport {
     private socket: Socket | null = null
-    private heartbeatInterval?: NodeJS.Timeout
+    private connected = false
 
     constructor(
-        options: TransportOptions,
-        platform: Platform = new DefaultPlatform(),
-        emitter: ClientEmitter
+        private readonly socketOptions: TransportOptions,
+        private readonly platform: Platform = new DefaultPlatform()
     ) {
-        super(options, platform, emitter)
+        super(socketOptions)
     }
 
     async connect(): Promise<void> {
-        if (this.socket) return
+        if (this.socket) {
+            this.socket.disconnect()
+        }
 
-        this.socket = io(this.options.coreOptions.socketUrl, {
-            query: {
-                token: this.options.coreOptions.token,
-                client: "widget",
-                clientVersion: version,
-                ...this.options.coreOptions.queryParams,
-            },
+        this.socket = io(this.socketOptions.coreOptions.socketUrl, {
             transports: ["websocket"],
-            closeOnBeforeunload: true,
-            autoConnect: true,
-        })
-
-        this.setupSocketListeners()
-        this.startHeartbeat()
-
-        await new Promise<void>((resolve) => {
-            this.socket?.once("connect", () => resolve())
-        })
-    }
-
-    private setupSocketListeners(): void {
-        if (!this.socket) return
-
-        this.socket.on("connect", () => {
-            this.emitter.emit("connection_status", "connected")
-        })
-
-        this.socket.on("disconnect", () => {
-            this.emitter.emit("connection_status", "disconnected")
-        })
-
-        this.socket.on("structured_message", (data) => {
-            this.handleStructuredMessage(data)
-        })
-
-        this.socket.on("ack:chat_message:delivered", (data) => {
-            this.emitter.emit("message_delivered", data)
-        })
-
-        this.socket.on("user_message_broadcast", (data) => {
-            this.emitter.emit("user_message", data)
-        })
-
-        this.socket.on("heartbeat:ack", (data) => {
-            this.emitter.emit("heartbeat_ack", data)
-        })
-    }
-
-    private handleStructuredMessage(message: StructuredSocketMessageType): void {
-        switch (message.type) {
-            case "message": {
-                const botMessage = message
-                this.emitter.emit("bot_message", {
-                    type: "FROM_BOT",
-                    component: "TEXT",
-                    id: botMessage.server_message_id,
-                    timestamp: botMessage.timestamp,
-                    attachments: botMessage.attachments,
-                    data: {
-                        message: botMessage.value,
-                    },
-                    agent: botMessage.agent,
-                })
-                break
+            auth: {
+                token: this.socketOptions.coreOptions.token
             }
-
-            case "session_update": {
-                const sessionUpdate = message
-                this.emitter.emit("session_update", sessionUpdate.value.session)
-                break
-            }
-
-            case "options": {
-                const options = message
-                this.emitter.emit("keyboard_options", options.value.options)
-                break
-            }
-
-            case "ui": {
-                const uiVal = message.value
-                this.emitter.emit("bot_message", {
-                    type: "FROM_BOT",
-                    component: uiVal.name,
-                    data: uiVal.request_response,
-                    id: genId(),
-                    agent: message.agent,
-                    timestamp: message.timestamp,
-                })
-                break
-            }
-
-            default: {
-                console.log("Unknown message type", message)
-            }
-        }
-    }
-
-    private startHeartbeat(): void {
-        if (this.heartbeatInterval) return
-
-        const sendHeartbeat = () => {
-            if (!this.socket?.connected) return
-
-            this.socket.emit("heartbeat", {
-                timestamp: this.platform.date.now(),
-            })
-        }
-
-        sendHeartbeat() // Initial heartbeat
-        this.heartbeatInterval = setInterval(sendHeartbeat, 50 * 1000)
-    }
-
-    removeHeartbeat(): void {
-        if (this.heartbeatInterval) {
-            clearInterval(this.heartbeatInterval)
-            this.heartbeatInterval = undefined
-        }
-    }
-
-    async sendMessage(messageData: MessageData) {
-
-        if (!this.socket?.connected) {
-            throw new TransportError("Socket not connected")
-        }
-
-        const session = await this.sessionManager.getOrCreateSession()
-
-        if (!session) {
-            throw new TransportError("No active session")
-        }
-
-        this.socket.emit("send_chat", {
-            ...messageData,
-            session_id: session.id
         })
-    }
 
-    joinSession(sessionId: string): void {
-        this.socket?.emit("join_session", { session_id: sessionId })
-    }
-
-    leaveSession(sessionId: string): void {
-        this.socket?.emit("leave_session", { session_id: sessionId })
+        this.setupSocketEvents()
     }
 
     disconnect(): void {
-        if (this.heartbeatInterval) {
-            clearInterval(this.heartbeatInterval)
-            this.heartbeatInterval = undefined
-        }
-
         if (this.socket) {
             this.socket.disconnect()
             this.socket = null
         }
+        this.connected = false
+        this.events.publish('transport:status', { status: 'disconnected' })
     }
 
     isConnected(): boolean {
-        return !!this.socket?.connected
+        return this.connected
+    }
+
+    async sendMessage(message: MessageData): Promise<void> {
+        if (!this.socket || !this.connected) {
+            const error = new Error('Socket not connected')
+            this.events.publish('transport:error', { error })
+            throw error
+        }
+
+        try {
+            this.socket.emit('message', message)
+        } catch (error) {
+            this.events.publish('transport:error', { error: error as Error })
+            throw error
+        }
+    }
+
+    private setupSocketEvents(): void {
+        if (!this.socket) return
+
+        this.socket.on('connect', () => {
+            this.connected = true
+            this.events.publish('transport:status', { status: 'connected' })
+        })
+
+        this.socket.on('disconnect', () => {
+            this.connected = false
+            this.events.publish('transport:status', { status: 'disconnected' })
+        })
+
+        this.socket.on('error', (error: Error) => {
+            this.events.publish('transport:error', { error })
+        })
+
+        this.socket.on('message', (message: MessageData) => {
+            this.events.publish('transport:message:received', message)
+        })
     }
 } 

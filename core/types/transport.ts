@@ -1,6 +1,7 @@
 import { CoreOptions } from "./index"
 import type { ApiCaller } from "../client/api"
-import { SessionManager } from "../session/session-manager"
+import { SessionManager } from "../managers/session-manager"
+import { ChatAttachmentType } from "./schemas"
 
 export type TransportOptions = {
     api: ApiCaller
@@ -9,15 +10,13 @@ export type TransportOptions = {
 }
 
 export interface MessageData {
-    content: { text: string }
     id: string
+    content: { text: string }
     timestamp: string
-    token: string
     bot_token: string
     session_id: string
-
     headers?: Record<string, string>
-    attachments?: Array<{ url: string }>
+    attachments?: ChatAttachmentType[]
     pathParams?: Record<string, string>
     queryParams?: Record<string, string>
     user?: {
