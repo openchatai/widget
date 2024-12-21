@@ -21,9 +21,10 @@ export class DefaultPlatform implements Platform {
     }
 
     private detectPlatform() {
+        // detect browser
         if (typeof window !== "undefined") {
             return "browser"
         }
-        return "node"
+        return "server"
     }
-} 
+}

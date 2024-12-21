@@ -1,13 +1,15 @@
 import { ApiClient } from "@core/client"
 import { createSafeContext } from "@react/utils/create-safe-context"
-import React, { useMemo } from "react"
+import React from "react"
 import { useConfigData } from "./ConfigDataProvider"
+import { useBaseClient } from "@react/hooks/useBaseClient"
 
 const [useClient, SafeClientProvider] = createSafeContext<ApiClient>()
 
 function ClientProvider({ children }: { children: React.ReactNode }) {
     const config = useConfigData()
-    const client = useMemo(() => new ApiClient({ token: config.token }), [config])
+    const client = useBaseClient({ token: config.token })
+    if (!client) return null
     return <SafeClientProvider value={client}>{children}</SafeClientProvider>
 }
 
