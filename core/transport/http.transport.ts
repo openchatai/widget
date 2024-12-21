@@ -7,7 +7,6 @@ interface HttpTransportOptions extends TransportOptions {
 }
 
 export class HttpTransport extends MessagingTransport {
-    private connected = false
     private pollingInterval?: NodeJS.Timeout
 
     constructor(
@@ -18,34 +17,28 @@ export class HttpTransport extends MessagingTransport {
     }
 
     async connect(): Promise<void> {
-        this.connected = true
-        this.events.publish('transport:status', { status: 'connected' })
+        this.setState({ connected: true })
         this.startPolling()
     }
 
     disconnect(): void {
-        this.connected = false
         if (this.pollingInterval) {
             clearInterval(this.pollingInterval)
         }
-        this.events.publish('transport:status', { status: 'disconnected' })
-    }
-
-    isConnected(): boolean {
-        return this.connected
+        this.setState({ connected: false })
     }
 
     async sendMessage(message: MessageData): Promise<void> {
-        if (!this.connected) {
+        if (!this.isConnected()) {
             const error = new Error('Transport not connected')
-            this.events.publish('transport:error', { error })
+            this.publish('transport:error', { error })
             throw error
         }
 
         try {
             await this.httpOptions.api.sendMessage(message)
         } catch (error) {
-            this.events.publish('transport:error', { error: error as Error })
+            this.publish('transport:error', { error: error as Error })
             throw error
         }
     }
@@ -56,17 +49,17 @@ export class HttpTransport extends MessagingTransport {
         }
 
         this.pollingInterval = setInterval(async () => {
-            if (!this.connected) return
+            if (!this.isConnected()) return
 
             try {
                 const session = await this.httpOptions.sessionManager.getOrCreateSession()
                 const messages = await this.httpOptions.api.getMessages(session.id)
 
                 messages.forEach(message => {
-                    this.events.publish('transport:message:received', message)
+                    this.publish('transport:message:received', message)
                 })
             } catch (error) {
-                this.events.publish('transport:error', { error: error as Error })
+                this.publish('transport:error', { error: error as Error })
             }
         }, this.httpOptions.pollingInterval)
     }

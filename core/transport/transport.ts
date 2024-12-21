@@ -7,17 +7,40 @@ export interface TransportEvents extends Record<string, any> {
     "transport:status": { status: "connected" | "disconnected" }
 }
 
-export abstract class MessagingTransport {
-    protected readonly events = new PubSub<TransportEvents>()
+export interface TransportState {
+    connected: boolean
+}
 
-    constructor(protected readonly options: TransportOptions) { }
+export abstract class MessagingTransport extends PubSub<TransportEvents> {
+    #state: TransportState = {
+        connected: false
+    }
+
+    constructor(protected readonly options: TransportOptions) {
+        super()
+    }
 
     abstract connect(): Promise<void>
     abstract disconnect(): void
     abstract sendMessage(message: MessageData): Promise<void>
-    abstract isConnected(): boolean
 
-    on<K extends keyof TransportEvents>(event: K, callback: (data: TransportEvents[K]) => void): () => void {
-        return this.events.subscribe(event, callback)
+    protected setState(newState: Partial<TransportState>) {
+        this.#state = { ...this.#state, ...newState }
+
+        // Emit status change event if connected state changes
+        if ('connected' in newState) {
+            this.publish('transport:status', {
+                status: newState.connected ? 'connected' : 'disconnected'
+            })
+        }
     }
+
+    isConnected(): boolean {
+        return this.#state.connected
+    }
+
+    getState(): TransportState {
+        return { ...this.#state }
+    }
+
 }

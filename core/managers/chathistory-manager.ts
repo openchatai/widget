@@ -33,16 +33,14 @@ export interface ChatHistoryEvents extends EventMap {
  * });
  * ```
  */
-export class ChatHistoryManager extends Subscribable {
+export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
     private messages: MessageType[] = [];
     private lastUpdated: number | null = null;
-    private readonly events: PubSub<ChatHistoryEvents>;
 
     constructor() {
         super();
         this.messages = [];
         this.lastUpdated = null;
-        this.events = new PubSub<ChatHistoryEvents>();
     }
 
     /**
@@ -55,13 +53,13 @@ export class ChatHistoryManager extends Subscribable {
         event: K,
         callback: (data: ChatHistoryEvents[K]) => void
     ): () => void {
-        return this.events.subscribe(event, callback);
+        return this.subscribe(event, callback);
     }
 
     private handleNewMessage = (message: MessageType) => {
         this.messages.push(message);
         this.updateTimestamp();
-        this.events.publish('history:message:added', message);
+        this.publish('history:message:added', message);
         this.notifyHistoryUpdate();
     };
 
@@ -72,7 +70,7 @@ export class ChatHistoryManager extends Subscribable {
     };
 
     private notifyHistoryUpdate() {
-        this.events.publish('history:updated', [...this.messages]); // Immutable copy
+        this.publish('history:updated', [...this.messages]); // Immutable copy
     }
 
     public addResponseMessage(message: MessageType) {
@@ -96,7 +94,7 @@ export class ChatHistoryManager extends Subscribable {
         const updatedMessages = this.messages.map(message => {
             if (message.type === "FROM_USER" && message.id === clientMessageId) {
                 const updatedMessage = { ...message, deliveredAt };
-                this.events.publish('history:message:updated', updatedMessage);
+                this.publish('history:message:updated', updatedMessage);
                 return updatedMessage;
             }
             return message;
@@ -114,7 +112,7 @@ export class ChatHistoryManager extends Subscribable {
 
         if (messagesToAdd.length > 0) {
             messagesToAdd.forEach(msg => {
-                this.events.publish('history:message:added', msg);
+                this.publish('history:message:added', msg);
             });
             this.handleHistoryUpdate([...this.messages, ...messagesToAdd]);
         }
@@ -123,7 +121,7 @@ export class ChatHistoryManager extends Subscribable {
     public reset() {
         this.messages = [];
         this.lastUpdated = null;
-        this.events.publish('history:cleared', void 0);
+        this.publish('history:cleared', void 0);
         this.notifyHistoryUpdate();
     }
 
@@ -154,6 +152,6 @@ export class ChatHistoryManager extends Subscribable {
     protected cleanup(): void {
         this.messages = [];
         this.lastUpdated = null;
-        this.events.clear();
+        this.clear();
     }
 }

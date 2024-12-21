@@ -4,10 +4,10 @@ import { ApiCaller } from "./api"
 import { PubSub, Subscribable } from "../types/pub-sub"
 import { SessionManager } from "../managers/session-manager"
 import { Platform, DefaultPlatform } from "../platform"
-import { ChatSessionType, ChatAttachmentType } from "../types/schemas"
+import { ChatAttachmentType } from "../types/schemas"
 import { HttpTransport } from "../transport/http.transport"
-import { MessagingTransport, TransportEvents } from "../transport/transport"
-import { MessageType, UserMessageType, BotMessageType } from "../types/messages"
+import { MessagingTransport } from "../transport/transport"
+import { MessageType, UserMessageType, BotMessageType, SendMessageInput } from "../types/messages"
 import { genId } from "../utils/genId"
 import { MessageData } from "../types/transport"
 import { mapChatHistoryToMessage } from "../utils/history-to-widget-messages"
@@ -19,23 +19,6 @@ interface ClientEvents extends Record<string, any> {
     "client:message:sent": MessageType
     "client:keyboard:update": string[]
     "client:heartbeat": { sessionId: string; timestamp: number }
-}
-
-export interface SendMessageInput {
-    content: {
-        text: string;
-    };
-    attachments?: ChatAttachmentType[];
-    id?: string;
-    language?: string;
-    user?: {
-        external_id?: string;
-        name?: string;
-        email?: string;
-        phone?: string;
-        customData?: Record<string, string>;
-        avatarUrl?: string;
-    };
 }
 
 export class ApiClient extends Subscribable {
@@ -162,7 +145,7 @@ export class ApiClient extends Subscribable {
     }
 
     private setupTransportEvents(): void {
-        this.messagingTransport.on('transport:message:received', (data: MessageData) => {
+        this.messagingTransport.subscribe('transport:message:received', (data: MessageData) => {
             const message: BotMessageType = {
                 type: "FROM_BOT",
                 id: data.id,
@@ -174,12 +157,12 @@ export class ApiClient extends Subscribable {
             this.handleIncomingMessage(message);
         });
 
-        this.messagingTransport.on('transport:error', ({ error }) => {
+        this.messagingTransport.subscribe('transport:error', ({ error }) => {
             console.error('Transport error:', error);
             this.events.publish('client:error', error);
         });
 
-        this.messagingTransport.on('transport:status', ({ status }) => {
+        this.messagingTransport.subscribe('transport:status', ({ status }) => {
             if (status === 'connected') {
                 this.events.publish('client:ready', void 0);
             }
@@ -323,7 +306,7 @@ export class ApiClient extends Subscribable {
             clearInterval(this.heartbeatInterval);
         }
         this.messagingTransport.disconnect();
-        this.session.dispose();
+        this.session.clear();
         this.events.clear();
         this.messages = [];
         this.keyboard = null;

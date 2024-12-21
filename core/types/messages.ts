@@ -28,3 +28,22 @@ export type BotMessageType<TData = unknown> = {
 };
 
 export type MessageType = UserMessageType | BotMessageType
+
+
+
+export interface SendMessageInput {
+    content: {
+        text: string;
+    };
+    attachments?: ChatAttachmentType[];
+    id?: string;
+    language?: string;
+    user?: {
+        external_id?: string;
+        name?: string;
+        email?: string;
+        phone?: string;
+        customData?: Record<string, string>;
+        avatarUrl?: string;
+    };
+}
