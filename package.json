@@ -11,7 +11,7 @@
     "clean:dist": "rm -rf ./dist ./dist-embed",
     "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
     "build:lib": "vite build",
-    "dev": "vite",
+    "dev": "vite -c vite.config.ts",
     "build:embed": "vite build -c vite.embed.config.ts",
     "test": "vitest run",
     "batman": "pnpm build:lib && pnpm build:embed",
@@ -146,7 +146,7 @@
     "vite": "^5.4.2",
     "vite-plugin-dts": "4.0.3",
     "vite-plugin-externalize-deps": "^0.8.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
   }

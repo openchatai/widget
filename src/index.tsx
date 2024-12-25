@@ -30,6 +30,7 @@ html, body {
 </html>`;
 
 export function IframedWidgetPopover() {
+  console.log('IframedWidgetPopover');
   const [isOpen, setIsOpened] = useState(false);
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
