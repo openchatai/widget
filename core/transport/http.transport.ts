@@ -8,7 +8,7 @@ interface HttpTransportOptions extends TransportOptions {
 
 export class HttpTransport extends MessagingTransport {
     private pollingInterval?: NodeJS.Timeout
-
+    
     constructor(
         private readonly httpOptions: HttpTransportOptions,
         private readonly platform: Platform = new DefaultPlatform()

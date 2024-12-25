@@ -19,58 +19,16 @@ interface SessionEvents extends EventMap {
     "session:error": { error: Error }
 }
 
-/**
- * Manages chat session lifecycle and state.
- * Uses a strongly typed event system for session-related events.
- * 
- * @example
- * ```typescript
- * const sessionManager = new SessionManager(httpClient);
- * 
- * // Subscribe to events
- * sessionManager.on('session:created', (session) => {
- *   console.log('New session:', session);
- * });
- * 
- * // Create a session
- * await sessionManager.createSession();
- * 
- * // Handle errors
- * sessionManager.on('session:error', ({ error }) => {
- *   console.error('Session error:', error);
- * });
- * ```
- */
 export class SessionManager extends PubSub<SessionEvents> {
     #currentSession: ChatSessionType | null = null
 
     constructor(
-        private readonly httpClient: ApiCaller
+        private readonly httpClient: ApiCaller,
+        initialSession?: ChatSessionType
     ) {
         super();
-    }
-
-    /**
-     * Subscribe to session events
-     * @param event Event name to subscribe to
-     * @param callback Callback function to handle the event
-     * @returns Unsubscribe function
-     */
-    public on<K extends keyof SessionEvents>(
-        event: K,
-        callback: (data: SessionEvents[K]) => void
-    ): () => void {
-        return this.subscribe(event, callback);
-    }
-
-    private handleSessionUpdate = (session: ChatSessionType) => {
-        this.#currentSession = session;
-        this.notifySessionUpdate();
-    }
-
-    private notifySessionUpdate() {
-        if (this.#currentSession) {
-            this.publish('session:updated', this.#currentSession);
+        if (initialSession) {
+            this.setSession(initialSession);
         }
     }
 

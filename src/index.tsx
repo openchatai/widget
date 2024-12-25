@@ -90,9 +90,6 @@ declare global {
   }
 }
 
-window["initOpenScript"] = initOpenScript;
-window['openCopilotWidgetVersion'] = version;
-
 function initOpenScript(options: WidgetOptions) {
   render(
     defaultRootId,
@@ -101,3 +98,6 @@ function initOpenScript(options: WidgetOptions) {
     </WidgetRoot>
   );
 }
+
+window["initOpenScript"] = initOpenScript;
+window['openCopilotWidgetVersion'] = version;

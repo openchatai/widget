@@ -7,6 +7,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
+    react(),
     tsconfigPaths(),
     dts({
       insertTypesEntry: true,
@@ -14,7 +15,6 @@ export default defineConfig({
     externalizeDeps({
       except: ["rehype-raw"],
     }),
-    react(),
   ],
   server: {
     port: 3005,

@@ -8,7 +8,7 @@ export interface TransportEvents extends Record<string, any> {
 }
 
 export interface TransportState {
-    connected: boolean
+    connected: boolean;
 }
 
 export abstract class MessagingTransport extends PubSub<TransportEvents> {

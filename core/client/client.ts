@@ -1,5 +1,4 @@
 import { CoreOptions } from "../types"
-import { SocketTransport } from "../transport/socket.transport"
 import { ApiCaller } from "./api"
 import { PubSub, Subscribable } from "../types/pub-sub"
 import { SessionManager } from "../managers/session-manager"
@@ -11,13 +10,8 @@ import { genId } from "../utils/genId"
 import { MessageData } from "../types/transport"
 import { mapChatHistoryToMessage } from "../utils/history-to-widget-messages"
 
-interface ClientEvents extends Record<string, any> {
-    "client:ready": void
+interface ClientEvents {
     "client:error": Error
-    "client:message:received": MessageType
-    "client:message:sent": MessageType
-    "client:keyboard:update": string[]
-    "client:heartbeat": { sessionId: string; timestamp: number }
 }
 
 export class ApiClient extends Subscribable {
@@ -28,7 +22,6 @@ export class ApiClient extends Subscribable {
     private readonly events = new PubSub<ClientEvents>()
     private messages: MessageType[] = []
     private keyboard: string[] | null = null
-    private lastUpdated: number | null = null
     private pollingInterval?: NodeJS.Timeout
     private heartbeatInterval?: NodeJS.Timeout
 
@@ -64,9 +57,6 @@ export class ApiClient extends Subscribable {
 
         // Initialize transport
         this.initializeTransport();
-
-        // Set up transport event handlers
-        this.setupTransportEvents();
 
         // Start polling and heartbeat
         this.startMessagePolling();
@@ -121,11 +111,6 @@ export class ApiClient extends Subscribable {
         const sendHeartbeat = async () => {
             const session = this.session.currentSession;
             if (!session) return;
-
-            this.events.publish('client:heartbeat', {
-                sessionId: session.id,
-                timestamp: Date.now()
-            });
         };
 
         sendHeartbeat();
@@ -137,41 +122,11 @@ export class ApiClient extends Subscribable {
             (msg) => !this.messages.some((m) => m.id === msg.id)
         );
         this.messages.push(...newMessages);
-        this.lastUpdated = Date.now();
-        newMessages.forEach(msg => {
-            this.events.publish('client:message:received', msg);
-        });
     }
 
-    private setupTransportEvents(): void {
-        this.messagingTransport.subscribe('transport:message:received', (data: MessageData) => {
-            const message: BotMessageType = {
-                type: "FROM_BOT",
-                id: data.id,
-                component: "text",
-                data: data,
-                timestamp: data.timestamp,
-                attachments: data.attachments
-            };
-            this.handleIncomingMessage(message);
-        });
-
-        this.messagingTransport.subscribe('transport:error', ({ error }) => {
-            console.error('Transport error:', error);
-            this.events.publish('client:error', error);
-        });
-
-        this.messagingTransport.subscribe('transport:status', ({ status }) => {
-            if (status === 'connected') {
-                this.events.publish('client:ready', void 0);
-            }
-        });
-    }
 
     private handleIncomingMessage(message: MessageType): void {
         this.messages.push(message);
-        this.lastUpdated = Date.now();
-        this.events.publish('client:message:received', message);
         this.refreshSession();
     }
 
@@ -197,11 +152,6 @@ export class ApiClient extends Subscribable {
                 },
                 this.platform
             );
-        } else {
-            this.messagingTransport = new SocketTransport(
-                transportConfig,
-                this.platform
-            );
         }
     }
 
@@ -220,7 +170,6 @@ export class ApiClient extends Subscribable {
 
         // Add to local messages
         this.messages.push(message);
-        this.events.publish('client:message:sent', message);
 
         // Clear keyboard if exists
         if (this.keyboard) {
@@ -245,7 +194,6 @@ export class ApiClient extends Subscribable {
 
     public setKeyboard(options: string[] | null): void {
         this.keyboard = options;
-        this.events.publish('client:keyboard:update', options || []);
     }
 
     public handleKeyboardOption(option: string): void {
@@ -255,13 +203,6 @@ export class ApiClient extends Subscribable {
         this.setKeyboard(null);
     }
 
-    public on<K extends keyof ClientEvents>(
-        event: K,
-        callback: (data: ClientEvents[K]) => void
-    ): () => void {
-        return this.events.subscribe(event, callback);
-    }
-
     public getMessages(): readonly MessageType[] {
         return this.messages;
     }
@@ -269,7 +210,6 @@ export class ApiClient extends Subscribable {
     public clearChat(): void {
         this.messages = [];
         this.keyboard = null;
-        this.lastUpdated = null;
         this.session.clearSession();
     }
 
@@ -293,7 +233,6 @@ export class ApiClient extends Subscribable {
             session: this.session.currentSession,
             messages: this.messages,
             keyboard: this.keyboard,
-            lastUpdated: this.lastUpdated
         }
     }
 
@@ -309,6 +248,5 @@ export class ApiClient extends Subscribable {
         this.events.clear();
         this.messages = [];
         this.keyboard = null;
-        this.lastUpdated = null;
     }
 }

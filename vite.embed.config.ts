@@ -8,7 +8,6 @@ export default defineConfig({
     assetsInlineLimit: 10 * 1024,
     emptyOutDir: true,
     sourcemap: true,
-    minify: "terser",
     rollupOptions: {
       input: "src/index.tsx",
       output: {
