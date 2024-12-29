@@ -1,21 +1,17 @@
 import { CoreOptions } from "../types"
-import { ApiCaller } from "./api"
 import { PubSub, Subscribable } from "../types/pub-sub"
 import { SessionManager } from "../managers/session-manager"
 import { Platform, DefaultPlatform } from "../platform"
-import { HttpTransport } from "../transport/http.transport"
-import { MessagingTransport } from "../transport/transport"
-import { MessageType, UserMessageType, BotMessageType, SendMessageInput } from "../types/messages"
+import { MessageType, UserMessageType, SendMessageInput } from "../types/messages"
 import { genId } from "../utils/genId"
-import { MessageData } from "../types/transport"
-import { mapChatHistoryToMessage } from "../utils/history-to-widget-messages"
+import { ApiCaller } from "./api-v2"
+import { ChatHistoryManager } from "@core/managers/chathistory-manager"
 
 interface ClientEvents {
     "client:error": Error
 }
 
 export class ApiClient extends Subscribable {
-    private messagingTransport!: MessagingTransport
     private readonly options: Required<CoreOptions>
     private readonly api: ApiCaller
     private readonly session: SessionManager
@@ -55,9 +51,6 @@ export class ApiClient extends Subscribable {
 
         this.session = new SessionManager(this.api);
 
-        // Initialize transport
-        this.initializeTransport();
-
         // Start polling and heartbeat
         this.startMessagePolling();
         this.startHeartbeat();
@@ -69,32 +62,11 @@ export class ApiClient extends Subscribable {
         }
 
         this.pollingInterval = setInterval(async () => {
-            const session = this.session.currentSession;
-            if (!session) return;
-
-            const lastMessage = this.messages[this.messages.length - 1];
-            if (!lastMessage?.timestamp) return;
-
             try {
-                const response = await this.api.getMessages(session.id);
+                const response = await this.getHistoryPooling();
                 if (response && response.length > 0) {
-                    // Convert MessageData[] to ChatHistoryMessageType[]
-                    const historyMessages = response.map(msg => ({
-                        message: msg.content.text,
-                        type: "message",
-                        publicId: msg.id,
-                        agent_avatar: null,
-                        agent_id: null,
-                        agent_name: null,
-                        created_at: msg.timestamp,
-                        from_user: false,
-                        handoff_happened_during_office_hours: false,
-                        session_id: msg.session_id,
-                        updated_at: null,
-                        attachments: msg.attachments
-                    }));
-
-                    this.appendMessages(mapChatHistoryToMessage(historyMessages));
+                    const messages = ChatHistoryManager.mapServerHistoryToWidgethistory(response);
+                    this.messages.push(...messages);
                 }
             } catch (error) {
                 console.error("Error polling messages:", error);
@@ -117,17 +89,12 @@ export class ApiClient extends Subscribable {
         this.heartbeatInterval = setInterval(sendHeartbeat, 50 * 1000);
     }
 
-    private appendMessages(messages: MessageType[]) {
-        const newMessages = messages.filter(
-            (msg) => !this.messages.some((m) => m.id === msg.id)
-        );
-        this.messages.push(...newMessages);
+    protected cleanup(): void {
+        // 
     }
 
-
-    private handleIncomingMessage(message: MessageType): void {
-        this.messages.push(message);
-        this.refreshSession();
+    get lastMessageTimestamp() {
+        return this.messages.at(-1)?.timestamp;
     }
 
     private async refreshSession() {
@@ -137,25 +104,7 @@ export class ApiClient extends Subscribable {
         }
     }
 
-    private initializeTransport() {
-        const transportConfig = {
-            api: this.api,
-            sessionManager: this.session,
-            coreOptions: this.options
-        };
-
-        if (this.options.transport === 'http') {
-            this.messagingTransport = new HttpTransport(
-                {
-                    ...transportConfig,
-                    pollingInterval: this.options.pollingInterval,
-                },
-                this.platform
-            );
-        }
-    }
-
-    public async sendMessage({ content, user, ...data }: SendMessageInput): Promise<void> {
+    public async sendMessage({ content, user, ...data }: SendMessageInput) {
         const session = await this.session.getOrCreateSession();
         const messageId = genId();
 
@@ -177,7 +126,7 @@ export class ApiClient extends Subscribable {
         }
 
         // Send through transport
-        await this.messagingTransport.sendMessage({
+        return this.api.handleMessage({
             id: messageId,
             content: { text: content.text },
             session_id: session.id,
@@ -213,40 +162,11 @@ export class ApiClient extends Subscribable {
         this.session.clearSession();
     }
 
-    async connect(): Promise<void> {
-        await this.messagingTransport.connect()
-    }
-
-    async disconnect(): Promise<void> {
-        this.messagingTransport.disconnect()
-    }
-
-    setTransport(transport: MessagingTransport): void {
-        this.messagingTransport.disconnect()
-        this.messagingTransport = transport
-        this.connect()
-    }
-
-    get state() {
-        return {
-            connected: this.messagingTransport.isConnected(),
-            session: this.session.currentSession,
-            messages: this.messages,
-            keyboard: this.keyboard,
-        }
-    }
-
-    protected cleanup(): void {
-        if (this.pollingInterval) {
-            clearInterval(this.pollingInterval);
-        }
-        if (this.heartbeatInterval) {
-            clearInterval(this.heartbeatInterval);
-        }
-        this.messagingTransport.disconnect();
-        this.session.clear();
-        this.events.clear();
-        this.messages = [];
-        this.keyboard = null;
+    async getHistoryPooling() {
+        const session = this.session.currentSession;
+        if (!session) return;
+        const lastMessageTimestamp = this.lastMessageTimestamp;
+        const response = await this.api.getSessionHistory(session.id, lastMessageTimestamp);
+        return response;
     }
 }

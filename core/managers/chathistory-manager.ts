@@ -1,6 +1,7 @@
-import { ChatHistoryMessageType, MessageType, UserMessageType } from "../types";
-import { mapChatHistoryToMessage } from "../utils/history-to-widget-messages";
-import { EventMap, PubSub, Subscribable } from "../types/pub-sub";
+import { MessageType, UserMessageType } from "../types";
+import { EventMap, PubSub } from "../types/pub-sub";
+import { WidgetHistorySchema } from "@core/types/schemas-v2";
+import { genId } from "@core/utils/genId";
 
 /**
  * Events emitted by the ChatHistoryManager
@@ -141,10 +142,6 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
         return this.messages.length === 0;
     }
 
-    public mapHistoryMessages(historyMessages: ChatHistoryMessageType[]): MessageType[] {
-        return mapChatHistoryToMessage(historyMessages);
-    }
-
     private updateTimestamp() {
         this.lastUpdated = Date.now();
     }
@@ -153,5 +150,39 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
         this.messages = [];
         this.lastUpdated = null;
         this.clear();
+    }
+
+    static mapServerHistoryToWidgethistory(
+        historyMessages: WidgetHistorySchema[]
+    ): MessageType[] {
+        let messages: MessageType[] = []
+        for (const msg of historyMessages) {
+            if (msg.sender.kind === "user") {
+                messages.push({
+                    type: "FROM_USER",
+                    content: msg.content.text || "",
+                    id: msg.publicId || genId(),
+                    deliveredAt: msg.sentAt?.toISOString() || "",
+                    attachments: msg.attachments || []
+                })
+            }
+
+            else if (["ai", "agent"].includes(msg.sender.kind)) {
+                messages.push({
+                    type: "FROM_BOT",
+                    component: "TEXT",
+                    data: {
+                        message: msg.content.text || "",
+                    },
+                    id: msg.publicId || genId(),
+                    attachments: msg.attachments || []
+                })
+            }
+
+            else {
+                console.warn(`Unknown sender kind: ${msg.sender.kind}`);
+            }
+        }
+        return messages;
     }
 }

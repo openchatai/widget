@@ -1,30 +1,23 @@
 import { EventMap, PubSub } from "../types/pub-sub"
-import { AIClosureType, SessionStatus, ChatSessionType } from "../types/schemas"
-import { ApiCaller } from "../client/api"
-
-export type ChatSessionWithStatus = ChatSessionType & {
-    isSessionClosed: boolean
-    isAssignedToAi: boolean
-    isAssignedToHuman: boolean
-    isPendingHuman: boolean
-}
+import { ApiCaller } from "../client/api-v2"
+import { WidgetSessionSchema } from "@core/types/schemas-v2"
 
 /**
  * Events emitted by the SessionManager
  */
 interface SessionEvents extends EventMap {
-    "session:updated": ChatSessionType
-    "session:created": ChatSessionType
+    "session:updated": WidgetSessionSchema
+    "session:created": WidgetSessionSchema
     "session:closed": { sessionId: string }
     "session:error": { error: Error }
 }
 
 export class SessionManager extends PubSub<SessionEvents> {
-    #currentSession: ChatSessionType | null = null
+    #currentSession: WidgetSessionSchema | null = null
 
     constructor(
         private readonly httpClient: ApiCaller,
-        initialSession?: ChatSessionType
+        initialSession?: WidgetSessionSchema
     ) {
         super();
         if (initialSession) {
@@ -32,20 +25,11 @@ export class SessionManager extends PubSub<SessionEvents> {
         }
     }
 
-    get currentSession(): ChatSessionWithStatus | null {
-        if (!this.#currentSession) {
-            return null;
-        }
-        return {
-            ...this.#currentSession,
-            isSessionClosed: this.#currentSession.status !== SessionStatus.OPEN,
-            isAssignedToAi: this.#currentSession.assignee_id === 555,
-            isAssignedToHuman: this.#currentSession.assignee_id !== 555,
-            isPendingHuman: this.#currentSession.assignee_id === 555 && this.#currentSession.ai_closure_type === AIClosureType.handed_off,
-        }
+    get currentSession() {
+        return this.#currentSession;
     }
 
-    setSession(session: ChatSessionType): void {
+    setSession(session: WidgetSessionSchema): void {
         this.#currentSession = session;
         this.publish('session:updated', session);
     }
@@ -58,7 +42,7 @@ export class SessionManager extends PubSub<SessionEvents> {
         }
     }
 
-    async createSession(): Promise<ChatSessionType> {
+    async createSession() {
         try {
             const session = await this.httpClient.createSession();
             this.setSession(session);
@@ -70,7 +54,7 @@ export class SessionManager extends PubSub<SessionEvents> {
         }
     }
 
-    async getOrCreateSession(): Promise<ChatSessionType> {
+    async getOrCreateSession() {
         const session = this.currentSession;
         if (!session) {
             return this.createSession();
@@ -78,9 +62,9 @@ export class SessionManager extends PubSub<SessionEvents> {
         return session;
     }
 
-    async refreshSession(sessionId: string): Promise<ChatSessionType | null> {
+    async refreshSession(sessionId: string) {
         try {
-            const session = await this.httpClient.fetchSession(sessionId);
+            const session = await this.httpClient.getSession(sessionId);
             if (session) {
                 this.setSession(session);
                 return session;

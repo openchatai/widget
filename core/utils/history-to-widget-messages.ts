@@ -1,8 +1,8 @@
+import { WidgetSessionSchema } from "@core/types/schemas-v2";
 import { MessageType } from "../types/messages";
-import { ChatHistoryMessageType } from "../types/schemas";
 import { genId } from "./genId";
 
-function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
+function mapChatHistoryToMessage(value: WidgetSessionSchema[]) {
     const messages: MessageType[] = [];
     for (let i = 0; i < value.length; i++) {
         const msg = value[i];

@@ -1,13 +1,4 @@
-import { CoreOptions } from "./index"
-import type { ApiCaller } from "../client/api"
-import { SessionManager } from "../managers/session-manager"
 import { ChatAttachmentType } from "./schemas"
-
-export type TransportOptions = {
-    api: ApiCaller
-    sessionManager: SessionManager
-    coreOptions: CoreOptions
-}
 
 export interface MessageData {
     id: string

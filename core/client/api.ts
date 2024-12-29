@@ -2,8 +2,9 @@ import { ChatSessionType } from "../types/schemas"
 import { MessageData } from "../types/transport"
 
 export interface ApiCallerOptions {
-    apiUrl: string
-    token: string
+    apiUrl: string;
+    token: string;
+    contactToken?: string;
 }
 
 export class ApiCaller {
@@ -83,5 +84,4 @@ export class ApiCaller {
             throw new Error('Failed to send message');
         }
     }
-
 } 
