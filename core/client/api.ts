@@ -1,87 +1,101 @@
-import { ChatSessionType } from "../types/schemas"
+import { createFetch, CustomFetch } from "@core/utils/create-fetch";
 import { MessageData } from "../types/transport"
+import { HandleContactMessageOutputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "@core/types/schemas-v2";
+import { CoreOptions } from "@core/types";
 
 export interface ApiCallerOptions {
     apiUrl: string;
     token: string;
-    contactToken?: string;
+    coreOptions: CoreOptions;
 }
 
 export class ApiCaller {
-    constructor(private readonly options: ApiCallerOptions) { }
-
-    async createSession(): Promise<ChatSessionType> {
-        const response = await fetch(`${this.options.apiUrl}/sessions`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.options.token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to create session');
+    #fetch: CustomFetch
+    constructor(private readonly options: ApiCallerOptions) {
+        const user = this.options.coreOptions.user;
+        const consumerHeader = {
+            claim: '',
+            value: ''
         }
 
-        return response.json();
-    }
-
-    async fetchSession(sessionId: string): Promise<ChatSessionType> {
-        const response = await fetch(`${this.options.apiUrl}/sessions/${sessionId}`, {
-            headers: {
-                'Authorization': `Bearer ${this.options.token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch session');
+        if (user?.email) {
+            consumerHeader.claim = 'email';
+            consumerHeader.value = user.email;
         }
 
-        return response.json();
-    }
-
-    async ping(): Promise<void> {
-        const response = await fetch(`${this.options.apiUrl}/ping`, {
-            headers: {
-                'Authorization': `Bearer ${this.options.token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to ping API');
-        }
-    }
-
-    async getMessages(sessionId?: string): Promise<MessageData[]> {
-        const url = sessionId
-            ? `${this.options.apiUrl}/messages/${sessionId}`
-            : `${this.options.apiUrl}/messages`;
-
-        const response = await fetch(url, {
-            headers: {
-                'Authorization': `Bearer ${this.options.token}`
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to fetch messages');
+        else if (user?.phone) {
+            consumerHeader.claim = 'phone';
+            consumerHeader.value = user.phone;
         }
 
-        return response.json();
+        const headers: Record<string, string> = {
+            'X-Bot-Token': this.options.token,
+            'X-Consumer-Id': `${consumerHeader.claim}:${consumerHeader.value}`
+        }
+
+        // Only add Authorization header if contactToken exists
+        if (this.options.coreOptions.contactToken) {
+            headers['Authorization'] = `Bearer ${this.options.coreOptions.contactToken}`
+        }
+
+        this.#fetch = createFetch({
+            baseURL: `${this.options.apiUrl}/widget/v2`,
+            headers
+        })
     }
 
-    async sendMessage(message: MessageData): Promise<void> {
-        const response = await fetch(`${this.options.apiUrl}/messages`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${this.options.token}`,
-                'Content-Type': 'application/json'
-            },
+    async me(): Promise<{
+        contactId: string;
+        contactName: string;
+    }> {
+        // GET /me
+        const response = await this.#fetch('/me')
+        return response.json()
+    }
+
+    async widgetPrelude(): Promise<WidgetPreludeSchema> {
+        // GET /prelude
+        const response = await this.#fetch('/prelude')
+        return response.json()
+    }
+
+    async handleMessage(message: MessageData): Promise<HandleContactMessageOutputSchema> {
+        // POST /chat/send
+        const response = await this.#fetch('/chat/send', {
+            method: "POST",
             body: JSON.stringify(message)
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to send message');
-        }
+        })
+        return response.json()
     }
-} 
+
+    async getSessionHistory(sessionId: string, lastMessageTimestamp?: string): Promise<WidgetHistorySchema[]> {
+        // session/history/:sessionId
+        const queryParams = new URLSearchParams({
+            lastMessageTimestamp: lastMessageTimestamp || ''
+        })
+
+        const url = `/session/history/${sessionId}?${queryParams.toString()}`
+
+        const response = await this.#fetch(url, {
+            method: 'GET'
+        })
+
+        return response.json()
+    }
+
+    async createSession(): Promise<WidgetSessionSchema> {
+        // POST /create-session
+        const response = await this.#fetch('/create-session', {
+            method: 'POST'
+        })
+        return response.json()
+    }
+
+    async getSession(sessionId: string): Promise<WidgetSessionSchema> {
+        // GET /session/:sessionId
+        const response = await this.#fetch(`/session/${sessionId}`, {
+            method: 'GET'
+        })
+        return response.json()
+    }
+}

@@ -24,6 +24,7 @@ export interface CoreOptions {
     debug?: boolean
     language?: string
     user?: User
+    contactToken?: string
     bot?: {
         name?: string
         avatarUrl?: string

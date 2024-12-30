@@ -1,5 +1,5 @@
 import { EventMap, PubSub } from "../types/pub-sub"
-import { ApiCaller } from "../client/api-v2"
+import { ApiCaller } from "../client/api"
 import { WidgetSessionSchema } from "@core/types/schemas-v2"
 
 /**
@@ -14,9 +14,10 @@ interface SessionEvents extends EventMap {
 
 export class SessionManager extends PubSub<SessionEvents> {
     #currentSession: WidgetSessionSchema | null = null
+    #refreshTimeout?: NodeJS.Timeout
 
     constructor(
-        private readonly httpClient: ApiCaller,
+        private readonly api: ApiCaller,
         initialSession?: WidgetSessionSchema
     ) {
         super();
@@ -29,22 +30,40 @@ export class SessionManager extends PubSub<SessionEvents> {
         return this.#currentSession;
     }
 
-    setSession(session: WidgetSessionSchema): void {
+    private setSession(session: WidgetSessionSchema): void {
         this.#currentSession = session;
         this.publish('session:updated', session);
+        this.scheduleRefresh();
     }
 
-    clearSession = (): void => {
+    private scheduleRefresh(): void {
+        if (this.#refreshTimeout) {
+            clearTimeout(this.#refreshTimeout);
+        }
+
+        this.#refreshTimeout = setTimeout(() => {
+            if (this.#currentSession) {
+                this.refreshSession(this.#currentSession.id).catch(error => {
+                    this.publish('session:error', { error: error as Error });
+                });
+            }
+        }, 5 * 60 * 1000); // Refresh every 5 minutes
+    }
+
+    public clearSession(): void {
         if (this.#currentSession) {
             const sessionId = this.#currentSession.id;
             this.#currentSession = null;
+            if (this.#refreshTimeout) {
+                clearTimeout(this.#refreshTimeout);
+            }
             this.publish('session:closed', { sessionId });
         }
     }
 
-    async createSession() {
+    public async createSession(): Promise<WidgetSessionSchema> {
         try {
-            const session = await this.httpClient.createSession();
+            const session = await this.api.createSession();
             this.setSession(session);
             this.publish('session:created', session);
             return session;
@@ -54,17 +73,16 @@ export class SessionManager extends PubSub<SessionEvents> {
         }
     }
 
-    async getOrCreateSession() {
-        const session = this.currentSession;
-        if (!session) {
+    public async getOrCreateSession(): Promise<WidgetSessionSchema> {
+        if (!this.#currentSession) {
             return this.createSession();
         }
-        return session;
+        return this.#currentSession;
     }
 
-    async refreshSession(sessionId: string) {
+    public async refreshSession(sessionId: string): Promise<WidgetSessionSchema | null> {
         try {
-            const session = await this.httpClient.getSession(sessionId);
+            const session = await this.api.getSession(sessionId);
             if (session) {
                 this.setSession(session);
                 return session;
@@ -77,6 +95,9 @@ export class SessionManager extends PubSub<SessionEvents> {
     }
 
     protected cleanup(): void {
+        if (this.#refreshTimeout) {
+            clearTimeout(this.#refreshTimeout);
+        }
         this.#currentSession = null;
         this.clear();
     }

@@ -1,174 +1,122 @@
-import { MessageType, UserMessageType } from "../types";
-import { EventMap, PubSub } from "../types/pub-sub";
-import { WidgetHistorySchema } from "@core/types/schemas-v2";
-import { genId } from "@core/utils/genId";
+import { PubSub } from "../types/pub-sub"
+import { MessageType } from "../types/messages"
+import { WidgetHistorySchema } from "@core/types/schemas-v2"
+import { genId } from "../utils/genId"
 
-/**
- * Events emitted by the ChatHistoryManager
- */
-export interface ChatHistoryEvents extends EventMap {
+interface ChatHistoryEvents {
     "history:message:added": MessageType
     "history:message:updated": MessageType
     "history:updated": MessageType[]
     "history:cleared": void
 }
 
-/**
- * Manages chat history and message operations.
- * Uses a strongly typed event system for history-related events.
- * 
- * @example
- * ```typescript
- * const history = new ChatHistoryManager();
- * 
- * // Subscribe to events
- * history.on('history:message:added', (message) => {
- *   console.log('New message:', message);
- * });
- * 
- * // Add messages
- * history.appendUserMessage({
- *   id: '123',
- *   type: 'FROM_USER',
- *   content: 'Hello'
- * });
- * ```
- */
 export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
-    private messages: MessageType[] = [];
-    private lastUpdated: number | null = null;
+    #messages: MessageType[] = []
+    #lastUpdated: number | null = null
 
     constructor() {
         super();
-        this.messages = [];
-        this.lastUpdated = null;
     }
 
-    /**
-     * Subscribe to history events
-     * @param event Event name to subscribe to
-     * @param callback Callback function to handle the event
-     * @returns Unsubscribe function
-     */
-    public on<K extends keyof ChatHistoryEvents>(
-        event: K,
-        callback: (data: ChatHistoryEvents[K]) => void
-    ): () => void {
-        return this.subscribe(event, callback);
+    private updateTimestamp(): void {
+        this.#lastUpdated = Date.now();
     }
 
-    private handleNewMessage = (message: MessageType) => {
-        this.messages.push(message);
+    private notifyHistoryUpdate(): void {
+        this.publish('history:updated', [...this.#messages]);
+    }
+
+    private handleNewMessage(message: MessageType): void {
+        this.#messages.push(message);
         this.updateTimestamp();
         this.publish('history:message:added', message);
         this.notifyHistoryUpdate();
-    };
+    }
 
-    private handleHistoryUpdate = (messages: MessageType[]) => {
-        this.messages = messages;
+    public addMessage(message: MessageType): void {
+        this.handleNewMessage(message);
+    }
+
+    public updateMessage(messageId: string, updates: Partial<MessageType>): void {
+        const index = this.#messages.findIndex(msg => msg.id === messageId);
+        if (index !== -1) {
+            const currentMessage = this.#messages[index];
+            const updatedMessage = {
+                ...currentMessage,
+                ...updates,
+                type: currentMessage.type
+            } as MessageType;
+
+            this.#messages[index] = updatedMessage;
+            this.updateTimestamp();
+            this.publish('history:message:updated', updatedMessage);
+            this.notifyHistoryUpdate();
+        }
+    }
+
+    public setMessages(messages: MessageType[]): void {
+        this.#messages = [...messages];
         this.updateTimestamp();
         this.notifyHistoryUpdate();
-    };
-
-    private notifyHistoryUpdate() {
-        this.publish('history:updated', [...this.messages]); // Immutable copy
     }
 
-    public addResponseMessage(message: MessageType) {
-        this.handleNewMessage(message);
-    }
-
-    public appendUserMessage(message: UserMessageType) {
-        this.handleNewMessage(message);
-    }
-
-    public prependHistory(historyMessages: MessageType[]) {
-        const historyIds = historyMessages.map((msg) => msg.id);
-        const filteredCurrentMessages = this.messages.filter(
-            (msg) => !historyIds.includes(msg.id)
-        );
-        const newMessages = [...historyMessages, ...filteredCurrentMessages];
-        this.handleHistoryUpdate(newMessages);
-    }
-
-    public setDeliveredAt(clientMessageId: string, deliveredAt: string) {
-        const updatedMessages = this.messages.map(message => {
-            if (message.type === "FROM_USER" && message.id === clientMessageId) {
-                const updatedMessage = { ...message, deliveredAt };
-                this.publish('history:message:updated', updatedMessage);
-                return updatedMessage;
-            }
-            return message;
-        });
-        this.handleHistoryUpdate(updatedMessages);
-    }
-
-    public setMessages(messages: MessageType[]) {
-        this.handleHistoryUpdate(messages);
-    }
-
-    public appendMessages(newMessages: MessageType[]) {
-        const existingIds = new Set(this.messages.map(m => m.id));
+    public appendMessages(newMessages: MessageType[]): void {
+        const existingIds = new Set(this.#messages.map(m => m.id));
         const messagesToAdd = newMessages.filter(msg => !existingIds.has(msg.id));
 
         if (messagesToAdd.length > 0) {
             messagesToAdd.forEach(msg => {
                 this.publish('history:message:added', msg);
             });
-            this.handleHistoryUpdate([...this.messages, ...messagesToAdd]);
+            this.#messages.push(...messagesToAdd);
+            this.updateTimestamp();
+            this.notifyHistoryUpdate();
         }
     }
 
-    public reset() {
-        this.messages = [];
-        this.lastUpdated = null;
+    public getMessages(): readonly MessageType[] {
+        return this.#messages;
+    }
+
+    public getLastMessageTimestamp(): string | undefined {
+        return this.#messages.at(-1)?.timestamp;
+    }
+
+    public getLastUpdated(): number | null {
+        return this.#lastUpdated;
+    }
+
+    public isEmpty(): boolean {
+        return this.#messages.length === 0;
+    }
+
+    public reset(): void {
+        this.#messages = [];
+        this.#lastUpdated = null;
         this.publish('history:cleared', void 0);
         this.notifyHistoryUpdate();
     }
 
-    public getMessages(): readonly MessageType[] {
-        return this.messages;
-    }
-
-    public getLastUpdated(): number | null {
-        return this.lastUpdated;
-    }
-
-    public getLastMessageTimestamp(): string | undefined {
-        return this.messages[this.messages.length - 1]?.timestamp;
-    }
-
-    public isEmpty(): boolean {
-        return this.messages.length === 0;
-    }
-
-    private updateTimestamp() {
-        this.lastUpdated = Date.now();
-    }
-
     protected cleanup(): void {
-        this.messages = [];
-        this.lastUpdated = null;
+        this.#messages = [];
+        this.#lastUpdated = null;
         this.clear();
     }
 
-    static mapServerHistoryToWidgethistory(
-        historyMessages: WidgetHistorySchema[]
-    ): MessageType[] {
-        let messages: MessageType[] = []
-        for (const msg of historyMessages) {
+    static mapServerHistoryToWidgethistory(historyMessages: WidgetHistorySchema[]): MessageType[] {
+        return historyMessages.map(msg => {
             if (msg.sender.kind === "user") {
-                messages.push({
+                return {
                     type: "FROM_USER",
                     content: msg.content.text || "",
                     id: msg.publicId || genId(),
                     deliveredAt: msg.sentAt?.toISOString() || "",
                     attachments: msg.attachments || []
-                })
+                };
             }
 
-            else if (["ai", "agent"].includes(msg.sender.kind)) {
-                messages.push({
+            if (["ai", "agent"].includes(msg.sender.kind)) {
+                return {
                     type: "FROM_BOT",
                     component: "TEXT",
                     data: {
@@ -176,13 +124,10 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
                     },
                     id: msg.publicId || genId(),
                     attachments: msg.attachments || []
-                })
+                };
             }
 
-            else {
-                console.warn(`Unknown sender kind: ${msg.sender.kind}`);
-            }
-        }
-        return messages;
+            throw new Error(`Unknown sender kind: ${msg.sender.kind}`);
+        });
     }
 }

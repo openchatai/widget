@@ -4,15 +4,19 @@ import { SessionManager } from "../managers/session-manager"
 import { Platform, DefaultPlatform } from "../platform"
 import { MessageType, UserMessageType, SendMessageInput } from "../types/messages"
 import { genId } from "../utils/genId"
-import { ApiCaller } from "./api-v2"
+import { ApiCaller } from "./api"
 import { ChatHistoryManager } from "@core/managers/chathistory-manager"
 
 interface ClientEvents {
     "client:error": Error
 }
 
+type RequiredOptions = Required<Omit<CoreOptions, 'contactToken'>> & {
+    contactToken: string | undefined | null
+}
+
 export class ApiClient extends Subscribable {
-    private readonly options: Required<CoreOptions>
+    private readonly _options: CoreOptions
     private readonly api: ApiCaller
     private readonly session: SessionManager
     private readonly events = new PubSub<ClientEvents>()
@@ -26,27 +30,12 @@ export class ApiClient extends Subscribable {
         private readonly platform: Platform = new DefaultPlatform()
     ) {
         super();
-        this.options = {
-            ...options,
-            apiUrl: options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
-            socketUrl: options.socketUrl ?? "https://api-v2.opencopilot.so",
-            transport: options.transport ?? 'socket',
-            pollingInterval: options.pollingInterval ?? 3000,
-            headers: {
-                "X-Bot-Token": options.token,
-                ...options.headers,
-            },
-            queryParams: {},
-            pathParams: {},
-            bot: {},
-            debug: false,
-            language: "en",
-            user: {},
-        }
+        this._options = options;
 
         this.api = new ApiCaller({
-            apiUrl: this.options.apiUrl,
-            token: this.options.token,
+            apiUrl: this.getOptions.apiUrl,
+            token: this.getOptions.token,
+            coreOptions: options,
         })
 
         this.session = new SessionManager(this.api);
@@ -54,6 +43,27 @@ export class ApiClient extends Subscribable {
         // Start polling and heartbeat
         this.startMessagePolling();
         this.startHeartbeat();
+    }
+
+    private get getOptions(): RequiredOptions {
+        return {
+            ...this._options,
+            apiUrl: this._options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
+            socketUrl: this._options.socketUrl ?? "https://api-v2.opencopilot.so",
+            transport: this._options.transport ?? 'socket',
+            pollingInterval: this._options.pollingInterval ?? 3000,
+            headers: {
+                ...(this._options.headers ?? {}),
+                "X-Bot-Token": this._options.token,
+            },
+            queryParams: this._options.queryParams ?? {},
+            pathParams: this._options.pathParams ?? {},
+            bot: this._options.bot ?? {},
+            contactToken: this._options.contactToken,
+            debug: this._options.debug ?? false,
+            language: this._options.language ?? "en",
+            user: this._options.user ?? {},
+        }
     }
 
     private startMessagePolling() {
@@ -130,12 +140,12 @@ export class ApiClient extends Subscribable {
             id: messageId,
             content: { text: content.text },
             session_id: session.id,
-            bot_token: this.options.token,
-            headers: this.options.headers,
-            pathParams: this.options.pathParams,
-            queryParams: this.options.queryParams,
+            bot_token: this.getOptions.token,
+            headers: this.getOptions.headers,
+            pathParams: this.getOptions.pathParams,
+            queryParams: this.getOptions.queryParams,
             user,
-            language: data.language ?? this.options.language,
+            language: data.language ?? this.getOptions.language,
             attachments: data.attachments,
             timestamp: new Date().toISOString()
         });
