@@ -10,8 +10,16 @@ interface ChatHistoryEvents {
     "history:cleared": void
 }
 
+interface ChatHistoryState {
+    messages: MessageType[]
+    keyboard: string[] | null
+}
+
 export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
-    #messages: MessageType[] = []
+    #state: ChatHistoryState = {
+        messages: [],
+        keyboard: null
+    }
     #lastUpdated: number | null = null
 
     constructor() {
@@ -22,32 +30,47 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
         this.#lastUpdated = Date.now();
     }
 
+    private setState(state: Partial<ChatHistoryState>): void {
+        this.#state = {
+            ...this.#state,
+            ...state
+        };
+        this.notifyHistoryUpdate();
+    }
+
+    private pushMessage(message: MessageType): void {
+        this.#state.messages.push(message);
+        this.updateTimestamp();
+        this.publish('history:message:added', message);
+    }
+
     private notifyHistoryUpdate(): void {
-        this.publish('history:updated', [...this.#messages]);
+        this.publish('history:updated', [...this.#state.messages]);
     }
 
     private handleNewMessage(message: MessageType): void {
-        this.#messages.push(message);
-        this.updateTimestamp();
-        this.publish('history:message:added', message);
-        this.notifyHistoryUpdate();
+        this.pushMessage(message);
     }
 
     public addMessage(message: MessageType): void {
         this.handleNewMessage(message);
     }
 
+    public addMessages(messages: MessageType[]): void {
+        messages.forEach(msg => this.handleNewMessage(msg));
+    }
+    
     public updateMessage(messageId: string, updates: Partial<MessageType>): void {
-        const index = this.#messages.findIndex(msg => msg.id === messageId);
+        const index = this.#state.messages.findIndex(msg => msg.id === messageId);
         if (index !== -1) {
-            const currentMessage = this.#messages[index];
+            const currentMessage = this.#state.messages[index];
             const updatedMessage = {
                 ...currentMessage,
                 ...updates,
                 type: currentMessage.type
             } as MessageType;
 
-            this.#messages[index] = updatedMessage;
+            this.#state.messages[index] = updatedMessage;
             this.updateTimestamp();
             this.publish('history:message:updated', updatedMessage);
             this.notifyHistoryUpdate();
@@ -55,31 +78,29 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
     }
 
     public setMessages(messages: MessageType[]): void {
-        this.#messages = [...messages];
-        this.updateTimestamp();
-        this.notifyHistoryUpdate();
+        this.setState({ messages });
     }
 
     public appendMessages(newMessages: MessageType[]): void {
-        const existingIds = new Set(this.#messages.map(m => m.id));
+        const existingIds = new Set(this.#state.messages.map(m => m.id));
         const messagesToAdd = newMessages.filter(msg => !existingIds.has(msg.id));
 
         if (messagesToAdd.length > 0) {
             messagesToAdd.forEach(msg => {
                 this.publish('history:message:added', msg);
             });
-            this.#messages.push(...messagesToAdd);
+            this.#state.messages.push(...messagesToAdd);
             this.updateTimestamp();
             this.notifyHistoryUpdate();
         }
     }
 
     public getMessages(): readonly MessageType[] {
-        return this.#messages;
+        return this.#state.messages;
     }
 
     public getLastMessageTimestamp(): string | undefined {
-        return this.#messages.at(-1)?.timestamp;
+        return this.#state.messages.at(-1)?.timestamp;
     }
 
     public getLastUpdated(): number | null {
@@ -87,18 +108,18 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
     }
 
     public isEmpty(): boolean {
-        return this.#messages.length === 0;
+        return this.#state.messages.length === 0;
     }
 
     public reset(): void {
-        this.#messages = [];
+        this.setState({ messages: [] });
         this.#lastUpdated = null;
         this.publish('history:cleared', void 0);
         this.notifyHistoryUpdate();
     }
 
     protected cleanup(): void {
-        this.#messages = [];
+        this.setState({ messages: [] });
         this.#lastUpdated = null;
         this.clear();
     }
@@ -129,5 +150,12 @@ export class ChatHistoryManager extends PubSub<ChatHistoryEvents> {
 
             throw new Error(`Unknown sender kind: ${msg.sender.kind}`);
         });
+    }
+
+    public clearChat(): void {
+        this.#state = {
+            keyboard: null,
+            messages: []
+        }
     }
 }

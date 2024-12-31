@@ -1,6 +1,10 @@
 import { EventMap, PubSub } from "../types/pub-sub"
 import { ApiCaller } from "../client/api"
 import { WidgetSessionSchema } from "@core/types/schemas-v2"
+import { ChatHistoryManager } from "./chathistory-manager"
+import { genId } from "@core/utils/genId"
+import { SendMessageInput, UserMessageType } from "@core/types"
+import { RequiredOptions } from "@core/client"
 
 /**
  * Events emitted by the SessionManager
@@ -13,17 +17,23 @@ interface SessionEvents extends EventMap {
 }
 
 export class SessionManager extends PubSub<SessionEvents> {
-    #currentSession: WidgetSessionSchema | null = null
+    #currentSession: WidgetSessionSchema | null = null;
+    #historyManager;
     #refreshTimeout?: NodeJS.Timeout
-
+    private pollingInterval?: NodeJS.Timeout
+    private heartbeatInterval?: NodeJS.Timeout
+    private coreOptions: RequiredOptions
     constructor(
         private readonly api: ApiCaller,
+        options: RequiredOptions,
         initialSession?: WidgetSessionSchema
     ) {
         super();
         if (initialSession) {
             this.setSession(initialSession);
         }
+        this.coreOptions = options;
+        this.#historyManager = new ChatHistoryManager();
     }
 
     get currentSession() {
@@ -101,4 +111,84 @@ export class SessionManager extends PubSub<SessionEvents> {
         this.#currentSession = null;
         this.clear();
     }
+
+    private startHeartbeat() {
+        if (this.heartbeatInterval) {
+            clearInterval(this.heartbeatInterval);
+        }
+
+        const sendHeartbeat = async () => {
+            const session = this.#currentSession
+            if (!session) return;
+        };
+
+        sendHeartbeat();
+        this.heartbeatInterval = setInterval(sendHeartbeat, 50 * 1000);
+    }
+
+    private startMessagePolling() {
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+        }
+
+        this.pollingInterval = setInterval(async () => {
+            try {
+                const response = await this.getHistoryPooling();
+                if (response && response.length > 0) {
+                    const messages = ChatHistoryManager.mapServerHistoryToWidgethistory(response);
+                    this.#historyManager.addMessages(messages);
+                }
+            } catch (error) {
+                console.error("Error polling messages:", error);
+                this.publish('client:error', error as Error);
+            }
+        }, 20 * 1000);
+    }
+
+    get lastMessageTimestamp(){
+        return this.#historyManager.getLastMessageTimestamp();
+    }
+
+    async getHistoryPooling() {
+        const session = this.#currentSession
+        if (!session) return;
+        const lastMessageTimestamp = this.lastMessageTimestamp;
+        const response = await this.api.getSessionHistory(session.id, lastMessageTimestamp);
+        return response;
+    }
+
+
+    public async sendMessage({ content, user, ...data }: SendMessageInput) {
+        const session = await this.getOrCreateSession();
+        const messageId = genId();
+
+        const message: UserMessageType = {
+            type: "FROM_USER",
+            id: messageId,
+            content: content.text,
+            user,
+            deliveredAt: null,
+            attachments: data.attachments
+        };
+
+        // Add to local messages
+        this.#historyManager.addMessage(message)
+
+        // Send through transport
+        return this.api.handleMessage({
+            id: messageId,
+            content: { text: content.text },
+            session_id: session.id,
+            bot_token: this.coreOptions.token,
+            headers: this.coreOptions.headers,
+            pathParams: this.coreOptions.pathParams,
+            queryParams: this.coreOptions.queryParams,
+            user,
+            language: data.language ?? this.coreOptions.language,
+            attachments: data.attachments,
+            timestamp: new Date().toISOString()
+        });
+    }
+
+
 }
