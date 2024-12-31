@@ -14,6 +14,7 @@ interface SessionEvents extends EventMap {
     "session:created": WidgetSessionSchema
     "session:closed": { sessionId: string }
     "session:error": { error: Error }
+    "initilized": void
 }
 
 export class SessionManager extends PubSub<SessionEvents> {
@@ -34,6 +35,9 @@ export class SessionManager extends PubSub<SessionEvents> {
         }
         this.coreOptions = options;
         this.#historyManager = new ChatHistoryManager();
+        this.startMessagePolling();
+        this.startHeartbeat();
+        this.publish('initilized', void 0);
     }
 
     get currentSession() {
