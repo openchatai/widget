@@ -1,7 +1,7 @@
-import { createFetch, CustomFetch } from "@core/utils/create-fetch";
-import { MessageData } from "../types/transport"
-import { HandleContactMessageOutputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "@core/types/schemas-v2";
-import { CoreOptions } from "@core/types";
+import { createFetch, CustomFetch } from "../utils/create-fetch";
+import { MessageData } from "../types/transport";
+import { HandleContactMessageOutputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
+import { CoreOptions } from "../types";
 
 export interface ApiCallerOptions {
     apiUrl: string;
