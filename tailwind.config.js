@@ -1,36 +1,36 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./src/**/*.{html,js,ts,jsx,tsx}",
-    "./lib/**/*.{html,js,ts,jsx,tsx}",
+    './src/**/*.{html,js,ts,jsx,tsx}',
+    './lib/**/*.{html,js,ts,jsx,tsx}'
   ],
   theme: {
     extend: {
       zIndex: {
-        max: 9999,
+        max: 9999
       },
       colors: {
-        primary: "var(--opn-primary)",
+        primary: 'var(--opencx-primary)',
 
-        foreground: "hsl(var(--opn-foreground))",
-        background: "hsl(var(--opn-background))",
+        foreground: 'hsl(var(--opencx-foreground))',
+        background: 'hsl(var(--opencx-background))',
 
-        accent: "hsl(var(--opn-accent))",
-        "accent-foreground": "hsl(var(--opn-accent-foreground))",
+        accent: 'hsl(var(--opencx-accent))',
+        'accent-foreground': 'hsl(var(--opencx-accent-foreground))',
 
-        secondary: "hsl(var(--opn-secondary))",
-        "secondary-foreground": "hsl(var(--opn-secondary-foreground))",
+        secondary: 'hsl(var(--opencx-secondary))',
+        'secondary-foreground': 'hsl(var(--opencx-secondary-foreground))',
 
-        destructive: "hsl(var(--opn-destructive))",
-        "destructive-foreground": "hsl(var(--opn-destructive-foreground))",
+        destructive: 'hsl(var(--opencx-destructive))',
+        'destructive-foreground': 'hsl(var(--opencx-destructive-foreground))',
 
-        input: "hsl(var(--opn-input))",
-        border: "hsl(var(--opn-border))",
-      },
+        input: 'hsl(var(--opencx-input))',
+        border: 'hsl(var(--opencx-border))'
+      }
     },
     fontFamily: {
-      inter: ["Inter", "Cairo", "sans-serif"],
-    },
+      inter: ['Inter', 'Cairo', 'sans-serif']
+    }
   },
-  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')]
 };
