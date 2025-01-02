@@ -10,7 +10,7 @@ import { AgentType } from "@core/types";
 
 const defaultTheme: WidgetThemeOptions = {
   headerStyle: "basic",
-  primaryColor: "hsl(211,65%,59%)",
+  primaryColor: "hsl(0,0%,0%)",
   triggerOffset: "20px"
 }
 
