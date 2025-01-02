@@ -11,7 +11,6 @@ export type UserObject = {
 }
 
 export interface WidgetThemeOptions {
-  headerStyle: "compact" | "basic";
   primaryColor: string;
   triggerOffset: string;
 }

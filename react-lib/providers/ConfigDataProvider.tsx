@@ -9,7 +9,6 @@ import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@core/types";
 
 const defaultTheme: WidgetThemeOptions = {
-  headerStyle: "basic",
   primaryColor: "hsl(0,0%,0%)",
   triggerOffset: "20px"
 }
