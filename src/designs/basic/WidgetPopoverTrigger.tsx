@@ -1,17 +1,13 @@
-import React from 'react';
-import { useConfigData } from '@react/index';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
-import { cssVars } from '../constants';
-import { cn } from 'src/utils';
-import {
-  MessageCircleQuestionIcon,
-  MessageSquareDot,
-  XIcon
-} from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { useConfigData } from '@react/index';
 import { Wobble } from '@ui/wobble';
+import { AnimatePresence, motion } from 'framer-motion';
+import { MessageSquareDot, XIcon } from 'lucide-react';
+import React from 'react';
+import { cn } from 'src/utils';
+import { cssVars } from '../constants';
 
-function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
+function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
   const { theme } = useConfigData();
 
   return (
@@ -36,7 +32,7 @@ function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
             'relative size-full rounded-full',
             'flex items-center justify-center',
             'transition-all',
-            'bg-gradient-to-tr bg-primary text-white',
+            'bg-gradient-to-tr bg-primary text-primary-foreground',
             'shadow-lg',
             'ring-4 ring-black/10',
             'active:scale-90',
@@ -65,11 +61,11 @@ function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
             )}
           </AnimatePresence>
 
-          <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-white rounded-full" />
+          <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-background rounded-full" />
         </div>
       </Wobble>
     </PopoverPrimitive.PopoverTrigger>
   );
 }
 
-export { PopoverTrigger };
+export { WidgetPopoverTrigger };

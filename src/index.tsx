@@ -7,7 +7,7 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import Iframe from '@uiw/react-iframe';
 import { useState } from 'react';
 import { Widget, WidgetRoot } from './designs/basic';
-import { PopoverTrigger } from './designs/basic/PopoverTrigger';
+import { WidgetPopoverTrigger } from './designs/basic/WidgetPopoverTrigger';
 import { motion } from 'framer-motion';
 import { version } from '../package.json';
 
@@ -76,7 +76,7 @@ export function IframedWidgetPopover() {
           </Iframe>
         </motion.div>
       </PopoverPrimitive.Content>
-      <PopoverTrigger isOpen={isOpen} />
+      <WidgetPopoverTrigger isOpen={isOpen} />
     </PopoverPrimitive.Root>
   );
 }
