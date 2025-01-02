@@ -81,8 +81,17 @@ function ResetConversationPopover() {
           </h2>
         </header>
         <div className="space-x-2 flex items-center justify-end">
-          <Button variant="secondary" size="sm">{locale.get('no')}</Button>
-          <Button onClick={clearSession} variant="destructive" size="sm">
+          <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>
+            {locale.get('no')}
+          </Button>
+          <Button
+            onClick={() => {
+              clearSession();
+              setOpen(false);
+            }}
+            variant="destructive"
+            size="sm"
+          >
             {locale.get('yes')}
           </Button>
         </div>
