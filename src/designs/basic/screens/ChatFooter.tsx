@@ -211,7 +211,8 @@ export function ChatFooter() {
                     {
                         shouldAcceptAttachments && (
                             <Tooltippy
-                                position="top-end"
+                                side="top"
+                                align="end"
                                 content="attach files, (maximum size 5mb)"
                             >
                                 <Button
