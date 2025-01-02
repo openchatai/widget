@@ -29,7 +29,7 @@ export default {
       }
     },
     fontFamily: {
-      inter: ['Inter', 'Cairo', 'sans-serif']
+      inter: ['Inter', 'sans-serif']
     }
   },
   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')]

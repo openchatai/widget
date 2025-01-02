@@ -68,7 +68,7 @@ export function IframedWidgetPopover() {
               borderColor: 'rgba(0, 0, 0, 0.1)',
               overflow: 'hidden',
               boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-              borderRadius: '24px'
+              borderRadius: '32px'
             }}
             data-chat-widget
           >
