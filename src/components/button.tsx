@@ -10,7 +10,7 @@ const buttonVariants = cva(
     'text-sm font-medium whitespace-nowrap',
     'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
-    'shadow-sm active:shadow-none active:scale-90 hover:active:scale-90',
+    'shadow-sm active:shadow-none active:scale-95 hover:active:scale-95',
     'rounded-xl',
     // Add border to make transitions between variants smoother... because border takes 1 pixel of space in each direction
     'border',
