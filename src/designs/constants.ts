@@ -6,24 +6,33 @@ interface Colors {
 }
 
 export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
-  const primary = tc(colors.primary).toHslString();
+  const primary = tc(colors.primary).toHsl();
+  const primaryForeground = tc(colors.primary).isLight()
+    ? '240 10% 3.9%'
+    : '0 0% 100%';
+
   return {
-    '--opencx-primary': primary,
+    /**
+     * Spread the primary color without the `hsl()` call so that we can use tailwind opacity classes on it
+     */
+    '--opencx-primary': `${primary.h} ${primary.s}% ${primary.l}%`,
+    '--opencx-primary-foreground': primaryForeground,
 
     '--opencx-background': '0 0% 100%',
-    '--opencx-foreground': '210 40% 98%',
+    '--opencx-foreground': '240 10% 3.9%',
 
-    '--opencx-accent': '210 40% 96.1%',
-    '--opencx-accent-foreground': '222.2 47.4% 11.2%',
+    '--opencx-accent': '240 4.8% 95.9%',
+    '--opencx-accent-foreground': '240 5.9% 10%',
 
     '--opencx-destructive': '0 84.2% 60.2%',
-    '--opencx-destructive-foreground': '210 40% 98%',
+    '--opencx-destructive-foreground': '0 0% 98%',
 
-    '--opencx-secondary': '0 0% 96%',
-    '--opencx-secondary-foreground': '222.2 47.4% 11.2%',
+    '--opencx-secondary': '240 4.8% 95.9%',
+    '--opencx-secondary-foreground': '240 5.9% 10%',
 
-    '--opencx-input': '214.3 31.8% 91.4%',
-    '--opencx-border': '214.3 31.8% 91.4%',
+    '--opencx-input': '240 5.9% 90%',
+    '--opencx-border': '240 5.9% 90%',
+    '--opencx-ring': '240 5.9% 10%',
 
     '--opencx-trigger-offset': _.triggerOffset
   } as CSSProperties;

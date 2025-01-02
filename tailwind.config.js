@@ -10,7 +10,8 @@ export default {
         max: 9999
       },
       colors: {
-        primary: 'var(--opencx-primary)',
+        primary: 'hsl(var(--opencx-primary))',
+        'primary-foreground': 'hsl(var(--opencx-primary-foreground))',
 
         foreground: 'hsl(var(--opencx-foreground))',
         background: 'hsl(var(--opencx-background))',
@@ -25,7 +26,8 @@ export default {
         'destructive-foreground': 'hsl(var(--opencx-destructive-foreground))',
 
         input: 'hsl(var(--opencx-input))',
-        border: 'hsl(var(--opencx-border))'
+        border: 'hsl(var(--opencx-border))',
+        ring: 'hsl(var(--opencx-ring))'
       }
     },
     fontFamily: {
