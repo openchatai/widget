@@ -74,13 +74,13 @@ function ResetConversationPopover() {
         </PopoverTrigger>
       </Tooltippy>
 
-      <PopoverContent align="end" className="space-y-2 text-sm">
+      <PopoverContent align="end" className="space-y-4 text-sm">
         <header>
-          <h2 className="text-sm" dir="auto">
+          <h2 dir="auto">
             {locale.get('reset-conversation-confirm')}
           </h2>
         </header>
-        <div className="space-x-2 flex items-center justify-end">
+        <div className="space-y-2 flex flex-col">
           <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>
             {locale.get('no')}
           </Button>
