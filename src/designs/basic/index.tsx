@@ -1,29 +1,29 @@
-import React from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { ComponentPropsWithoutRef, forwardRef } from "react";
-import { ChatScreen } from "./screens/ChatScreen";
-import { useChat, useConfigData, WidgetOptions } from "@react/index";
-import { cssVars } from "../constants";
-import { cn } from "src/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import { PopoverTrigger } from "./PopoverTrigger";
-import { TooltipProvider } from "@ui/tooltip";
-import { Toaster } from "react-hot-toast";
-import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
-import { WidgetRoot as OriginalRoot } from "@react/index";
+import React from 'react';
+import * as PopoverPrimitive from '@radix-ui/react-popover';
+import { ComponentPropsWithoutRef, forwardRef } from 'react';
+import { ChatScreen } from './screens/ChatScreen';
+import { useChat, useConfigData, WidgetOptions } from '@react/index';
+import { cssVars } from '../constants';
+import { cn } from 'src/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import { PopoverTrigger } from './PopoverTrigger';
+import { TooltipProvider } from '@ui/tooltip';
+import { Toaster } from 'react-hot-toast';
+import { InfoIcon, BadgeInfo, CheckCircle2Icon } from 'lucide-react';
+import { WidgetRoot as OriginalRoot } from '@react/index';
 import {
   BotTextResponse,
   BotMessage,
   FallbackComponent,
-  BotLoadingComponent,
-} from "src/@components";
-import { useSyncedState } from "@react/hooks";
+  BotLoadingComponent
+} from 'src/@components';
+import { useSyncedState } from '@react/hooks';
 
 function WidgetPopover() {
   const [isOpen, setIsOpened] = useSyncedState<boolean>(
-    "[widget-opened]",
+    '[widget-opened]',
     false,
-    "session",
+    'session'
   );
 
   return (
@@ -40,28 +40,28 @@ function WidgetPopover() {
             align="end"
           >
             <motion.div
-              style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
+              style={{ transformOrigin: 'bottom right', zIndex: 10000000 }}
               initial={{ opacity: 0, scale: 0.3, y: 20 }}
               className="max-h-[85dvh] w-[350px] h-fit shadow-lg rounded-2xl border"
               variants={{
                 hidden: {
-                  rotate: "-10deg",
-                  opacity: 0,
+                  rotate: '-10deg',
+                  opacity: 0
                 },
                 visible: {
                   rotate: 0,
-                  opacity: 1,
-                },
+                  opacity: 1
+                }
               }}
               animate={{
                 opacity: 1,
                 scale: 1,
-                y: 0,
+                y: 0
               }}
               transition={{
-                type: "spring",
+                type: 'spring',
                 damping: 25,
-                stiffness: 300,
+                stiffness: 300
               }}
               exit={{
                 opacity: 0,
@@ -69,8 +69,8 @@ function WidgetPopover() {
                 y: 20,
                 transition: {
                   duration: 0.2,
-                  ease: "easeInOut",
-                },
+                  ease: 'easeInOut'
+                }
               }}
             >
               <Widget className="overflow-hidden h-[600px] shadow-lg font-inter" />
@@ -88,38 +88,38 @@ function WidgetToaster() {
     <Toaster
       position="top-center"
       containerStyle={{
-        position: "absolute",
-        top: "0",
-        maxHeight: "50%",
-        overflow: "hidden",
+        position: 'absolute',
+        top: '0',
+        maxHeight: '50%',
+        overflow: 'hidden'
       }}
       toastOptions={{
-        position: "top-center",
+        position: 'top-center',
         blank: {
           className:
-            "text-primary-foreground bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full",
+            'text-primary-foreground bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full',
           icon: (
             <BadgeInfo className="size-5 shrink-0 text-primary-foreground" />
-          ),
+          )
         },
         success: {
           icon: (
             <CheckCircle2Icon className="size-5 shrink-0 text-emerald-600" />
           ),
           className:
-            "text-emerald-700 bg-background text-xs p-2 max-w-[200px] font-medium rounded-lg border flex items-center gap-1 w-full",
+            'text-emerald-700 bg-background text-xs p-2 max-w-[200px] font-medium rounded-lg border flex items-center gap-1 w-full'
         },
         error: {
           icon: <InfoIcon className="size-5 shrink-0 text-rose-600" />,
           className:
-            "text-red-700 bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full",
-        },
+            'text-red-700 bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full'
+        }
       }}
     />
   );
 }
 
-const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
+const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
   ({ className, ...props }, _ref) => {
     const chat = useChat();
     const { theme } = useConfigData();
@@ -128,11 +128,11 @@ const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
       <TooltipProvider>
         <div
           style={{
-            display: "contents",
+            display: 'contents',
             ...cssVars(
               { primary: theme.primaryColor },
-              { triggerOffset: theme.triggerOffset },
-            ),
+              { triggerOffset: theme.triggerOffset }
+            )
           }}
           data-chat-widget
         >
@@ -142,11 +142,11 @@ const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
             data-version={chat.version}
             data-chat-widget
             className={cn(
-              "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
-              className,
+              'antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground',
+              className
             )}
           >
-            <div className="size-full absolute antialiased font-inter">
+            <div className="size-full">
               <ChatScreen />
             </div>
             <WidgetToaster />
@@ -154,31 +154,34 @@ const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
         </div>
       </TooltipProvider>
     );
-  },
+  }
 );
 
 function WidgetRoot({
   children,
-  options,
-}: { children?: React.ReactNode; options: WidgetOptions }) {
+  options
+}: {
+  children?: React.ReactNode;
+  options: WidgetOptions;
+}) {
   return (
     <OriginalRoot
       options={{
         ...options,
         components: [
           {
-            key: "LOADING",
-            component: BotLoadingComponent,
+            key: 'LOADING',
+            component: BotLoadingComponent
           },
           {
-            key: "FALLBACK",
-            component: FallbackComponent,
+            key: 'FALLBACK',
+            component: FallbackComponent
           },
           {
-            key: "TEXT",
-            component: BotTextResponse,
-          },
-        ],
+            key: 'TEXT',
+            component: BotTextResponse
+          }
+        ]
       }}
     >
       {children}
@@ -186,6 +189,6 @@ function WidgetRoot({
   );
 }
 
-Widget.displayName = "Widget";
+Widget.displayName = 'Widget';
 
 export { Widget, WidgetRoot, BotTextResponse, BotMessage };

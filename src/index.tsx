@@ -1,8 +1,8 @@
-import "./index.css";
+import './index.css';
 import styles from './index.css?inline';
-import React from "react";
-import { WidgetOptions } from "../react-lib/types";
-import { render } from "./render";
+import React from 'react';
+import { WidgetOptions } from '../react-lib/types';
+import { render } from './render';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import Iframe from '@uiw/react-iframe';
 import { useState } from 'react';
@@ -43,9 +43,7 @@ export function IframedWidgetPopover() {
           width: '350px',
           height: '600px',
           fontSize: '16px',
-          zIndex: 1000000,
-          boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 40px',
-          borderRadius: '24px'
+          zIndex: 1000000
         }}
         sideOffset={10}
         data-chat-widget
@@ -53,13 +51,11 @@ export function IframedWidgetPopover() {
         asChild
       >
         <motion.div
-          animate={
-            isOpen ? 'visible' : 'hidden'
-          }
+          animate={isOpen ? 'visible' : 'hidden'}
           initial="hidden"
           variants={{
             hidden: { opacity: 0, y: 16, transitionEnd: { display: 'none' } },
-            visible: { opacity: 1, y: 0, display: 'block' },
+            visible: { opacity: 1, y: 0, display: 'block' }
           }}
         >
           <Iframe
@@ -68,10 +64,14 @@ export function IframedWidgetPopover() {
             style={{
               width: '100%',
               height: '100%',
-              border: 'none',
+              border: '1px solid',
+              borderColor: 'rgba(0, 0, 0, 0.1)',
               overflow: 'hidden',
+              boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+              borderRadius: '24px'
             }}
-            data-chat-widget>
+            data-chat-widget
+          >
             <Widget data-chat-widget className="font-inter size-full" />
           </Iframe>
         </motion.div>
@@ -81,7 +81,7 @@ export function IframedWidgetPopover() {
   );
 }
 
-const defaultRootId = "opencopilot-root";
+const defaultRootId = 'opencopilot-root';
 
 declare global {
   interface Window {
@@ -99,5 +99,5 @@ function initOpenScript(options: WidgetOptions) {
   );
 }
 
-window["initOpenScript"] = initOpenScript;
+window['initOpenScript'] = initOpenScript;
 window['openCopilotWidgetVersion'] = version;

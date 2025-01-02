@@ -161,7 +161,7 @@ export function ChatFooter() {
     return (
         <div className="p-2 relative space-y-1" {...getRootProps()}>
             <input {...getInputProps()} />
-            <div className="rounded-xl relative gap-2 border border-px border-zinc-200 transition-all shadow-sm">
+            <div className="rounded-2xl relative gap-2 border border-zinc-200 transition-all shadow-sm">
                 {
                     allFiles.length > 0 && (
                         <motion.div
