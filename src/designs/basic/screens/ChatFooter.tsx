@@ -210,7 +210,7 @@ export function ChatFooter() {
       <div
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
-          'relative gap-2 border transition-all shadow-sm'
+          'relative gap-2 border transition-all shadow'
         )}
       >
         {allFiles.length > 0 && (
@@ -245,7 +245,10 @@ export function ChatFooter() {
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
-            `outline-none w-full p-3 pr-12 text-zinc-900 text-sm bg-transparent resize-none placeholder:text-zinc-400`
+            'w-full p-3 pr-12',
+            'resize-none',
+            'bg-transparent outline-none',
+            'text-zinc-900 text-sm placeholder:text-zinc-400',
           )}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={async (event) => {
