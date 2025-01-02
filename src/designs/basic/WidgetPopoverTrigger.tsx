@@ -33,8 +33,8 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
             'flex items-center justify-center',
             'transition-all',
             'bg-gradient-to-tr bg-primary text-primary-foreground',
-            'shadow-lg',
-            'ring-4 ring-black/10',
+            'shadow-xl',
+            'ring-1 ring-border',
             'active:scale-90',
             '[&_svg]:size-6'
           )}
@@ -61,7 +61,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
             )}
           </AnimatePresence>
 
-          <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-background rounded-full" />
+          <span className="absolute top-0.5 right-0.5 size-2.5 bg-emerald-600 border border-border rounded-full" />
         </div>
       </Wobble>
     </PopoverPrimitive.PopoverTrigger>
