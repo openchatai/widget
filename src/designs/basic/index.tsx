@@ -125,7 +125,11 @@ const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
     const { theme } = useConfigData();
 
     return (
-      <TooltipProvider>
+      <TooltipProvider
+        delayDuration={200}
+        // this is important, because without it, the tooltip remains even after moving the mouse away from trigger
+        disableHoverableContent
+      >
         <div
           style={{
             display: 'contents',
