@@ -16,12 +16,14 @@
   </head>
 
   <body>
-    <script>
+    <script type="module">
       const socketUrl = 'http://localhost:8080';
       const apiUrl = 'http://localhost:8080/backend';
+      const token = import.meta.env.VITE_ORG_TOKEN;
+
       window.addEventListener('DOMContentLoaded', () => {
         initOpenScript({
-          token: 'f22658b18bda3d3a0d7e3d0e9ab57635',
+          token: token,
           apiUrl: apiUrl,
           socketUrl: socketUrl,
           language: 'en',
@@ -36,7 +38,7 @@
           theme: {
             headerStyle: 'basic'
           },
-          collectUserData: false,
+          collectUserData: true,
           headers: {
             'X-auth': 'Hello-Header'
           },
