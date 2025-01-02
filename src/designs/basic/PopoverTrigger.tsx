@@ -8,7 +8,7 @@ import {
   MessageSquareDot,
   XIcon
 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { Wobble } from '@ui/wobble';
 
 function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
@@ -39,40 +39,31 @@ function PopoverTrigger({ isOpen }: { isOpen: boolean }) {
             'bg-gradient-to-tr bg-primary text-white',
             'shadow-lg',
             'ring-4 ring-black/10',
-            'active:scale-95',
+            'active:scale-90',
             '[&_svg]:size-6'
           )}
         >
-          <motion.div
-            initial={false}
-            animate={{
-              scale: isOpen ? 0 : 1,
-              opacity: isOpen ? 0 : 1
-            }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 25
-            }}
-          >
-            <MessageSquareDot />
-          </motion.div>
-
-          <motion.div
-            initial={false}
-            animate={{
-              scale: isOpen ? 1 : 0,
-              opacity: isOpen ? 1 : 0
-            }}
-            transition={{
-              type: 'spring',
-              stiffness: 300,
-              damping: 25
-            }}
-            className="absolute inset-0 flex items-center justify-center"
-          >
-            <XIcon />
-          </motion.div>
+          <AnimatePresence mode="wait">
+            {isOpen ? (
+              <motion.div
+                key="x-icon"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0, transition: { duration: 0.1 } }}
+              >
+                <XIcon />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="message-icon"
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0, opacity: 0, transition: { duration: 0.1 } }}
+              >
+                <MessageSquareDot />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <span className="absolute top-0 right-0 size-3 bg-emerald-600 border-2 border-white rounded-full" />
         </div>
