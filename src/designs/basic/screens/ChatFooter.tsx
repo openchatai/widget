@@ -98,7 +98,7 @@ function FileDisplay({
           {getStatusIcon()}
         </div>
         <button
-          className="absolute p-0.5 rounded-full bg-black/20 text-foreground right-0.5 bottom-0.5 z-10"
+          className="absolute p-0.5 rounded-full bg-black/20 text-primary-foreground right-0.5 bottom-0.5 z-10"
           onClick={onCancel}
         >
           <XIcon className="size-3" />
@@ -210,7 +210,7 @@ export function ChatFooter() {
       <div
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
-          'relative gap-2 border border-zinc-200 transition-all shadow-sm'
+          'relative gap-2 border transition-all shadow-sm'
         )}
       >
         {allFiles.length > 0 && (

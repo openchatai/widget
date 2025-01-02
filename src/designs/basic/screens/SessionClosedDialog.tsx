@@ -23,7 +23,7 @@ export function SessionClosedDialog() {
                 <footer className="grid mt-2">
                     <button
                         onClick={recreateSession}
-                        className="text-sm font-medium hover:brightness-110 whitespace-nowrap px-3 py-2 bg-primary text-white rounded-md"
+                        className="text-sm font-medium hover:brightness-110 whitespace-nowrap px-3 py-2 bg-primary text-primary-foreground rounded-md"
                     >
                         {locale.get("create-new-ticket")}
                     </button>

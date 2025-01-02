@@ -13,7 +13,7 @@ function Keyboard({
             {options.map((option, index) => (
                 <button
                     onClick={() => onKeyboardClick(option)}
-                    className='hover:shadow font-semibold transition-all hover:border-secondary border-transparent border text-white bg-primary rounded-md p-1.5 text-sm w-full'
+                    className='hover:shadow font-semibold transition-all hover:border-secondary border-transparent border text-primary-foreground bg-primary rounded-md p-1.5 text-sm w-full'
                     key={index}>
                     {option}
                 </button>
