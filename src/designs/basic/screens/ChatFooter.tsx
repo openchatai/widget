@@ -84,7 +84,7 @@ function FileDisplay({ file: { status, file, error }, onCancel }: { file: FileWi
 export function ChatFooter() {
     const { collectUserData } = useConfigData();
     const inputRef = useRef<HTMLTextAreaElement>(null);
-    const { sendMessage, hookState, session } = useChat();
+    const { sendMessage, sendMessageState, session } = useChat();
     const { contact } = useContact();
     const locale = useLocale();
 
@@ -102,7 +102,7 @@ export function ChatFooter() {
     };
 
     const handleSubmit = async (text: string) => {
-        if (hookState.state === "loading") return;
+        if (sendMessageState.loading) return;
         if (isUploading) {
             toast.error('please wait for the file(s) to upload')
         }
@@ -146,7 +146,7 @@ export function ChatFooter() {
     });
 
     const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
-    const isLoading = hookState.state === "loading";
+    const isLoading = sendMessageState.loading;
 
     const shouldCollectDataFirst = collectUserData && !contact?.id;
 

@@ -121,7 +121,7 @@ export function useAxiosInstance(options: Options) {
        * @param message 
        */
       sendMessage: async (message: HttpChatInputSchema) => {
-        return instance.post<HandleContactMessageOutputSchema>('chat/send', message)
+        return instance.post<HandleContactMessageOutputSchema>('widget/chat/send', message)
       }
     }),
     [instance]

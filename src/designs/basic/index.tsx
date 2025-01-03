@@ -1,12 +1,9 @@
 import React from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { ComponentPropsWithoutRef, forwardRef } from "react";
 import { ChatScreen } from "./screens/ChatScreen";
 import { useChat, useConfigData, WidgetOptions } from "@react/index";
 import { cssVars } from "../constants";
 import { cn } from "src/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import { PopoverTrigger } from "./PopoverTrigger";
 import { TooltipProvider } from "@ui/tooltip";
 import { Toaster } from "react-hot-toast";
 import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
@@ -17,71 +14,6 @@ import {
   FallbackComponent,
   BotLoadingComponent,
 } from "src/@components";
-import { useSyncedState } from "@react/hooks";
-
-function WidgetPopover() {
-  const [isOpen, setIsOpened] = useSyncedState<boolean>(
-    "[widget-opened]",
-    false,
-    "session",
-  );
-
-  return (
-    <PopoverPrimitive.Root open={isOpen ?? false} onOpenChange={setIsOpened}>
-      <AnimatePresence mode="wait">
-        {isOpen && (
-          <PopoverPrimitive.Content
-            forceMount
-            onInteractOutside={(ev) => ev.preventDefault()}
-            side="top"
-            sideOffset={10}
-            data-chat-widget
-            asChild
-            align="end"
-          >
-            <motion.div
-              style={{ transformOrigin: "bottom right", zIndex: 10000000 }}
-              initial={{ opacity: 0, scale: 0.3, y: 20 }}
-              className="max-h-[85dvh] w-[350px] h-fit shadow-lg rounded-2xl border"
-              variants={{
-                hidden: {
-                  rotate: "-10deg",
-                  opacity: 0,
-                },
-                visible: {
-                  rotate: 0,
-                  opacity: 1,
-                },
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              transition={{
-                type: "spring",
-                damping: 25,
-                stiffness: 300,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.3,
-                y: 20,
-                transition: {
-                  duration: 0.2,
-                  ease: "easeInOut",
-                },
-              }}
-            >
-              <Widget className="overflow-hidden h-[600px] shadow-lg font-inter" />
-            </motion.div>
-          </PopoverPrimitive.Content>
-        )}
-      </AnimatePresence>
-      <PopoverTrigger isOpen={isOpen ?? false} />
-    </PopoverPrimitive.Root>
-  );
-}
 
 function WidgetToaster() {
   return (

@@ -18,7 +18,7 @@ import { WelcomeScreen } from "./WelcomeScreen";
 import { ChatFooter } from "./ChatFooter";
 
 function ChatRenderer() {
-  const { state, hookState } = useChat();
+  const { state, sendMessageState } = useChat();
   const { componentStore, initialMessages, ...config } = useConfigData();
 
   const LoadingComponent = componentStore.getComponent(
@@ -96,7 +96,7 @@ function ChatRenderer() {
       }
       return null;
     })}
-    {hookState.state === "loading" && <LoadingComponent />}
+    {sendMessageState.loading && <LoadingComponent />}
   </div>
 }
 
