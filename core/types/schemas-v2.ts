@@ -88,6 +88,7 @@ const widgetSessionSchema = z.object({
 })
 
 const httpChatInputDto = z.object({
+    id: z.string().optional(),
     content: z.string(),
     session_id: z.string(),
     headers: z.record(z.string(), z.string()),
@@ -104,53 +105,45 @@ const httpChatInputDto = z.object({
     attachments: z.array(chatAttachmentSchema).optional().nullable(),
 })
 
-const handleContactMessageOutputSchema = z.union([
-    z.object({
-        success: z.literal(true),
-        autopilotResponse: z
-            .object({
-                type: z.literal('text'),
-                value: z.object({
-                    content: z.string(),
-                    error: z.boolean(),
-                }),
-                id: z.string().optional(),
-            })
-            .optional(),
-        uiResponse: z
-            .object({
-                type: z.literal('ui'),
-                value: z.object({
-                    type: z.string(),
-                    request_response: z.any(),
-                    name: z.string(),
-                    content: z.string(),
-                    message_id: z.string().optional(),
-                }),
-            })
-            .optional(),
-        options: z
-            .object({
-                type: z.literal('options'),
-                value: z.array(z.string()),
-            })
-            .optional(),
-        sessionIsHandedOff: z.boolean().optional(),
-    }),
-    z.object({
-        success: z.literal(false),
-        error: z
-            .object({
-                message: z.string(),
+const handleContactMessageOutputSchema = z.discriminatedUnion(
+    'success',
+    [
+        z.object({
+            success: z.literal(true),
+            code: z.string().optional(),
+            options: z
+                .object({
+                    type: z.literal('options'),
+                    value: z.array(z.string()),
+                })
+                .optional(),
+            autopilotResponse: z
+                .object({
+                    type: z.literal('text'),
+                    value: z.object({
+                        error: z.boolean(),
+                        content: z.string(),
+                    }),
+                    id: z.string().optional(),
+                })
+                .optional(),
+            uiResponse: z
+                .object({
+                    type: z.literal('ui'),
+                    value: z.unknown(),
+                })
+                .optional(),
+            sessionIsHandedOff: z.boolean().optional(),
+        }),
+        z.object({
+            success: z.literal(false),
+            error: z.object({
                 code: z.string().optional(),
-            })
-            .optional(),
-    }),
-    z.object({
-        success: z.literal(true),
-        code: z.string().optional(),
-    }),
-]);
+                message: z.string().optional(),
+            }),
+        }),
+    ],
+);
 
 export type HandleContactMessageOutputSchema = z.infer<typeof handleContactMessageOutputSchema>;
 export type HttpChatInputSchema = z.infer<typeof httpChatInputDto>;

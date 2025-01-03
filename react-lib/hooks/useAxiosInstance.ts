@@ -1,9 +1,10 @@
 import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@core/types";
-import axios, { AxiosRequestConfig, HttpStatusCode } from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 import { version } from "../../package.json"
 import { PreludeData, WorkingHours } from "@core/types/prelude";
 import { UserObject } from "@react/types";
+import { HandleContactMessageOutputSchema, HttpChatInputSchema } from "@core/types/schemas-v2";
 
 type Options = {
   apiUrl: string;
@@ -113,6 +114,14 @@ export function useAxiosInstance(options: Options) {
         const searchParams = new URLSearchParams();
         searchParams.append("lastMessageTimestamp", lastMessageTimestamp.toString());
         return instance.get<ChatHistoryMessageType[] | undefined>(`/widget/session/history/${sessionId}/?${searchParams.toString()}`);
+      },
+
+      /**
+       * send a message to the chat
+       * @param message 
+       */
+      sendMessage: async (message: HttpChatInputSchema) => {
+        return instance.post<HandleContactMessageOutputSchema>('chat/send', message)
       }
     }),
     [instance]
