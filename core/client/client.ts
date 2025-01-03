@@ -1,6 +1,4 @@
 import { CoreOptions } from "../types"
-import { SessionManager } from "../managers/session-manager"
-import { Platform, DefaultPlatform } from "../platform"
 import { ApiCaller } from "./api"
 
 
@@ -11,11 +9,9 @@ export type RequiredOptions = Required<Omit<CoreOptions, 'contactToken'>> & {
 export class ApiClient {
     private readonly _options: CoreOptions
     private readonly api: ApiCaller
-    private readonly session: SessionManager
 
     constructor(
         options: CoreOptions,
-        private readonly platform: Platform = new DefaultPlatform()
     ) {
         this._options = options;
 
@@ -24,8 +20,6 @@ export class ApiClient {
             token: this.getOptions.token,
             coreOptions: options,
         })
-
-        this.session = new SessionManager(this.api, this.getOptions);
     }
 
     private get getOptions(): RequiredOptions {
