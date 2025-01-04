@@ -22,6 +22,9 @@ export default {
         secondary: 'hsl(var(--opencx-secondary))',
         'secondary-foreground': 'hsl(var(--opencx-secondary-foreground))',
 
+        muted: 'hsl(var(--opencx-muted))',
+        'muted-foreground': 'hsl(var(--opencx-muted-foreground))',
+
         destructive: 'hsl(var(--opencx-destructive))',
         'destructive-foreground': 'hsl(var(--opencx-destructive-foreground))',
 

@@ -248,7 +248,7 @@ export function ChatFooter() {
             'w-full p-3 pr-12',
             'resize-none',
             'bg-transparent outline-none',
-            'text-zinc-900 text-sm placeholder:text-zinc-400',
+            'text-sm'
           )}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={async (event) => {

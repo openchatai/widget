@@ -5,115 +5,146 @@ import {
   usePreludeData
 } from '@react/index';
 import { Button } from '@ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@ui/popover';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@ui/dropdown-menu';
+import { MotionDiv } from '@ui/MotionDiv';
 import { Skeleton } from '@ui/skeleton';
 import { Switch } from '@ui/switch';
-import { Tooltippy } from '@ui/tooltip';
-import { RotateCcw, SettingsIcon } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  EllipsisVerticalIcon,
+  RotateCcw,
+  SaveIcon,
+  SaveOffIcon,
+  Volume2Icon,
+  VolumeOffIcon
+} from 'lucide-react';
 import React, { useState } from 'react';
 
-function SettingsPopover() {
+function OptionsMenu() {
   const locale = useLocale();
-  const { widgetSettings, setSettings } = useConfigData();
-
-  return (
-    <Popover>
-      <Tooltippy content={locale.get('settings')} side="right">
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="fit" className="rounded-full">
-            <SettingsIcon className="size-4" />
-          </Button>
-        </PopoverTrigger>
-      </Tooltippy>
-      <PopoverContent align="start" className="space-y-2 text-sm">
-        <div className="flex items-center justify-between">
-          <h2 className="text-sm font-semibold" dir="auto">
-            {locale.get('settings')}
-          </h2>
-        </div>
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label htmlFor="persist-session::open" dir="auto">
-              {locale.get('persist-session')}
-            </label>
-            <Switch
-              id="persist-session::open"
-              checked={widgetSettings?.persistSession}
-              onCheckedChange={(c) => setSettings({ persistSession: c })}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <label htmlFor="sfx::open" dir="auto">
-              {locale.get('sound-effects')}
-            </label>
-            <Switch
-              id="sfx::open"
-              checked={widgetSettings?.useSoundEffects}
-              onCheckedChange={(c) => setSettings({ useSoundEffects: c })}
-            />
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-function ResetConversationPopover() {
-  const locale = useLocale();
-  const { clearSession } = useChat();
   const [open, setOpen] = useState(false);
 
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <Tooltippy content={locale.get('reset-conversation')} side="left">
-        <PopoverTrigger asChild>
-          <Button variant="ghost" size="fit" className="rounded-full">
-            <RotateCcw className="size-4" />
-          </Button>
-        </PopoverTrigger>
-      </Tooltippy>
+  const { clearSession } = useChat();
+  const { widgetSettings, setSettings } = useConfigData();
 
-      <PopoverContent align="end" className="space-y-4 text-sm">
-        <header>
-          <h2 dir="auto">
-            {locale.get('reset-conversation-confirm')}
-          </h2>
-        </header>
-        <div className="space-y-2 flex flex-col">
-          <Button variant="secondary" size="sm" onClick={() => setOpen(false)}>
-            {locale.get('no')}
-          </Button>
-          <Button
-            onClick={() => {
+  const togglePersistSession = () => {
+    setSettings({ persistSession: !widgetSettings?.persistSession });
+  };
+
+  const toggleSoundEffects = () => {
+    setSettings({ useSoundEffects: !widgetSettings?.useSoundEffects });
+  };
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="fit" className="rounded-full">
+          <EllipsisVerticalIcon className="size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="min-w-56">
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              togglePersistSession();
+            }}
+          >
+            <AnimatePresence mode="wait">
+              {widgetSettings?.persistSession ? (
+                <MotionDiv key="save" fadeIn="right" distance={4} snapExit>
+                  <SaveIcon />
+                </MotionDiv>
+              ) : (
+                <MotionDiv key="save-off" fadeIn="right" distance={4} snapExit>
+                  <SaveOffIcon />
+                </MotionDiv>
+              )}
+            </AnimatePresence>
+            {locale.get('persist-session')}
+            <Switch
+              className="ml-auto"
+              checked={widgetSettings?.persistSession}
+              onCheckedChange={togglePersistSession}
+            />
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(e) => {
+              e.preventDefault();
+              toggleSoundEffects();
+            }}
+          >
+            <AnimatePresence mode="wait">
+              {widgetSettings?.useSoundEffects ? (
+                <MotionDiv key="volume-2" fadeIn="right" distance={4} snapExit>
+                  <Volume2Icon />
+                </MotionDiv>
+              ) : (
+                <MotionDiv
+                  key="volume-off"
+                  fadeIn="right"
+                  distance={4}
+                  snapExit
+                >
+                  <VolumeOffIcon />
+                </MotionDiv>
+              )}
+            </AnimatePresence>
+            {locale.get('sound-effects')}
+            <Switch
+              className="ml-auto"
+              checked={widgetSettings?.useSoundEffects}
+              onCheckedChange={toggleSoundEffects}
+            />
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuGroup>
+          <DropdownMenuItem
+            onSelect={() => {
               clearSession();
               setOpen(false);
             }}
-            variant="destructive"
-            size="sm"
           >
-            {locale.get('yes')}
-          </Button>
-        </div>
-      </PopoverContent>
-    </Popover>
+            <motion.div
+              initial={{ opacity: 0, x: -4, rotate: 360 }}
+              animate={{ opacity: 1, x: 0, rotate: 0 }}
+            >
+              <RotateCcw />
+            </motion.div>
+            {locale.get('reset-conversation')}
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
 export function ChatHeader() {
   const { data, isLoading } = usePreludeData();
+
   return (
     <header className="p-2 border-b bg-background">
       <div className="flex items-center gap-2">
-        <SettingsPopover />
-        <div className="flex-1">
+        {/* <SettingsPopover /> */}
+        <div className="flex-1 pl-2">
           {isLoading ? (
             <Skeleton className="h-4 w-2/3" />
           ) : (
             <h2 className="font-semibold">{data?.organization_name}</h2>
           )}
         </div>
-        <ResetConversationPopover />
+        <OptionsMenu />
       </div>
     </header>
   );

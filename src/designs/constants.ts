@@ -30,6 +30,9 @@ export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
     '--opencx-secondary': '240 4.8% 95.9%',
     '--opencx-secondary-foreground': '240 5.9% 10%',
 
+    '--opencx-muted': '240 4.8% 95.9%',
+    '--opencx-muted-foreground': '240 3.8% 46.1%',
+
     '--opencx-input': '240 5.9% 90%',
     '--opencx-border': '240 5.9% 90%',
     '--opencx-ring': '240 5.9% 10%',
