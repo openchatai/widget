@@ -9,7 +9,7 @@ export function RootScreen() {
   const { shouldCollectDataFirst } = useShouldCollectUserData();
 
   return (
-    <div className="size-full">
+    <div className="size-full bg-background">
       <AnimatePresence mode="wait">
         {shouldCollectDataFirst ? (
           <MotionDiv key="welcome-screen" fadeIn="right" className="size-full">
