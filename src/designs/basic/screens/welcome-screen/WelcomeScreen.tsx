@@ -36,7 +36,7 @@ export function WelcomeScreen() {
   );
 
   return (
-    <div ref={observedElementRef} className="h-fit min-h-[400px] bg-primary flex flex-col">
+    <div ref={observedElementRef} className="h-fit min-h-[400px] bg-primary rounded-3xl flex flex-col">
       {/* <div
         className="absolute inset-0 z-0"
         style={{

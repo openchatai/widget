@@ -12,11 +12,21 @@ export function RootScreen() {
     <div className="bg-background size-full">
       <AnimatePresence mode="wait">
         {shouldCollectDataFirst ? (
-          <MotionDiv key="welcome-screen" fadeIn="right" className="size-full">
+          <MotionDiv
+            key="welcome-screen"
+            fadeIn="right"
+            className="size-full"
+            snapExit
+          >
             <WelcomeScreen />
           </MotionDiv>
         ) : (
-          <MotionDiv key="chat-screen" fadeIn="right" className="size-full">
+          <MotionDiv
+            key="chat-screen"
+            fadeIn="right"
+            className="size-full"
+            snapExit
+          >
             <ChatScreen />
           </MotionDiv>
         )}
