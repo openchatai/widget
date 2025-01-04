@@ -45,7 +45,7 @@ export function IframedWidgetPopover() {
           fontSize: '16px',
           zIndex: 1000000
         }}
-        sideOffset={10}
+        sideOffset={16}
         data-chat-widget
         align="end"
         asChild
