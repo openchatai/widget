@@ -7,6 +7,7 @@ import React from 'react';
 import { cn } from 'src/utils';
 import { cssVars } from '../constants';
 import { OpenLogoSvg } from 'src/@components/OpenLogoSvg';
+import { MotionDiv } from '@ui/MotionDiv';
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
   const { theme } = useConfigData();
@@ -34,7 +35,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
             'flex items-center justify-center',
             'transition-all',
             // 'bg-gradient-to-t from-primary/50 via-primary to-primary',
-            "[background:radial-gradient(68.75%_68.75%_at_50%_100%,_#717171_0%,_#000000_100%)]",
+            '[background:radial-gradient(68.75%_68.75%_at_50%_100%,_#717171_0%,_#000000_100%)]',
             'text-primary-foreground',
             'shadow-xl',
             'active:scale-90',
@@ -43,23 +44,13 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         >
           <AnimatePresence mode="wait">
             {isOpen ? (
-              <motion.div
-                key="x-icon"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0, transition: { duration: 0.1 } }}
-              >
+              <MotionDiv key="x-icon" snapExit fadeIn="up">
                 <XIcon />
-              </motion.div>
+              </MotionDiv>
             ) : (
-              <motion.div
-                key="message-icon"
-                initial={{ scale: 0, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0, opacity: 0, transition: { duration: 0.1 } }}
-              >
+              <MotionDiv key="message-icon" snapExit>
                 <OpenLogoSvg />
-              </motion.div>
+              </MotionDiv>
             )}
           </AnimatePresence>
         </div>
