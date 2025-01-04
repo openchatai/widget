@@ -11,6 +11,11 @@ import { SendHorizontal } from 'lucide-react';
 import { z } from 'zod';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 import { useWidgetContentHeight } from '@react/hooks';
+import {
+  DEFAULT_STYLES,
+  WIDGET_CONTENT_MIN_HEIGHT_PX
+} from 'src/designs/constants';
+import { cn } from 'src/utils';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -22,7 +27,9 @@ export function WelcomeScreen() {
   const { data: preludeData } = usePreludeData();
   const { createContactAsync } = useContact();
   const { assets } = useConfigData();
-  const { observedElementRef } = useWidgetContentHeight();
+  const { observedElementRef } = useWidgetContentHeight({
+    fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX
+  });
   const [handleSubmitState, handleSubmit] = useAsyncFn(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -36,7 +43,13 @@ export function WelcomeScreen() {
   );
 
   return (
-    <div ref={observedElementRef} className="h-fit min-h-[400px] bg-primary rounded-3xl flex flex-col">
+    <div
+      ref={observedElementRef}
+      className={cn(
+        DEFAULT_STYLES.widgetMinHeight,
+        'h-fit bg-primary rounded-3xl flex flex-col'
+      )}
+    >
       {/* <div
         className="absolute inset-0 z-0"
         style={{
@@ -48,7 +61,7 @@ export function WelcomeScreen() {
         }}
       /> */}
 
-      <div className="flex-1 flex flex-col px-4 py-8 text-start space-y-4 relative z-10">
+      <div className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10">
         <div className="flex items-center justify-between w-full mb-2">
           {assets?.organizationLogo ? (
             <img

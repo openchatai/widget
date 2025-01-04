@@ -2,7 +2,15 @@ import { useEffect, useRef } from 'react';
 
 const SELECTOR = '[data-chat-widget-content-root]' as const;
 
-export function useWidgetContentHeight() {
+export function useWidgetContentHeight({
+  fallbackHeight: minHeight
+}: {
+  /**
+   * unrendered elements have an offset height of 0, this is causes a weird animation when opening the widget.
+   * So, a fallback value equal to the fixed height or min height of the screen's root div solves the issue.
+   */
+  fallbackHeight: number;
+}) {
   /**
    * This is the element that we will observe for height changes
    */
@@ -17,9 +25,9 @@ export function useWidgetContentHeight() {
       let animationFrame: number;
       const observer = new ResizeObserver(() => {
         animationFrame = requestAnimationFrame(() => {
-          const height = observedElement.offsetHeight;
+          const height = Math.max(observedElement.offsetHeight, minHeight);
           contentRoot.style.setProperty(
-            "--opencx-widget-height",
+            '--opencx-widget-height',
             height.toFixed(1) + 'px'
           );
         });

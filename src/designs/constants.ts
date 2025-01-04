@@ -1,6 +1,14 @@
 import type { CSSProperties } from 'react';
 import tc from 'tinycolor2';
 
+export const WIDGET_CONTENT_MIN_HEIGHT_PX = 400;
+export const WIDGET_CONTENT_MAX_HEIGHT_PX = 600;
+export const DEFAULT_STYLES = {
+  widgetMinHeight: 'min-h-[400px]',
+  widgetMaxHeight: 'max-h-[600px]',
+  widgetHeight: 'h-[600px]'
+} as const;
+
 interface Colors {
   primary: string;
 }

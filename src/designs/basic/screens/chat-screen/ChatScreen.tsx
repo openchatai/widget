@@ -11,6 +11,11 @@ import { ChatFooter } from './ChatFooter';
 import { useWidgetContentHeight } from '@react/hooks';
 import { cn } from 'src/utils';
 import { Button } from '@ui/button';
+import {
+  DEFAULT_STYLES,
+  WIDGET_CONTENT_MAX_HEIGHT_PX,
+  WIDGET_CONTENT_MIN_HEIGHT_PX
+} from 'src/designs/constants';
 
 function ChatRenderer() {
   const { state, hookState } = useChat();
@@ -99,13 +104,15 @@ export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
-  const { observedElementRef } = useWidgetContentHeight();
+  const { observedElementRef } = useWidgetContentHeight({
+    fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX
+  });
 
   return (
     <div
       ref={observedElementRef}
       className={cn(
-        'h-[600px]', // fixed height
+        DEFAULT_STYLES.widgetHeight,
         'w-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0'
       )}
     >

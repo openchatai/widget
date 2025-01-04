@@ -9,7 +9,7 @@ import { WidgetPopoverTrigger } from './designs/basic/WidgetPopoverTrigger';
 import './index.css';
 import styles from './index.css?inline';
 import { render } from './render';
-
+import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from './designs/constants';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -72,8 +72,8 @@ export function IframedWidgetPopover() {
             data-chat-widget
             style={{
               maxHeight: '85dvh',
-              minHeight: '400px',
               width: '350px',
+              minHeight: DEFAULT_STYLES.widgetMinHeight,
               height: 'var(--opencx-widget-height)',
               overflow: 'hidden',
               /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
