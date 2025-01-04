@@ -6,6 +6,7 @@ import { MessageSquareDot, XIcon } from 'lucide-react';
 import React from 'react';
 import { cn } from 'src/utils';
 import { cssVars } from '../constants';
+import { OpenLogoSvg } from 'src/@components/OpenLogoSvg';
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
   const { theme } = useConfigData();
@@ -32,7 +33,9 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
             'relative size-full rounded-full',
             'flex items-center justify-center',
             'transition-all',
-            'bg-gradient-to-tr bg-primary text-primary-foreground',
+            // 'bg-gradient-to-t from-primary/50 via-primary to-primary',
+            "[background:radial-gradient(68.75%_68.75%_at_50%_100%,_#717171_0%,_#000000_100%)]",
+            'text-primary-foreground',
             'shadow-xl',
             'active:scale-90',
             '[&_svg]:size-6'
@@ -55,7 +58,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0, opacity: 0, transition: { duration: 0.1 } }}
               >
-                <MessageSquareDot />
+                <OpenLogoSvg />
               </motion.div>
             )}
           </AnimatePresence>
