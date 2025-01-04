@@ -8,7 +8,7 @@ import { ChatHeader } from './ChatHeader';
 import { SessionClosedDialog } from './SessionClosedDialog';
 import { usePreludeData } from '@react/providers/usePreludeData';
 import { useShouldCollectUserData } from 'src/hooks/useShouldCollectData';
-import { WelcomeScreen } from './WelcomeScreen';
+import { WelcomeScreen } from '../WelcomeScreen';
 import { ChatFooter } from './ChatFooter';
 
 function ChatRenderer() {

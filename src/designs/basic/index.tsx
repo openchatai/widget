@@ -16,7 +16,7 @@ import {
 } from 'src/@components';
 import { cn } from 'src/utils';
 import { cssVars } from '../constants';
-import { ChatScreen } from './screens/ChatScreen';
+import { ChatScreen } from './screens/chat-screen/ChatScreen';
 
 function WidgetToaster() {
   return (
