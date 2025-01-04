@@ -9,7 +9,6 @@ import { Input } from '@ui/input';
 import { Button } from '@ui/button';
 import { SendHorizontal } from 'lucide-react';
 import { z } from 'zod';
-import { motion } from 'framer-motion';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
 
 const schema = z.object({
@@ -35,12 +34,10 @@ export function WelcomeScreen() {
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="h-full flex flex-col bg-background relative overflow-hidden rounded-xl"
+    <div
+      className="h-full bg-primary flex flex-col"
     >
-      <div
+      {/* <div
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url('https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
@@ -49,9 +46,9 @@ export function WelcomeScreen() {
           backgroundRepeat: 'no-repeat',
           height: '240px'
         }}
-      />
+      /> */}
 
-      <div className="flex-1 px-4 pt-12 flex flex-col justify-start text-left space-y-4 relative z-10">
+      <div className="flex-1 flex flex-col px-4 py-8 text-start space-y-4 relative z-10">
         <div className="flex items-center justify-between w-full mb-2">
           {assets?.organizationLogo ? (
             <img
@@ -76,7 +73,7 @@ export function WelcomeScreen() {
         </div>
       </div>
 
-      <div className="p-2 bg-background shadow-xl relative z-10 rounded-t-3xl -mt-6">
+      <div className="p-2 bg-background rounded-3xl">
         <form onSubmit={handleSubmit} className="space-y-2">
           <div className="space-y-2">
             <Input
@@ -108,6 +105,6 @@ export function WelcomeScreen() {
           </Button>
         </form>
       </div>
-    </motion.div>
+    </div>
   );
 }
