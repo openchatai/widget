@@ -54,7 +54,12 @@ export function IframedWidgetPopover() {
           animate={isOpen ? 'visible' : 'hidden'}
           initial="hidden"
           variants={{
-            hidden: { opacity: 0, y: 8, transitionEnd: { display: 'none' } },
+            hidden: {
+              opacity: 0,
+              y: 8,
+              transitionEnd: { display: 'none' },
+              transition: { duration: 0.15 }
+            },
             visible: { opacity: 1, y: 0, display: 'block' }
           }}
         >
