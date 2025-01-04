@@ -10,13 +10,11 @@ import React, { ComponentPropsWithoutRef, forwardRef } from 'react';
 import { Toaster } from 'react-hot-toast';
 import {
   BotLoadingComponent,
-  BotMessage,
   BotTextResponse,
   FallbackComponent
 } from 'src/@components';
 import { cn } from 'src/utils';
 import { cssVars } from '../constants';
-import { ChatScreen } from './screens/chat-screen/ChatScreen';
 import { RootScreen } from './screens/root-screen';
 
 function WidgetToaster() {
@@ -82,13 +80,11 @@ const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
             data-version={chat.version}
             data-chat-widget
             className={cn(
-              'antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground',
+              'antialiased font-inter overflow-hidden isolate relative text-secondary-foreground',
               className
             )}
           >
-            <div className="size-full">
-              <RootScreen />
-            </div>
+            <RootScreen />
             <WidgetToaster />
           </div>
         </div>
@@ -131,4 +127,4 @@ function WidgetRoot({
 
 Widget.displayName = 'Widget';
 
-export { BotMessage, BotTextResponse, Widget, WidgetRoot };
+export { Widget, WidgetRoot };

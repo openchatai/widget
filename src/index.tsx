@@ -1,15 +1,15 @@
-import './index.css';
-import styles from './index.css?inline';
-import React from 'react';
-import { WidgetOptions } from '../react-lib/types';
-import { render } from './render';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import Iframe from '@uiw/react-iframe';
-import { useState } from 'react';
+import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { version } from '../package.json';
+import { WidgetOptions } from '../react-lib/types';
 import { Widget, WidgetRoot } from './designs/basic';
 import { WidgetPopoverTrigger } from './designs/basic/WidgetPopoverTrigger';
-import { motion } from 'framer-motion';
-import { version } from '../package.json';
+import './index.css';
+import styles from './index.css?inline';
+import { render } from './render';
+
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -31,6 +31,7 @@ html, body {
 
 export function IframedWidgetPopover() {
   const [isOpen, setIsOpened] = useState(false);
+
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
       <style>{styles}</style>
@@ -39,14 +40,12 @@ export function IframedWidgetPopover() {
         side="top"
         forceMount
         style={{
-          maxHeight: '85dvh',
-          width: '350px',
-          height: '600px',
-          fontSize: '16px',
-          zIndex: 1000000
+          zIndex: 1000000,
+          fontSize: '16px'
         }}
         sideOffset={8}
         data-chat-widget
+        data-chat-widget-content-root
         align="end"
         asChild
       >
@@ -60,22 +59,32 @@ export function IframedWidgetPopover() {
               transitionEnd: { display: 'none' },
               transition: { duration: 0.15 }
             },
-            visible: { opacity: 1, y: 0, display: 'block' }
+            visible: {
+              opacity: 1,
+              y: 0,
+              display: 'block'
+            }
           }}
         >
           <Iframe
             initialContent={initialContent}
             allowFullScreen
-            style={{
-              width: '100%',
-              height: '100%',
-              border: '1px solid',
-              borderColor: 'rgba(0, 0, 0, 0.1)',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-              borderRadius: '32px'
-            }}
             data-chat-widget
+            style={{
+              maxHeight: '85dvh',
+              minHeight: '400px',
+              width: '350px',
+              height: 'var(--opencx-widget-height)',
+              overflow: 'hidden',
+              /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
+              outline: '1px solid',
+              outlineColor: 'hsl(240 10% 3.9% / 0.2)',
+              borderRadius: '32px',
+              boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+              transitionProperty: 'height',
+              transitionTimingFunction: 'ease-out',
+              transitionDuration: '150ms'
+            }}
           >
             <Widget data-chat-widget className="font-inter size-full" />
           </Iframe>

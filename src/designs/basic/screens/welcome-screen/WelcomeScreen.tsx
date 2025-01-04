@@ -10,6 +10,7 @@ import { Button } from '@ui/button';
 import { SendHorizontal } from 'lucide-react';
 import { z } from 'zod';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
+import { useWidgetContentHeight } from '@react/hooks';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -21,6 +22,7 @@ export function WelcomeScreen() {
   const { data: preludeData } = usePreludeData();
   const { createContactAsync } = useContact();
   const { assets } = useConfigData();
+  const { observedElementRef } = useWidgetContentHeight();
   const [handleSubmitState, handleSubmit] = useAsyncFn(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -34,9 +36,7 @@ export function WelcomeScreen() {
   );
 
   return (
-    <div
-      className="h-full bg-primary flex flex-col"
-    >
+    <div ref={observedElementRef} className="h-fit min-h-[400px] bg-primary flex flex-col">
       {/* <div
         className="absolute inset-0 z-0"
         style={{

@@ -7,9 +7,9 @@ import { Keyboard } from '@ui/keyboard';
 import { ChatHeader } from './ChatHeader';
 import { SessionClosedDialog } from './SessionClosedDialog';
 import { usePreludeData } from '@react/providers/usePreludeData';
-import { useShouldCollectUserData } from 'src/hooks/useShouldCollectData';
-import { WelcomeScreen } from '../welcome-screen/WelcomeScreen';
 import { ChatFooter } from './ChatFooter';
+import { useWidgetContentHeight } from '@react/hooks';
+import { cn } from 'src/utils';
 
 function ChatRenderer() {
   const { state, hookState } = useChat();
@@ -98,9 +98,16 @@ export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
+  const { observedElementRef } = useWidgetContentHeight();
 
   return (
-    <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">
+    <div
+      ref={observedElementRef}
+      className={cn(
+        'h-[600px]', // fixed height
+        'w-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0'
+      )}
+    >
       <div
         className="w-full h-full justify-between flex flex-col relative"
         style={{
