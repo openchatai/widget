@@ -45,6 +45,9 @@ type useChatOptions = {
 type ChatState = {
   lastUpdated: number | null;
   messages: MessageType[];
+  /**
+   * Options that the AI provides to the user after a reply, such as "I need more help" or "This is helpful"
+   */
   keyboard: { options: string[] } | null;
 };
 

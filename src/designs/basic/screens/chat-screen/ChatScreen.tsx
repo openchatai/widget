@@ -120,12 +120,10 @@ export function ChatScreen() {
           <ChatRenderer />
           <footer>
             {state.keyboard && (
-              <React.Fragment>
-                <Keyboard
-                  options={state.keyboard.options}
-                  onKeyboardClick={handleKeyboard}
-                />
-              </React.Fragment>
+              <Keyboard
+                options={state.keyboard.options}
+                onKeyboardClick={handleKeyboard}
+              />
             )}
 
             <React.Fragment>
