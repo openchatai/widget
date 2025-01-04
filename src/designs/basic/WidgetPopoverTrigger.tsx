@@ -44,11 +44,20 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         >
           <AnimatePresence mode="wait">
             {isOpen ? (
-              <MotionDiv key="x-icon" snapExit fadeIn="up">
+              <MotionDiv
+                key="x-icon"
+                snapExit
+                fadeIn="up"
+                overrides={{ initial: { rotate: 45 }, animate: { rotate: 0 } }}
+              >
                 <XIcon />
               </MotionDiv>
             ) : (
-              <MotionDiv key="message-icon" snapExit>
+              <MotionDiv
+                key="message-icon"
+                snapExit
+                overrides={{ initial: { rotate: 45 }, animate: { rotate: 0 } }}
+              >
                 <OpenLogoSvg />
               </MotionDiv>
             )}
