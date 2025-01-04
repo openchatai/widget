@@ -96,12 +96,8 @@ function ChatRenderer() {
 
 export function ChatScreen() {
   const { state, sendMessage, noMessages, handleKeyboard } = useChat();
-  const { theme } = useConfigData();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.initial_questions;
-  const { shouldCollectDataFirst } = useShouldCollectUserData();
-
-  if (shouldCollectDataFirst) return <WelcomeScreen />;
 
   return (
     <div className="size-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0">

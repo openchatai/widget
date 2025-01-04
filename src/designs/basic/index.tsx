@@ -17,6 +17,7 @@ import {
 import { cn } from 'src/utils';
 import { cssVars } from '../constants';
 import { ChatScreen } from './screens/chat-screen/ChatScreen';
+import { RootScreen } from './screens/root-screen';
 
 function WidgetToaster() {
   return (
@@ -86,7 +87,7 @@ const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<'div'>>(
             )}
           >
             <div className="size-full">
-              <ChatScreen />
+              <RootScreen />
             </div>
             <WidgetToaster />
           </div>
