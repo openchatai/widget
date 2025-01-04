@@ -25,6 +25,9 @@ import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
 import { genId } from "@core/utils/genId";
 
+const SESSION_POOLING_INTERVAL = 10000; // every 10 seconds
+const MESSAGE_POOLING_INTERVAL = 5000; // every 5 seconds
+
 type HookState = {
   state: "loading" | "error" | "idle";
   error?: any;
@@ -315,7 +318,7 @@ function useAbstractChat({
       // Poll for session updates
       sessionInterval = setInterval(() => {
         pollSession(session.id);
-      }, 10000); // Every 10 seconds
+      }, SESSION_POOLING_INTERVAL); // Every 10 seconds
 
       // Poll for new messages
       messageInterval = setInterval(() => {
@@ -323,7 +326,7 @@ function useAbstractChat({
         if (lastMessageTimestamp) {
           pollMessages(session.id, lastMessageTimestamp);
         }
-      }, 3000); // Every 3 seconds
+      }, MESSAGE_POOLING_INTERVAL); // Every 5 seconds
     }
 
     return () => {
