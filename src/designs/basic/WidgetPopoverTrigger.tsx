@@ -24,7 +24,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         right: theme.triggerOffset,
         bottom: theme.triggerOffset
       }}
-      className={cn('size-14 font-inter flex items-center justify-center')}
+      className={cn('size-12 font-inter flex items-center justify-center')}
     >
       <Wobble>
         <div
@@ -34,7 +34,6 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
             'transition-all',
             'bg-gradient-to-tr bg-primary text-primary-foreground',
             'shadow-xl',
-            'ring-1 ring-border',
             'active:scale-90',
             '[&_svg]:size-6'
           )}
@@ -60,8 +59,6 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
               </motion.div>
             )}
           </AnimatePresence>
-
-          <span className="absolute top-0.5 right-0.5 size-2.5 bg-emerald-600 border border-border rounded-full" />
         </div>
       </Wobble>
     </PopoverPrimitive.PopoverTrigger>
