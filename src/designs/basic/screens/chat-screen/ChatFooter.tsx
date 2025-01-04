@@ -18,7 +18,6 @@ import {
   XIcon
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
-import useMeasure from 'react-use/lib/useMeasure';
 import { useDropzone } from 'react-dropzone';
 import { Tooltippy } from '@ui/tooltip';
 import { AnimatePresence } from 'framer-motion';
@@ -26,6 +25,7 @@ import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { AIClosureType } from '@core/types';
 import { cn } from 'src/utils';
+import { MotionDiv } from '@ui/MotionDiv';
 
 function FileDisplay({
   file: { status, file, error },
@@ -54,7 +54,7 @@ function FileDisplay({
       case 'uploading':
         return <Loader2 className="size-4 animate-spin" />;
       case 'error':
-        return <AlertCircle className="size-4 text-red-500" />;
+        return <AlertCircle className="size-4 text-destructive" />;
       default:
         return null;
     }
@@ -82,31 +82,35 @@ function FileDisplay({
     <Tooltippy
       content={
         status === 'error' ? (
-          <span className="text-red-500">Failed to upload: {error}</span>
+          <span className="text-destructive">Failed to upload: {error}</span>
         ) : (
           file.name
         )
       }
     >
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        initial={{ opacity: 0, y: 10 }}
-        className="size-11 flex border items-center justify-center group rounded-lg shrink-0 overflow-hidden relative"
+      <div
+        className={cn(
+          status === 'uploading' && 'opacity-50',
+          'group',
+          'size-12 border rounded-2xl overflow-hidden relative',
+          'flex items-center justify-center shrink-0'
+        )}
       >
         <div className="absolute inset-0 flex items-center justify-center">
           {getStatusIcon()}
         </div>
         <button
-          className="absolute p-0.5 rounded-full bg-black/20 text-primary-foreground right-0.5 bottom-0.5 z-10"
+          className={cn(
+            'absolute bg-black/50 inset-0 size-full z-10 opacity-0',
+            'flex items-center justify-center',
+            'opacity-0 group-hover:opacity-100 transition'
+          )}
           onClick={onCancel}
         >
-          <XIcon className="size-3" />
+          <XIcon className="size-4 text-primary-foreground" />
         </button>
-        <div className={status === 'uploading' ? 'opacity-50' : ''}>
-          <FileContent />
-        </div>
-      </motion.div>
+        <FileContent />
+      </div>
     </Tooltippy>
   );
 }
@@ -116,7 +120,7 @@ const INPUT_CONTAINER_B_RADIUS = cn('rounded-3xl');
 export function ChatFooter() {
   const { collectUserData } = useConfigData();
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { sendMessage, hookState, session } = useChat();
+  const { sendMessage, hookState: chatState, session } = useChat();
   const { contact } = useContact();
   const locale = useLocale();
 
@@ -144,8 +148,9 @@ export function ChatFooter() {
   };
 
   const handleSubmit = async () => {
-    if (hookState.state === 'loading') return;
+    if (chatState.state === 'loading') return;
     if (isUploading) {
+      // TODO use something other than toast
       toast.error('please wait for the file(s) to upload');
     }
     if (!inputText.trim()) return;
@@ -180,6 +185,7 @@ export function ChatFooter() {
     noClick: true,
     onDropRejected() {
       if (shouldAcceptAttachments) {
+        // TODO use something other than toast
         toast.error('unsupported file type, or the file is too large');
       }
     },
@@ -191,8 +197,7 @@ export function ChatFooter() {
     }
   });
 
-  const [containerRef, dimensions] = useMeasure<HTMLDivElement>();
-  const isLoading = hookState.state === 'loading';
+  const isLoading = chatState.state === 'loading';
 
   const shouldCollectDataFirst = collectUserData && !contact?.id;
 
@@ -210,42 +215,33 @@ export function ChatFooter() {
       <div
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
-          'relative gap-2 border transition-all shadow'
+          'relative space-y-2 border transition-all shadow py-2'
         )}
       >
-        {allFiles.length > 0 && (
-          <motion.div
-            animate={{
-              transition: {
-                staggerChildren: 0.5,
-                delayChildren: 0.5
-              }
-            }}
-            className="flex items-center gap-0.5 p-1 border-b"
-          >
+        <div className="flex items-center gap-1 px-2">
+          <AnimatePresence mode="popLayout">
             {allFiles.map((file) => (
-              <AnimatePresence key={file.id}>
+              <MotionDiv key={file.id} snapExit>
                 <FileDisplay
                   onCancel={() => handleCancelUpload(file.id)}
                   file={file}
                 />
-              </AnimatePresence>
+              </MotionDiv>
             ))}
-          </motion.div>
-        )}
+          </AnimatePresence>
+        </div>
         <textarea
           onPaste={handlePaste}
           ref={inputRef}
           id="chat-input"
           dir="auto"
-          data-padding={dimensions.width}
           disabled={isLoading}
           value={inputText}
           rows={3}
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
-            'w-full p-3 pr-12',
+            'w-full px-3',
             'resize-none',
             'bg-transparent outline-none',
             'text-sm'
@@ -259,26 +255,34 @@ export function ChatFooter() {
           }}
           placeholder={locale.get('write-a-message')}
         />
-        <div
-          ref={containerRef}
-          className="absolute space-x-1 bottom-1.5 right-1.5 w-fit"
-        >
-          {shouldAcceptAttachments && (
-            <Tooltippy
-              side="top"
-              align="end"
-              content="attach files, (maximum size 5mb)"
+        <div className="px-2 flex justify-between">
+          <Tooltippy
+            side="top"
+            align="end"
+            // TODO translation
+            content="attach files, (maximum size 5mb)"
+          >
+            <Button
+              onClick={() => {
+                if (!shouldAcceptAttachments) return;
+                dropzone__openFileSelect();
+              }}
+              size="fit"
+              variant="outline"
+              className={cn(
+                'disabled:opacity-0',
+                'rounded-full size-8 flex items-center justify-center p-0'
+              )}
+              disabled={!shouldAcceptAttachments}
             >
-              <Button
-                onClick={dropzone__openFileSelect}
-                size="fit"
-                variant={'outline'}
-              >
-                <PaperclipIcon className="size-4" />
-              </Button>
-            </Tooltippy>
-          )}
-          <Tooltippy content="send message">
+              <PaperclipIcon className="size-4" />
+            </Button>
+          </Tooltippy>
+
+          <Tooltippy
+            // TODO translation
+            content="send message"
+          >
             <Button
               size="fit"
               onClick={handleSubmit}
