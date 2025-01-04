@@ -10,6 +10,7 @@ import { usePreludeData } from '@react/providers/usePreludeData';
 import { ChatFooter } from './ChatFooter';
 import { useWidgetContentHeight } from '@react/hooks';
 import { cn } from 'src/utils';
+import { Button } from '@ui/button';
 
 function ChatRenderer() {
   const { state, hookState } = useChat();
@@ -126,27 +127,27 @@ export function ChatScreen() {
               />
             )}
 
-            <React.Fragment>
-              {noMessages && initialQuestions && (
-                <div className="flex items-center flex-row justify-end gap-1 flex-wrap px-2">
-                  {initialQuestions?.map((iq, index) => (
-                    <button
-                      key={index}
-                      dir="auto"
-                      className="p-1.5 border whitespace-nowrap hover:bg-secondary hover:text-secondary-foreground transition-all rounded-xl text-xs font-300"
-                      onClick={() => {
-                        sendMessage({
-                          content: { text: iq }
-                        });
-                      }}
-                    >
-                      {iq}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <ChatFooter />
-            </React.Fragment>
+            {noMessages && initialQuestions && (
+              <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
+                {initialQuestions?.map((iq, index) => (
+                  <Button
+                    key={index}
+                    dir="auto"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      sendMessage({
+                        content: { text: iq }
+                      });
+                    }}
+                  >
+                    {iq}
+                  </Button>
+                ))}
+              </div>
+            )}
+
+            <ChatFooter />
           </footer>
         </div>
       </div>
