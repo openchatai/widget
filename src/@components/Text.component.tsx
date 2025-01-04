@@ -11,11 +11,19 @@ export function BotTextResponse({
   type,
   attachments,
 }: DefaultTextComponentProps) {
+  const { message, variant = "default" } = data;
+
+  if (variant === "error") {
+    return <div>
+      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
+        <div className="leading-snug font-medium text-sm text-rose-500">{message}</div>
+      </div>
+    </div>
+  }
+
   return (
     <div>
-      <div
-        className="gap-0.5 flex flex-row flex-wrap items-center justify-start"
-      >
+      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
         {attachments?.map((attachment) => {
           return <RenderAttachment attachment={attachment} key={attachment.id} />
         })}
@@ -34,7 +42,7 @@ export function BotTextResponse({
         }}
         className="leading-snug font-medium text-sm prose prose-a:decoration-primary prose-a:underline prose-sm prose-slate"
       >
-        {data.message}
+        {message}
       </MemoizedReactMarkdown>
     </div>
   );

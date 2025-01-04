@@ -82,7 +82,7 @@ type ActionType =
   } | {
     type: "APPEND_MESSAGES",
     payload: MessageType[];
-  };
+  }
 
 function chatReducer(state: ChatState, action: ActionType) {
   return create(state, (draft) => {
@@ -487,6 +487,32 @@ function useAbstractChat({
               }
             })
           }
+          if (data.uiResponse) {
+            const uiVal = data.uiResponse.value;
+            dispatch({
+              type: "ADD_RESPONSE_MESSAGE",
+              payload: {
+                type: "FROM_BOT",
+                id: genId(),
+                timestamp: new Date().toISOString(),
+                component: uiVal.name,
+                data: uiVal.request_response,
+              }
+            })
+          }
+        } else {
+          dispatch({
+            type: "ADD_RESPONSE_MESSAGE",
+            payload: {
+              type: "FROM_BOT",
+              id: genId(),
+              component: "TEXT",
+              data: {
+                message: response.data.error?.message || "",
+                variant: "error"
+              }
+            }
+          })
         }
         return { id: msgId };
       } catch (error) {

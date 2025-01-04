@@ -130,7 +130,12 @@ const handleContactMessageOutputSchema = z.discriminatedUnion(
             uiResponse: z
                 .object({
                     type: z.literal('ui'),
-                    value: z.unknown(),
+                    value: z.object({
+                        type: z.literal('ui_component'),
+                        request_response: z.unknown(),
+                        name: z.string(),
+                        content: z.string().optional(),
+                    }),
                 })
                 .optional(),
             sessionIsHandedOff: z.boolean().optional(),

@@ -1,9 +1,7 @@
-import { MessageTypeEnum } from "@core/types";
 import { ComponentProps } from "@react/types";
 import React from "react";
 
 type ChatEventComponentProps = ComponentProps<{
-    event: MessageTypeEnum
     message: string;
 }>
 
@@ -21,6 +19,5 @@ function ChatEventComponent(props: ChatEventComponentProps) {
 
 export {
     ChatEventComponent,
-    MessageTypeEnum,
     type ChatEventComponentProps
 }

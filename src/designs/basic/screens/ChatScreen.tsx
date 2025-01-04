@@ -45,7 +45,6 @@ function ChatRenderer() {
     ref={messagesContainerRef}
     className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
   >
-
     {state.messages.length === 0 && (
       initialMessages?.map((message, index) => (
         <BotMessage
