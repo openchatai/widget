@@ -76,8 +76,8 @@ export function WelcomeScreen() {
         </div>
       </div>
 
-      <div className="p-4 bg-background shadow-xl relative z-10 rounded-t-3xl -mt-6">
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="p-2 bg-background shadow-xl relative z-10 rounded-t-3xl -mt-6">
+        <form onSubmit={handleSubmit} className="space-y-2">
           <div className="space-y-2">
             <Input
               required
@@ -85,6 +85,7 @@ export function WelcomeScreen() {
               autoFocus
               placeholder={locale.get('your-name')}
               name="name"
+              className="rounded-3xl pl-3"
             />
             <Input
               required
@@ -92,13 +93,13 @@ export function WelcomeScreen() {
               type="email"
               placeholder={locale.get('your-email')}
               name="email"
+              className="rounded-3xl pl-3"
             />
           </div>
 
           <Button
             disabled={handleSubmitState.loading}
-            className="w-full bg-primary text-primary-foreground hover:brightness-110 text-primary-foreground shadow-lg border-0"
-            size="lg"
+            className="w-full rounded-3xl"
           >
             {handleSubmitState.loading
               ? locale.get('starting-chat')

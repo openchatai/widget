@@ -45,7 +45,7 @@ export function IframedWidgetPopover() {
           fontSize: '16px',
           zIndex: 1000000
         }}
-        sideOffset={16}
+        sideOffset={8}
         data-chat-widget
         align="end"
         asChild
@@ -54,7 +54,7 @@ export function IframedWidgetPopover() {
           animate={isOpen ? 'visible' : 'hidden'}
           initial="hidden"
           variants={{
-            hidden: { opacity: 0, y: 16, transitionEnd: { display: 'none' } },
+            hidden: { opacity: 0, y: 8, transitionEnd: { display: 'none' } },
             visible: { opacity: 1, y: 0, display: 'block' }
           }}
         >
