@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.3.1
+
+### Patch Changes
+
+- fix loading
+
 ## 2.3.0
 
 ### Minor Changes
