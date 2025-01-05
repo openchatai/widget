@@ -22,7 +22,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
     lib: {
-      name: "@openchatai/widget",
+      name: "@opencx/widget",
       formats: ["cjs", "es"],
       entry: {
         basic: resolve(__dirname, "src/designs/basic/index.tsx"),

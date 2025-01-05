@@ -1,7 +1,7 @@
 import "./App.css";
-import { WidgetRoot, type WidgetOptions } from "@openchatai/widget";
-import { Widget } from "@openchatai/widget/basic";
-import "@openchatai/widget/dist/style.css";
+import { WidgetRoot, type WidgetOptions } from "@opencx/widget";
+import { Widget } from "@opencx/widget/basic";
+import "@opencx/widget/dist/style.css";
 import { Pane } from "tweakpane";
 import { useEffect, useState } from "react";
 

@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@openchatai/widget": "1.5.14-alpha.2",
+    "@opencx/widget": "^2.0.0",
     "@tweakpane/core": "^2.0.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",

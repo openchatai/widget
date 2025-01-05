@@ -1,4 +1,4 @@
-# @openchatai/widget
+# @opencx/widget
 
 ## 1.6.0
 
