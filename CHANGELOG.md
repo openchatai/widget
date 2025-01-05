@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.2.0
+
+### Minor Changes
+
+- cec8bf7: export Widget and WidgetRoot from basic dir
+
 ## 2.1.0
 
 ### Minor Changes
