@@ -1,5 +1,11 @@
 # @openchatai/widget
 
+## 1.6.0
+
+### Minor Changes
+
+- 4b9261d: design v2 phase-1
+
 ## 1.5.23
 
 ### Patch Changes

@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.5.23",
+  "version": "1.6.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -76,7 +76,10 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": ["dist", "dist-embed"],
+  "files": [
+    "dist",
+    "dist-embed"
+  ],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },
