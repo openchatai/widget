@@ -14,11 +14,10 @@ import { Button } from "@ui/button";
 import {
   DEFAULT_STYLES,
   WIDGET_CONTENT_MAX_HEIGHT_PX,
-  WIDGET_CONTENT_MIN_HEIGHT_PX,
 } from "src/designs/constants";
 
 function ChatRenderer() {
-  const { state, sendMessageState } = useChat();
+  const { state, hookState } = useChat();
   const { componentStore, initialMessages, ...config } = useConfigData();
 
   const LoadingComponent = componentStore.getComponent(
@@ -95,7 +94,7 @@ function ChatRenderer() {
         }
         return null;
       })}
-      {sendMessageState.loading && <LoadingComponent />}
+      {hookState.state === "loading" && <LoadingComponent />}
     </div>
   );
 }

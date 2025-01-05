@@ -62,13 +62,6 @@ type ActionType =
     payload: MessageType[];
   }
   | {
-    type: "SET_SERVER_ID";
-    payload: {
-      clientMessageId: string;
-      ServerMessageId: number;
-    };
-  }
-  | {
     type: "SET_KEYBOARD";
     payload: {
       options: string[];
@@ -205,17 +198,19 @@ function useSession({
     persist ? "local" : "memory",
   );
 
-  const session = _session
-    ? {
-      ..._session,
-      isSessionClosed: _session.status !== SessionStatus.OPEN,
-      isAssignedToAi: _session.assignee_id === 555,
-      isAssignedToHuman: _session.assignee_id !== 555,
-      isPendingHuman:
-        _session.assignee_id === 555 &&
-        _session.ai_closure_type === AIClosureType.handed_off,
+  const transformSession = (session: ChatSessionType) => {
+    return {
+      ...session,
+      isSessionClosed: session.status !== SessionStatus.OPEN,
+      isAssignedToAi: session.assignee_id === 555,
+      isAssignedToHuman: session.assignee_id !== 555,
+      isPendingHuman: session.assignee_id === 555 && session.ai_closure_type === AIClosureType.handed_off,
     }
-    : null;
+  }
+
+  const session = useMemo(() => {
+    return _session ? transformSession(_session) : null;
+  }, [_session]);
 
   const [refreshSessionState, refreshSession] = useAsyncFn(
     async (sId: string) => {
@@ -226,6 +221,22 @@ function useSession({
       return response.data;
     },
     [http, setSession],
+  );
+  // Poll for session updates with improved error handling
+  const [_pollSessionState, pollSession] = useAsyncFn(
+    async (sessionId: string) => {
+      try {
+        const sessionUpdated = await refreshSession(sessionId);
+        if (sessionUpdated) {
+          return transformSession(sessionUpdated);
+        }
+        return null;
+      } catch (error) {
+        console.error("Error polling session:", error);
+        throw error;
+      }
+    },
+    [refreshSession, transformSession]
   );
 
   function deleteSession() {
@@ -239,6 +250,8 @@ function useSession({
     refreshSessionState,
     deleteSession,
     setSession,
+    transformSession,
+    pollSession,
   };
 }
 
@@ -250,11 +263,11 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
     keyboard: null,
   });
 
+  const [hookState, setHookState] = useState<HookState>({ state: "idle" });
+
   // Check if there are no messages
   const noMessages = chatState.messages.length === 0;
 
-  // Get locale and configuration data
-  const locale = useLocale();
   const { botToken, http, widgetSettings, defaultSettings, language, ...config } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
 
@@ -263,7 +276,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
     widgetSettings?.persistSession || defaultSettings.persistSession;
 
   // Manage session state
-  const { refreshSession, session, deleteSession, setSession } = useSession({
+  const { refreshSession, session, deleteSession, setSession, pollSession } = useSession({
     persist: shouldPersistSession
   });
 
@@ -320,19 +333,6 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
     [http.apis, dispatch, messageArrivedSound]
   );
 
-  // Poll for session updates with improved error handling
-  const [_pollSessionState, pollSession] = useAsyncFn(
-    async (sessionId: string) => {
-      try {
-        await refreshSession(sessionId);
-        return true;
-      } catch (error) {
-        console.error("Error polling session:", error);
-        throw error;
-      }
-    },
-    [refreshSession]
-  );
 
   // Set up polling intervals
   useEffect(() => {
@@ -392,12 +392,13 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
         deleteSession();
         dispatch({ type: "RESET" });
         onSessionDestroy?.();
+        setHookState({ state: "idle" });
       } catch (error) {
         console.error("Error clearing session:", error);
         throw error;
       }
     },
-    [deleteSession, dispatch, onSessionDestroy]
+    [deleteSession, dispatch, onSessionDestroy, setHookState]
   );
 
   // Recreate a new session
@@ -417,10 +418,15 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
   );
 
   // Send a message with improved error handling
-  const [sendMessageState, sendMessage] = useAsyncFn(
+  const [__, sendMessage] = useAsyncFn(
     async ({ content, user, attachments, ...data }: SendMessageInput) => {
-      let chatSession = session;
+      // Only set loading state if session is assigned to AI
+      if (session?.isAssignedToAi) {
+        setHookState({ state: "loading" });
+      }
 
+      let chatSession = session;
+      let newSessionCreated = false;
       if (!session && noMessages) {
         try {
           const { data: newSession } = await http.apis.createSession(botToken);
@@ -433,6 +439,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
               isAssignedToHuman: false,
               isPendingHuman: false,
             };
+            newSessionCreated = true;
           } else {
             throw new Error("Failed to create session");
           }
@@ -471,6 +478,13 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
             type: "SET_KEYBOARD",
             payload: null,
           });
+        }
+
+        if (!newSessionCreated && chatSession.isAssignedToAi) {
+          const sessionUpdated = await pollSession(chatSession.id);
+          if (sessionUpdated) {
+            chatSession = sessionUpdated;
+          }
         }
 
         // Send message via HTTP
@@ -545,7 +559,12 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
         return { id: msgId };
       } catch (error) {
         console.error("Error sending message:", error);
+        setHookState({ state: "error", error });
         throw error;
+      } finally {
+        if (session?.isAssignedToAi) {
+          setHookState({ state: "idle" });
+        }
       }
     },
     [session, noMessages, http.apis, botToken, setSession, config, language, chatState.keyboard]
@@ -577,7 +596,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
     initState,
     clearSessionState,
     recreateSessionState,
-    sendMessageState,
+    hookState,
     recreateSession: recreateSessionAsync,
     clearSession: clearSessionAsync,
     sendMessage,
