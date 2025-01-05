@@ -11,7 +11,7 @@ const locales = {
   nl: nlLocale,
   fr: frLocale,
   de: deLocale,
-  pt: ptLocale
+  pt: ptLocale,
 } as const;
 
 export type LangType = keyof typeof locales;

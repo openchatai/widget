@@ -2,25 +2,25 @@ import {
   useChat,
   useConfigData,
   WidgetOptions,
-  WidgetRoot
-} from '@react/index';
-import { TooltipProvider } from '@ui/tooltip';
-import React, { ComponentPropsWithoutRef } from 'react';
+  WidgetRoot,
+} from "@react/index";
+import { TooltipProvider } from "@ui/tooltip";
+import React, { ComponentPropsWithoutRef } from "react";
 import {
   BotLoadingComponent,
   BotTextResponse,
-  FallbackComponent
-} from 'src/@components';
-import { cn } from 'src/utils';
-import { cssVars, DEFAULT_STYLES } from '../constants';
-import { RootScreen } from './screens/root-screen';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
-import Iframe from '@uiw/react-iframe';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import '../../index.css';
-import styles from '../../index.css?inline';
-import { WidgetPopoverTrigger } from './WidgetPopoverTrigger';
+  FallbackComponent,
+} from "src/@components";
+import { cn } from "src/utils";
+import { cssVars, DEFAULT_STYLES } from "../constants";
+import { RootScreen } from "./screens/root-screen";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import Iframe from "@uiw/react-iframe";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import "../../index.css";
+import styles from "../../index.css?inline";
+import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -40,7 +40,7 @@ html, body {
 </body>
 </html>`;
 
-function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
+function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const chat = useChat();
   const { theme } = useConfigData();
   const [isOpen, setIsOpened] = useState(false);
@@ -54,7 +54,7 @@ function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
         forceMount
         style={{
           zIndex: 1000000,
-          fontSize: '16px'
+          fontSize: "16px",
         }}
         sideOffset={8}
         data-chat-widget
@@ -63,20 +63,20 @@ function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
         asChild
       >
         <motion.div
-          animate={isOpen ? 'visible' : 'hidden'}
+          animate={isOpen ? "visible" : "hidden"}
           initial="hidden"
           variants={{
             hidden: {
               opacity: 0,
               y: 8,
-              transitionEnd: { display: 'none' },
-              transition: { duration: 0.15 }
+              transitionEnd: { display: "none" },
+              transition: { duration: 0.15 },
             },
             visible: {
               opacity: 1,
               y: 0,
-              display: 'block'
-            }
+              display: "block",
+            },
           }}
         >
           <Iframe
@@ -84,19 +84,19 @@ function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
             allowFullScreen
             data-chat-widget
             style={{
-              maxHeight: '85dvh',
-              width: '350px',
+              maxHeight: "85dvh",
+              width: "350px",
               minHeight: DEFAULT_STYLES.widgetMinHeight,
-              height: 'var(--opencx-widget-height)',
-              overflow: 'hidden',
+              height: "var(--opencx-widget-height)",
+              overflow: "hidden",
               /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
-              outline: '1px solid',
-              outlineColor: 'hsl(240 10% 3.9% / 0.2)',
-              borderRadius: '32px',
-              boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-              transitionProperty: 'height',
-              transitionTimingFunction: 'ease-out',
-              transitionDuration: '150ms'
+              outline: "1px solid",
+              outlineColor: "hsl(240 10% 3.9% / 0.2)",
+              borderRadius: "32px",
+              boxShadow: "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+              transitionProperty: "height",
+              transitionTimingFunction: "ease-out",
+              transitionDuration: "150ms",
             }}
           >
             <TooltipProvider
@@ -106,11 +106,11 @@ function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
             >
               <div
                 style={{
-                  display: 'contents',
+                  display: "contents",
                   ...cssVars(
                     { primary: theme.primaryColor },
-                    { triggerOffset: theme.triggerOffset }
-                  )
+                    { triggerOffset: theme.triggerOffset },
+                  ),
                 }}
                 data-chat-widget
               >
@@ -119,8 +119,8 @@ function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<'div'>) {
                   data-version={chat.version}
                   data-chat-widget
                   className={cn(
-                    'antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground',
-                    className
+                    "antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground",
+                    className,
                   )}
                 >
                   <RootScreen />
@@ -142,18 +142,18 @@ export function Widget({ options }: { options: WidgetOptions }) {
         ...options,
         components: [
           {
-            key: 'LOADING',
-            component: BotLoadingComponent
+            key: "LOADING",
+            component: BotLoadingComponent,
           },
           {
-            key: 'FALLBACK',
-            component: FallbackComponent
+            key: "FALLBACK",
+            component: FallbackComponent,
           },
           {
-            key: 'TEXT',
-            component: BotTextResponse
-          }
-        ]
+            key: "TEXT",
+            component: BotTextResponse,
+          },
+        ],
       }}
     >
       <WidgetInner />

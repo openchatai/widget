@@ -1,30 +1,30 @@
 export interface Platform {
-    storage?: Storage
-    env: {
-        platform: string;
-    }
-    date: {
-        now(): number
-        toISOString(date: number): string
-    }
+  storage?: Storage;
+  env: {
+    platform: string;
+  };
+  date: {
+    now(): number;
+    toISOString(date: number): string;
+  };
 }
 
 // Default platform implementation
 export class DefaultPlatform implements Platform {
-    env = {
-        platform: this.detectPlatform()
-    }
+  env = {
+    platform: this.detectPlatform(),
+  };
 
-    date = {
-        now: () => Date.now(),
-        toISOString: (date: number) => new Date(date).toISOString()
-    }
+  date = {
+    now: () => Date.now(),
+    toISOString: (date: number) => new Date(date).toISOString(),
+  };
 
-    private detectPlatform() {
-        // detect browser
-        if (typeof window !== "undefined") {
-            return "browser"
-        }
-        return "server"
+  private detectPlatform() {
+    // detect browser
+    if (typeof window !== "undefined") {
+      return "browser";
     }
+    return "server";
+  }
 }

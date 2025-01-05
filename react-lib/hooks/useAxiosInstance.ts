@@ -1,7 +1,11 @@
-import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@core/types";
+import {
+  ChatHistoryMessageType,
+  ChatSessionType,
+  ConsumerType,
+} from "@core/types";
 import axios, { AxiosRequestConfig, HttpStatusCode } from "axios";
 import { useMemo } from "react";
-import { version } from "../../package.json"
+import { version } from "../../package.json";
 import { PreludeData, WorkingHours } from "@core/types/prelude";
 import { UserObject } from "@react/types";
 
@@ -19,7 +23,7 @@ export function useAxiosInstance(options: Options) {
       headers: {
         [BotTokenHeader]: options.botToken,
         [WidgetVersionHeader]: version,
-        "X-Use-Guard": true
+        "X-Use-Guard": true,
       },
     });
   }, [options]);
@@ -44,7 +48,8 @@ export function useAxiosInstance(options: Options) {
       },
 
       fetchPreludeData: async () => {
-        return (await instance.get<PreludeData | undefined>("/widget/prelude")).data;
+        return (await instance.get<PreludeData | undefined>("/widget/prelude"))
+          .data;
       },
       /**
        * get the organization office working hours.
@@ -58,7 +63,7 @@ export function useAxiosInstance(options: Options) {
           throw new Error("Session id is required");
         }
         return instance.get<ChatHistoryMessageType[] | undefined>(
-          `widget/session/history/${sessionId}`
+          `widget/session/history/${sessionId}`,
         );
       },
 
@@ -78,7 +83,7 @@ export function useAxiosInstance(options: Options) {
        * given the userData object we will create or update the contact + get the related conversations/tickets/sessions
        */
       dumpContact: (userData: UserObject) => {
-        return instance.post<ConsumerType>("/widget/contact/upsert", userData)
+        return instance.post<ConsumerType>("/widget/contact/upsert", userData);
       },
       /**
        * get the completions for the given input
@@ -89,13 +94,16 @@ export function useAxiosInstance(options: Options) {
         }>(`/widget/chat/completions`, { input });
       },
       /**
-       * @param file 
-       * @param options 
+       * @param file
+       * @param options
        */
-      uploadFile: async (file: {
-        id: string;
-        file: File;
-      }, _options?: AxiosRequestConfig) => {
+      uploadFile: async (
+        file: {
+          id: string;
+          file: File;
+        },
+        _options?: AxiosRequestConfig,
+      ) => {
         const formData = new FormData();
         formData.append("file", file.file);
         return instance.post<{
@@ -107,15 +115,23 @@ export function useAxiosInstance(options: Options) {
             "Content-Type": "multipart/form-data",
           },
           ..._options,
-        })
+        });
       },
-      getHistoryPooling: async ({ lastMessageTimestamp, sessionId }: { lastMessageTimestamp: string, sessionId: string }) => {
+      getHistoryPooling: async ({
+        lastMessageTimestamp,
+        sessionId,
+      }: { lastMessageTimestamp: string; sessionId: string }) => {
         const searchParams = new URLSearchParams();
-        searchParams.append("lastMessageTimestamp", lastMessageTimestamp.toString());
-        return instance.get<ChatHistoryMessageType[] | undefined>(`/widget/session/history/${sessionId}/?${searchParams.toString()}`);
-      }
+        searchParams.append(
+          "lastMessageTimestamp",
+          lastMessageTimestamp.toString(),
+        );
+        return instance.get<ChatHistoryMessageType[] | undefined>(
+          `/widget/session/history/${sessionId}/?${searchParams.toString()}`,
+        );
+      },
     }),
-    [instance]
+    [instance],
   );
 
   return { apis, options };

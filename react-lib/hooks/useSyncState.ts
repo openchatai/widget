@@ -13,10 +13,10 @@ interface StorageLike {
 const memoryStorage: StorageLike = {
   getItem: () => null,
   setItem: () => {
-    // 
+    //
   },
   removeItem: () => {
-    // 
+    //
   },
 };
 
@@ -38,7 +38,7 @@ type DefaultValue<T> = T | (() => T);
 export function useSyncedState<TData>(
   key: string,
   defaultValue?: DefaultValue<TData>,
-  storage: StorageType = "session"
+  storage: StorageType = "session",
 ): [TData | null, (newState: TData | null) => void, () => void] {
   const bucket = useMemo(() => getStorage(storage), [storage]);
 
@@ -68,12 +68,12 @@ export function useSyncedState<TData>(
         } catch (error) {
           console.error(
             `Error saving state to storage for key '${key}':`,
-            error
+            error,
           );
         }
       }
     },
-    [key, bucket]
+    [key, bucket],
   );
 
   const clear = useCallback(() => {
@@ -88,9 +88,9 @@ export function useSyncedState<TData>(
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener("storage", handleStorageChange);
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener("storage", handleStorageChange);
     };
   }, [key, state]);
 

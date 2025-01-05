@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button } from './button';
+import React from "react";
+import { Button } from "./button";
 type Props = {
   options: string[];
   onKeyboardClick: (option: string) => void;

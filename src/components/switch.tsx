@@ -1,6 +1,6 @@
-import * as React from "react"
-import * as SwitchPrimitives from "@radix-ui/react-switch"
-import { cn } from "src/utils"
+import * as React from "react";
+import * as SwitchPrimitives from "@radix-ui/react-switch";
+import { cn } from "src/utils";
 import { Wobble } from "./wobble";
 
 const Switch = React.forwardRef<
@@ -19,7 +19,7 @@ const Switch = React.forwardRef<
       <SwitchPrimitives.Thumb
         className={cn(
           "pointer-events-none block size-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0",
-          'group-active:scale-90 group-hover:active:scale-90',
+          "group-active:scale-90 group-hover:active:scale-90",
         )}
       />
     </SwitchPrimitives.Root>
@@ -27,4 +27,4 @@ const Switch = React.forwardRef<
 ));
 Switch.displayName = SwitchPrimitives.Root.displayName;
 
-export { Switch }
+export { Switch };

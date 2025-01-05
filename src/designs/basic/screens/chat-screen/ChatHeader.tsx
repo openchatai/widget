@@ -2,30 +2,30 @@ import {
   useChat,
   useConfigData,
   useLocale,
-  usePreludeData
-} from '@react/index';
-import { Button } from '@ui/button';
+  usePreludeData,
+} from "@react/index";
+import { Button } from "@ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@ui/dropdown-menu';
-import { MotionDiv } from '@ui/MotionDiv';
-import { Skeleton } from '@ui/skeleton';
-import { Switch } from '@ui/switch';
-import { AnimatePresence, motion } from 'framer-motion';
+  DropdownMenuTrigger,
+} from "@ui/dropdown-menu";
+import { MotionDiv } from "@ui/MotionDiv";
+import { Skeleton } from "@ui/skeleton";
+import { Switch } from "@ui/switch";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   EllipsisVerticalIcon,
   RotateCcw,
   SaveIcon,
   SaveOffIcon,
   Volume2Icon,
-  VolumeOffIcon
-} from 'lucide-react';
-import React, { useState } from 'react';
+  VolumeOffIcon,
+} from "lucide-react";
+import React, { useState } from "react";
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -69,7 +69,7 @@ function OptionsMenu() {
                 </MotionDiv>
               )}
             </AnimatePresence>
-            {locale.get('persist-session')}
+            {locale.get("persist-session")}
             <Switch
               className="ml-auto"
               checked={widgetSettings?.persistSession}
@@ -98,7 +98,7 @@ function OptionsMenu() {
                 </MotionDiv>
               )}
             </AnimatePresence>
-            {locale.get('sound-effects')}
+            {locale.get("sound-effects")}
             <Switch
               className="ml-auto"
               checked={widgetSettings?.useSoundEffects}
@@ -122,7 +122,7 @@ function OptionsMenu() {
             >
               <RotateCcw />
             </motion.div>
-            {locale.get('reset-conversation')}
+            {locale.get("reset-conversation")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

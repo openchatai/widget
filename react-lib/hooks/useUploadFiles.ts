@@ -2,122 +2,123 @@ import { useConfigData } from "@react/providers/ConfigDataProvider";
 import { genId } from "@core/utils/genId";
 import { useEffect, useMemo, useState } from "react";
 
-
 const uploadAbortControllers: Map<string, AbortController> = new Map();
 
 interface FileWithProgress {
-    status: "pending" | "uploading" | "success" | "error";
-    id: string;
-    file: File;
-    fileUrl?: string;
-    progress: number;
-    error?: string;
+  status: "pending" | "uploading" | "success" | "error";
+  id: string;
+  file: File;
+  fileUrl?: string;
+  progress: number;
+  error?: string;
 }
 
 function useUploadFiles() {
-    const [files, setFiles] = useState<FileWithProgress[]>([]);
-    const { http } = useConfigData();
-    function appendFiles(files: File[]) {
-        const newFiles = files.map(file => ({
-            file,
-            id: genId(10),
-            status: "pending" as const,
-            progress: 0
-        }));
+  const [files, setFiles] = useState<FileWithProgress[]>([]);
+  const { http } = useConfigData();
+  function appendFiles(files: File[]) {
+    const newFiles = files.map((file) => ({
+      file,
+      id: genId(10),
+      status: "pending" as const,
+      progress: 0,
+    }));
 
-        setFiles(prev => [...prev, ...newFiles]);
-        newFiles.forEach(uploadFile);
+    setFiles((prev) => [...prev, ...newFiles]);
+    newFiles.forEach(uploadFile);
+  }
+
+  function updateFileById(id: string, update: Partial<FileWithProgress>) {
+    setFiles((prev) =>
+      prev.map((f) => (f.id === id ? { ...f, ...update } : f)),
+    );
+  }
+
+  function removeFileById(id: string) {
+    setFiles((prev) => prev.filter((f) => f.id !== id));
+  }
+
+  const uploadFile = async (fileItem: FileWithProgress) => {
+    const controller = new AbortController();
+    uploadAbortControllers.set(fileItem.id, controller);
+
+    try {
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileItem.id ? { ...f, status: "uploading", progress: 0 } : f,
+        ),
+      );
+
+      const response = await http.apis.uploadFile(fileItem, {
+        signal: controller.signal,
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.total) return;
+
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+
+          updateFileById(fileItem.id, { progress });
+        },
+      });
+
+      updateFileById(fileItem.id, {
+        status: "success",
+        fileUrl: response.data.fileUrl,
+        progress: 100,
+      });
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        updateFileById(fileItem.id, {
+          status: "error",
+          error: error instanceof Error ? error.message : "Upload failed",
+          progress: 0,
+        });
+      }
+    } finally {
+      uploadAbortControllers.delete(fileItem.id);
     }
+  };
 
-    function updateFileById(id: string, update: Partial<FileWithProgress>) {
-        setFiles(prev => prev.map(f => f.id === id ? { ...f, ...update } : f));
+  const handleCancelUpload = (fileId: string) => {
+    const controller = uploadAbortControllers.get(fileId);
+    if (controller) {
+      controller.abort();
+      uploadAbortControllers.delete(fileId);
     }
+    removeFileById(fileId);
+  };
 
-    function removeFileById(id: string) {
-        setFiles(prev => prev.filter(f => f.id !== id));
-    }
+  const successFiles = useMemo(() => {
+    return files.filter((f) => f.status === "success" && f.fileUrl);
+  }, [files]);
 
-    const uploadFile = async (fileItem: FileWithProgress) => {
-        const controller = new AbortController();
-        uploadAbortControllers.set(fileItem.id, controller);
+  function emptyTheFiles() {
+    uploadAbortControllers.forEach((controller) => controller.abort());
+    uploadAbortControllers.clear();
+    setFiles([]);
+  }
 
-        try {
-            setFiles(prev =>
-                prev.map(f => f.id === fileItem.id ?
-                    { ...f, status: "uploading", progress: 0 } : f
-                )
-            );
-
-            const response = await http.apis.uploadFile(fileItem, {
-                signal: controller.signal,
-                onUploadProgress: (progressEvent) => {
-                    if (!progressEvent.total) return;
-
-                    const progress = Math.round(
-                        (progressEvent.loaded * 100) / progressEvent.total
-                    );
-
-                    updateFileById(fileItem.id, { progress });
-                }
-            });
-
-            updateFileById(fileItem.id, {
-                status: "success",
-                fileUrl: response.data.fileUrl,
-                progress: 100
-            });
-
-        } catch (error) {
-            if (!controller.signal.aborted) {
-                updateFileById(fileItem.id, {
-                    status: "error",
-                    error: error instanceof Error ? error.message : "Upload failed",
-                    progress: 0
-                });
-            }
-        } finally {
-            uploadAbortControllers.delete(fileItem.id);
-        }
+  useEffect(() => {
+    return () => {
+      uploadAbortControllers.forEach((controller) => controller.abort());
+      uploadAbortControllers.clear();
     };
+  }, []);
 
-    const handleCancelUpload = (fileId: string) => {
-        const controller = uploadAbortControllers.get(fileId);
-        if (controller) {
-            controller.abort();
-            uploadAbortControllers.delete(fileId);
-        }
-        removeFileById(fileId);
-    };
-
-    const successFiles = useMemo(() => {
-        return files.filter(f => f.status === "success" && f.fileUrl);
-    }, [files]);
-
-    function emptyTheFiles() {
-        uploadAbortControllers.forEach(controller => controller.abort());
-        uploadAbortControllers.clear();
-        setFiles([])
-    }
-
-    useEffect(() => {
-        return () => {
-            uploadAbortControllers.forEach(controller => controller.abort());
-            uploadAbortControllers.clear();
-        };
-    }, []);
-
-    return {
-        allFiles: files,
-        appendFiles,
-        handleCancelUpload,
-        successFiles,
-        emptyTheFiles,
-        getFileById: (id: string) => files.find(f => f.id === id),
-        getUploadProgress: (id: string) => files.find(f => f.id === id)?.progress ?? 0,
-        getUploadStatus: (id: string) => files.find(f => f.id === id)?.status,
-        hasErrors: files.some(f => f.status === "error"),
-        isUploading: files.some(f => f.status === "uploading"),
-    }
+  return {
+    allFiles: files,
+    appendFiles,
+    handleCancelUpload,
+    successFiles,
+    emptyTheFiles,
+    getFileById: (id: string) => files.find((f) => f.id === id),
+    getUploadProgress: (id: string) =>
+      files.find((f) => f.id === id)?.progress ?? 0,
+    getUploadStatus: (id: string) => files.find((f) => f.id === id)?.status,
+    hasErrors: files.some((f) => f.status === "error"),
+    isUploading: files.some((f) => f.status === "uploading"),
+  };
 }
 
 export { useUploadFiles, type FileWithProgress };

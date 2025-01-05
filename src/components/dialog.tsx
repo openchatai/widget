@@ -12,7 +12,7 @@ const [useDialogState, SafeProvider] = createSafeContext<{
   open: boolean;
   setOpen: (open: boolean) => void;
   onOpenChange: (open: boolean) => void;
-  isAlert: boolean
+  isAlert: boolean;
 }>();
 
 const noop = () => {
@@ -24,17 +24,17 @@ function Dialog({
   onOpenChange,
   open,
   children,
-  isAlert
+  isAlert,
 }: {
   children:
-  | React.ReactNode
-  | (({
-    open,
-    setOpen,
-  }: {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-  }) => React.ReactNode);
+    | React.ReactNode
+    | (({
+        open,
+        setOpen,
+      }: {
+        open: boolean;
+        setOpen: (open: boolean) => void;
+      }) => React.ReactNode);
   defaultOpen?: boolean;
   open?: boolean; // controlled
   isAlert?: boolean;
@@ -47,8 +47,9 @@ function Dialog({
     <SafeProvider
       value={{
         open: isOpen,
-        setOpen, onOpenChange: onOpenChange ?? noop,
-        isAlert: isAlert ? isAlert : false
+        setOpen,
+        onOpenChange: onOpenChange ?? noop,
+        isAlert: isAlert ? isAlert : false,
       }}
     >
       {typeof children === "function"
@@ -160,7 +161,6 @@ const DialogContent = React.forwardRef<
     </AnimatePresence>
   );
 });
-
 
 const DialogClose = React.forwardRef<
   ElementRef<"button">,

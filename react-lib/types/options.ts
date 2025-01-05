@@ -8,7 +8,7 @@ export type UserObject = {
   phone?: string;
   customData?: Record<string, string>;
   avatarUrl?: string;
-}
+};
 
 export interface WidgetThemeOptions {
   primaryColor: string;
@@ -26,18 +26,18 @@ export type WidgetOptions = {
   settings?: {
     persistSession?: boolean;
     useSoundEffects?: boolean;
-  },
+  };
   collectUserData?: boolean;
   soundEffectFiles?: {
     messageArrived?: string;
-  },
+  };
   socketUrl?: string;
   debug?: boolean;
   language?: LangType;
   user?: UserObject;
   assets?: {
     organizationLogo?: string;
-  },
+  };
   bot?: {
     name?: string;
     avatarUrl?: string;

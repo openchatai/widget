@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
-const SELECTOR = '[data-chat-widget-content-root]' as const;
+const SELECTOR = "[data-chat-widget-content-root]" as const;
 
 export function useWidgetContentHeight({
-  fallbackHeight: minHeight
+  fallbackHeight: minHeight,
 }: {
   /**
    * unrendered elements have an offset height of 0, this is causes a weird animation when opening the widget.
@@ -27,8 +27,8 @@ export function useWidgetContentHeight({
         animationFrame = requestAnimationFrame(() => {
           const height = Math.max(observedElement.offsetHeight, minHeight);
           contentRoot.style.setProperty(
-            '--opencx-widget-height',
-            height.toFixed(1) + 'px'
+            "--opencx-widget-height",
+            height.toFixed(1) + "px",
           );
         });
       });

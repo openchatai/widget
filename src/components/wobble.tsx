@@ -1,6 +1,6 @@
-import React, { cloneElement, forwardRef, ReactElement, useState } from 'react';
-import { memo } from 'react';
-import { cn } from 'src/utils';
+import React, { cloneElement, forwardRef, ReactElement, useState } from "react";
+import { memo } from "react";
+import { cn } from "src/utils";
 /**
  * The maximum number of pixels the element can move in the x and y directions
  *
@@ -8,14 +8,14 @@ import { cn } from 'src/utils';
  */
 const MAX_MOVEMENT_PIXELS = {
   x: 2,
-  y: 2
+  y: 2,
 };
 
 const scaleVariants = {
-  '1': 'scale-[1]',
-  '1.01': 'scale-[1.01]',
-  '1.02': 'scale-[1.02]',
-  '1.1': 'scale-[1.1]'
+  "1": "scale-[1]",
+  "1.01": "scale-[1.01]",
+  "1.02": "scale-[1.02]",
+  "1.1": "scale-[1.1]",
 };
 
 export interface WobbleProps {
@@ -27,14 +27,14 @@ export interface WobbleProps {
 
 const Wobble = memo(
   forwardRef<HTMLElement, WobbleProps>(
-    ({ children, className, scale = '1.02', off = false }, ref) => {
+    ({ children, className, scale = "1.02", off = false }, ref) => {
       const [isHovering, setIsHovering] = useState(false);
       const [movement, setMovement] = useState({ x: 0, y: 0 });
 
       if (off) return children;
 
       const hasTranslateClass = /translate/.test(
-        children.props.className || ''
+        children.props.className || "",
       );
       if (hasTranslateClass) return children;
 
@@ -52,11 +52,11 @@ const Wobble = memo(
         // Normalize offset values to the range [-1, 1]
         const normalizedX = Math.max(
           -1,
-          Math.min(1, offsetX / (rect.width / 2))
+          Math.min(1, offsetX / (rect.width / 2)),
         );
         const normalizedY = Math.max(
           -1,
-          Math.min(1, offsetY / (rect.height / 2))
+          Math.min(1, offsetY / (rect.height / 2)),
         );
 
         // Scale normalized values to the desired range
@@ -78,8 +78,8 @@ const Wobble = memo(
       };
 
       const childStyles = {
-        '--opencx-wobble-x': isHovering ? `${movement.x}px` : '0px',
-        '--opencx-wobble-y': isHovering ? `${movement.y}px` : '0px'
+        "--opencx-wobble-x": isHovering ? `${movement.x}px` : "0px",
+        "--opencx-wobble-y": isHovering ? `${movement.y}px` : "0px",
       } as React.CSSProperties;
 
       return cloneElement(children, {
@@ -89,21 +89,21 @@ const Wobble = memo(
         onMouseLeave: handleMouseLeave,
         style: {
           ...childStyles,
-          ...children.props.style
+          ...children.props.style,
         },
         className: cn(
-          'translate-x-[var(--opencx-wobble-x)]',
-          'translate-y-[var(--opencx-wobble-y)]',
+          "translate-x-[var(--opencx-wobble-x)]",
+          "translate-y-[var(--opencx-wobble-y)]",
           `hover:${scaleVariants[scale]}`,
           className,
           children.props.className,
-          'transition-all ease-out'
-        )
+          "transition-all ease-out",
+        ),
       });
-    }
-  )
+    },
+  ),
 );
 
-Wobble.displayName = 'Wobble';
+Wobble.displayName = "Wobble";
 
 export { Wobble };

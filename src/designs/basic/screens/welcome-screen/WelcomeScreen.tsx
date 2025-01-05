@@ -1,25 +1,25 @@
-import React from 'react';
+import React from "react";
 import {
   useConfigData,
   useContact,
   useLocale,
-  usePreludeData
-} from '@react/index';
-import { Input } from '@ui/input';
-import { Button } from '@ui/button';
-import { SendHorizontal } from 'lucide-react';
-import { z } from 'zod';
-import useAsyncFn from 'react-use/lib/useAsyncFn';
-import { useWidgetContentHeight } from '@react/hooks';
+  usePreludeData,
+} from "@react/index";
+import { Input } from "@ui/input";
+import { Button } from "@ui/button";
+import { SendHorizontal } from "lucide-react";
+import { z } from "zod";
+import useAsyncFn from "react-use/lib/useAsyncFn";
+import { useWidgetContentHeight } from "@react/hooks";
 import {
   DEFAULT_STYLES,
-  WIDGET_CONTENT_MIN_HEIGHT_PX
-} from 'src/designs/constants';
-import { cn } from 'src/utils';
+  WIDGET_CONTENT_MIN_HEIGHT_PX,
+} from "src/designs/constants";
+import { cn } from "src/utils";
 
 const schema = z.object({
   name: z.string().min(2),
-  email: z.string().email()
+  email: z.string().email(),
 });
 
 export function WelcomeScreen() {
@@ -28,7 +28,7 @@ export function WelcomeScreen() {
   const { createContactAsync } = useContact();
   const { assets } = useConfigData();
   const { observedElementRef } = useWidgetContentHeight({
-    fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX
+    fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
   const [handleSubmitState, handleSubmit] = useAsyncFn(
     async (event: React.FormEvent<HTMLFormElement>) => {
@@ -39,7 +39,7 @@ export function WelcomeScreen() {
       if (result.success) {
         await createContactAsync(result.data);
       }
-    }
+    },
   );
 
   return (
@@ -47,7 +47,7 @@ export function WelcomeScreen() {
       ref={observedElementRef}
       className={cn(
         DEFAULT_STYLES.widgetMinHeight,
-        'h-fit bg-primary rounded-3xl flex flex-col'
+        "h-fit bg-primary rounded-3xl flex flex-col",
       )}
     >
       {/* <div
@@ -77,11 +77,11 @@ export function WelcomeScreen() {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-primary-foreground">
-            {locale.get('welcome-title')}
+            {locale.get("welcome-title")}
           </h1>
 
           <p className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed">
-            {locale.get('welcome-description')}
+            {locale.get("welcome-description")}
           </p>
         </div>
       </div>
@@ -93,7 +93,7 @@ export function WelcomeScreen() {
               required
               dir="auto"
               autoFocus
-              placeholder={locale.get('your-name')}
+              placeholder={locale.get("your-name")}
               name="name"
               className="rounded-3xl pl-3"
             />
@@ -101,7 +101,7 @@ export function WelcomeScreen() {
               required
               dir="auto"
               type="email"
-              placeholder={locale.get('your-email')}
+              placeholder={locale.get("your-email")}
               name="email"
               className="rounded-3xl pl-3"
             />
@@ -112,8 +112,8 @@ export function WelcomeScreen() {
             className="w-full rounded-3xl"
           >
             {handleSubmitState.loading
-              ? locale.get('starting-chat')
-              : locale.get('start-chat')}
+              ? locale.get("starting-chat")
+              : locale.get("start-chat")}
             <SendHorizontal className="size-4" />
           </Button>
         </form>

@@ -76,10 +76,7 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": [
-    "dist",
-    "dist-embed"
-  ],
+  "files": ["dist", "dist-embed"],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },

@@ -4,9 +4,9 @@ import {
   useConfigData,
   useContact,
   useLocale,
-  useUploadFiles
-} from '@react/index';
-import { Button } from '@ui/button';
+  useUploadFiles,
+} from "@react/index";
+import { Button } from "@ui/button";
 import {
   AlertCircle,
   CircleDashed,
@@ -15,35 +15,35 @@ import {
   Loader2,
   PaperclipIcon,
   SendHorizonal,
-  XIcon
-} from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { Tooltippy } from '@ui/tooltip';
-import { AnimatePresence } from 'framer-motion';
-import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
-import { AIClosureType } from '@core/types';
-import { cn } from 'src/utils';
-import { MotionDiv } from '@ui/MotionDiv';
+  XIcon,
+} from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { Tooltippy } from "@ui/tooltip";
+import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import toast from "react-hot-toast";
+import { AIClosureType } from "@core/types";
+import { cn } from "src/utils";
+import { MotionDiv } from "@ui/MotionDiv";
 
 function FileDisplay({
   file: { status, file, error },
-  onCancel
+  onCancel,
 }: {
   file: FileWithProgress;
   onCancel: () => void;
 }) {
   const [fileContent, setFileContent] = useState<string | ArrayBuffer | null>(
-    null
+    null,
   );
 
   useEffect(() => {
-    if (!file.type.startsWith('image/')) return;
+    if (!file.type.startsWith("image/")) return;
 
     const reader = new FileReader();
     reader.onload = () => setFileContent(reader.result as string);
-    reader.onerror = () => console.error('Error reading file');
+    reader.onerror = () => console.error("Error reading file");
     reader.readAsDataURL(file);
 
     return () => reader.abort();
@@ -51,9 +51,9 @@ function FileDisplay({
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'uploading':
+      case "uploading":
         return <Loader2 className="size-4 animate-spin" />;
-      case 'error':
+      case "error":
         return <AlertCircle className="size-4 text-destructive" />;
       default:
         return null;
@@ -61,18 +61,18 @@ function FileDisplay({
   };
 
   const FileContent = () => {
-    const fileType = file.type.split('/')[0];
+    const fileType = file.type.split("/")[0];
 
-    if (fileType === 'image' && fileContent) {
+    if (fileType === "image" && fileContent) {
       return (
         <img
-          src={typeof fileContent === 'string' ? fileContent : ''}
+          src={typeof fileContent === "string" ? fileContent : ""}
           className="object-cover bg-secondary size-full"
           alt={file.name}
         />
       );
     }
-    if (fileType === 'audio') {
+    if (fileType === "audio") {
       return <FileAudio />;
     }
     return <FileIcon />;
@@ -81,7 +81,7 @@ function FileDisplay({
   return (
     <Tooltippy
       content={
-        status === 'error' ? (
+        status === "error" ? (
           <span className="text-destructive">Failed to upload: {error}</span>
         ) : (
           file.name
@@ -90,10 +90,10 @@ function FileDisplay({
     >
       <div
         className={cn(
-          status === 'uploading' && 'opacity-50',
-          'group',
-          'size-12 border rounded-2xl overflow-hidden relative',
-          'flex items-center justify-center shrink-0'
+          status === "uploading" && "opacity-50",
+          "group",
+          "size-12 border rounded-2xl overflow-hidden relative",
+          "flex items-center justify-center shrink-0",
         )}
       >
         <div className="absolute inset-0 flex items-center justify-center">
@@ -101,9 +101,9 @@ function FileDisplay({
         </div>
         <button
           className={cn(
-            'absolute bg-black/50 inset-0 size-full z-10 opacity-0',
-            'flex items-center justify-center',
-            'opacity-0 group-hover:opacity-100 transition'
+            "absolute bg-black/50 inset-0 size-full z-10 opacity-0",
+            "flex items-center justify-center",
+            "opacity-0 group-hover:opacity-100 transition",
           )}
           onClick={onCancel}
         >
@@ -115,7 +115,7 @@ function FileDisplay({
   );
 }
 
-const INPUT_CONTAINER_B_RADIUS = cn('rounded-3xl');
+const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
 export function ChatFooter() {
   const { collectUserData } = useConfigData();
@@ -124,7 +124,7 @@ export function ChatFooter() {
   const { contact } = useContact();
   const locale = useLocale();
 
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState("");
 
   const {
     allFiles,
@@ -132,7 +132,7 @@ export function ChatFooter() {
     handleCancelUpload,
     appendFiles,
     isUploading,
-    successFiles
+    successFiles,
   } = useUploadFiles();
 
   const shouldAcceptAttachments =
@@ -148,56 +148,56 @@ export function ChatFooter() {
   };
 
   const handleSubmit = async () => {
-    if (chatState.state === 'loading') return;
+    if (chatState.state === "loading") return;
     if (isUploading) {
       // TODO use something other than toast
-      toast.error('please wait for the file(s) to upload');
+      toast.error("please wait for the file(s) to upload");
     }
     if (!inputText.trim()) return;
 
     await sendMessage({
       content: {
-        text: inputText.trim()
+        text: inputText.trim(),
       },
       user: {
         email: contact?.email ?? undefined,
-        name: contact?.name ?? undefined
+        name: contact?.name ?? undefined,
       },
       attachments: successFiles.map((f) => ({
         url: f.fileUrl!,
         type: f.file.type,
         name: f.file.name,
         id: f.id,
-        size: f.file.size
-      }))
+        size: f.file.size,
+      })),
     });
 
-    setInputText('');
+    setInputText("");
     emptyTheFiles();
   };
 
   const {
     getRootProps: dropzone__getRootProps,
     getInputProps: dropzone__getInputProps,
-    open: dropzone__openFileSelect
+    open: dropzone__openFileSelect,
   } = useDropzone({
     onDrop: handleFileDrop,
     noClick: true,
     onDropRejected() {
       if (shouldAcceptAttachments) {
         // TODO use something other than toast
-        toast.error('unsupported file type, or the file is too large');
+        toast.error("unsupported file type, or the file is too large");
       }
     },
     maxSize: 5 * 1024 * 1024,
     accept: {
-      'text/*': ['.txt'],
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
-      'application/pdf': ['.pdf']
-    }
+      "text/*": [".txt"],
+      "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+      "application/pdf": [".pdf"],
+    },
   });
 
-  const isLoading = chatState.state === 'loading';
+  const isLoading = chatState.state === "loading";
 
   const shouldCollectDataFirst = collectUserData && !contact?.id;
 
@@ -215,7 +215,7 @@ export function ChatFooter() {
       <div
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
-          'relative space-y-2 border transition-all shadow py-2'
+          "relative space-y-2 border transition-all shadow py-2",
         )}
       >
         <div className="flex items-center gap-1 px-2">
@@ -241,19 +241,19 @@ export function ChatFooter() {
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
-            'w-full px-3',
-            'resize-none',
-            'bg-transparent outline-none',
-            'text-sm'
+            "w-full px-3",
+            "resize-none",
+            "bg-transparent outline-none",
+            "text-sm",
           )}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={async (event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
+            if (event.key === "Enter" && !event.shiftKey) {
               event.preventDefault();
               handleSubmit();
             }
           }}
-          placeholder={locale.get('write-a-message')}
+          placeholder={locale.get("write-a-message")}
         />
         <div className="px-2 flex justify-between">
           <Tooltippy
@@ -270,8 +270,8 @@ export function ChatFooter() {
               size="fit"
               variant="outline"
               className={cn(
-                'disabled:opacity-0',
-                'rounded-full size-8 flex items-center justify-center p-0'
+                "disabled:opacity-0",
+                "rounded-full size-8 flex items-center justify-center p-0",
               )}
               disabled={!shouldAcceptAttachments}
             >

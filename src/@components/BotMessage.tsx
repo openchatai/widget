@@ -17,7 +17,7 @@ export function BotMessage<W extends React.ElementType>({
 
   const Component = config.componentStore.getComponent(
     message.component,
-    config.debug
+    config.debug,
   ) as ComponentType<{
     data: BotMessageType["data"];
     id: string;
@@ -26,7 +26,6 @@ export function BotMessage<W extends React.ElementType>({
   if (!Component) {
     return null;
   }
-
 
   if (!Wrapper) {
     return <Component {...message} id={message.id} key={message.id} />;
