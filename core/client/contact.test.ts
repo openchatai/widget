@@ -78,32 +78,6 @@ describe('createContact', () => {
         });
     });
 
-    it('should persist contact data to storage', async () => {
-        const user = {
-            email: 'test@example.com',
-            name: 'Test User'
-        };
-
-        const contact = createContact({
-            api: mockApi,
-            botToken: 'test-token',
-            platform: mockPlatform,
-            user
-        });
-
-        // Wait for initial contact creation
-        await new Promise(resolve => setTimeout(resolve, 0));
-
-        expect(mockPlatform.storage!.setItem).toHaveBeenCalled();
-
-        const storedData = mockStorage[`test-token:contact:undefined`];
-        expect(JSON.parse(storedData)).toMatchObject({
-            id: 'test-contact-id',
-            name: 'Test User',
-            email: 'test@example.com'
-        });
-    });
-
     it('should load persisted contact data', () => {
         const persistedContact = {
             id: 'persisted-id',

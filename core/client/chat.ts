@@ -101,9 +101,53 @@ export function createChat(options: ChatOptions) {
     });
 
     const sessionState = new PubSub<WidgetSessionSchema | null>(null);
+    let stopPolling: (() => void) | null = null;
 
-    // Start polling and get cleanup function
-    const stopPolling = startPolling(options.api, sessionState, state);
+    async function createSession() {
+        const session = await options.api.createSession();
+        sessionState.setState(session);
+        if (!stopPolling) {
+            stopPolling = startPolling(options.api, sessionState, state);
+        }
+        return session;
+    }
+
+    async function clearSession() {
+        const session = sessionState.getState();
+        if (!session?.id) return;
+
+        try {
+            if (stopPolling) {
+                stopPolling();
+                stopPolling = null;
+            }
+            sessionState.setState(null);
+            state.setState({
+                lastUpdated: null,
+                messages: [],
+                keyboard: null
+            });
+            options.onSessionDestroy?.();
+        } catch (error) {
+            console.error("Error clearing session:", error);
+            throw error;
+        }
+    }
+
+    function cleanup() {
+        if (stopPolling) {
+            stopPolling();
+            stopPolling = null;
+        }
+        state.setState({
+            lastUpdated: null,
+            messages: [],
+            keyboard: null
+        });
+        sessionState.setState(null);
+        state.clear();
+        sessionState.clear();
+    }
 
     const sendMessage = async (input: {
         content: { text: string };
@@ -124,105 +168,41 @@ export function createChat(options: ChatOptions) {
             throw new Error("No active session");
         }
 
-        const messageId = input.id || genId();
-        const userMessage: UserMessageType = {
-            id: messageId,
-            type: "FROM_USER",
-            content: input.content.text,
-            deliveredAt: null,
-            attachments: input.attachments,
-            user: input.user,
-            timestamp: new Date().toISOString()
+        const message: SendMessageInput = {
+            ...input,
+            session_id: session.id
         };
 
-        // Optimistically add message to state
-        state.setStatePartial({
-            messages: [...state.getState().messages, userMessage],
-            keyboard: null
-        });
-
         try {
-            const response = await options.api.handleMessage({
-                content: {
-                    text: input.content.text
-                },
-                attachments: input.attachments,
-                id: messageId,
-                language: input.language,
-                user: input.user
+            // Add message to local state first
+            state.setStatePartial({
+                messages: [
+                    ...state.getState().messages,
+                    {
+                        id: input.id || genId(),
+                        type: "FROM_USER",
+                        content: input.content.text,
+                        deliveredAt: new Date().toISOString(),
+                        attachments: input.attachments,
+                        timestamp: new Date().toISOString()
+                    }
+                ]
             });
 
-            if (response) {
-                // Update message with server response
-                const updatedMessages = state.getState().messages.map(msg => {
-                    if (msg.id === messageId) {
-                        return {
-                            ...msg,
-                            deliveredAt: new Date().toISOString()
-                        };
-                    }
-                    return msg;
-                });
-
-                state.setStatePartial({
-                    messages: updatedMessages
-                });
-
-                return response;
-            }
+            // Send message
+            await options.api.handleMessage(message);
         } catch (error) {
             console.error("Error sending message:", error);
             throw error;
         }
     };
 
-    const createSession = async () => {
-        try {
-            const response = await options.api.createSession();
-            if (response) {
-                sessionState.setState(response);
-                return response;
-            }
-        } catch (error) {
-            console.error("Error creating session:", error);
-            throw error;
-        }
-        return null;
-    };
-
-    const clearSession = async () => {
-        const session = sessionState.getState();
-        if (!session?.id) return;
-
-        try {
-            // Since there's no closeSession in API, we'll just clear local state
-            sessionState.setState(null);
-            state.setState({
-                lastUpdated: null,
-                messages: [],
-                keyboard: null
-            });
-            options.onSessionDestroy?.();
-        } catch (error) {
-            console.error("Error clearing session:", error);
-            throw error;
-        }
-    };
-
-    const cleanup = () => {
-        stopPolling();
-        state.clear();
-        sessionState.clear();
-    };
-
     return {
-        state,
-        sessionState,
-        cleanup,
+        getState: () => state.getState(),
+        getSession: () => sessionState.getState(),
         sendMessage,
         createSession,
         clearSession,
-        getState: () => state.getState(),
-        getSession: () => sessionState.getState(),
+        cleanup
     };
 } 

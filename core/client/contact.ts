@@ -29,7 +29,7 @@ export function createContact(options: ContactOptions): ContactInstance {
     const storageKey = `${options.botToken}:contact:${options.user?.external_id}`;
 
     // Initialize state from storage if available
-    let initialState = null;
+    let initialState: ConsumerType | null = null;
     if (options.platform.storage) {
         const stored = options.platform.storage.getItem(storageKey);
         if (stored) {
@@ -71,12 +71,13 @@ export function createContact(options: ContactOptions): ContactInstance {
 
     function cleanup() {
         state.clear();
+        state.setState(null);
     }
 
     return {
         shouldCollectData,
-        getContact: state.getState,
-        subscribe: state.subscribe,
+        getContact: () => state.getState(),
+        subscribe: (callback) => state.subscribe(callback),
         cleanup
     };
 } 

@@ -1,14 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { createChat } from './chat';
-import { ApiCaller } from './api';
-import { WidgetHistorySchema, WidgetSessionSchema } from '../types/schemas-v2';
+import type { ApiCaller } from './api';
+import type { WidgetHistorySchema, WidgetSessionSchema } from '../types/schemas-v2';
 import { MessageTypeEnum } from '@core/types';
-
-vi.mock('node-fetch', () => {
-    return {
-        default: vi.fn()
-    }
-});
 
 describe('createChat', () => {
     let mockApi: ApiCaller;
@@ -106,7 +100,7 @@ describe('createChat', () => {
             attachments: undefined,
             language: undefined,
             user: undefined,
-            session_id: 'test-session-id'
+            session_id: mockSession.id
         });
 
         const state = chat.getState();
@@ -126,7 +120,7 @@ describe('createChat', () => {
         // Fast-forward past the polling interval
         await vi.advanceTimersByTimeAsync(5000);
 
-        expect(mockApi.getSessionHistory).toHaveBeenCalledWith('test-session-id');
+        expect(mockApi.getSessionHistory).toHaveBeenCalledWith(mockSession.id);
         const state = chat.getState();
         expect(state.messages).toHaveLength(2);
         expect(state.messages[0]).toMatchObject({
@@ -137,7 +131,7 @@ describe('createChat', () => {
         expect(state.messages[1]).toMatchObject({
             id: 'msg-2',
             type: 'FROM_BOT',
-            content: undefined,
+            component: MessageTypeEnum.MESSAGE,
             data: { text: 'Hi there!' }
         });
 
