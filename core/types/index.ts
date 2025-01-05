@@ -1,3 +1,5 @@
+import { ChatAttachmentType } from "./schemas"
+
 export * from "./messages"
 export * from "./schemas"
 export * from "./pub-sub"
@@ -10,6 +12,16 @@ export interface User {
     phone?: string
     customData?: Record<string, string>
     avatarUrl?: string
+}
+
+export interface SendMessageInput extends Record<string, unknown> {
+    content: {
+        text: string;
+    };
+    attachments?: Array<ChatAttachmentType>,
+    id?: string;
+    language?: string;
+    user?: User
 }
 
 export interface CoreOptions {
@@ -31,4 +43,16 @@ export interface CoreOptions {
         is_ai?: boolean
     }
     pollingInterval?: number
+    soundEffectFiles?: {
+        messageArrived?: string
+    }
+    theme?: {
+        headerStyle?: "compact" | "basic"
+        primaryColor?: string
+        triggerOffset?: string
+    }
+    settings?: {
+        persistSession?: boolean
+        useSoundEffects?: boolean
+    }
 }

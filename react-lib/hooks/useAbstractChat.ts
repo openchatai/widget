@@ -15,6 +15,7 @@ import {
   ChatAttachmentType,
   type ChatSessionType,
   MessageType,
+  SendMessageInput,
   SessionStatus,
   UserMessageType,
 } from "@core/types";
@@ -152,16 +153,6 @@ function chatReducer(state: ChatState, action: ActionType) {
         break;
     }
   });
-}
-
-interface SendMessageInput extends Record<string, unknown> {
-  content: {
-    text: string;
-  };
-  attachments?: Array<ChatAttachmentType>,
-  id?: string;
-  language?: string;
-  user?: UserObject
 }
 
 interface HookSettings {

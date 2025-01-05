@@ -1,9 +1,9 @@
 export type Subscriber<T> = (data: T) => void
 
-export class PubSub<S extends object> {
+export class PubSub<S> {
     private subscribers: Set<Subscriber<S>> = new Set();
-    private state: S = {} as S;
-    private initialState: S = {} as S;
+    private state: S;
+    private initialState: S;
 
     constructor(state?: S) {
         this.state = state ?? {} as S;
@@ -58,6 +58,6 @@ export class PubSub<S extends object> {
     }
 }
 
-export function createPubSub<S extends object>(state?: S): PubSub<S> {
+export function createPubSub<S>(state?: S): PubSub<S> {
     return new PubSub<S>(state);
 }

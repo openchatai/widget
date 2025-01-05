@@ -1,7 +1,6 @@
 import { createFetch, CustomFetch } from "../utils/create-fetch";
-import { MessageData } from "../types/transport";
 import { HandleContactMessageOutputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
-import { CoreOptions } from "../types";
+import { CoreOptions, SendMessageInput } from "../types";
 
 export interface ApiCallerOptions {
     apiUrl: string;
@@ -59,7 +58,7 @@ export class ApiCaller {
         return response.json()
     }
 
-    async handleMessage(message: MessageData): Promise<HandleContactMessageOutputSchema> {
+    async handleMessage(message: SendMessageInput): Promise<HandleContactMessageOutputSchema> {
         // POST /chat/send
         const response = await this.#fetch('/chat/send', {
             method: "POST",
