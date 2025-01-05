@@ -1,13 +1,13 @@
 export type Subscriber<T> = (data: T) => void
 
 export class PubSub<S> {
-    private subscribers: Set<Subscriber<S>> = new Set();
+    private subscribers = new Set<Subscriber<S>>();
     private state: S;
     private initialState: S;
 
-    constructor(state?: S) {
-        this.state = state ?? {} as S;
-        this.initialState = state ?? {} as S;
+    constructor(state: S) {
+        this.state = state;
+        this.initialState = state;
     }
 
     /**
@@ -58,6 +58,6 @@ export class PubSub<S> {
     }
 }
 
-export function createPubSub<S>(state?: S): PubSub<S> {
+export function createPubSub<S>(state: S): PubSub<S> {
     return new PubSub<S>(state);
 }

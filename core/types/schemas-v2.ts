@@ -33,7 +33,7 @@ export const chatAttachmentSchema = z.object({
     url: z.string(),
 });
 
-enum MessageType {
+export enum MessageTypeEnum {
     MESSAGE = 'message',
     HANDOFF = 'handoff',
     HANDOFF_TO_ZENDESK = 'handoff_to_zendesk',
@@ -51,7 +51,7 @@ enum MessageType {
 
 const widgetHistorySchema = z.object({
     publicId: z.string().optional().nullable(),
-    type: z.nativeEnum(MessageType),
+    type: z.nativeEnum(MessageTypeEnum),
     sender: z.object({
         kind: z.enum(['user', 'agent', 'ai', 'none', 'unknown']),
         name: z.string().optional().nullable(),

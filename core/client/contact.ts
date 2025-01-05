@@ -75,8 +75,8 @@ export function createContact(options: ContactOptions): ContactInstance {
 
     return {
         shouldCollectData,
-        getContact: () => state.getState(),
-        subscribe: (callback) => state.subscribe(callback),
+        getContact: state.getState,
+        subscribe: state.subscribe,
         cleanup
     };
 } 
