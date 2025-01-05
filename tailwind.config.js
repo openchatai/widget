@@ -10,26 +10,31 @@ export default {
         max: 9999,
       },
       colors: {
-        primary: "var(--opn-primary)",
+        primary: "hsl(var(--opencx-primary))",
+        "primary-foreground": "hsl(var(--opencx-primary-foreground))",
 
-        foreground: "hsl(var(--opn-foreground))",
-        background: "hsl(var(--opn-background))",
+        foreground: "hsl(var(--opencx-foreground))",
+        background: "hsl(var(--opencx-background))",
 
-        accent: "hsl(var(--opn-accent))",
-        "accent-foreground": "hsl(var(--opn-accent-foreground))",
+        accent: "hsl(var(--opencx-accent))",
+        "accent-foreground": "hsl(var(--opencx-accent-foreground))",
 
-        secondary: "hsl(var(--opn-secondary))",
-        "secondary-foreground": "hsl(var(--opn-secondary-foreground))",
+        secondary: "hsl(var(--opencx-secondary))",
+        "secondary-foreground": "hsl(var(--opencx-secondary-foreground))",
 
-        destructive: "hsl(var(--opn-destructive))",
-        "destructive-foreground": "hsl(var(--opn-destructive-foreground))",
+        muted: "hsl(var(--opencx-muted))",
+        "muted-foreground": "hsl(var(--opencx-muted-foreground))",
 
-        input: "hsl(var(--opn-input))",
-        border: "hsl(var(--opn-border))",
+        destructive: "hsl(var(--opencx-destructive))",
+        "destructive-foreground": "hsl(var(--opencx-destructive-foreground))",
+
+        input: "hsl(var(--opencx-input))",
+        border: "hsl(var(--opencx-border))",
+        ring: "hsl(var(--opencx-ring))",
       },
     },
     fontFamily: {
-      inter: ["Inter", "Cairo", "sans-serif"],
+      inter: ["Inter", "sans-serif"],
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],

@@ -6,19 +6,19 @@ import { ChatProvider } from "./providers/ChatProvider";
 import { ContactProvider } from "./providers/ContactProvider";
 
 export function WidgetRoot({
-    children,
-    options,
+  children,
+  options,
 }: {
-    children: React.ReactNode;
-    options: WidgetOptions;
+  children: React.ReactNode;
+  options: WidgetOptions;
 }) {
-    return (
-        <ConfigDataProvider data={options}>
-            <ContactProvider>
-                <LocaleProvider>
-                        <ChatProvider>{children}</ChatProvider>
-                </LocaleProvider>
-            </ContactProvider>
-        </ConfigDataProvider>
-    );
+  return (
+    <ConfigDataProvider data={options}>
+      <ContactProvider>
+        <LocaleProvider>
+          <ChatProvider>{children}</ChatProvider>
+        </LocaleProvider>
+      </ContactProvider>
+    </ConfigDataProvider>
+  );
 }

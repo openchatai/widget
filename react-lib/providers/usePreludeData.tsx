@@ -3,12 +3,12 @@ import useSWR from "swr";
 import { useConfigData } from "./ConfigDataProvider";
 
 function usePreludeData() {
-    const { apiUrl, botToken } = useConfigData()
-    const http = useAxiosInstance({
-        apiUrl,
-        botToken,
-    });
-    return useSWR(http.options, http.apis.fetchPreludeData)
+  const { apiUrl, botToken } = useConfigData();
+  const http = useAxiosInstance({
+    apiUrl,
+    botToken,
+  });
+  return useSWR(http.options, http.apis.fetchPreludeData);
 }
 
-export { usePreludeData }
+export { usePreludeData };

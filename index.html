@@ -1,45 +1,57 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="src/index.tsx"></script>
+    <title>Openchat AI-Copilot</title>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.style.height = '100vh';
+        document.body.style.backgroundColor = 'antiquewhite';
+        document.body.style.margin = '0px';
+        document.body.style.padding = '0px';
+      });
+    </script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script type="module" src="src/index.tsx"></script>
-  <title>Openchat AI-Copilot</title>
-</head>
+  <body>
+    <script type="module">
+      const socketUrl = 'http://localhost:8080';
+      const apiUrl = 'http://localhost:8080/backend';
+      const token = import.meta.env.VITE_ORG_TOKEN;
 
-<body>
-  <script>
-    const socketUrl = "http://localhost:8080";
-    const apiUrl = "http://localhost:8080/backend";
-    window.addEventListener("DOMContentLoaded", () => {
-      initOpenScript({
-        token: "f22658b18bda3d3a0d7e3d0e9ab57635",
-        apiUrl: apiUrl,
-        socketUrl: socketUrl,
-        language: "en",
-        initialMessages: ["How can we help you?", "Please provide your name and email so we can help you better."],
-        settings: {
-          persistSession: true,
-          useSoundEffects: true
-        },
-        theme: {
-          headerStyle: "basic",
-        },
-        collectUserData: false,
-        headers: {
-          "X-auth": "Hello-Header"
-        },
-        queryParams: {
-          "X-auth": "Hello-World"
-        },
-        debug: false,
-        bot: {
-          avatarUrl: "https://yt3.ggpht.com/6pKAhwXP0jLQyNidcMM-rjfVAzrqJuI5lDsrqOguhfx1xFDyu7D9ish3lC17OEfWuEyZshrz=s48-c-k-c0x00ffffff-no-rj"
-        },
-      }); // default or iframed
-    });
-  </script>
-</body>
-
+      window.addEventListener('DOMContentLoaded', () => {
+        initOpenScript({
+          token: token,
+          apiUrl: apiUrl,
+          socketUrl: socketUrl,
+          language: 'en',
+          initialMessages: [
+            'How can we help you?',
+            'Please provide your name and email so we can help you better.'
+          ],
+          settings: {
+            persistSession: true,
+            useSoundEffects: true
+          },
+          theme: {
+            headerStyle: 'basic'
+          },
+          collectUserData: true,
+          headers: {
+            'X-auth': 'Hello-Header'
+          },
+          queryParams: {
+            'X-auth': 'Hello-World'
+          },
+          debug: false,
+          bot: {
+            avatarUrl:
+              'https://yt3.ggpht.com/6pKAhwXP0jLQyNidcMM-rjfVAzrqJuI5lDsrqOguhfx1xFDyu7D9ish3lC17OEfWuEyZshrz=s48-c-k-c0x00ffffff-no-rj'
+          }
+        }); // default or iframed
+      });
+    </script>
+  </body>
 </html>

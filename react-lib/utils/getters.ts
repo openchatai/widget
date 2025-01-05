@@ -19,13 +19,13 @@ export const workingDays = [
 
 export type PreludeData = {
   initial_questions: string[];
-  ai_enabled: boolean,
+  ai_enabled: boolean;
   office_hours: WorkingHours;
   office_hours_timezone: string;
-  organization_name: string
+  organization_name: string;
 };
 
-type Day = typeof workingDays[number];
+type Day = (typeof workingDays)[number];
 
 export type WorkingHours = {
   [K in Day]: DayOfficeHours;

@@ -46,7 +46,8 @@ export const enLocale = {
   exit: "Exit",
   "reset-conversation": "Reset conversation",
   "welcome-title": "Welcome to our support chat",
-  "welcome-description": "We're here to help! Start a conversation and we'll get back to you as soon as possible.",
+  "welcome-description":
+    "We're here to help! Start a conversation and we'll get back to you as soon as possible.",
   "your-name": "Your name",
   "your-email": "Your email address",
   "start-chat": "Talk to support",

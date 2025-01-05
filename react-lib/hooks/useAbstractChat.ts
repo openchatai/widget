@@ -1,5 +1,5 @@
 import { useLocale } from "../providers/LocalesProvider";
-import { useConfigData } from "../providers/ConfigDataProvider"
+import { useConfigData } from "../providers/ConfigDataProvider";
 import { UserObject } from "@react/types";
 import { create } from "mutative";
 import {
@@ -45,51 +45,56 @@ type useChatOptions = {
 type ChatState = {
   lastUpdated: number | null;
   messages: MessageType[];
+  /**
+   * Options that the AI provides to the user after a reply, such as "I need more help" or "This is helpful"
+   */
   keyboard: { options: string[] } | null;
 };
 
 type ActionType =
   | {
-    type: "ADD_RESPONSE_MESSAGE";
-    payload: MessageType;
-  }
+      type: "ADD_RESPONSE_MESSAGE";
+      payload: MessageType;
+    }
   | {
-    type: "APPEND_USER_MESSAGE";
-    payload: UserMessageType;
-  }
+      type: "APPEND_USER_MESSAGE";
+      payload: UserMessageType;
+    }
   | {
-    type: "PREPEND_HISTORY";
-    payload: MessageType[];
-  }
+      type: "PREPEND_HISTORY";
+      payload: MessageType[];
+    }
   | {
-    type: "SET_SERVER_ID";
-    payload: {
-      clientMessageId: string;
-      ServerMessageId: number;
+      type: "SET_SERVER_ID";
+      payload: {
+        clientMessageId: string;
+        ServerMessageId: number;
+      };
+    }
+  | {
+      type: "SET_KEYBOARD";
+      payload: {
+        options: string[];
+      } | null;
+    }
+  | {
+      type: "RESET";
+    }
+  | {
+      type: "SET_DELIVERED_AT";
+      payload: {
+        clientMessageId: string;
+        deliveredAt: string;
+      };
+    }
+  | {
+      type: "SET_MESSAGES";
+      payload: MessageType[];
+    }
+  | {
+      type: "APPEND_MESSAGES";
+      payload: MessageType[];
     };
-  }
-  | {
-    type: "SET_KEYBOARD";
-    payload: {
-      options: string[];
-    } | null;
-  }
-  | {
-    type: "RESET";
-  }
-  | {
-    type: "SET_DELIVERED_AT";
-    payload: {
-      clientMessageId: string;
-      deliveredAt: string;
-    };
-  } | {
-    type: "SET_MESSAGES",
-    payload: MessageType[];
-  } | {
-    type: "APPEND_MESSAGES",
-    payload: MessageType[];
-  };
 
 function chatReducer(state: ChatState, action: ActionType) {
   return create(state, (draft) => {
@@ -119,7 +124,7 @@ function chatReducer(state: ChatState, action: ActionType) {
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
         draft.messages = draft.messages.filter(
-          (msg) => !historyIds.includes(msg.id)
+          (msg) => !historyIds.includes(msg.id),
         );
         draft.messages = [...action.payload, ...draft.messages];
         setLastupdated();
@@ -130,18 +135,21 @@ function chatReducer(state: ChatState, action: ActionType) {
         break;
       }
       case "SET_DELIVERED_AT": {
-        const message = draft.messages.find(message => {
-          if (message.type === "FROM_USER" && message.id === action.payload?.clientMessageId) {
+        const message = draft.messages.find((message) => {
+          if (
+            message.type === "FROM_USER" &&
+            message.id === action.payload?.clientMessageId
+          ) {
             return true;
           }
-        })
+        });
         if (message?.type === "FROM_USER") {
           lodashSet(message, "deliveredAt", action.payload.deliveredAt);
         }
         break;
       }
       case "SET_MESSAGES": {
-        draft.messages = action.payload
+        draft.messages = action.payload;
         break;
       }
       case "APPEND_MESSAGES": {
@@ -180,10 +188,10 @@ interface SendMessageInput extends Record<string, unknown> {
   content: {
     text: string;
   };
-  attachments?: Array<ChatAttachmentType>,
+  attachments?: Array<ChatAttachmentType>;
   id?: string;
   language?: string;
-  user?: UserObject
+  user?: UserObject;
 }
 
 interface HookSettings {
@@ -193,40 +201,45 @@ interface HookSettings {
 
 function useSession({
   persist,
-  sessionKey = (botToken, { external_id }) => `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`
+  sessionKey = (botToken, { external_id }) =>
+    `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`,
 }: {
-  persist: boolean,
-  sessionKey?: (
-    botToken: string,
-    user: UserObject
-  ) => string
+  persist: boolean;
+  sessionKey?: (botToken: string, user: UserObject) => string;
 }) {
   const { botToken, http, user } = useConfigData();
   const [_session, setSession, clearBucket] = useSyncedState<ChatSessionType>(
     sessionKey(botToken, user),
     undefined,
-    persist ? "local" : "memory"
+    persist ? "local" : "memory",
   );
 
-  const session = _session ? {
-    ..._session,
-    isSessionClosed: _session.status !== SessionStatus.OPEN,
-    isAssignedToAi: _session.assignee_id === 555,
-    isAssignedToHuman: _session.assignee_id !== 555,
-    isPendingHuman: _session.assignee_id === 555 && _session.ai_closure_type === AIClosureType.handed_off,
-  } : null;
+  const session = _session
+    ? {
+        ..._session,
+        isSessionClosed: _session.status !== SessionStatus.OPEN,
+        isAssignedToAi: _session.assignee_id === 555,
+        isAssignedToHuman: _session.assignee_id !== 555,
+        isPendingHuman:
+          _session.assignee_id === 555 &&
+          _session.ai_closure_type === AIClosureType.handed_off,
+      }
+    : null;
 
-  const [refreshSessionState, refreshSession] = useAsyncFn(async (sId: string) => {
-    let response = await http.apis.fetchSession(sId);
-    if (response.data) {
-      setSession(response.data);
-    }
-    return response.data;
-  }, [http, setSession]);
+  const [refreshSessionState, refreshSession] = useAsyncFn(
+    async (sId: string) => {
+      let response = await http.apis.fetchSession(sId);
+      if (response.data) {
+        setSession(response.data);
+      }
+      return response.data;
+    },
+    [http, setSession],
+  );
 
   function deleteSession() {
     setSession(null);
-    clearBucket()
+    clearBucket();
   }
 
   return {
@@ -234,8 +247,8 @@ function useSession({
     refreshSession,
     refreshSessionState,
     deleteSession,
-    setSession
-  }
+    setSession,
+  };
 }
 
 function useHookState() {
@@ -244,9 +257,7 @@ function useHookState() {
 }
 
 // Initialize chat state and reducer
-function useAbstractChat({
-  onSessionDestroy,
-}: useChatOptions) {
+function useAbstractChat({ onSessionDestroy }: useChatOptions) {
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
@@ -255,7 +266,15 @@ function useAbstractChat({
 
   // Get locale and configuration data
   const locale = useLocale();
-  const { botToken, http, socketUrl, widgetSettings, defaultSettings, language, ...config } = useConfigData();
+  const {
+    botToken,
+    http,
+    socketUrl,
+    widgetSettings,
+    defaultSettings,
+    language,
+    ...config
+  } = useConfigData();
   const { messageArrivedSound } = useWidgetSoundEffects();
 
   // Fetch chat history
@@ -270,38 +289,46 @@ function useAbstractChat({
             return messages;
           }
         } catch (error) {
-          console.error(error)
-          return []
+          console.error(error);
+          return [];
         }
       }
       return [];
     },
-    [config.bot]
+    [config.bot],
   );
 
   // Determine if session should be persisted
-  const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
+  const shouldPersistSession =
+    widgetSettings?.persistSession || defaultSettings.persistSession;
 
   // Manage session state
-  const { refreshSession, refreshSessionState, session, deleteSession, setSession } = useSession({
-    persist: shouldPersistSession
+  const {
+    refreshSession,
+    refreshSessionState,
+    session,
+    deleteSession,
+    setSession,
+  } = useSession({
+    persist: shouldPersistSession,
   });
 
   // Manage hook state
   const [hookState, _setHookState] = useHookState();
 
   // Set hook state with optional loading disable
-  function setHookState(
-    state: HookState
-  ) {
-    const disableLoading = session?.isAssignedToHuman || session?.isPendingHuman || session?.isSessionClosed || !session?.isAssignedToAi
+  function setHookState(state: HookState) {
+    const disableLoading =
+      session?.isAssignedToHuman ||
+      session?.isPendingHuman ||
+      session?.isSessionClosed ||
+      !session?.isAssignedToAi;
     if (!disableLoading) {
       _setHookState(state);
-    }
-    else {
+    } else {
       _setHookState({
-        state: "idle"
-      })
+        state: "idle",
+      });
     }
   }
 
@@ -367,13 +394,13 @@ function useAbstractChat({
     (data: { success: boolean }) => {
       // Handle heartbeat acknowledgement
     },
-    [session]
+    [session],
   );
 
   // Manage socket connection state info
   const [info, setInfo] = useTimeoutState<ReactNode | null>(
     () => representSocketState(socketState, locale.get),
-    1000
+    1000,
   );
 
   // Handle socket connection events
@@ -381,13 +408,13 @@ function useAbstractChat({
     if (session && socket) {
       socket.emit("join_session", { session_id: session.id });
     }
-  }
+  };
 
   const handleReconnect = () => {
     if (session && socket) {
       socket.emit("join_session", { session_id: session.id });
     }
-  }
+  };
 
   // Set up socket event listeners
   useEffect(() => {
@@ -413,7 +440,7 @@ function useAbstractChat({
     deleteSession();
     dispatch({ type: "RESET" });
     onSessionDestroy?.();
-    setHookState({ state: "idle" })
+    setHookState({ state: "idle" });
   }
 
   // Recreate a new session
@@ -440,17 +467,17 @@ function useAbstractChat({
         });
         dispatch({ type: "ADD_RESPONSE_MESSAGE", payload: message });
         try {
-          messageArrivedSound.play()
+          messageArrivedSound.play();
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
       },
       onChatEvent() {
-        session && refreshSession(session.id)
+        session && refreshSession(session.id);
       },
       onUi(message, _ctx) {
         if (message.type === "FROM_BOT") {
-          session && refreshSession(session.id)
+          session && refreshSession(session.id);
         }
         setHookState({
           state: "idle",
@@ -482,7 +509,7 @@ function useAbstractChat({
     (info: string) => {
       setInfo(info);
     },
-    [setInfo]
+    [setInfo],
   );
 
   // Poll for new messages at regular intervals
@@ -491,20 +518,23 @@ function useAbstractChat({
     const lastMessageTimestamp = chatState.messages.at(-1)?.timestamp;
     if (!lastMessageTimestamp) return;
     const interval = setInterval(() => {
-      http.apis.getHistoryPooling({
-        sessionId: session.id,
-        lastMessageTimestamp,
-      }).then((response) => {
-        response.data && dispatch({
-          type: "APPEND_MESSAGES",
-          payload: mapChatHistoryToMessage(response.data)
+      http.apis
+        .getHistoryPooling({
+          sessionId: session.id,
+          lastMessageTimestamp,
         })
-      })
+        .then((response) => {
+          response.data &&
+            dispatch({
+              type: "APPEND_MESSAGES",
+              payload: mapChatHistoryToMessage(response.data),
+            });
+        });
     }, 20 * 1000);
     return () => {
       clearInterval(interval);
-    }
-  }, [session, chatState.messages])
+    };
+  }, [session, chatState.messages]);
 
   // Handle user message broadcasts
   const handleUserMessageBroadcast = useCallback((message: MessagePayload) => {
@@ -516,7 +546,7 @@ function useAbstractChat({
         deliveredAt: null,
         content: message.content,
         id: message.id ?? genId(10),
-        attachments: []
+        attachments: [],
       },
     });
   }, []);
@@ -533,7 +563,7 @@ function useAbstractChat({
   }, []);
 
   // Set up socket listeners
-  useListen("structured_message", handleIncomingMessage)
+  useListen("structured_message", handleIncomingMessage);
   useListen("ack:chat_message:delivered", handleDeliveredAck);
   useListen("info", handleInfo);
   useListen("user_message_broadcast", handleUserMessageBroadcast);
@@ -560,8 +590,8 @@ function useAbstractChat({
               isSessionClosed: newSession.status !== SessionStatus.OPEN,
               isAssignedToAi: newSession.assignee_id === 555,
               isAssignedToHuman: false,
-              isPendingHuman: false
-            }
+              isPendingHuman: false,
+            };
           } else {
             throw new Error("Failed to create session");
           }
@@ -586,7 +616,7 @@ function useAbstractChat({
           queryParams,
           user: {
             ...config.user,
-            ...user
+            ...user,
           },
           language,
           ...data,
@@ -618,7 +648,7 @@ function useAbstractChat({
       }
       return null;
     },
-    [setHookState, session, socket, config.user, config, botToken, language]
+    [setHookState, session, socket, config.user, config, botToken, language],
   );
 
   // Handle keyboard input
@@ -634,7 +664,7 @@ function useAbstractChat({
         payload: null,
       });
     },
-    [dispatch, sendMessage, socket]
+    [dispatch, sendMessage, socket],
   );
 
   // Determine if messages can be sent

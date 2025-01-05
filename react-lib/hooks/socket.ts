@@ -14,7 +14,11 @@ type useSocketReturn = {
   socket: Socket | null;
   socketState: SocketState;
   disconnect: () => void;
-  useListen: (event: string, callback: (data: any) => void, deps?: DependencyList) => void
+  useListen: (
+    event: string,
+    callback: (data: any) => void,
+    deps?: DependencyList,
+  ) => void;
 };
 
 export function useSocket(
@@ -37,12 +41,27 @@ export function useSocket(
     }
   };
   const onConnect = useCallback(() => updateState("connected"), [updateState]);
-  const onDisconnect = useCallback(() => updateState("disconnected"), [updateState]);
+  const onDisconnect = useCallback(
+    () => updateState("disconnected"),
+    [updateState],
+  );
   const onConnectError = useCallback(() => updateState("error"), [updateState]);
-  const onReconnect = useCallback(() => updateState("reconnected"), [updateState]);
-  const onReconnecting = useCallback(() => updateState("reconnecting"), [updateState]);
-  const onReconnectError = useCallback(() => updateState("error"), [updateState]);
-  const onReconnectFailed = useCallback(() => updateState("error"), [updateState]);
+  const onReconnect = useCallback(
+    () => updateState("reconnected"),
+    [updateState],
+  );
+  const onReconnecting = useCallback(
+    () => updateState("reconnecting"),
+    [updateState],
+  );
+  const onReconnectError = useCallback(
+    () => updateState("error"),
+    [updateState],
+  );
+  const onReconnectFailed = useCallback(
+    () => updateState("error"),
+    [updateState],
+  );
 
   useEffect(() => {
     if (!url) return;
@@ -55,7 +74,11 @@ export function useSocket(
     };
   }, [url]);
 
-  const useListen = (event: string, callback: (data: any) => void, deps: DependencyList = []) => {
+  const useListen = (
+    event: string,
+    callback: (data: any) => void,
+    deps: DependencyList = [],
+  ) => {
     useEffect(() => {
       if (!socket) return;
       socket.on(event, callback);
@@ -97,6 +120,6 @@ export function useSocket(
     socket,
     socketState,
     disconnect,
-    useListen
+    useListen,
   };
 }

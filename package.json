@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.4",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
@@ -75,10 +76,7 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": [
-    "dist",
-    "dist-embed"
-  ],
+  "files": ["dist", "dist-embed"],
   "bugs": {
     "url": "https://github.com/openchatai/OpenCopilot/issues"
   },
@@ -124,6 +122,7 @@
     "@types/react-dom": "^18.3.0",
     "@types/tinycolor2": "^1.4.6",
     "@uiw/react-iframe": "^1.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.5",
     "class-variance-authority": "^0.7.0",
@@ -146,7 +145,6 @@
     "vite": "^5.4.2",
     "vite-plugin-dts": "4.0.3",
     "vite-plugin-externalize-deps": "^0.8.0",
-    "@vitejs/plugin-react": "^4.3.4",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.0.5"
   }
