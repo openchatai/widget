@@ -4,12 +4,12 @@ import { WidgetOptions } from "../react-lib/types";
 import { Widget } from "./designs/basic";
 import { render } from "./render";
 
-const defaultRootId = "opencopilot-root";
+const defaultRootId = "opencx-root";
 
 declare global {
   interface Window {
     initOpenScript: typeof initOpenScript;
-    openCopilotWidgetVersion: string;
+    openCXWidgetVersion: string;
   }
 }
 
@@ -18,4 +18,4 @@ function initOpenScript(options: WidgetOptions) {
 }
 
 window["initOpenScript"] = initOpenScript;
-window["openCopilotWidgetVersion"] = version;
+window["openCXWidgetVersion"] = version;

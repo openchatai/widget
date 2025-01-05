@@ -5,13 +5,13 @@
 ### 1. Install the Package
 
 ```bash
-pnpm add @opencopilot/widget
+pnpm add @opencx/widget
 ```
 
 ### 2. Import the package
 
 ```javascript
-import { Widget, WidgetRoot } from "@opencopilot/widget/basic";
+import { Widget, WidgetRoot } from "@opencx/widget/basic";
 ```
 
 ### 3. Use the Widget
@@ -55,14 +55,14 @@ type WidgetOptions = {
 also you must import the css file too.
 
 ```javascript
-import "@opencopilot/widget/index.css";
+import "@opencx/widget/index.css";
 ```
 
 also the styles are scoped to the widget only so the widget should have a container with `data-chat-widget`
 
 ```javascript
-import { Widget, WidgetRoot, WidgetPopover } from "@opencopilot/widget";
-import "@opencopilot/widget/index.css";
+import { Widget, WidgetRoot, WidgetPopover } from "@opencx/widget";
+import "@opencx/widget/index.css";
 <div data-chat-widget>
   <WidgetRoot>
     <Widget />
