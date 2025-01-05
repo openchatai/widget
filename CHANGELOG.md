@@ -1,5 +1,11 @@
 ## 1.5.23
 
+## 2.0.0-next.0
+
+### Major Changes
+
+- http, removed socket
+
 ### Patch Changes
 
 - fdcede4: .

@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "@openchatai/widget": "1.5.24"
+  },
+  "changesets": [
+    "angry-foxes-march"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "@openchatai/widget",
   "private": false,
-  "version": "1.5.24",
+  "version": "2.0.0-next.0",
   "type": "module",
   "publishConfig": {
     "access": "public"
