@@ -2,7 +2,11 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": ".",
@@ -18,13 +22,27 @@
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@react/*": ["./react-lib/*"],
-      "@ui/*": ["./src/components/*"],
-      "@core/*": ["./core/*"]
+      "@react/*": [
+        "./react-web/*"
+      ],
+      "@ui/*": [
+        "./src/components/*"
+      ],
+      "@core/*": [
+        "./core/*"
+      ]
     }
   },
-  "include": ["src", "react-lib", "core", "react-bindings"],
-  "exclude": ["node_modules", "dist"],
+  "include": [
+    "src",
+    "react-web",
+    "core",
+    "react-bindings"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "references": [
     {
       "path": "./tsconfig.node.json"
