@@ -2,10 +2,10 @@ import {
   useChat,
   useConfigData,
   WidgetOptions,
-  WidgetRoot,
+  WidgetRoot as OriginalWidgetRoot,
 } from "@react/index";
 import { TooltipProvider } from "@ui/tooltip";
-import React, { ComponentPropsWithoutRef } from "react";
+import React, { ComponentPropsWithoutRef, ReactNode } from "react";
 import {
   BotLoadingComponent,
   BotTextResponse,
@@ -40,7 +40,7 @@ html, body {
 </body>
 </html>`;
 
-function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<"div">) {
+function Widget({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const chat = useChat();
   const { theme } = useConfigData();
   const [isOpen, setIsOpened] = useState(false);
@@ -135,9 +135,12 @@ function WidgetInner({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   );
 }
 
-export function Widget({ options }: { options: WidgetOptions }) {
+function WidgetRoot({
+  options,
+  children,
+}: { options: WidgetOptions; children: ReactNode }) {
   return (
-    <WidgetRoot
+    <OriginalWidgetRoot
       options={{
         ...options,
         components: [
@@ -156,7 +159,9 @@ export function Widget({ options }: { options: WidgetOptions }) {
         ],
       }}
     >
-      <WidgetInner />
-    </WidgetRoot>
+      {children}
+    </OriginalWidgetRoot>
   );
 }
+
+export { WidgetRoot, Widget };
