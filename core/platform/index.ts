@@ -9,22 +9,22 @@ export interface Platform {
   };
 }
 
-// Default platform implementation
-export class DefaultPlatform implements Platform {
-  env = {
-    platform: this.detectPlatform(),
-  };
-
-  date = {
-    now: () => Date.now(),
-    toISOString: (date: number) => new Date(date).toISOString(),
-  };
-
-  private detectPlatform() {
+export function createDefaultPlatform(): Platform {
+  const detectPlatform = () => {
     // detect browser
     if (typeof window !== "undefined") {
       return "browser";
     }
     return "server";
-  }
+  };
+
+  return {
+    env: {
+      platform: detectPlatform()
+    },
+    date: {
+      now: () => Date.now(),
+      toISOString: (date: number) => new Date(date).toISOString()
+    }
+  };
 }

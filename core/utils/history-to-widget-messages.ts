@@ -2,6 +2,7 @@ import { MessageType } from "../types/messages";
 import { ChatHistoryMessageType } from "../types/schemas";
 import { genId } from "./genId";
 
+// temp
 function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
   const messages: MessageType[] = [];
   for (let i = 0; i < value.length; i++) {

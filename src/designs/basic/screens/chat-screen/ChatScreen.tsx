@@ -14,7 +14,6 @@ import { Button } from "@ui/button";
 import {
   DEFAULT_STYLES,
   WIDGET_CONTENT_MAX_HEIGHT_PX,
-  WIDGET_CONTENT_MIN_HEIGHT_PX,
 } from "src/designs/constants";
 
 function ChatRenderer() {
@@ -60,19 +59,19 @@ function ChatRenderer() {
             wrapperProps={{ agent: config.bot }}
           />
         )) ?? (
-          <BotMessage
-            key={"default-welcome"}
-            message={{
-              component: "text",
-              data: { message: "Hello, how can I help?" },
-              id: "default-welcome",
-              type: "FROM_BOT",
-              agent: config.bot,
-            }}
-            Wrapper={BotResponseWrapper}
-            wrapperProps={{ agent: config.bot }}
-          />
-        ))}
+            <BotMessage
+              key={"default-welcome"}
+              message={{
+                component: "text",
+                data: { message: "Hello, how can I help?" },
+                id: "default-welcome",
+                type: "FROM_BOT",
+                agent: config.bot,
+              }}
+              Wrapper={BotResponseWrapper}
+              wrapperProps={{ agent: config.bot }}
+            />
+          ))}
       {state.messages.map((message) => {
         if (message.type === "FROM_USER") {
           return (

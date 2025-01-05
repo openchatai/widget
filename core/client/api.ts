@@ -1,89 +1,115 @@
-import { ChatSessionType } from "../types/schemas";
-import { MessageData } from "../types/transport";
+import { createFetch, CustomFetch } from "../utils/create-fetch";
+import { HandleContactMessageOutputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
+import { CoreOptions, SendMessageInput, ConsumerType } from "../types";
 
 export interface ApiCallerOptions {
-  apiUrl: string;
-  token: string;
+    apiUrl: string;
+    token: string;
+    coreOptions: CoreOptions;
 }
 
 export class ApiCaller {
-  constructor(private readonly options: ApiCallerOptions) {}
+    #fetch: CustomFetch
+    constructor(private readonly options: ApiCallerOptions) {
+        const user = this.options.coreOptions.user;
+        const consumerHeader = {
+            claim: '',
+            value: ''
+        }
 
-  async createSession(): Promise<ChatSessionType> {
-    const response = await fetch(`${this.options.apiUrl}/sessions`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.options.token}`,
-        "Content-Type": "application/json",
-      },
-    });
+        if (user?.email) {
+            consumerHeader.claim = 'email';
+            consumerHeader.value = user.email;
+        }
 
-    if (!response.ok) {
-      throw new Error("Failed to create session");
+        else if (user?.phone) {
+            consumerHeader.claim = 'phone';
+            consumerHeader.value = user.phone;
+        }
+
+        const headers: Record<string, string> = {
+            'X-Bot-Token': this.options.token,
+            'X-Consumer-Id': `${consumerHeader.claim}:${consumerHeader.value}`
+        }
+
+        // Only add Authorization header if contactToken exists
+        if (this.options.coreOptions.contactToken) {
+            headers['Authorization'] = `Bearer ${this.options.coreOptions.contactToken}`
+        }
+
+        this.#fetch = createFetch({
+            baseURL: `${this.options.apiUrl}/widget/v2`,
+            headers
+        })
     }
 
-    return response.json();
-  }
-
-  async fetchSession(sessionId: string): Promise<ChatSessionType> {
-    const response = await fetch(
-      `${this.options.apiUrl}/sessions/${sessionId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${this.options.token}`,
-        },
-      },
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch session");
+    async me(): Promise<{
+        contactId: string;
+        contactName: string;
+    }> {
+        // GET /me
+        const response = await this.#fetch('/me')
+        return response.json()
     }
 
-    return response.json();
-  }
-
-  async ping(): Promise<void> {
-    const response = await fetch(`${this.options.apiUrl}/ping`, {
-      headers: {
-        Authorization: `Bearer ${this.options.token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to ping API");
-    }
-  }
-
-  async getMessages(sessionId?: string): Promise<MessageData[]> {
-    const url = sessionId
-      ? `${this.options.apiUrl}/messages/${sessionId}`
-      : `${this.options.apiUrl}/messages`;
-
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${this.options.token}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch messages");
+    async widgetPrelude(): Promise<WidgetPreludeSchema> {
+        // GET /prelude
+        const response = await this.#fetch('/prelude')
+        return response.json()
     }
 
-    return response.json();
-  }
-
-  async sendMessage(message: MessageData): Promise<void> {
-    const response = await fetch(`${this.options.apiUrl}/messages`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.options.token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(message),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to send message");
+    async handleMessage(message: SendMessageInput): Promise<HandleContactMessageOutputSchema> {
+        // POST /chat/send
+        const response = await this.#fetch('/chat/send', {
+            method: "POST",
+            body: JSON.stringify(message)
+        })
+        return response.json()
     }
-  }
+
+    async getSessionHistory(sessionId: string, lastMessageTimestamp?: string): Promise<WidgetHistorySchema[]> {
+        // session/history/:sessionId
+        const queryParams = new URLSearchParams({
+            lastMessageTimestamp: lastMessageTimestamp || ''
+        })
+
+        const url = `/session/history/${sessionId}?${queryParams.toString()}`
+
+        const response = await this.#fetch(url, {
+            method: 'GET'
+        })
+
+        return response.json()
+    }
+
+    async createSession(): Promise<WidgetSessionSchema> {
+        // POST /create-session
+        const response = await this.#fetch('/create-session', {
+            method: 'POST'
+        })
+        return response.json()
+    }
+
+    async getSession(sessionId: string): Promise<WidgetSessionSchema> {
+        // GET /session/:sessionId
+        const response = await this.#fetch(`/session/${sessionId}`, {
+            method: 'GET'
+        })
+        return response.json()
+    }
+
+    async createContact(user: {
+        external_id?: string;
+        name?: string;
+        email?: string;
+        phone?: string;
+        customData?: Record<string, string>;
+        avatarUrl?: string;
+    }): Promise<ConsumerType> {
+        const response = await this.#fetch('/contact/upsert', {
+            method: 'POST',
+            body: JSON.stringify(user)
+        });
+        return response.json();
+    }
 }
