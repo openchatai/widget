@@ -120,7 +120,7 @@ const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 export function ChatFooter() {
   const { collectUserData } = useConfigData();
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { sendMessage, hookState: chatState, session } = useChat();
+  const { sendMessage, sendMessageState, session } = useChat();
   const { contact } = useContact();
   const locale = useLocale();
 
@@ -148,7 +148,7 @@ export function ChatFooter() {
   };
 
   const handleSubmit = async () => {
-    if (chatState.state === "loading") return;
+    if (sendMessageState.loading) return;
     if (isUploading) {
       // TODO use something other than toast
       toast.error("please wait for the file(s) to upload");
@@ -197,7 +197,7 @@ export function ChatFooter() {
     },
   });
 
-  const isLoading = chatState.state === "loading";
+  const isLoading = sendMessageState.loading;
 
   const shouldCollectDataFirst = collectUserData && !contact?.id;
 

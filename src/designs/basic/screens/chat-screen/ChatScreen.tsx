@@ -18,7 +18,7 @@ import {
 } from "src/designs/constants";
 
 function ChatRenderer() {
-  const { state, hookState } = useChat();
+  const { state, sendMessageState } = useChat();
   const { componentStore, initialMessages, ...config } = useConfigData();
 
   const LoadingComponent = componentStore.getComponent(
@@ -60,19 +60,19 @@ function ChatRenderer() {
             wrapperProps={{ agent: config.bot }}
           />
         )) ?? (
-          <BotMessage
-            key={"default-welcome"}
-            message={{
-              component: "text",
-              data: { message: "Hello, how can I help?" },
-              id: "default-welcome",
-              type: "FROM_BOT",
-              agent: config.bot,
-            }}
-            Wrapper={BotResponseWrapper}
-            wrapperProps={{ agent: config.bot }}
-          />
-        ))}
+            <BotMessage
+              key={"default-welcome"}
+              message={{
+                component: "text",
+                data: { message: "Hello, how can I help?" },
+                id: "default-welcome",
+                type: "FROM_BOT",
+                agent: config.bot,
+              }}
+              Wrapper={BotResponseWrapper}
+              wrapperProps={{ agent: config.bot }}
+            />
+          ))}
       {state.messages.map((message) => {
         if (message.type === "FROM_USER") {
           return (
@@ -95,7 +95,7 @@ function ChatRenderer() {
         }
         return null;
       })}
-      {hookState.state === "loading" && <LoadingComponent />}
+      {sendMessageState.loading && <LoadingComponent />}
     </div>
   );
 }
