@@ -299,7 +299,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
     [session, http.apis]
   );
 
-  // Poll for new messages with improved error handling
+  // Poll for new messages with 
   const [_pollMessagesState, pollMessages] = useAsyncFn(
     async (sessionId: string, lastMessageTimestamp: string) => {
       try {
@@ -417,16 +417,16 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
     [clearSessionAsync, http.apis, botToken, setSession]
   );
 
-  // Send a message with improved error handling
-  const [__, sendMessage] = useAsyncFn(
-    async ({ content, user, attachments, ...data }: SendMessageInput) => {
-      // Only set loading state if session is assigned to AI
-      if (session?.isAssignedToAi) {
+  const sendMessage = async ({ content, user, attachments, ...data }: SendMessageInput) => {
+    try {
+      let chatSession = session;
+      let newSessionCreated = false;
+
+      // Only set loading if creating new session (which will be AI) or if existing session is assigned to AI
+      if (!session || session?.isAssignedToAi) {
         setHookState({ state: "loading" });
       }
 
-      let chatSession = session;
-      let newSessionCreated = false;
       if (!session && noMessages) {
         try {
           const { data: newSession } = await http.apis.createSession(botToken);
@@ -441,136 +441,147 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
             };
             newSessionCreated = true;
           } else {
-            throw new Error("Failed to create session");
+            throw new Error("Failed to create new chat session");
           }
         } catch (error) {
-          console.error("Error creating session:", error);
+          setHookState({
+            state: "error",
+            error: error instanceof Error ? error.message : "Failed to create session"
+          });
           throw error;
         }
       }
 
       if (!chatSession) {
-        throw new Error("No active session");
+        const error = new Error("No active session available");
+        setHookState({ state: "error", error: error.message });
+        throw error;
       }
 
       const msgId = genId();
       const { headers, queryParams } = config;
 
-      try {
-        // Add message to local state first
-        dispatch({
-          type: "APPEND_USER_MESSAGE",
-          payload: {
-            type: "FROM_USER",
-            id: msgId,
-            content: content.text,
-            user: {
-              ...config.user,
-              ...user
-            },
-            deliveredAt: null,
-            attachments,
+      // Add message to local state first
+      dispatch({
+        type: "APPEND_USER_MESSAGE",
+        payload: {
+          type: "FROM_USER",
+          id: msgId,
+          content: content.text,
+          user: {
+            ...config.user,
+            ...user
           },
+          deliveredAt: null,
+          attachments,
+        },
+      });
+
+      if (chatState.keyboard) {
+        dispatch({
+          type: "SET_KEYBOARD",
+          payload: null,
         });
+      }
 
-        if (chatState.keyboard) {
-          dispatch({
-            type: "SET_KEYBOARD",
-            payload: null,
-          });
-        }
-
-        if (!newSessionCreated && chatSession.isAssignedToAi) {
+      if (!newSessionCreated && chatSession.isAssignedToAi) {
+        try {
           const sessionUpdated = await pollSession(chatSession.id);
           if (sessionUpdated) {
             chatSession = sessionUpdated;
           }
+        } catch (error) {
+          console.error("Error polling session:", error);
+          // Continue with existing session if polling fails
         }
+      }
 
-        // Send message via HTTP
-        const response = await http.apis.sendMessage({
-          id: msgId,
-          content: content.text,
-          session_id: chatSession.id,
-          bot_token: botToken,
-          headers,
-          query_params: queryParams,
-          user: {
-            ...config.user,
-            ...user,
-          },
-          language,
-          attachments,
-          ...data,
-        });
+      // Send message via HTTP
+      const response = await http.apis.sendMessage({
+        id: msgId,
+        content: content.text,
+        session_id: chatSession.id,
+        bot_token: botToken,
+        headers,
+        query_params: queryParams,
+        user: {
+          ...config.user,
+          ...user,
+        },
+        language,
+        attachments,
+        ...data,
+      });
 
-        // Mark message as delivered
-        dispatch({
-          type: "SET_DELIVERED_AT",
-          payload: {
-            clientMessageId: msgId,
-            deliveredAt: new Date().toISOString(),
-          },
-        });
-        // append the response to the chat state
-        if (response.data.success) {
-          const data = response.data;
-          if (data.autopilotResponse) {
-            dispatch({
-              type: "ADD_RESPONSE_MESSAGE",
-              payload: {
-                type: "FROM_BOT",
-                id: data.autopilotResponse.id || genId(),
-                timestamp: new Date().toISOString(),
-                component: "TEXT",
-                data: {
-                  message: data.autopilotResponse.value.content,
-                }
+      // Mark message as delivered
+      dispatch({
+        type: "SET_DELIVERED_AT",
+        payload: {
+          clientMessageId: msgId,
+          deliveredAt: new Date().toISOString(),
+        },
+      });
+
+      // Handle response
+      if (response.data.success) {
+        const data = response.data;
+        if (data.autopilotResponse) {
+          dispatch({
+            type: "ADD_RESPONSE_MESSAGE",
+            payload: {
+              type: "FROM_BOT",
+              id: data.autopilotResponse.id || genId(),
+              timestamp: new Date().toISOString(),
+              component: "TEXT",
+              data: {
+                message: data.autopilotResponse.value.content,
               }
-            })
-          }
-          if (data.uiResponse) {
-            const uiVal = data.uiResponse.value;
-            dispatch({
-              type: "ADD_RESPONSE_MESSAGE",
-              payload: {
-                type: "FROM_BOT",
-                id: genId(),
-                timestamp: new Date().toISOString(),
-                component: uiVal.name,
-                data: uiVal.request_response,
-              }
-            })
-          }
-        } else {
+            }
+          });
+        }
+        if (data.uiResponse) {
+          const uiVal = data.uiResponse.value;
           dispatch({
             type: "ADD_RESPONSE_MESSAGE",
             payload: {
               type: "FROM_BOT",
               id: genId(),
-              component: "TEXT",
-              data: {
-                message: response.data.error?.message || "",
-                variant: "error"
-              }
+              timestamp: new Date().toISOString(),
+              component: uiVal.name,
+              data: uiVal.request_response,
             }
-          })
+          });
         }
-        return { id: msgId };
-      } catch (error) {
-        console.error("Error sending message:", error);
-        setHookState({ state: "error", error });
-        throw error;
-      } finally {
-        if (session?.isAssignedToAi) {
-          setHookState({ state: "idle" });
-        }
+      } else {
+        const errorMessage = response.data.error?.message || "Unknown error occurred";
+        dispatch({
+          type: "ADD_RESPONSE_MESSAGE",
+          payload: {
+            type: "FROM_BOT",
+            id: genId(),
+            component: "TEXT",
+            data: {
+              message: errorMessage,
+              variant: "error"
+            }
+          }
+        });
+        setHookState({ state: "error", error: errorMessage });
       }
-    },
-    [session, noMessages, http.apis, botToken, setSession, config, language, chatState.keyboard]
-  );
 
-  // Handle keyboard input with improved error handling
+      setHookState({ state: "idle" });
+      return { id: msgId };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
+      console.error("Error in sendMessage:", errorMessage, error);
+      // Only set error state if we were in loading state (AI session)
+      if (!session || session?.isAssignedToAi) {
+        setHookState({ state: "error", error: errorMessage });
+      }
+      throw error;
+    }
+  }
+
   const handleKeyboard = useCallback(
     (option: string) => {
       sendMessage({
