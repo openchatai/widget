@@ -1,5 +1,11 @@
 ## 1.5.23
 
+## 2.0.0
+
+### Major Changes
+
+- b19f7c6: http, removed socket
+
 ## 2.0.0-next.0
 
 ### Major Changes
