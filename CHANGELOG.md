@@ -1,3 +1,29 @@
+# @opencx/widget
+
+## 2.2.0
+
+### Minor Changes
+
+- cec8bf7: export Widget and WidgetRoot from basic dir
+
+## 2.1.0
+
+### Minor Changes
+
+- 191a0e1: change opencopilot occurrences to opencx
+
+## 2.0.0
+
+### Major Changes
+
+- 2c9c18c: change namespace
+
+## 1.6.0
+
+### Minor Changes
+
+- 4b9261d: design v2 phase-1
+
 ## 1.5.23
 
 ## 2.0.0

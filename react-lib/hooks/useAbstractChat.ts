@@ -1,5 +1,5 @@
 import { useLocale } from "../providers/LocalesProvider";
-import { useConfigData } from "../providers/ConfigDataProvider"
+import { useConfigData } from "../providers/ConfigDataProvider";
 import { UserObject } from "@react/types";
 import { create } from "mutative";
 import {
@@ -42,6 +42,9 @@ type useChatOptions = {
 type ChatState = {
   lastUpdated: number | null;
   messages: MessageType[];
+  /**
+   * Options that the AI provides to the user after a reply, such as "I need more help" or "This is helpful"
+   */
   keyboard: { options: string[] } | null;
 };
 
@@ -64,6 +67,30 @@ type ActionType =
       clientMessageId: string;
       ServerMessageId: number;
     };
+  }
+  | {
+    type: "SET_KEYBOARD";
+    payload: {
+      options: string[];
+    } | null;
+  }
+  | {
+    type: "RESET";
+  }
+  | {
+    type: "SET_DELIVERED_AT";
+    payload: {
+      clientMessageId: string;
+      deliveredAt: string;
+    };
+  }
+  | {
+    type: "SET_MESSAGES";
+    payload: MessageType[];
+  }
+  | {
+    type: "APPEND_MESSAGES";
+    payload: MessageType[];
   }
   | {
     type: "SET_KEYBOARD";
@@ -116,7 +143,7 @@ function chatReducer(state: ChatState, action: ActionType) {
       case "PREPEND_HISTORY": {
         const historyIds = action.payload.map((msg) => msg.id);
         draft.messages = draft.messages.filter(
-          (msg) => !historyIds.includes(msg.id)
+          (msg) => !historyIds.includes(msg.id),
         );
         draft.messages = [...action.payload, ...draft.messages];
         setLastupdated();
@@ -127,18 +154,21 @@ function chatReducer(state: ChatState, action: ActionType) {
         break;
       }
       case "SET_DELIVERED_AT": {
-        const message = draft.messages.find(message => {
-          if (message.type === "FROM_USER" && message.id === action.payload?.clientMessageId) {
+        const message = draft.messages.find((message) => {
+          if (
+            message.type === "FROM_USER" &&
+            message.id === action.payload?.clientMessageId
+          ) {
             return true;
           }
-        })
+        });
         if (message?.type === "FROM_USER") {
           lodashSet(message, "deliveredAt", action.payload.deliveredAt);
         }
         break;
       }
       case "SET_MESSAGES": {
-        draft.messages = action.payload
+        draft.messages = action.payload;
         break;
       }
       case "APPEND_MESSAGES": {
@@ -162,40 +192,45 @@ interface HookSettings {
 
 function useSession({
   persist,
-  sessionKey = (botToken, { external_id }) => `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`
+  sessionKey = (botToken, { external_id }) =>
+    `[OPEN_SESSION_${botToken}]_${external_id ? external_id : "session"}`,
 }: {
-  persist: boolean,
-  sessionKey?: (
-    botToken: string,
-    user: UserObject
-  ) => string
+  persist: boolean;
+  sessionKey?: (botToken: string, user: UserObject) => string;
 }) {
   const { botToken, http, user } = useConfigData();
   const [_session, setSession, clearBucket] = useSyncedState<ChatSessionType>(
     sessionKey(botToken, user),
     undefined,
-    persist ? "local" : "memory"
+    persist ? "local" : "memory",
   );
 
-  const session = _session ? {
-    ..._session,
-    isSessionClosed: _session.status !== SessionStatus.OPEN,
-    isAssignedToAi: _session.assignee_id === 555,
-    isAssignedToHuman: _session.assignee_id !== 555,
-    isPendingHuman: _session.assignee_id === 555 && _session.ai_closure_type === AIClosureType.handed_off,
-  } : null;
-
-  const [refreshSessionState, refreshSession] = useAsyncFn(async (sId: string) => {
-    let response = await http.apis.fetchSession(sId);
-    if (response.data) {
-      setSession(response.data);
+  const session = _session
+    ? {
+      ..._session,
+      isSessionClosed: _session.status !== SessionStatus.OPEN,
+      isAssignedToAi: _session.assignee_id === 555,
+      isAssignedToHuman: _session.assignee_id !== 555,
+      isPendingHuman:
+        _session.assignee_id === 555 &&
+        _session.ai_closure_type === AIClosureType.handed_off,
     }
-    return response.data;
-  }, [http, setSession]);
+    : null;
+
+  const [refreshSessionState, refreshSession] = useAsyncFn(
+    async (sId: string) => {
+      let response = await http.apis.fetchSession(sId);
+      if (response.data) {
+        setSession(response.data);
+      }
+      return response.data;
+    },
+    [http, setSession],
+  );
 
   function deleteSession() {
     setSession(null);
-    clearBucket()
+    clearBucket();
   }
 
   return {
@@ -203,14 +238,12 @@ function useSession({
     refreshSession,
     refreshSessionState,
     deleteSession,
-    setSession
-  }
+    setSession,
+  };
 }
 
 // Initialize chat state and reducer
-function useAbstractChat({
-  onSessionDestroy,
-}: useChatOptions) {
+function useAbstractChat({ onSessionDestroy }: useChatOptions) {
   const [chatState, dispatch] = useReducer(chatReducer, {
     lastUpdated: null,
     messages: [],
@@ -226,7 +259,8 @@ function useAbstractChat({
   const { messageArrivedSound } = useWidgetSoundEffects();
 
   // Determine if session should be persisted
-  const shouldPersistSession = widgetSettings?.persistSession || defaultSettings.persistSession;
+  const shouldPersistSession =
+    widgetSettings?.persistSession || defaultSettings.persistSession;
 
   // Manage session state
   const { refreshSession, session, deleteSession, setSession } = useSession({
@@ -397,8 +431,8 @@ function useAbstractChat({
               isSessionClosed: newSession.status !== SessionStatus.OPEN,
               isAssignedToAi: newSession.assignee_id === 555,
               isAssignedToHuman: false,
-              isPendingHuman: false
-            }
+              isPendingHuman: false,
+            };
           } else {
             throw new Error("Failed to create session");
           }
@@ -449,7 +483,7 @@ function useAbstractChat({
           query_params: queryParams,
           user: {
             ...config.user,
-            ...user
+            ...user,
           },
           language,
           attachments,

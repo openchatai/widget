@@ -1,30 +1,50 @@
 import type { CSSProperties } from "react";
 import tc from "tinycolor2";
 
+export const WIDGET_CONTENT_MIN_HEIGHT_PX = 400;
+export const WIDGET_CONTENT_MAX_HEIGHT_PX = 600;
+export const DEFAULT_STYLES = {
+  widgetMinHeight: "min-h-[400px]",
+  widgetMaxHeight: "max-h-[600px]",
+  widgetHeight: "h-[600px]",
+} as const;
+
 interface Colors {
-    primary: string;
+  primary: string;
 }
 
 export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
-    const primary = tc(colors.primary).toHslString();
-    return {
-        "--opn-primary": primary,
+  const primary = tc(colors.primary).toHsl();
+  const primaryForeground = tc(colors.primary).isLight()
+    ? "240 10% 3.9%"
+    : "0 0% 100%";
 
-        "--opn-background": "0 0% 100%",
-        "--opn-foreground": "210 40% 98%",
+  return {
+    /**
+     * Spread the primary color without the `hsl()` call so that we can use tailwind opacity classes on it
+     */
+    "--opencx-primary": `${primary.h} ${primary.s}% ${primary.l}%`,
+    "--opencx-primary-foreground": primaryForeground,
 
-        "--opn-accent": "210 40% 96.1%",
-        "--opn-accent-foreground": "222.2 47.4% 11.2%",
-        
-        "--opn-destructive": "0 84.2% 60.2%",
-        "--opn-destructive-foreground": "210 40% 98%",
-        
-        "--opn-secondary": "0 0% 96%",
-        "--opn-secondary-foreground": "222.2 47.4% 11.2%",
-        
-        "--opn-input": "214.3 31.8% 91.4%",
-        "--opn-border": "214.3 31.8% 91.4%",
+    "--opencx-background": "0 0% 100%",
+    "--opencx-foreground": "240 10% 3.9%",
 
-        "--opn-trigger-offset": _.triggerOffset,
-    } as CSSProperties;
+    "--opencx-accent": "240 4.8% 95.9%",
+    "--opencx-accent-foreground": "240 5.9% 10%",
+
+    "--opencx-destructive": "0 84.2% 60.2%",
+    "--opencx-destructive-foreground": "0 0% 98%",
+
+    "--opencx-secondary": "240 4.8% 95.9%",
+    "--opencx-secondary-foreground": "240 5.9% 10%",
+
+    "--opencx-muted": "240 4.8% 95.9%",
+    "--opencx-muted-foreground": "240 3.8% 46.1%",
+
+    "--opencx-input": "240 5.9% 90%",
+    "--opencx-border": "240 5.9% 90%",
+    "--opencx-ring": "240 5.9% 10%",
+
+    "--opencx-trigger-offset": _.triggerOffset,
+  } as CSSProperties;
 };

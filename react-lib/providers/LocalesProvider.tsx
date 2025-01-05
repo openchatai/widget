@@ -15,7 +15,8 @@ function LocaleProvider({ children }: { children: React.ReactNode }) {
   return (
     <SafeProvider
       value={{
-        get: (key: TranslationKeysType, pfx) => getStr(key, config.language ?? "en") + (pfx ?? ""),
+        get: (key: TranslationKeysType, pfx) =>
+          getStr(key, config.language ?? "en") + (pfx ?? ""),
         lang: config.language,
       }}
     >

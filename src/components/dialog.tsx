@@ -12,7 +12,7 @@ const [useDialogState, SafeProvider] = createSafeContext<{
   open: boolean;
   setOpen: (open: boolean) => void;
   onOpenChange: (open: boolean) => void;
-  isAlert: boolean
+  isAlert: boolean;
 }>();
 
 const noop = () => {
@@ -24,17 +24,17 @@ function Dialog({
   onOpenChange,
   open,
   children,
-  isAlert
+  isAlert,
 }: {
   children:
-  | React.ReactNode
-  | (({
-    open,
-    setOpen,
-  }: {
-    open: boolean;
-    setOpen: (open: boolean) => void;
-  }) => React.ReactNode);
+    | React.ReactNode
+    | (({
+        open,
+        setOpen,
+      }: {
+        open: boolean;
+        setOpen: (open: boolean) => void;
+      }) => React.ReactNode);
   defaultOpen?: boolean;
   open?: boolean; // controlled
   isAlert?: boolean;
@@ -47,8 +47,9 @@ function Dialog({
     <SafeProvider
       value={{
         open: isOpen,
-        setOpen, onOpenChange: onOpenChange ?? noop,
-        isAlert: isAlert ? isAlert : false
+        setOpen,
+        onOpenChange: onOpenChange ?? noop,
+        isAlert: isAlert ? isAlert : false,
       }}
     >
       {typeof children === "function"
@@ -140,7 +141,7 @@ const DialogContent = React.forwardRef<
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: 20, x: "-50%" }}
             transition={{ type: "spring", damping: 20, stiffness: 300 }}
-            className="bg-background rounded-xl grid grid-cols-1 gap-2 border border-border max-w-[90%] bottom-2 w-full absolute left-1/2 p-3 z-[25]"
+            className="bg-background rounded-xl grid grid-cols-1 gap-2 border max-w-[90%] bottom-2 w-full absolute left-1/2 p-3 z-[25]"
             ref={_ref}
             {...props}
           >
@@ -160,7 +161,6 @@ const DialogContent = React.forwardRef<
     </AnimatePresence>
   );
 });
-
 
 const DialogClose = React.forwardRef<
   ElementRef<"button">,

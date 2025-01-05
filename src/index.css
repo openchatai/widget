@@ -1,15 +1,27 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..700;1,14..32,100..700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 .required:after {
-    content:" *";
-    color: red;
-  }
+  content: " *";
+  color: red;
+}
 
 @layer base {
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    @apply border-border no-scrollbar;
+  }
+
   .center-absolute {
     @apply absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2;
   }

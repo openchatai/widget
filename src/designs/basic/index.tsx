@@ -1,100 +1,146 @@
-import React from "react";
-import { ComponentPropsWithoutRef, forwardRef } from "react";
-import { ChatScreen } from "./screens/ChatScreen";
-import { useChat, useConfigData, WidgetOptions } from "@react/index";
-import { cssVars } from "../constants";
-import { cn } from "src/utils";
-import { TooltipProvider } from "@ui/tooltip";
-import { Toaster } from "react-hot-toast";
-import { InfoIcon, BadgeInfo, CheckCircle2Icon } from "lucide-react";
-import { WidgetRoot as OriginalRoot } from "@react/index";
 import {
-  BotTextResponse,
-  BotMessage,
-  FallbackComponent,
+  useChat,
+  useConfigData,
+  WidgetOptions,
+  WidgetRoot as OriginalWidgetRoot,
+} from "@react/index";
+import { TooltipProvider } from "@ui/tooltip";
+import React, { ComponentPropsWithoutRef, ReactNode } from "react";
+import {
   BotLoadingComponent,
+  BotTextResponse,
+  FallbackComponent,
 } from "src/@components";
+import { cn } from "src/utils";
+import { cssVars, DEFAULT_STYLES } from "../constants";
+import { RootScreen } from "./screens/root-screen";
+import * as PopoverPrimitive from "@radix-ui/react-popover";
+import Iframe from "@uiw/react-iframe";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import "../../index.css";
+import styles from "../../index.css?inline";
+import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
 
-function WidgetToaster() {
+const initialContent = `<!DOCTYPE html>
+<html>
+<head>
+<style>
+${styles}
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+</style>
+</head>
+<body>
+</body>
+</html>`;
+
+function Widget({ className, ...props }: ComponentPropsWithoutRef<"div">) {
+  const chat = useChat();
+  const { theme } = useConfigData();
+  const [isOpen, setIsOpened] = useState(false);
+
   return (
-    <Toaster
-      position="top-center"
-      containerStyle={{
-        position: "absolute",
-        top: "0",
-        maxHeight: "50%",
-        overflow: "hidden",
-      }}
-      toastOptions={{
-        position: "top-center",
-        blank: {
-          className:
-            "text-primary-foreground bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full",
-          icon: (
-            <BadgeInfo className="size-5 shrink-0 text-primary-foreground" />
-          ),
-        },
-        success: {
-          icon: (
-            <CheckCircle2Icon className="size-5 shrink-0 text-emerald-600" />
-          ),
-          className:
-            "text-emerald-700 bg-background text-xs p-2 max-w-[200px] font-medium rounded-lg border flex items-center gap-1 w-full",
-        },
-        error: {
-          icon: <InfoIcon className="size-5 shrink-0 text-rose-600" />,
-          className:
-            "text-red-700 bg-background text-xs max-w-[200px] p-2 font-medium rounded-lg border flex items-center gap-1 w-full",
-        },
-      }}
-    />
+    <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
+      <style>{styles}</style>
+      <PopoverPrimitive.Content
+        onInteractOutside={(ev) => ev.preventDefault()}
+        side="top"
+        forceMount
+        style={{
+          zIndex: 1000000,
+          fontSize: "16px",
+        }}
+        sideOffset={8}
+        data-chat-widget
+        data-chat-widget-content-root
+        align="end"
+        asChild
+      >
+        <motion.div
+          animate={isOpen ? "visible" : "hidden"}
+          initial="hidden"
+          variants={{
+            hidden: {
+              opacity: 0,
+              y: 8,
+              transitionEnd: { display: "none" },
+              transition: { duration: 0.15 },
+            },
+            visible: {
+              opacity: 1,
+              y: 0,
+              display: "block",
+            },
+          }}
+        >
+          <Iframe
+            initialContent={initialContent}
+            allowFullScreen
+            data-chat-widget
+            style={{
+              maxHeight: "85dvh",
+              width: "350px",
+              minHeight: DEFAULT_STYLES.widgetMinHeight,
+              height: "var(--opencx-widget-height)",
+              overflow: "hidden",
+              /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
+              outline: "1px solid",
+              outlineColor: "hsl(240 10% 3.9% / 0.2)",
+              borderRadius: "32px",
+              boxShadow: "0 25px 50px -12px rgb(0 0 0 / 0.25)",
+              transitionProperty: "height",
+              transitionTimingFunction: "ease-out",
+              transitionDuration: "150ms",
+            }}
+          >
+            <TooltipProvider
+              delayDuration={200}
+              // this is important, because without it, the tooltip remains even after moving the mouse away from trigger
+              disableHoverableContent
+            >
+              <div
+                style={{
+                  display: "contents",
+                  ...cssVars(
+                    { primary: theme.primaryColor },
+                    { triggerOffset: theme.triggerOffset },
+                  ),
+                }}
+                data-chat-widget
+              >
+                <div
+                  {...props}
+                  data-version={chat.version}
+                  data-chat-widget
+                  className={cn(
+                    "antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground",
+                    className,
+                  )}
+                >
+                  <RootScreen />
+                </div>
+              </div>
+            </TooltipProvider>
+          </Iframe>
+        </motion.div>
+      </PopoverPrimitive.Content>
+      <WidgetPopoverTrigger isOpen={isOpen} />
+    </PopoverPrimitive.Root>
   );
 }
 
-const Widget = forwardRef<HTMLDivElement, ComponentPropsWithoutRef<"div">>(
-  ({ className, ...props }, _ref) => {
-    const chat = useChat();
-    const { theme } = useConfigData();
-
-    return (
-      <TooltipProvider>
-        <div
-          style={{
-            display: "contents",
-            ...cssVars(
-              { primary: theme.primaryColor },
-              { triggerOffset: theme.triggerOffset },
-            ),
-          }}
-          data-chat-widget
-        >
-          <div
-            {...props}
-            ref={_ref}
-            data-version={chat.version}
-            data-chat-widget
-            className={cn(
-              "rounded-xl size-full overflow-hidden isolate relative text-secondary-foreground",
-              className,
-            )}
-          >
-            <div className="size-full absolute antialiased font-inter">
-              <ChatScreen />
-            </div>
-            <WidgetToaster />
-          </div>
-        </div>
-      </TooltipProvider>
-    );
-  },
-);
-
 function WidgetRoot({
-  children,
   options,
-}: { children?: React.ReactNode; options: WidgetOptions }) {
+  children,
+}: { options: WidgetOptions; children: ReactNode }) {
   return (
-    <OriginalRoot
+    <OriginalWidgetRoot
       options={{
         ...options,
         components: [
@@ -114,10 +160,8 @@ function WidgetRoot({
       }}
     >
       {children}
-    </OriginalRoot>
+    </OriginalWidgetRoot>
   );
 }
 
-Widget.displayName = "Widget";
-
-export { Widget, WidgetRoot, BotTextResponse, BotMessage };
+export { WidgetRoot, Widget };

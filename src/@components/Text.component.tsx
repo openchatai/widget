@@ -1,7 +1,7 @@
 import React from "react";
 import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
-import rehypeRaw from 'rehype-raw'
+import rehypeRaw from "rehype-raw";
 import { RenderAttachment } from "@ui/RenderFile";
 import { DefaultTextComponentProps } from "@react/types";
 
@@ -25,7 +25,9 @@ export function BotTextResponse({
     <div>
       <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
         {attachments?.map((attachment) => {
-          return <RenderAttachment attachment={attachment} key={attachment.id} />
+          return (
+            <RenderAttachment attachment={attachment} key={attachment.id} />
+          );
         })}
       </div>
       <MemoizedReactMarkdown
@@ -35,10 +37,12 @@ export function BotTextResponse({
         rehypePlugins={[rehypeRaw]}
         components={{
           a: ({ children, ...props }) => {
-            return <a target="_top" {...props}>
-              {children}
-            </a>
-          }
+            return (
+              <a target="_top" {...props}>
+                {children}
+              </a>
+            );
+          },
         }}
         className="leading-snug font-medium text-sm prose prose-a:decoration-primary prose-a:underline prose-sm prose-slate"
       >

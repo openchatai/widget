@@ -6,12 +6,12 @@ export * from "./pub-sub"
 export * from "./helpers"
 
 export interface User {
-    external_id?: string
-    name?: string
-    email?: string
-    phone?: string
-    customData?: Record<string, string>
-    avatarUrl?: string
+    external_id?: string;
+    name?: string;
+    email?: string;
+    phone?: string;
+    customData?: Record<string, string>;
+    avatarUrl?: string;
 }
 
 export interface SendMessageInput extends Record<string, unknown> {

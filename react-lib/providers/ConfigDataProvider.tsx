@@ -9,10 +9,9 @@ import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@core/types";
 
 const defaultTheme: WidgetThemeOptions = {
-  headerStyle: "basic",
-  primaryColor: "hsl(211,65%,59%)",
-  triggerOffset: "20px"
-}
+  primaryColor: "hsl(0,0%,0%)",
+  triggerOffset: "20px",
+};
 
 function useNormalizeOptions(data: WidgetOptions) {
   return useMemo(() => {
@@ -21,14 +20,14 @@ function useNormalizeOptions(data: WidgetOptions) {
       ...data.soundEffectFiles,
     };
 
-    const theme = Object.assign({}, defaultTheme, data.theme ?? {})
+    const theme = Object.assign({}, defaultTheme, data.theme ?? {});
 
     const bot: AgentType = {
       id: "555",
       is_ai: true,
       profile_picture: data.bot?.avatarUrl || AgentIcon,
       name: data.bot?.name || "Bot",
-    }
+    };
 
     return {
       ...data,
@@ -55,7 +54,7 @@ export type NormalizedWidgetOptions = ReturnType<typeof useNormalizeOptions>;
 type WidgetSettings = {
   persistSession: boolean;
   useSoundEffects: boolean;
-}
+};
 
 interface ConfigData extends ReturnType<typeof useNormalizeOptions> {
   http: ReturnType<typeof useAxiosInstance>;
@@ -66,7 +65,7 @@ interface ConfigData extends ReturnType<typeof useNormalizeOptions> {
   defaultSettings: WidgetSettings;
   soundEffectFiles: {
     messageArrived: string;
-  }
+  };
 }
 
 const [useConfigData, ConfigDataSafeProvider] = createSafeContext<ConfigData>();
@@ -85,7 +84,7 @@ export function ConfigDataProvider({
       new ComponentRegistry({
         components: data.components,
       }),
-    [data]
+    [data],
   );
 
   const _data = useNormalizeOptions(data);
@@ -94,13 +93,21 @@ export function ConfigDataProvider({
     botToken: _data.token,
   });
 
-
-  const [widgetSettings, _setSettings] = useSyncedState("open_settings", _data.defaultSettings, "local");
+  const [widgetSettings, _setSettings] = useSyncedState(
+    "open_settings",
+    _data.defaultSettings,
+    "local",
+  );
 
   const setSettings = (_settings: Partial<WidgetSettings>) => {
-    const merged = Object.assign({}, _data.defaultSettings, widgetSettings, _settings);
+    const merged = Object.assign(
+      {},
+      _data.defaultSettings,
+      widgetSettings,
+      _settings,
+    );
     _setSettings(merged);
-  }
+  };
 
   return (
     <ConfigDataSafeProvider
