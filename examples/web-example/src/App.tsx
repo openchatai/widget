@@ -1,7 +1,6 @@
 import "./App.css";
-import { WidgetRoot, type WidgetOptions } from "@opencx/widget";
-import { Widget } from "@opencx/widget/basic";
-import "@opencx/widget/dist/style.css";
+import { type WidgetOptions } from "@opencx/widget/react";
+import { Widget, WidgetRoot } from "@opencx/widget/basic";
 import { Pane } from "tweakpane";
 import { useEffect, useState } from "react";
 
@@ -70,17 +69,23 @@ function App() {
     }
 
     const themeFolder = pane.addFolder({ title: "Theme" });
-    themeFolder.addBinding(opts.theme, "primaryColor");
-    themeFolder.addBinding(opts.theme, "triggerOffset");
+    if (opts.theme) {
+      themeFolder.addBinding(opts.theme, "primaryColor");
+      themeFolder.addBinding(opts.theme, "triggerOffset");
+    }
 
     const settingsFolder = pane.addFolder({ title: "Settings" });
-    settingsFolder.addBinding(opts.settings, "persistSession");
-    settingsFolder.addBinding(opts.settings, "useSoundEffects");
+    if (opts.settings) {
+      settingsFolder.addBinding(opts.settings, "persistSession");
+      settingsFolder.addBinding(opts.settings, "useSoundEffects");
+    }
 
     pane.addBinding(opts, "collectUserData");
 
     const soundEffectFilesFolder = pane.addFolder({ title: "Sound Effects" });
-    soundEffectFilesFolder.addBinding(opts.soundEffectFiles, "messageArrived");
+    if (opts.soundEffectFiles) {
+      soundEffectFilesFolder.addBinding(opts.soundEffectFiles, "messageArrived");
+    }
 
     pane.on("change", (ev) => {
       setOptions((prevOptions) => ({
