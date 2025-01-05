@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.0.0
+
+### Major Changes
+
+- 2c9c18c: change namespace
+
 ## 1.6.0
 
 ### Minor Changes
