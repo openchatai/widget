@@ -2,11 +2,11 @@ export type Subscriber<T> = (data: T) => void
 
 export class PubSub<S> {
     private subscribers = new Set<Subscriber<S>>();
-    private state: S;
+    #state: S;
     private initialState: S;
 
     constructor(state: S) {
-        this.state = state;
+        this.#state = state;
         this.initialState = state;
     }
 
@@ -27,7 +27,7 @@ export class PubSub<S> {
      * Get the current state
      */
     getState(): S {
-        return this.state;
+        return this.#state;
     }
 
     /**
@@ -35,14 +35,14 @@ export class PubSub<S> {
      * @param newState The new state to set
      */
     setState(newState: S): void {
-        if (this.state !== newState) {
-            this.state = newState;
+        if (this.#state !== newState) {
+            this.#state = newState;
             this.subscribers.forEach(callback => callback(newState));
         }
     }
 
     setStatePartial(_s: Partial<S>): void {
-        const newState = { ...this.state, ..._s };
+        const newState = { ...this.#state, ..._s };
         this.setState(newState);
     }
 
@@ -55,6 +55,14 @@ export class PubSub<S> {
 
     reset(): void {
         this.setState(this.initialState);
+    }
+
+    getSnapshot(): S {
+        return this.#state;
+    }
+
+    get state(): S {
+        return this.#state;
     }
 }
 

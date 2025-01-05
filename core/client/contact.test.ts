@@ -60,7 +60,7 @@ describe('createContact', () => {
             platform: mockPlatform
         });
 
-        expect(contact.getContact()).toBeNull();
+        expect(contact.contactState.state).toBeNull();
         expect(contact.shouldCollectData()).toEqual({ should: false });
     });
 
@@ -98,7 +98,7 @@ describe('createContact', () => {
             }
         });
 
-        expect(contact.getContact()).toEqual(persistedContact);
+        expect(contact.contactState.state).toEqual(persistedContact);
     });
 
     it('should cleanup resources', () => {
@@ -109,11 +109,11 @@ describe('createContact', () => {
         });
 
         const unsubscribe = vi.fn();
-        contact.subscribe(() => unsubscribe());
+        contact.contactState.subscribe(() => unsubscribe());
 
         contact.cleanup();
 
         // State should be cleared
-        expect(contact.getContact()).toBeNull();
+        expect(contact.contactState.state).toBeNull();
     });
 }); 

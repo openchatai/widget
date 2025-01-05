@@ -23,7 +23,7 @@
       "@core/*": ["./core/*"]
     }
   },
-  "include": ["src", "react-lib", "core"],
+  "include": ["src", "react-lib", "core", "react-bindings"],
   "exclude": ["node_modules", "dist"],
   "references": [
     {

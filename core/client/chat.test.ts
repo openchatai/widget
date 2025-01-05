@@ -66,12 +66,12 @@ describe('createChat', () => {
 
     it('should create a chat instance with initial state', () => {
         const chat = createChat({ api: mockApi });
-        expect(chat.getState()).toEqual({
+        expect(chat.chatState.state).toEqual({
             lastUpdated: null,
             messages: [],
             keyboard: null
         });
-        expect(chat.getSession()).toBeNull();
+        expect(chat.sessionState.state).toBeNull();
     });
 
     it('should create a session', async () => {
@@ -80,7 +80,7 @@ describe('createChat', () => {
 
         expect(mockApi.createSession).toHaveBeenCalled();
         expect(session).toEqual(mockSession);
-        expect(chat.getSession()).toEqual(mockSession);
+        expect(chat.sessionState.state).toEqual(mockSession);
     });
 
     it('should send a message', async () => {
@@ -103,7 +103,7 @@ describe('createChat', () => {
             session_id: mockSession.id
         });
 
-        const state = chat.getState();
+        const state = chat.chatState.state;
         expect(state.messages).toHaveLength(1);
         expect(state.messages[0]).toMatchObject({
             id: 'test-id',
@@ -121,7 +121,7 @@ describe('createChat', () => {
         await vi.advanceTimersByTimeAsync(5000);
 
         expect(mockApi.getSessionHistory).toHaveBeenCalledWith(mockSession.id);
-        const state = chat.getState();
+        const state = chat.chatState.state;
         expect(state.messages).toHaveLength(2);
         expect(state.messages[0]).toMatchObject({
             id: 'msg-1',
@@ -143,17 +143,17 @@ describe('createChat', () => {
         await chat.createSession();
         await chat.sendMessage({ content: { text: 'Hello' } });
 
-        expect(chat.getState().messages).toHaveLength(1);
-        expect(chat.getSession()).not.toBeNull();
+        expect(chat.chatState.state.messages).toHaveLength(1);
+        expect(chat.sessionState.state).not.toBeNull();
 
         await chat.clearSession();
 
-        expect(chat.getState()).toEqual({
+        expect(chat.chatState.state).toEqual({
             lastUpdated: null,
             messages: [],
             keyboard: null
         });
-        expect(chat.getSession()).toBeNull();
+        expect(chat.sessionState.state).toBeNull();
     });
 
     it('should cleanup resources', async () => {
@@ -172,7 +172,7 @@ describe('createChat', () => {
 
         // Should not have polled after cleanup
         expect(mockApi.getSessionHistory).toHaveBeenCalledTimes(1);
-        expect(chat.getState()).toEqual({
+        expect(chat.chatState.state).toEqual({
             lastUpdated: null,
             messages: [],
             keyboard: null

@@ -18,14 +18,7 @@ type ContactOptions = {
     };
 };
 
-type ContactInstance = {
-    shouldCollectData: () => { should: boolean; reason?: string };
-    getContact: () => ConsumerType | null;
-    subscribe: (callback: (contact: ConsumerType | null) => void) => () => void;
-    cleanup: () => void;
-};
-
-export function createContact(options: ContactOptions): ContactInstance {
+export function createContact(options: ContactOptions) {
     const storageKey = `${options.botToken}:contact:${options.user?.external_id}`;
 
     // Initialize state from storage if available
@@ -76,8 +69,7 @@ export function createContact(options: ContactOptions): ContactInstance {
 
     return {
         shouldCollectData,
-        getContact: () => state.getState(),
-        subscribe: (callback) => state.subscribe(callback),
-        cleanup
+        cleanup,
+        contactState: state,
     };
 } 

@@ -198,8 +198,8 @@ export function createChat(options: ChatOptions) {
     };
 
     return {
-        getState: () => state.getState(),
-        getSession: () => sessionState.getState(),
+        chatState: state,
+        sessionState,
         sendMessage,
         createSession,
         clearSession,
