@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.3.0
+
+### Minor Changes
+
+- no more socket
+
 ## 2.2.0
 
 ### Minor Changes
