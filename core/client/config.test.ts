@@ -31,7 +31,6 @@ describe('createConfig', () => {
                 messageArrived: 'https://cloud.opencopilot.so/sfx/notification3.mp3'
             },
             theme: {
-                headerStyle: 'basic',
                 primaryColor: 'hsl(211,65%,59%)',
                 triggerOffset: '20px'
             },
@@ -55,7 +54,6 @@ describe('createConfig', () => {
                 is_ai: false
             },
             theme: {
-                headerStyle: 'compact',
                 primaryColor: '#ff0000'
             },
             settings: {
@@ -77,7 +75,6 @@ describe('createConfig', () => {
                 is_ai: false
             },
             theme: {
-                headerStyle: 'compact',
                 primaryColor: '#ff0000',
                 triggerOffset: '20px'
             },
@@ -117,7 +114,6 @@ describe('createConfig', () => {
         });
 
         expect(config.getThemeConfig()).toEqual({
-            headerStyle: 'basic',
             primaryColor: '#ff0000',
             triggerOffset: '20px'
         });

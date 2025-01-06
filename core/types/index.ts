@@ -47,7 +47,6 @@ export interface CoreOptions {
         messageArrived?: string
     }
     theme?: {
-        headerStyle?: "compact" | "basic"
         primaryColor?: string
         triggerOffset?: string
     }

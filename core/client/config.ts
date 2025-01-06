@@ -5,7 +5,6 @@ const DEFAULT_SOUND_EFFECTS = {
 };
 
 const DEFAULT_THEME = {
-    headerStyle: "basic" as const,
     primaryColor: "hsl(211,65%,59%)",
     triggerOffset: "20px"
 };
@@ -16,7 +15,6 @@ type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
         messageArrived: string;
     };
     theme: {
-        headerStyle: "compact" | "basic";
         primaryColor: string;
         triggerOffset: string;
     };
@@ -71,7 +69,6 @@ export function createConfig(options: CoreOptions): ConfigInstance {
             messageArrived: options.soundEffectFiles?.messageArrived ?? DEFAULT_SOUND_EFFECTS.messageArrived
         },
         theme: {
-            headerStyle: options.theme?.headerStyle ?? DEFAULT_THEME.headerStyle,
             primaryColor: options.theme?.primaryColor ?? DEFAULT_THEME.primaryColor,
             triggerOffset: options.theme?.triggerOffset ?? DEFAULT_THEME.triggerOffset
         },
