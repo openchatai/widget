@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.4.2
+
+### Patch Changes
+
+- remove headerStyle option
+
 ## 2.4.1
 
 ### Patch Changes
