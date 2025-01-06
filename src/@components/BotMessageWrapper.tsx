@@ -18,19 +18,27 @@ export function BotResponseWrapper({
   sessionId?: string;
 }) {
   return (
-    <div className="flex flex-row items-end w-full gap-2">
+    <div className={cn("flex flex-col items-start gap-2", "pr-8")}>
       <Avatar>
         <AvatarImage src={agent?.profile_picture ?? ""} alt="Agent Icon" />
       </Avatar>
-      <div className={cn("w-fit min-w-[80%]", className)}>
-        <div className="rounded-xl rounded-bl-none bg-secondary shadow-sm p-2.5 min-w-fit">
+      <div className={cn("w-fit space-y-2", className)}>
+        <div
+          className={cn(
+            "w-fit p-2 rounded-2xl text-sm",
+            "bg-secondary border shadow-sm",
+          )}
+        >
           {children}
         </div>
-        {
-          messageId && sessionId && (
-            <VoteButtons messageId={messageId} sessionId={sessionId} className="self-end" />
-          )
-        }
+        {/* TODO: render this in a good way... right now it takes too much space under the message */}
+        {/* {messageId && sessionId && (
+          <VoteButtons
+            messageId={messageId}
+            sessionId={sessionId}
+            className="self-end"
+          />
+        )} */}
       </div>
     </div>
   );

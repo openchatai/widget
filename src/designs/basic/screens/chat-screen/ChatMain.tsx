@@ -31,7 +31,7 @@ export function ChatMain() {
     <div
       data-messages
       ref={messagesContainerRef}
-      className="max-h-full scroll-smooth relative flex-1 py-4 px-3 space-y-3 overflow-auto"
+      className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
       {state.messages.length === 0 &&
         (initialMessages?.map((message, index) => (

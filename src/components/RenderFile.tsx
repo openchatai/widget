@@ -12,8 +12,9 @@ export function RenderAttachment({ attachment }: Props) {
   const isVideo = type.startsWith("video/");
   const isAudio = type.startsWith("audio/");
 
+  // TODO open asset when clicked (in a dialog or something)
   return (
-    <div className="size-fit gap-2 border shrink-0 rounded-xl overflow-hidden">
+    <div className="size-fit gap-2 border shrink-0 rounded-2xl overflow-hidden">
       {isImage && (
         <img loading="lazy" src={url} className="object-cover size-16" />
       )}
