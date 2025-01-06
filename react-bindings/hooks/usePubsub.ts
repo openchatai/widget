@@ -14,7 +14,7 @@ function usePubsub<S extends any>(
     pubsub: InstanceType<typeof PubSub<S>>,
     lifecycleOptions?: LifecycleHookOptions
 ) {
-    const state = useSyncExternalStore(pubsub.subscribe, () => pubsub.state);
+    const state = useSyncExternalStore(pubsub.subscribe, pubsub.getState);
 
     useEffect(() => {
         const unsubscribers: Array<() => void> = [];

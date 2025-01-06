@@ -6,10 +6,15 @@ import { HttpChatInputSchema, WidgetHistorySchema, WidgetSessionSchema } from ".
 import { LoadingState, ErrorState, SomeOptional } from "../types/helpers";
 import { ConfigInstance } from "./config";
 import { Platform, isStorageAvailable } from "../platform";
+import { Logger } from "../platform/logger";
 
-const SESSION_POLLING_INTERVAL = 10000; // every 10 seconds
-const MESSAGE_POLLING_INTERVAL = 5000; // every 5 seconds
+// Constants
+const POLLING_INTERVALS = {
+    SESSION: 10000, // every 10 seconds
+    MESSAGES: 5000  // every 5 seconds
+} as const;
 
+// Types
 type ChatState = {
     messages: MessageType[];
     keyboard: { options: string[] } | null;
@@ -25,127 +30,169 @@ type ChatOptions = {
     platform: Platform;
 };
 
-
+// Message Mapping
 function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
+    const commonFields = {
+        id: history.publicId || genId(),
+        timestamp: history.sentAt || "",
+        attachments: history.attachments || undefined
+    };
+
     if (history.sender.kind === 'user') {
         return {
-            id: history.publicId || genId(),
+            ...commonFields,
             type: "FROM_USER",
             content: history.content.text || "",
             deliveredAt: history.sentAt || "",
-            attachments: history.attachments || undefined,
-            timestamp: history.sentAt || ""
         };
     }
 
     return {
-        id: history.publicId || genId(),
+        ...commonFields,
         type: "FROM_BOT",
-        component: history.type,
+        component: 'TEXT',
+        agent: {
+            id: null,
+            name: history.sender.name || '',
+            is_ai: history.sender.kind === 'ai',
+            profile_picture: history.sender.avatar
+        },
         data: {
             text: history.content.text
         },
-        timestamp: history.sentAt || "",
-        attachments: history.attachments || undefined
     };
 }
 
-const fetchHistoryMessages = async (api: ApiCaller, session: WidgetSessionSchema, state: PubSub<ChatState>) => {
-    const lastMessageTimestamp = state.state.messages[state.state.messages.length - 1]?.timestamp || "";
-    const response = await api.getSessionHistory(session.id, lastMessageTimestamp);
-    if (response) {
-        const extraMessages = response.map(mapHistoryToMessage).filter(msg => !state.state.messages.some(m => m.id === msg.id));
-        state.setStatePartial({
-            messages: [...state.state.messages, ...extraMessages]
-        })
-    }
-}
+// Message Handling
+function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?: Logger) {
+    async function fetchHistoryMessages(session: WidgetSessionSchema) {
+        // Get the most recent message's timestamp
+        const messages = state.getState().messages;
+        const lastMessageTimestamp = messages[messages.length - 1]?.timestamp;
+        const response = await api.getSessionHistory(session.id, lastMessageTimestamp);
 
-function startPolling(
-    api: ApiCaller,
-    sessionState: PubSub<WidgetSessionSchema | null>,
-    state: PubSub<ChatState>
-) {
-    const intervals: NodeJS.Timeout[] = [];
+        if (response) {
+            // Map and filter out duplicates by ID
+            const newMessages = response
+                .map(mapHistoryToMessage)
+                .filter((newMsg: MessageType) => !messages.some((existingMsg: MessageType) => existingMsg.id === newMsg.id));
 
-    // Poll session
-    intervals.push(
-        setInterval(async () => {
-            const session = sessionState.getState();
-            if (!session?.id) return;
-
-            try {
-                const response = await api.getSession(session.id);
-                if (response) {
-                    sessionState.setState(response);
-                }
-            } catch (error) {
-                console.error("Error polling session:", error);
+            if (newMessages.length > 0) {
+                logger?.debug('Adding new messages to state', { count: newMessages.length });
+                state.setStatePartial({
+                    messages: [...messages, ...newMessages]
+                });
             }
-        }, SESSION_POLLING_INTERVAL)
-    );
-
-    // Poll messages
-    intervals.push(
-        setInterval(async () => {
-            const session = sessionState.state
-            if (!session?.id) return;
-            try {
-                await fetchHistoryMessages(api, session, state);
-            } catch (error) {
-                console.error("Error polling messages:", error);
-            }
-        }, MESSAGE_POLLING_INTERVAL)
-    );
-
-    return () => intervals.forEach(clearInterval);
-}
-
-export function createChat(options: ChatOptions) {
-    const state = new PubSub<ChatState>({
-        messages: [],
-        keyboard: null,
-        loading: { isLoading: false },
-        error: { hasError: false }
-    });
-
-    const config = options.config.getConfig();
-    const sessionState = new PubSub<WidgetSessionSchema | null>(null);
-    let stopPolling: (() => void) | null = null;
-
-    // Session persistence
-    const storage = options.platform?.storage;
-    const sessionStorageKey = `${config.user.external_id}:${config.token}:session`;
-
-    // Try to restore session from storage
-    if (options.persistSession && isStorageAvailable(storage)) {
-        try {
-            const storedSession = storage.getItem(sessionStorageKey);
-            if (storedSession) {
-                const session = JSON.parse(storedSession) as WidgetSessionSchema;
-                sessionState.setState(session);
-                fetchHistoryMessages(options.api, session, state);
-                if (!stopPolling) {
-                    stopPolling = startPolling(options.api, sessionState, state);
-                }
-            }
-        } catch (error) {
-            console.error("Error restoring session from storage:", error);
         }
     }
 
-    // Subscribe to session changes to persist
-    if (options.persistSession && isStorageAvailable(storage)) {
+    function addUserMessage(content: string, attachments?: any[]) {
+        return {
+            id: genId(),
+            type: "FROM_USER" as const,
+            content,
+            deliveredAt: new Date().toISOString(),
+            attachments,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    function addBotMessage(response: any) {
+        if (response.autopilotResponse) {
+            return {
+                type: "FROM_BOT" as const,
+                id: response.autopilotResponse.id || genId(),
+                timestamp: new Date().toISOString(),
+                component: "TEXT",
+                data: {
+                    message: response.autopilotResponse.value.content,
+                }
+            };
+        }
+
+        if (response.uiResponse) {
+            const uiVal = response.uiResponse.value;
+            return {
+                type: "FROM_BOT" as const,
+                id: genId(),
+                timestamp: new Date().toISOString(),
+                component: uiVal.name,
+                data: uiVal.request_response,
+            };
+        }
+
+        return null;
+    }
+
+    function addErrorMessage(message: string) {
+        return {
+            type: "FROM_BOT" as const,
+            id: genId(),
+            timestamp: new Date().toISOString(),
+            component: "TEXT",
+            data: {
+                message,
+                variant: "error"
+            }
+        };
+    }
+
+    return {
+        fetchHistoryMessages,
+        addUserMessage,
+        addBotMessage,
+        addErrorMessage
+    };
+}
+
+// Session Management
+function createSessionManager(
+    api: ApiCaller,
+    sessionState: PubSub<WidgetSessionSchema | null>,
+    chatState: PubSub<ChatState>,
+    messageHandler: ReturnType<typeof createMessageHandler>,
+    config: ConfigInstance,
+    options: ChatOptions
+) {
+    const logger = options.platform?.logger;
+    let stopPolling: (() => void) | null = null;
+    const storage = options.platform?.storage;
+    const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
+
+    async function restoreSession() {
+        if (!storage) return;
+
+        try {
+            logger?.debug('Attempting to restore session from storage');
+            const storedSession = storage.getItem(sessionStorageKey);
+            if (storedSession) {
+                const session = JSON.parse(storedSession) as WidgetSessionSchema;
+                logger?.info('Session restored from storage', { sessionId: session.id });
+                sessionState.setState(session);
+                await messageHandler.fetchHistoryMessages(session);
+                startPolling();
+            }
+        } catch (error) {
+            logger?.error('Error restoring session from storage:', error);
+        }
+    }
+
+    function setupSessionPersistence() {
+        if (!storage) return;
+
+        logger?.debug('Setting up session persistence');
         sessionState.subscribe((session) => {
             try {
                 if (session) {
                     storage.setItem(sessionStorageKey, JSON.stringify(session));
+                    logger?.debug('Session persisted to storage', { sessionId: session.id });
                 } else {
                     storage.removeItem(sessionStorageKey);
+                    logger?.debug('Session removed from storage');
                 }
             } catch (error) {
-                console.error("Error persisting session:", error);
-                state.setStatePartial({
+                logger?.error('Error persisting session:', error);
+                chatState.setStatePartial({
                     error: {
                         hasError: true,
                         message: error instanceof Error ? error.message : 'Failed to persist session',
@@ -156,28 +203,72 @@ export function createChat(options: ChatOptions) {
         });
     }
 
+    function startPolling() {
+        if (stopPolling) return;
+
+        logger?.debug('Starting polling');
+        const intervals: NodeJS.Timeout[] = [];
+
+        // Poll session
+        intervals.push(
+            setInterval(async () => {
+                const session = sessionState.getState();
+                if (!session?.id) return;
+
+                try {
+                    const response = await api.getSession(session.id);
+                    if (response) {
+                        sessionState.setState(response);
+                    }
+                } catch (error) {
+                    logger?.error('Error polling session:', error);
+                }
+            }, POLLING_INTERVALS.SESSION)
+        );
+
+        // Poll messages
+        intervals.push(
+            setInterval(async () => {
+                const session = sessionState.getState();
+                if (!session?.id) return;
+                try {
+                    await messageHandler.fetchHistoryMessages(session);
+                } catch (error) {
+                    logger?.error('Error polling messages:', error);
+                }
+            }, POLLING_INTERVALS.MESSAGES)
+        );
+
+        stopPolling = () => {
+            logger?.debug('Stopping polling');
+            intervals.forEach(clearInterval);
+        };
+    }
+
     async function createSession() {
         try {
-            state.setStatePartial({
+            logger?.info('Creating new session');
+            chatState.setStatePartial({
                 loading: { isLoading: true, reason: 'creating_session' },
                 error: { hasError: false }
             });
-            const session = await options.api.createSession();
+
+            const session = await api.createSession();
+            logger?.info('Session created successfully', { sessionId: session.id });
             sessionState.setState(session);
-            if (!stopPolling) {
-                stopPolling = startPolling(options.api, sessionState, state);
-            }
+            startPolling();
             return session;
         } catch (error) {
+            logger?.error('Failed to create session:', error);
             const errorState = {
                 hasError: true,
                 message: error instanceof Error ? error.message : 'Failed to create session',
                 code: 'SESSION_CREATION_FAILED' as const
             };
-            state.setStatePartial({ error: errorState });
+            chatState.setStatePartial({ error: errorState });
             return null;
         } finally {
-            state.setStatePartial({
+            chatState.setStatePartial({
                 loading: { isLoading: false, reason: null }
             });
         }
@@ -193,20 +284,22 @@ export function createChat(options: ChatOptions) {
                 stopPolling = null;
             }
             sessionState.setState(null);
-            // Clear session from storage if persistence is enabled
+
             if (options.persistSession && storage && isStorageAvailable(storage)) {
                 storage.removeItem(sessionStorageKey);
             }
-            state.setState({
+
+            chatState.setState({
                 messages: [],
                 keyboard: null,
                 loading: { isLoading: false },
                 error: { hasError: false }
             });
+
             options.onSessionDestroy?.();
         } catch (error) {
             console.error("Error clearing session:", error);
-            state.setStatePartial({
+            chatState.setStatePartial({
                 error: {
                     hasError: true,
                     message: error instanceof Error ? error.message : 'Failed to clear session',
@@ -222,22 +315,24 @@ export function createChat(options: ChatOptions) {
                 stopPolling();
                 stopPolling = null;
             }
-            // Clear session from storage if persistence is enabled
+
             if (options.persistSession && storage && isStorageAvailable(storage)) {
                 storage.removeItem(sessionStorageKey);
             }
-            state.setState({
+
+            chatState.setState({
                 messages: [],
                 keyboard: null,
                 loading: { isLoading: false },
                 error: { hasError: false }
             });
+
             sessionState.setState(null);
-            state.clear();
+            chatState.clear();
             sessionState.clear();
         } catch (error) {
             console.error("Error in cleanup:", error);
-            state.setStatePartial({
+            chatState.setStatePartial({
                 error: {
                     hasError: true,
                     message: error instanceof Error ? error.message : 'Failed to cleanup',
@@ -247,34 +342,65 @@ export function createChat(options: ChatOptions) {
         }
     }
 
-    const sendMessage = async (input: SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">) => {
-        let session = sessionState.state;
+    // Initialize session if persistence is enabled
+    if (options.persistSession && storage && isStorageAvailable(storage)) {
+        restoreSession();
+        setupSessionPersistence();
+    }
+
+    return {
+        createSession,
+        clearSession,
+        cleanup,
+        startPolling
+    };
+}
+
+// Main Chat Function
+export function createChat(options: ChatOptions) {
+    const logger = options.platform?.logger;
+    logger?.info('Initializing chat');
+
+    const state = new PubSub<ChatState>({
+        messages: [],
+        keyboard: null,
+        loading: { isLoading: false },
+        error: { hasError: false }
+    });
+
+    const sessionState = new PubSub<WidgetSessionSchema | null>(null);
+    const messageHandler = createMessageHandler(options.api, state, logger);
+    const sessionManager = createSessionManager(
+        options.api,
+        sessionState,
+        state,
+        messageHandler,
+        options.config,
+        options
+    );
+
+    async function sendMessage(input: SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">) {
+        let session = sessionState.getState();
         if (!session?.id) {
-            session = await createSession();
-            if (!session) {
-                return false;
-            }
+            logger?.debug('No active session, creating new session');
+            session = await sessionManager.createSession();
+            if (!session) return false;
         }
+
         try {
+            logger?.debug('Sending message', { sessionId: session.id });
             state.setStatePartial({
                 loading: { isLoading: true, reason: 'sending_message' },
                 error: { hasError: false }
             });
 
+            const userMessage = messageHandler.addUserMessage(input.content, input.attachments || undefined);
+            const currentMessages = state.getState().messages;
             state.setStatePartial({
-                messages: [
-                    ...state.state.messages,
-                    {
-                        id: genId(),
-                        type: "FROM_USER",
-                        content: input.content,
-                        deliveredAt: new Date().toISOString(),
-                        attachments: input.attachments || undefined,
-                        timestamp: new Date().toISOString()
-                    }
-                ]
+                messages: [...currentMessages, userMessage]
             });
 
+            const config = options.config.getConfig();
             const data = await options.api.handleMessage({
                 bot_token: config.token,
                 headers: config.headers,
@@ -282,57 +408,28 @@ export function createChat(options: ChatOptions) {
                 session_id: session.id,
                 ...input,
             });
+
             if (data.success) {
-                if (data.autopilotResponse) {
+                logger?.debug('Message sent successfully');
+                const botMessage = messageHandler.addBotMessage(data);
+                if (botMessage) {
+                    const updatedMessages = state.getState().messages;
                     state.setStatePartial({
-                        messages: [
-                            ...state.state.messages,
-                            {
-                                type: "FROM_BOT",
-                                id: data.autopilotResponse.id || genId(),
-                                timestamp: new Date().toISOString(),
-                                component: "TEXT",
-                                data: {
-                                    message: data.autopilotResponse.value.content,
-                                }
-                            }
-                        ]
-                    })
-                }
-                if (data.uiResponse) {
-                    const uiVal = data.uiResponse.value;
-                    state.setStatePartial({
-                        messages: [
-                            ...state.state.messages,
-                            {
-                                type: "FROM_BOT",
-                                id: genId(),
-                                timestamp: new Date().toISOString(),
-                                component: uiVal.name,
-                                data: uiVal.request_response,
-                            }
-                        ]
-                    })
+                        messages: [...updatedMessages, botMessage]
+                    });
                 }
             } else {
-                const errorMessage = data.error?.message || "Unknown error occurred";
+                logger?.warn('Message send failed', data.error);
+                const errorMessage = messageHandler.addErrorMessage(data.error?.message || "Unknown error occurred");
+                const currentMessages = state.getState().messages;
                 state.setStatePartial({
-                    messages: [
-                        ...state.state.messages,
-                        {
-                            type: "FROM_BOT",
-                            id: genId(),
-                            component: "TEXT",
-                            data: {
-                                message: errorMessage,
-                                variant: "error"
-                            }
-                        }
-                    ]
+                    messages: [...currentMessages, errorMessage]
                 });
             }
+
             return true;
         } catch (error) {
+            logger?.error('Error sending message:', error);
             state.setStatePartial({
                 error: {
                     hasError: true,
@@ -346,14 +443,14 @@ export function createChat(options: ChatOptions) {
                 loading: { isLoading: false, reason: null }
             });
         }
-    };
+    }
 
     return {
         chatState: state,
         sessionState,
         sendMessage,
-        createSession,
-        clearSession,
-        cleanup
+        createSession: sessionManager.createSession,
+        clearSession: sessionManager.clearSession,
+        cleanup: sessionManager.cleanup
     };
 } 

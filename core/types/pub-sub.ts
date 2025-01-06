@@ -119,10 +119,6 @@ export class PubSub<S> {
         this.setState(this.initialState);
     }
 
-    get state(): S {
-        return this.#state;
-    }
-
     get lastUpdated(): number | null {
         return this.#lastUpdated;
     }
