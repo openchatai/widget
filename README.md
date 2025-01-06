@@ -23,7 +23,7 @@ import { Widget, WidgetRoot } from "@opencx/widget/basic";
 ```
 
 `WidgetRoot` is just the data layer for the widget. It is required to be present in the parent component of the widget.
-You can Pass [options](./react-lib/types/options.ts) to the `WidgetRoot` component to customize the widget.
+You can Pass [options](./react-web/types/options.ts) to the `WidgetRoot` component to customize the widget.
 
 ## I don't want your UI? can I use my own?
 
