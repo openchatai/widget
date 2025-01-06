@@ -26,7 +26,6 @@ type ChatOptions = {
     api: ApiCaller;
     config: ConfigInstance;
     onSessionDestroy?: () => void;
-    persistSession?: boolean;
     platform: Platform;
 };
 
@@ -184,10 +183,9 @@ function createSessionManager(
     let stopPolling: (() => void) | null = null;
     const storage = options.platform?.storage;
     const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
-
+    const persistSession = options.config.getSettings().persistSession;
     async function restoreSession() {
         if (!storage) return;
-
         try {
             logger?.debug('Attempting to restore session from storage');
             const storedSession = storage.getItem(sessionStorageKey);
@@ -311,7 +309,7 @@ function createSessionManager(
             }
             sessionState.setState(null);
 
-            if (options.persistSession && storage && isStorageAvailable(storage)) {
+            if (persistSession && storage && isStorageAvailable(storage)) {
                 storage.removeItem(sessionStorageKey);
             }
 
@@ -342,7 +340,7 @@ function createSessionManager(
                 stopPolling = null;
             }
 
-            if (options.persistSession && storage && isStorageAvailable(storage)) {
+            if (persistSession && storage && isStorageAvailable(storage)) {
                 storage.removeItem(sessionStorageKey);
             }
 
@@ -369,7 +367,7 @@ function createSessionManager(
     }
 
     // Initialize session if persistence is enabled
-    if (options.persistSession && storage && isStorageAvailable(storage)) {
+    if (persistSession && isStorageAvailable(storage)) {
         restoreSession();
         setupSessionPersistence();
     }

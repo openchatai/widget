@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "composite": true,
     "useDefineForClassFields": true,
     "lib": [
       "ES2020",
@@ -11,10 +12,8 @@
     "skipLibCheck": true,
     "baseUrl": ".",
     "moduleResolution": "Node",
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react",
     "strict": true,
     "noUnusedLocals": false,

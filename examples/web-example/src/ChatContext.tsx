@@ -18,10 +18,6 @@ const apiUrl = 'http://localhost:8080/backend';
 
 
 export const platform: Platform = {
-    date: {
-        now: () => Date.now(),
-        toISOString: (date: number) => new Date(date).toISOString()
-    },
     env: {
         platform: 'web'
     },
@@ -58,7 +54,6 @@ const useInitChat = () => {
         const chat = createChat({
             api,
             config,
-            persistSession: true,
             platform
         });
         const contact = createContact({

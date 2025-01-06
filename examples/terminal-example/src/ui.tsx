@@ -2,47 +2,94 @@ import React, { useState, useEffect } from 'react';
 import { Box, Text, useInput, useApp } from 'ink';
 import TextInput from 'ink-text-input';
 import Spinner from 'ink-spinner';
-import { createChat, createConfig, ApiCaller } from '@core/index.js';
-import type { Platform, Storage } from '@platform/index.js';
-import type { MessageType } from '@core/types/messages.js';
 import usePubsub from './usePubsub.js';
-import { readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
-const configOptions = {
-    token: '6cb3b1b746e45441b4d2a874dd60d44a',
-    socketUrl: 'http://localhost:8080',
-    apiUrl: 'http://localhost:8080/backend',
-    user: {
-        email: "test@test.com",
-        name: "Test User"
-    }
-};
+import { readFileSync, unlinkSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
+import { join, dirname } from 'node:path';
+import { createChat, createConfig, ApiCaller } from "../../../core/index.js"
+import type { MessageType } from "../../../core/types/messages.js"
+import type { Platform, Storage } from "../../../core/platform/index.js"
+import { cwd } from 'node:process';
+import { createLogger } from '@core/platform/logger.js';
+
+// Create storage directory in current working directory
+const STORAGE_DIR = join(cwd(), '.tui-data');
+if (!existsSync(STORAGE_DIR)) {
+    mkdirSync(STORAGE_DIR, { recursive: true });
+}
+
+// Function to make keys safe for file paths
+function safeStorageKey(key: string): string {
+    // Replace invalid characters with safe alternatives
+    return Buffer.from(key).toString('base64').replace(/[/+=]/g, '_');
+}
 
 const storage: Storage = {
     getItem: (key: string) => {
-        return readFileSync(key, 'utf8');
+        try {
+            const safeKey = safeStorageKey(key);
+            const filePath = join(STORAGE_DIR, `${safeKey}.json`);
+            if (!existsSync(filePath)) {
+                return null;
+            }
+            const content = readFileSync(filePath, 'utf8');
+            return content;
+        } catch (error) {
+            console.error(`Failed to read from storage: ${error}`);
+            return null;
+        }
     },
     setItem: (key: string, value: string) => {
-        writeFileSync(key, value);
+        try {
+            const safeKey = safeStorageKey(key);
+            const filePath = join(STORAGE_DIR, `${safeKey}.json`);
+
+            // Ensure directory exists
+            if (!existsSync(STORAGE_DIR)) {
+                mkdirSync(STORAGE_DIR, { recursive: true });
+            }
+
+            writeFileSync(filePath, value, 'utf8');
+        } catch (error) {
+            console.error(`Failed to write to storage: ${error}`);
+        }
     },
     removeItem: (key: string) => {
-        unlinkSync(key);
+        try {
+            const safeKey = safeStorageKey(key);
+            const filePath = join(STORAGE_DIR, `${safeKey}.json`);
+            if (existsSync(filePath)) {
+                unlinkSync(filePath);
+            }
+        } catch (error) {
+            console.error(`Failed to remove from storage: ${error}`);
+        }
     },
-    clear: () => {
-        readdirSync('.').forEach(file => {
-            unlinkSync(file);
-        });
-    }
-}
+    isAvailable() {
+        try {
+            // Ensure directory exists
+            if (!existsSync(STORAGE_DIR)) {
+                mkdirSync(STORAGE_DIR, { recursive: true });
+            }
+            const testFile = join(STORAGE_DIR, '.test');
+            writeFileSync(testFile, 'test', 'utf8');
+            unlinkSync(testFile);
+            return true;
+        } catch (error) {
+            console.error(`Storage not available: ${error}`);
+            return false;
+        }
+    },
+};
 
 const platform: Platform = {
-    date: {
-        now: () => Date.now(),
-        toISOString: (date: number) => new Date(date).toISOString()
-    },
     env: {
         platform: 'node',
     },
     storage,
+    logger: createLogger({
+        enabled: true,
+        level: "debug",
+    })
 };
 
 type ChatState = {
@@ -50,13 +97,6 @@ type ChatState = {
     keyboard: { options: string[] } | null;
     loading: { isLoading: boolean };
     error: { hasError: boolean };
-};
-
-const defaultChatState: ChatState = {
-    messages: [],
-    keyboard: null,
-    loading: { isLoading: false },
-    error: { hasError: false }
 };
 
 function MessagesRenderer({ messages }: { messages: MessageType[] }) {
@@ -88,7 +128,18 @@ export const Chat = () => {
 
     // Initialize chat
     const chatInstance = React.useMemo(() => {
-        const config = createConfig(configOptions);
+        const config = createConfig({
+            token: '6cb3b1b746e45441b4d2a874dd60d44a',
+            socketUrl: 'http://localhost:8080',
+            apiUrl: 'http://localhost:8080/backend',
+            user: {
+                email: "test@test.com",
+                name: "Test User"
+            },
+            settings: {
+                persistSession: true,
+            }
+        });
         const api = new ApiCaller({
             config: config.getConfig(),
         });
@@ -106,8 +157,8 @@ export const Chat = () => {
         }
     }, []);
 
-    const chatState = usePubsub<ChatState>(chatInstance.chat.chatState) ?? defaultChatState;
-
+    const chatState = usePubsub<ChatState>(chatInstance.chat.chatState)
+    const session = usePubsub(chatInstance.chat.sessionState)
     // Load prelude data
     useEffect(() => {
         const loadPrelude = async () => {
@@ -150,6 +201,7 @@ export const Chat = () => {
         <Box flexDirection="column" padding={1}>
             <Box marginBottom={1}>
                 <Text bold color="blue">{organizationName || 'Chat Assistant'}</Text>
+                <Text>{session?.id}</Text>
             </Box>
 
             {chatState.messages.length === 0 && initialQuestions.length > 0 && (

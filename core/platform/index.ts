@@ -8,8 +8,4 @@ export interface Platform {
   env: {
     platform: string;
   };
-  date: {
-    now(): number;
-    toISOString(date: number): string;
-  };
 }

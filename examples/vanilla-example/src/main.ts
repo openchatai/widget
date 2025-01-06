@@ -89,10 +89,6 @@ const api = new ApiCaller({
 });
 
 const platform: Platform = {
-    date: {
-        now: () => Date.now(),
-        toISOString: (date: number) => new Date(date).toISOString()
-    },
     env: {
         platform: 'web'
     },
@@ -113,7 +109,6 @@ const contact = createContact({
 const chat = createChat({
     api,
     config,
-    persistSession: true,
     platform
 });
 // Fetch and render prelude data
@@ -163,10 +158,6 @@ async function initializeWidget() {
         showErrorToast('Failed to initialize chat widget');
     }
 }
-// Subscribe to chat state changes
-chat.chatState.subscribe((state) => {
-    console.log(state.messages.at(-1)?.timestamp)
-})
 
 chat.chatState.subscribe((state) => {
     // Handle error states first

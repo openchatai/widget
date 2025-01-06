@@ -1,4 +1,9 @@
 {
+    "references": [
+        {
+            "path": "../../tsconfig.json"
+        }
+    ],
     "compilerOptions": {
         "target": "ES2018",
         "module": "NodeNext",
@@ -12,25 +17,16 @@
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist",
-        "rootDir": "../../",
-        "baseUrl": "../../",
+        "resolveJsonModule": true,
+        "allowJs": true,
         "paths": {
             "@core/*": [
-                "core/*"
-            ],
-            "@platform/*": [
-                "core/platform/*"
-            ],
-            "@types/*": [
-                "core/types/*"
+                "../../core/*"
             ]
-        },
-        "resolveJsonModule": true,
-        "allowJs": true
+        }
     },
     "include": [
         "src/**/*",
-        "../../core/**/*"
     ],
     "exclude": [
         "node_modules",
