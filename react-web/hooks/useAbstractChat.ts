@@ -26,7 +26,11 @@ import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
 import { genId } from "@core/utils/genId";
 
-const SESSION_POOLING_INTERVAL = 10000; // every 10 seconds
+/**
+ * IMPORTANT: both intervals must have the same value, otherwise the one with the longer duration will be cleared and recreated and so on, and never actually fired
+ * Both rely on the `session`... polling messages shouldn't trigger a session change... but still, the useEffect will rerun and the intervals will be recreated
+ */
+const SESSION_POOLING_INTERVAL = 5000; // every 5 seconds
 const MESSAGE_POOLING_INTERVAL = 5000; // every 5 seconds
 
 type HookState = {
