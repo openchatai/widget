@@ -66,19 +66,63 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
 // Message Handling
 function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?: Logger) {
     async function fetchHistoryMessages(session: WidgetSessionSchema) {
-        // Get the most recent message's timestamp
         const messages = state.getState().messages;
-        const lastMessageTimestamp = messages[messages.length - 1]?.timestamp;
+
+        // Skip polling if we just sent a message (to avoid duplicates)
+        const lastMessage = messages[messages.length - 1];
+        if (lastMessage?.type === 'FROM_USER') {
+            const messageAge = Date.now() - new Date(lastMessage.timestamp).getTime();
+            // If the last message is less than polling interval old, skip this update
+            if (messageAge < POLLING_INTERVALS.MESSAGES) {
+                logger?.debug('Skipping history fetch, recent user message exists', {
+                    messageAge,
+                    lastMessageId: lastMessage.id
+                });
+                return;
+            }
+        }
+
+        // Get timestamp from the last bot message instead of the last message
+        const lastBotMessage = [...messages].reverse().find(m => m.type === 'FROM_BOT');
+        const lastMessageTimestamp = lastBotMessage ? new Date(lastBotMessage.timestamp).toISOString() : "";
+
+        logger?.debug('Fetching history messages', {
+            sessionId: session.id,
+            lastMessageTimestamp,
+            currentMessageCount: messages.length
+        });
+
         const response = await api.getSessionHistory(session.id, lastMessageTimestamp);
 
         if (response) {
             // Map and filter out duplicates by ID
             const newMessages = response
                 .map(mapHistoryToMessage)
-                .filter((newMsg: MessageType) => !messages.some((existingMsg: MessageType) => existingMsg.id === newMsg.id));
+                .filter((newMsg: MessageType) => {
+                    // Never add duplicate IDs
+                    if (messages.some(existingMsg => existingMsg.id === newMsg.id)) {
+                        return false;
+                    }
+
+                    // For user messages, be extra careful about duplicates
+                    if (newMsg.type === 'FROM_USER') {
+                        // Check for messages with same content and similar timestamp
+                        return !messages.some(existingMsg =>
+                            existingMsg.type === 'FROM_USER' &&
+                            existingMsg.content === newMsg.content &&
+                            Math.abs(new Date(existingMsg.timestamp).getTime() - new Date(newMsg.timestamp).getTime()) < 1000
+                        );
+                    }
+
+                    return true;
+                });
 
             if (newMessages.length > 0) {
-                logger?.debug('Adding new messages to state', { count: newMessages.length });
+                logger?.debug('Adding new messages to state', {
+                    count: newMessages.length,
+                    messageIds: newMessages.map(m => m.id),
+                    messageTypes: newMessages.map(m => m.type)
+                });
                 state.setStatePartial({
                     messages: [...messages, ...newMessages]
                 });
