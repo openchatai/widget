@@ -1,4 +1,3 @@
-import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider";
 import { UserObject } from "@react/types";
 import { create } from "mutative";
@@ -12,7 +11,6 @@ import {
 import pkg from "../../package.json";
 import {
   AIClosureType,
-  ChatAttachmentType,
   type ChatSessionType,
   MessageType,
   SendMessageInput,

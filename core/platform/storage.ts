@@ -8,20 +8,20 @@ export interface Storage {
      * @param key The key to look up
      * @returns The stored value or null if not found
      */
-    getItem(key: string): string | null;
+    getItem(key: string): Promise<string | null>;
 
     /**
      * Stores a value with the given key
      * @param key The key to store under
      * @param value The value to store
      */
-    setItem(key: string, value: string): void;
+    setItem(key: string, value: string): Promise<void>;
 
     /**
      * Removes the value associated with the given key
      * @param key The key to remove
      */
-    removeItem(key: string): void;
+    removeItem(key: string): Promise<void>;
 
     /**
      * Checks if the storage is available and working
@@ -54,12 +54,12 @@ export type StorageOperationResult<T> =
 /**
  * Helper function to safely perform storage operations
  */
-export function safeStorageOperation<T>(
-    operation: () => T,
+export async function safeStorageOperation<T>(
+    operation: () => Promise<T>,
     errorMessage: string
-): StorageOperationResult<T> {
+): Promise<StorageOperationResult<T>> {
     try {
-        const result = operation();
+        const result = await operation();
         return { success: true, result };
     } catch (error) {
         console.error(errorMessage, error);

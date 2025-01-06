@@ -4,7 +4,7 @@ import TextInput from 'ink-text-input';
 import Spinner from 'ink-spinner';
 import usePubsub from './usePubsub.js';
 import { readFileSync, unlinkSync, writeFileSync, existsSync, mkdirSync } from 'node:fs';
-import { join, dirname } from 'node:path';
+import { join } from 'node:path';
 import { createChat, createConfig, ApiCaller } from "../../../core/index.js"
 import type { MessageType } from "../../../core/types/messages.js"
 import type { Platform, Storage } from "../../../core/platform/index.js"
@@ -24,7 +24,7 @@ function safeStorageKey(key: string): string {
 }
 
 const storage: Storage = {
-    getItem: (key: string) => {
+    getItem: async (key: string) => {
         try {
             const safeKey = safeStorageKey(key);
             const filePath = join(STORAGE_DIR, `${safeKey}.json`);
@@ -38,7 +38,7 @@ const storage: Storage = {
             return null;
         }
     },
-    setItem: (key: string, value: string) => {
+    setItem: async (key: string, value: string) => {
         try {
             const safeKey = safeStorageKey(key);
             const filePath = join(STORAGE_DIR, `${safeKey}.json`);
@@ -53,7 +53,7 @@ const storage: Storage = {
             console.error(`Failed to write to storage: ${error}`);
         }
     },
-    removeItem: (key: string) => {
+    removeItem: async (key: string) => {
         try {
             const safeKey = safeStorageKey(key);
             const filePath = join(STORAGE_DIR, `${safeKey}.json`);

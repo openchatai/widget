@@ -1,5 +1,5 @@
-import { createChat, createConfig, ApiCaller, type MessageType, type BotMessageType, type CoreOptions, createContact, Platform } from '../../../core';
-import { createLogger } from '../../../core/platform/logger';
+import { createChat, createConfig, ApiCaller, type MessageType, type BotMessageType, type CoreOptions, createContact, Platform } from '@core/index';
+import { createLogger } from '@core/platform/logger';
 import "./index.css"
 // DOM Elements
 const chatWidget = document.getElementById('chatWidget') as HTMLDivElement;
@@ -92,7 +92,17 @@ const platform: Platform = {
     env: {
         platform: 'web'
     },
-    storage: localStorage,
+    storage: {
+        getItem: async (key: string) => {
+            return localStorage.getItem(key);
+        },
+        setItem: async (key: string, value: string) => {
+            localStorage.setItem(key, value);
+        },
+        removeItem: async (key: string) => {
+            localStorage.removeItem(key);
+        }
+    },
     logger: createLogger({
         level: 'debug',
         prefix: '[OpenChat]',

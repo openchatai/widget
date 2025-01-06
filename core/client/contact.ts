@@ -26,18 +26,17 @@ export function createContact(options: ContactOptions) {
     // Initialize state from storage if available
     let initialContact: ConsumerType | null = null;
     if (storage) {
-        const result = safeStorageOperation(
-            () => {
-                const stored = storage.getItem(storageKey);
+        safeStorageOperation(
+            async () => {
+                const stored = await storage.getItem(storageKey);
                 return stored ? JSON.parse(stored) : null;
             },
             "Error loading contact from storage"
-        );
-
-        if (result.success) {
-            initialContact = result.result;
-        }
-        // If loading fails, we start with null contact - no need to handle error here
+        ).then((result) => {
+            if (result.success) {
+                initialContact = result.result;
+            }
+        });
     }
 
     const state = new PubSub<ContactState>({
@@ -50,25 +49,25 @@ export function createContact(options: ContactOptions) {
     if (isStorageAvailable(storage)) {
         state.subscribe((currentState) => {
             const result = safeStorageOperation(
-                () => {
+                async () => {
                     if (currentState.contact) {
-                        storage.setItem(storageKey, JSON.stringify(currentState.contact));
+                        await storage.setItem(storageKey, JSON.stringify(currentState.contact));
                     } else {
                         storage.removeItem(storageKey);
                     }
                 },
                 "Error persisting contact state"
-            );
-
-            if (!result.success) {
-                state.setStatePartial({
-                    error: {
-                        hasError: true,
-                        message: result.error.message,
-                        code: 'CONTACT_PERSISTENCE_FAILED'
-                    }
-                });
-            }
+            ).then((result) => {
+                if (!result.success) {
+                    state.setStatePartial({
+                        error: {
+                            hasError: true,
+                            message: result.error.message,
+                            code: 'CONTACT_PERSISTENCE_FAILED'
+                        }
+                    });
+                }
+            });
         });
     }
 
@@ -80,9 +79,9 @@ export function createContact(options: ContactOptions) {
             });
 
             if (storage) {
-                const result = safeStorageOperation(
-                    () => {
-                        const stored = storage.getItem(storageKey);
+                const result = await safeStorageOperation(
+                    async () => {
+                        const stored = await storage.getItem(storageKey);
                         return stored ? JSON.parse(stored) : null;
                     },
                     "Error loading contact"
@@ -134,7 +133,7 @@ export function createContact(options: ContactOptions) {
             };
 
             if (isStorageAvailable(storage)) {
-                const result = safeStorageOperation(
+                const result = await safeStorageOperation(
                     () => storage.setItem(storageKey, JSON.stringify(updatedContact)),
                     "Error saving contact"
                 );
@@ -189,7 +188,7 @@ export function createContact(options: ContactOptions) {
             });
 
             if (storage) {
-                const result = safeStorageOperation(
+                const result = await safeStorageOperation(
                     () => storage.removeItem(storageKey),
                     "Error removing contact data"
                 );

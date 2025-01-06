@@ -188,7 +188,7 @@ function createSessionManager(
         if (!storage) return;
         try {
             logger?.debug('Attempting to restore session from storage');
-            const storedSession = storage.getItem(sessionStorageKey);
+            const storedSession = await storage.getItem(sessionStorageKey);
             if (storedSession) {
                 const session = JSON.parse(storedSession) as WidgetSessionSchema;
                 logger?.info('Session restored from storage', { sessionId: session.id });
@@ -205,13 +205,13 @@ function createSessionManager(
         if (!storage) return;
 
         logger?.debug('Setting up session persistence');
-        sessionState.subscribe((session) => {
+        sessionState.subscribe(async (session) => {
             try {
                 if (session) {
-                    storage.setItem(sessionStorageKey, JSON.stringify(session));
+                    await storage.setItem(sessionStorageKey, JSON.stringify(session));
                     logger?.debug('Session persisted to storage', { sessionId: session.id });
                 } else {
-                    storage.removeItem(sessionStorageKey);
+                    await storage.removeItem(sessionStorageKey);
                     logger?.debug('Session removed from storage');
                 }
             } catch (error) {

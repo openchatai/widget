@@ -36,7 +36,8 @@
     "src",
     "react-web",
     "core",
-    "react-bindings"
+    "react-bindings",
+    "package.json"
   ],
   "exclude": [
     "node_modules",

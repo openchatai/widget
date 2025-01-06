@@ -16,6 +16,7 @@ function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
           id: msg.publicId || genId(),
           deliveredAt: msg.created_at || "",
           attachments: msg.attachments,
+          timestamp: msg.created_at || "",
         });
       }
     } else {
