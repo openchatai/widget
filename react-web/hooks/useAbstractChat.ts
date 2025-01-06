@@ -26,12 +26,7 @@ import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
 import { genId } from "@core/utils/genId";
 
-/**
- * IMPORTANT: both intervals must have the same value, otherwise the one with the longer duration will be cleared and recreated and so on, and never actually fired
- * Both rely on the `session`... polling messages shouldn't trigger a session change... but still, the useEffect will rerun and the intervals will be recreated
- */
-const SESSION_POOLING_INTERVAL = 5000; // every 5 seconds
-const MESSAGE_POOLING_INTERVAL = 5000; // every 5 seconds
+const POLLING_INTERVAL = 5000; // every 5 seconds
 
 type HookState = {
   state: "loading" | "error" | "idle";
@@ -338,29 +333,26 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
   );
 
 
-  // Set up polling intervals
+  /**
+   * ----------------- Polling interval ----------------- *
+   * If there is a separate interval for session polling and another for messages, whichever executes first will trigger a render, which will cause the other interval to clear and re-schedule, and it will never fire
+   * So, by putting both in the same interval, we ensure both are fired
+   */
   useEffect(() => {
-    let sessionInterval: NodeJS.Timeout;
-    let messageInterval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout;
 
     if (session) {
-      // Poll for session updates
-      sessionInterval = setInterval(() => {
+      interval = setInterval(() => {
         pollSession(session.id);
-      }, SESSION_POOLING_INTERVAL); // Every 10 seconds
-
-      // Poll for new messages
-      messageInterval = setInterval(() => {
         const lastMessageTimestamp = chatState.messages.at(-1)?.timestamp;
         if (lastMessageTimestamp) {
           pollMessages(session.id, lastMessageTimestamp);
         }
-      }, MESSAGE_POOLING_INTERVAL); // Every 5 seconds
+      }, POLLING_INTERVAL);
     }
 
     return () => {
-      clearInterval(sessionInterval);
-      clearInterval(messageInterval);
+      clearInterval(interval);
     };
   }, [session, pollSession, pollMessages]);
 
