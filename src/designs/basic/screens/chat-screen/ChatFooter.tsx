@@ -339,11 +339,27 @@ export function ChatFooter() {
     <div>
       <AnimatePresence mode="wait">
         {isSessionClosed ? (
-          <MotionDiv key="session-closed">
+          <MotionDiv
+            key="session-closed"
+            className="overflow-hidden"
+            overrides={{
+              initial: { height: 0 },
+              animate: { height: "auto" },
+              exit: { height: 0 },
+            }}
+          >
             <SessionClosedSection />
           </MotionDiv>
         ) : (
-          <MotionDiv key="chat-input">
+          <MotionDiv
+            key="chat-input"
+            className="overflow-hidden"
+            overrides={{
+              initial: { height: 0 },
+              animate: { height: "auto" },
+              exit: { height: 0 },
+            }}
+          >
             <ChatInput />
           </MotionDiv>
         )}
