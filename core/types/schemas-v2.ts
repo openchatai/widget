@@ -112,7 +112,7 @@ const handleContactMessageOutputSchema = z.discriminatedUnion(
     [
         z.object({
             success: z.literal(true),
-            code: z.string().optional(),
+            code: z.union([z.string(), z.literal("session_assigned_to_human_agent")]).optional(),
             options: z
                 .object({
                     type: z.literal('options'),

@@ -2,7 +2,7 @@ import { PubSub } from "../types/pub-sub";
 import { MessageType } from "../types";
 import { ApiCaller } from "./api";
 import { genId } from "../utils/genId";
-import { HttpChatInputSchema, WidgetHistorySchema, WidgetSessionSchema } from "../types/schemas-v2";
+import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetSessionSchema } from "../types/schemas-v2";
 import { LoadingState, ErrorState, SomeOptional } from "../types/helpers";
 import { ConfigInstance } from "./config";
 import { Platform, isStorageAvailable } from "../platform";
@@ -67,26 +67,25 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
 function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?: Logger) {
     async function fetchHistoryMessages(session: WidgetSessionSchema) {
         const messages = state.getState().messages;
-
-        // Skip polling if we just sent a message (to avoid duplicates)
-        const lastMessage = messages[messages.length - 1];
-        if (lastMessage?.type === 'FROM_USER') {
-            const messageAge = Date.now() - new Date(lastMessage.timestamp).getTime();
-            // If the last message is less than polling interval old, skip this update
-            if (messageAge < POLLING_INTERVALS.MESSAGES) {
-                logger?.debug('Skipping history fetch, recent user message exists', {
-                    messageAge,
-                    lastMessageId: lastMessage.id
+        if (messages.length === 0) {
+            logger?.debug('No messages yet, fetching all history', { sessionId: session.id });
+            const response = await api.getSessionHistory(session.id, "");
+            if (response && response.length > 0) {
+                state.setStatePartial({
+                    messages: response.map(mapHistoryToMessage)
                 });
-                return;
             }
+            return;
         }
 
-        // Get timestamp from the last bot message instead of the last message
-        const lastBotMessage = [...messages].reverse().find(m => m.type === 'FROM_BOT');
-        const lastMessageTimestamp = lastBotMessage ? new Date(lastBotMessage.timestamp).toISOString() : "";
+        // Get the latest message timestamp
+        const lastMessage = messages[messages.length - 1];
+        const lastTimestamp = new Date(lastMessage.timestamp);
+        // Add 1 second to avoid getting the same message
+        lastTimestamp.setSeconds(lastTimestamp.getSeconds() + 1);
+        const lastMessageTimestamp = lastTimestamp.toISOString();
 
-        logger?.debug('Fetching history messages', {
+        logger?.debug('Fetching history messages after timestamp', {
             sessionId: session.id,
             lastMessageTimestamp,
             currentMessageCount: messages.length
@@ -94,28 +93,11 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
 
         const response = await api.getSessionHistory(session.id, lastMessageTimestamp);
 
-        if (response) {
-            // Map and filter out duplicates by ID
+        if (response && response.length > 0) {
+            // Map and filter out any potential duplicates by ID
             const newMessages = response
                 .map(mapHistoryToMessage)
-                .filter((newMsg: MessageType) => {
-                    // Never add duplicate IDs
-                    if (messages.some(existingMsg => existingMsg.id === newMsg.id)) {
-                        return false;
-                    }
-
-                    // For user messages, be extra careful about duplicates
-                    if (newMsg.type === 'FROM_USER') {
-                        // Check for messages with same content and similar timestamp
-                        return !messages.some(existingMsg =>
-                            existingMsg.type === 'FROM_USER' &&
-                            existingMsg.content === newMsg.content &&
-                            Math.abs(new Date(existingMsg.timestamp).getTime() - new Date(newMsg.timestamp).getTime()) < 1000
-                        );
-                    }
-
-                    return true;
-                });
+                .filter(newMsg => !messages.some(existingMsg => existingMsg.id === newMsg.id));
 
             if (newMessages.length > 0) {
                 logger?.debug('Adding new messages to state', {
@@ -141,8 +123,8 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
         };
     }
 
-    function addBotMessage(response: any) {
-        if (response.autopilotResponse) {
+    function addBotMessage(response: HandleContactMessageOutputSchema) {
+        if (response.success && response.autopilotResponse) {
             return {
                 type: "FROM_BOT" as const,
                 id: response.autopilotResponse.id || genId(),
@@ -154,7 +136,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
             };
         }
 
-        if (response.uiResponse) {
+        if (response.success && response.uiResponse) {
             const uiVal = response.uiResponse.value;
             return {
                 type: "FROM_BOT" as const,
