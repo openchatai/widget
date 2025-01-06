@@ -1,0 +1,39 @@
+{
+    "compilerOptions": {
+        "target": "ES2018",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": [
+            "ES2018"
+        ],
+        "jsx": "react",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "dist",
+        "rootDir": "../../",
+        "baseUrl": "../../",
+        "paths": {
+            "@core/*": [
+                "core/*"
+            ],
+            "@platform/*": [
+                "core/platform/*"
+            ],
+            "@types/*": [
+                "core/types/*"
+            ]
+        },
+        "resolveJsonModule": true,
+        "allowJs": true
+    },
+    "include": [
+        "src/**/*",
+        "../../core/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

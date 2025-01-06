@@ -40,8 +40,6 @@ function ChatWidget() {
     setMessageInput(question);
   };
 
-  console.log(chatState);
-
   if (isLoading) {
     return (
       <div className="chat-widget">

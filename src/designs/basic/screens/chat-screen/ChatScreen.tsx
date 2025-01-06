@@ -53,6 +53,7 @@ function ChatRenderer() {
               data: { message },
               id: `initial-${index}`,
               type: "FROM_BOT",
+              timestamp: Date.now().toString(),
             }}
             Wrapper={BotResponseWrapper}
             wrapperProps={{ agent: config.bot }}
@@ -66,6 +67,7 @@ function ChatRenderer() {
                 id: "default-welcome",
                 type: "FROM_BOT",
                 agent: config.bot,
+                timestamp: Date.now().toString(),
               }}
               Wrapper={BotResponseWrapper}
               wrapperProps={{ agent: config.bot }}

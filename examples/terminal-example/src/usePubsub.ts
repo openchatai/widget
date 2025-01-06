@@ -1,5 +1,5 @@
-import { PubSub, LifecycleEvent } from "@core/types/pub-sub";
 import { useEffect, useSyncExternalStore } from "react";
+import { PubSub, LifecycleEvent } from "@core/types/pub-sub.js";
 
 type LifecycleHookOptions = {
     onInit?: (data: any) => void;
@@ -10,11 +10,14 @@ type LifecycleHookOptions = {
     onError?: (data: any) => void;
 };
 
-function usePubsub<S extends any>(
-    pubsub: InstanceType<typeof PubSub<S>>,
+function usePubsub<S>(
+    pubsub: PubSub<S>,
     lifecycleOptions?: LifecycleHookOptions
-) {
-    const state = useSyncExternalStore(pubsub.subscribe, pubsub.getState);
+): S {
+    const state = useSyncExternalStore(
+        pubsub.subscribe.bind(pubsub),
+        pubsub.getState.bind(pubsub)
+    );
 
     useEffect(() => {
         const unsubscribers: Array<() => void> = [];
