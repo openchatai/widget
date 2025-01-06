@@ -19,7 +19,7 @@ export function BotResponseWrapper({
 }) {
   return (
     <div className="flex flex-row items-end w-full gap-2">
-      <Avatar className="flex items-center size-7 border-0">
+      <Avatar>
         <AvatarImage src={agent?.profile_picture ?? ""} alt="Agent Icon" />
       </Avatar>
       <div className={cn("w-fit min-w-[80%]", className)}>

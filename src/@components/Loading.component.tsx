@@ -12,7 +12,7 @@ export function BotLoadingComponent() {
         className="flex flex-row items-end w-full gap-1"
       >
         <div className="flex items-center gap-1">
-          <Avatar className="animate-pulse size-7 rounded-xl bg-secondary">
+          <Avatar className="animate-pulse">
             <AvatarFallback />
           </Avatar>
         </div>

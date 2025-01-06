@@ -46,13 +46,12 @@ export function UserMessage({
           )}
         </div>
       </div>
-      <Avatar className="size-8 ring-2 ring-white shadow-sm">
+      <Avatar>
         <AvatarImage
           src={user?.avatarUrl}
-          className="object-cover"
           alt={user?.name || "User avatar"}
         />
-        <AvatarFallback className="bg-zinc-100 text-zinc-600 text-xs font-medium">
+        <AvatarFallback>
           {user?.name?.slice(0, 2)?.toUpperCase() || "U"}
         </AvatarFallback>
       </Avatar>
