@@ -5,7 +5,6 @@ import React, { ComponentType, useEffect, useRef } from "react";
 import { UserMessage } from "@ui/userMessage";
 import { Keyboard } from "@ui/keyboard";
 import { ChatHeader } from "./ChatHeader";
-import { SessionClosedDialog } from "./SessionClosedDialog";
 import { usePreludeData } from "@react/providers/usePreludeData";
 import { ChatFooter } from "./ChatFooter";
 import { useWidgetContentHeight } from "@react/hooks";
@@ -161,7 +160,6 @@ export function ChatScreen() {
           </footer>
         </div>
       </div>
-      <SessionClosedDialog />
     </div>
   );
 }

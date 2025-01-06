@@ -9,6 +9,7 @@ import {
 import { Button } from "@ui/button";
 import {
   AlertCircle,
+  CheckCheckIcon,
   CircleDashed,
   FileAudio,
   FileIcon,
@@ -117,7 +118,7 @@ function FileDisplay({
 
 const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
-export function ChatFooter() {
+function ChatInput() {
   const { collectUserData } = useConfigData();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { sendMessage, hookState, session } = useChat();
@@ -298,6 +299,55 @@ export function ChatFooter() {
           </Tooltippy>
         </div>
       </div>
+    </div>
+  );
+}
+
+function SessionClosedSection() {
+  const { recreateSession } = useChat();
+  const locale = useLocale();
+
+  return (
+    <div className="p-2">
+      <div className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2">
+        <div className="flex items-center gap-1">
+          <CheckCheckIcon className="size-4 text-emerald-500" />
+          <h2 className="text-sm font-medium" dir="auto">
+            {locale.get("session-closed-lead")}
+          </h2>
+        </div>
+
+        <div>
+          <Button onClick={recreateSession} className="rounded-2xl w-full">
+            {locale.get("create-new-ticket")}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ChatFooter() {
+  const { session, hookState } = useChat();
+
+  const isSessionClosed =
+    session &&
+    session.isSessionClosed === true &&
+    hookState.state !== "loading";
+
+  return (
+    <div>
+      <AnimatePresence mode="wait">
+        {isSessionClosed ? (
+          <MotionDiv key="session-closed">
+            <SessionClosedSection />
+          </MotionDiv>
+        ) : (
+          <MotionDiv key="chat-input">
+            <ChatInput />
+          </MotionDiv>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
