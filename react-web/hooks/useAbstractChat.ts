@@ -472,6 +472,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
           type: "FROM_USER",
           id: msgId,
           content: content.text,
+          timestamp: new Date().toISOString(),
           user: {
             ...config.user,
             ...user
@@ -563,6 +564,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
           payload: {
             type: "FROM_BOT",
             id: genId(),
+            timestamp: new Date().toISOString(),
             component: "TEXT",
             data: {
               message: errorMessage,
