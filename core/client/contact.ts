@@ -3,6 +3,7 @@ import { ConsumerType } from "../types";
 import { ApiCaller } from "./api";
 import { Platform, Storage, isStorageAvailable, safeStorageOperation } from "../platform";
 import { LoadingState, ErrorState } from "../types/helpers";
+import { ConfigInstance } from "./config";
 
 type ContactState = {
     contact: ConsumerType | null;
@@ -12,21 +13,14 @@ type ContactState = {
 
 type ContactOptions = {
     api: ApiCaller;
-    botToken: string;
     platform: Platform;
-    collectUserData?: boolean;
-    user?: {
-        external_id?: string;
-        name?: string;
-        email?: string;
-        phone?: string;
-        customData?: Record<string, string>;
-        avatarUrl?: string;
-    };
+    config: ConfigInstance
 };
 
 export function createContact(options: ContactOptions) {
-    const storageKey = `${options.botToken}:contact:${options.user?.external_id}`;
+    const config = options.config.getConfig();
+    options.config.getConfig
+    const storageKey = `${config.token}:contact:${config.user.external_id}`;
     const storage = isStorageAvailable(options.platform.storage) ? options.platform.storage : undefined;
 
     // Initialize state from storage if available
@@ -175,7 +169,7 @@ export function createContact(options: ContactOptions) {
     function shouldCollectData(): { should: boolean; reason?: string } {
         const currentState = state.getState();
 
-        if (!currentState.contact?.id && options.collectUserData) {
+        if (!currentState.contact?.id && config.collectUserData) {
             return {
                 should: true,
                 reason: "No contact id and collectUserData is true"

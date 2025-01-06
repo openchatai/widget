@@ -31,6 +31,7 @@ export interface CoreOptions {
     headers?: Record<string, string>
     queryParams?: Record<string, string>
     pathParams?: Record<string, string>
+    collectUserData?: boolean
     debug?: boolean
     language?: string
     user?: User

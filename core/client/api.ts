@@ -1,6 +1,6 @@
 import { createFetch, CustomFetch } from "../utils/create-fetch";
-import { HandleContactMessageOutputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
-import { CoreOptions, SendMessageInput, ConsumerType } from "../types";
+import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
+import { CoreOptions, ConsumerType } from "../types";
 
 export interface ApiCallerOptions {
     apiUrl: string;
@@ -29,7 +29,9 @@ export class ApiCaller {
 
         const headers: Record<string, string> = {
             'X-Bot-Token': this.options.token,
-            'X-Consumer-Id': `${consumerHeader.claim}:${consumerHeader.value}`
+            'X-Consumer-Id': `${consumerHeader.claim}:${consumerHeader.value}`,
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         }
 
         // Only add Authorization header if contactToken exists
@@ -58,13 +60,13 @@ export class ApiCaller {
         return response.json()
     }
 
-    async handleMessage(message: SendMessageInput): Promise<HandleContactMessageOutputSchema> {
+    async handleMessage(message: HttpChatInputSchema) {
         // POST /chat/send
         const response = await this.#fetch('/chat/send', {
             method: "POST",
             body: JSON.stringify(message)
         })
-        return response.json()
+        return response.json() as Promise<HandleContactMessageOutputSchema>
     }
 
     async getSessionHistory(sessionId: string, lastMessageTimestamp?: string): Promise<WidgetHistorySchema[]> {

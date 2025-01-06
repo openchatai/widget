@@ -60,7 +60,7 @@ const widgetHistorySchema = z.object({
     content: z.object({
         text: z.string().optional().nullable(),
     }),
-    sentAt: z.date().optional().nullable(),
+    sentAt: z.string().optional().nullable(),
     actionCalls: z
         .array(
             z.object({
@@ -88,19 +88,21 @@ const widgetSessionSchema = z.object({
 })
 
 const httpChatInputDto = z.object({
-    id: z.string().optional(),
     content: z.string(),
     session_id: z.string(),
-    headers: z.record(z.string(), z.string()),
+    headers: z.record(z.string(), z.string()).optional().nullable(),
     bot_token: z.string(),
     query_params: z.record(z.string(), z.string()).optional().nullable(),
-    user: z.object({
-        email: z.string().optional(),
-        name: z.string().optional(),
-        phone: z.string().optional(),
-        avatar: z.string().optional(),
-        customData: z.record(z.string(), z.string()).optional(),
-    }),
+    user: z
+        .object({
+            email: z.string().optional(),
+            name: z.string().optional(),
+            phone: z.string().optional(),
+            avatar: z.string().optional(),
+            customData: z.record(z.string(), z.string()).optional(),
+        })
+        .optional()
+        .nullable(),
     language: z.string().optional().nullable(),
     attachments: z.array(chatAttachmentSchema).optional().nullable(),
 })

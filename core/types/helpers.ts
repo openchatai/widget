@@ -25,6 +25,7 @@ export type LoadingState = {
 export type ErrorCode =
   | 'SESSION_CREATION_FAILED'
   | 'SESSION_CLEAR_FAILED'
+  | 'SESSION_PERSISTENCE_FAILED'
   | 'MESSAGE_SEND_FAILED'
   | 'NO_ACTIVE_SESSION'
   | 'CONTACT_PERSISTENCE_FAILED'
@@ -37,3 +38,5 @@ export type ErrorState = {
   message?: string;
   code?: ErrorCode;
 };
+
+export type SomeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;

@@ -24,7 +24,7 @@ type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
     };
 };
 
-type ConfigInstance = {
+export type ConfigInstance = {
     getConfig: () => NormalizedConfig;
     getApiConfig: () => {
         apiUrl: string;
@@ -45,6 +45,7 @@ type ConfigInstance = {
 export function createConfig(options: CoreOptions): ConfigInstance {
     const normalizedConfig: NormalizedConfig = {
         ...options,
+        collectUserData: options.collectUserData ?? false,
         apiUrl: options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
         socketUrl: options.socketUrl ?? "https://api-v2.opencopilot.so",
         pollingInterval: options.pollingInterval ?? 3000,
@@ -74,7 +75,8 @@ export function createConfig(options: CoreOptions): ConfigInstance {
         settings: {
             persistSession: options.settings?.persistSession ?? false,
             useSoundEffects: options.settings?.useSoundEffects ?? false
-        }
+        },
+        token: options.token
     };
 
     return {

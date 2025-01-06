@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenChat Widget - Vanilla Example</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/modern-normalize@2.0.0/modern-normalize.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="/src/index.css">
+  </head>
+  <body>
+    <div id="app">
+      <h1 class="app-title">OpenChat Widget</h1>
+      <p class="app-description">Experience our modern chat interface. Click the chat button in the bottom right corner to start a conversation!</p>
+    </div>
+
+    <!-- Error Toast Notification -->
+    <div id="errorToast" class="error-toast hidden animate__animated">
+      <div class="error-toast-icon">⚠️</div>
+      <div class="error-toast-content">
+        <div class="error-toast-title">Error</div>
+        <div class="error-toast-message"></div>
+      </div>
+      <button class="error-toast-close" aria-label="Close error message">×</button>
+    </div>
+
+    <button class="toggle-chat" id="toggleChat" aria-label="Toggle chat">
+      💬
+    </button>
+
+    <div class="chat-widget hidden" id="chatWidget">
+      <div class="chat-header">
+        <div class="chat-header-icon" id="orgLogo">🤖</div>
+        <div class="chat-header-content">
+          <span class="chat-header-title" id="orgName">Chat Assistant</span>
+          <span class="chat-header-subtitle" id="orgTagline"></span>
+        </div>
+      </div>
+      
+      <!-- Connection Status -->
+      <div id="connectionStatus" class="connection-status hidden">
+        <div class="connection-status-icon">🔌</div>
+        <span class="connection-status-text">Connecting...</span>
+        <button class="connection-retry-button hidden">Retry</button>
+      </div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state">
+        <div class="empty-state-content">
+          <div class="empty-state-icon">👋</div>
+          <h3 class="empty-state-title">Welcome!</h3>
+          <p class="empty-state-description" id="welcomeMessage">Start a conversation with our AI assistant. We're here to help!</p>
+          <div class="empty-state-suggestions">
+            <h4 class="suggestions-title">Common Questions:</h4>
+            <div class="suggestion-chips" id="initialQuestions">
+              <!-- Initial questions will be populated dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+      </div>
+
+      <!-- Error Message in Chat -->
+      <div id="chatError" class="chat-error hidden">
+        <div class="chat-error-content">
+          <div class="chat-error-icon">😕</div>
+          <div class="chat-error-message">Something went wrong</div>
+          <button class="chat-error-retry">Try Again</button>
+        </div>
+      </div>
+
+      <div class="chat-input">
+        <input 
+          type="text" 
+          id="messageInput" 
+          placeholder="Type your message..."
+          aria-label="Message input"
+        >
+        <button id="sendMessage">Send</button>
+      </div>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html> 
