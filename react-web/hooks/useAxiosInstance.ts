@@ -55,6 +55,7 @@ export function useAxiosInstance(options: Options) {
         return instance.get<WorkingHours>("/copilot/office-hours/public");
       },
 
+      // TODO unify with history polling function
       fetchHistory: (sessionId: string) => {
         if (!sessionId) {
           throw new Error("Session id is required");
