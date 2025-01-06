@@ -347,7 +347,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
       // Poll for session updates
       sessionInterval = setInterval(() => {
         pollSession(session.id);
-      }, SESSION_POOLING_INTERVAL); // Every 10 seconds
+      }, SESSION_POOLING_INTERVAL);
 
       // Poll for new messages
       messageInterval = setInterval(() => {
@@ -355,7 +355,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
         if (lastMessageTimestamp) {
           pollMessages(session.id, lastMessageTimestamp);
         }
-      }, MESSAGE_POOLING_INTERVAL); // Every 5 seconds
+      }, MESSAGE_POOLING_INTERVAL);
     }
 
     return () => {

@@ -47,7 +47,6 @@ export function createConfig(options: CoreOptions): ConfigInstance {
         ...options,
         apiUrl: options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
         socketUrl: options.socketUrl ?? "https://api-v2.opencopilot.so",
-        transport: options.transport ?? 'socket',
         pollingInterval: options.pollingInterval ?? 3000,
         headers: {
             ...(options.headers ?? {}),
