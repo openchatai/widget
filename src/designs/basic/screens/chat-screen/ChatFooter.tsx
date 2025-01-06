@@ -152,7 +152,9 @@ function ChatInput() {
     if (hookState.state === "loading") return;
     if (isUploading) {
       // TODO use something other than toast
-      toast.error("please wait for the file(s) to upload");
+      const message = "please wait for the file(s) to upload";
+      toast.error(message);
+      console.info(message);
     }
     if (!inputText.trim()) return;
 
@@ -187,7 +189,9 @@ function ChatInput() {
     onDropRejected() {
       if (shouldAcceptAttachments) {
         // TODO use something other than toast
-        toast.error("unsupported file type, or the file is too large");
+        const message = "unsupported file type, or the file is too large";
+        toast.error(message);
+        console.error(message);
       }
     },
     maxSize: 5 * 1024 * 1024,
