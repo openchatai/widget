@@ -150,8 +150,21 @@ const handleContactMessageOutputSchema = z.discriminatedUnion(
     ],
 );
 
+const widgetVoteSchema = z.object({
+    action: z.enum(['upvote', 'downvote']),
+    sessionId: z.string(),
+    messagePublicId: z.string(),
+});
+
+const widgetVoteResponseSchema = z.object({
+    messagePublicId: z.string().nullable(),
+    success: z.boolean(),
+});
+
+export type WidgetVoteResponseSchema = z.infer<typeof widgetVoteResponseSchema>;
 export type HandleContactMessageOutputSchema = z.infer<typeof handleContactMessageOutputSchema>;
 export type HttpChatInputSchema = z.infer<typeof httpChatInputDto>;
 export type WidgetSessionSchema = z.infer<typeof widgetSessionSchema>;
 export type WidgetHistorySchema = z.infer<typeof widgetHistorySchema>;
 export type WidgetPreludeSchema = z.infer<typeof widgetPreludeSchema>;
+export type WidgetVoteSchema = z.infer<typeof widgetVoteSchema>;

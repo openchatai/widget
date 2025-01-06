@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { version } from "../../package.json";
 import { PreludeData, WorkingHours } from "@core/types/prelude";
 import { UserObject } from "@react/types";
-import { HandleContactMessageOutputSchema, HttpChatInputSchema } from "@core/types/schemas-v2";
+import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetVoteResponseSchema, WidgetVoteSchema } from "@core/types/schemas-v2";
 
 type Options = {
   apiUrl: string;
@@ -63,13 +63,23 @@ export function useAxiosInstance(options: Options) {
           `widget/session/history/${sessionId}`,
         );
       },
-
+      /**
+       * downvote a message
+       * @param id 
+       * @returns 
+       * @deprecated use vote instead
+       */
       downvote: (id: string) => {
         return instance.delete<{
           message: string;
         }>(`/chat/vote/${id}`);
       },
-
+      /**
+       * upvote a message
+       * @param id 
+       * @returns 
+       * @deprecated use vote instead
+       */
       upvote: (id: string) => {
         return instance.post<{
           message: string;
@@ -129,6 +139,14 @@ export function useAxiosInstance(options: Options) {
        */
       sendMessage: async (message: HttpChatInputSchema) => {
         return instance.post<HandleContactMessageOutputSchema>('widget/chat/send', message)
+      },
+
+      /**
+       * vote on a message
+       * @param data 
+       */
+      vote: (data: WidgetVoteSchema) => {
+        return instance.post<WidgetVoteResponseSchema>(`/widget/chat/vote`, data)
       }
     }),
     [instance],

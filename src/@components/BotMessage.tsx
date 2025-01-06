@@ -1,6 +1,7 @@
 import { useConfigData } from "@react/providers/ConfigDataProvider";
 import type { BotMessageType } from "@core/types";
 import React, { type ComponentType } from "react";
+import { VoteButtons } from "./VoteButtons";
 
 interface BotMessageProps<W extends React.ElementType> {
   message: BotMessageType;

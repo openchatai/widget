@@ -17,7 +17,7 @@ import {
 } from "src/designs/constants";
 
 function ChatRenderer() {
-  const { state, hookState } = useChat();
+  const { state, hookState, session } = useChat();
   const { componentStore, initialMessages, ...config } = useConfigData();
 
   const LoadingComponent = componentStore.getComponent(
@@ -88,7 +88,11 @@ function ChatRenderer() {
               key={message.id}
               message={message}
               Wrapper={BotResponseWrapper}
-              wrapperProps={{ agent: message.agent }}
+              wrapperProps={{
+                agent: message.agent,
+                messageId: message.id,
+                sessionId: session?.id
+              }}
             />
           );
         }
