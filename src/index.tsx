@@ -1,6 +1,6 @@
 import React from "react";
 import { version } from "../package.json";
-import { WidgetOptions } from "../react-lib/types";
+import { WidgetOptions } from "@react/types";
 import { Widget, WidgetRoot } from "./designs/basic";
 import { render } from "./render";
 
