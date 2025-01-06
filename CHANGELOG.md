@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.4.0
+
+### Minor Changes
+
+- voting component, headless support
+
 ## 2.3.1
 
 ### Patch Changes
