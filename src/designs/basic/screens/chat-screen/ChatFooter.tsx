@@ -81,6 +81,7 @@ function FileDisplay({
 
   return (
     <Tooltippy
+      side="bottom"
       content={
         status === "error" ? (
           <span className="text-destructive">Failed to upload: {error}</span>
@@ -263,7 +264,7 @@ function ChatInput() {
         <div className="px-2 flex justify-between">
           <Tooltippy
             side="top"
-            align="end"
+            align="start"
             // TODO translation
             content="attach files, (maximum size 5mb)"
           >
@@ -287,6 +288,8 @@ function ChatInput() {
           <Tooltippy
             // TODO translation
             content="send message"
+            side="top"
+            align="end"
           >
             <Button
               size="fit"
