@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.4.1
+
+### Patch Changes
+
+- fix WidgetOptions import
+
 ## 2.4.0
 
 ### Minor Changes
