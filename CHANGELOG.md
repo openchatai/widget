@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.4.3
+
+### Patch Changes
+
+- change session-closed section
+
 ## 2.4.2
 
 ### Patch Changes
