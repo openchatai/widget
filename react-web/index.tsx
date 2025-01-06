@@ -4,6 +4,7 @@ export {
   useUpvote,
   useDownvote,
   useUploadFiles,
+  useVote,
   type FileWithProgress,
 } from "./hooks";
 export { WidgetRoot } from "./Root";

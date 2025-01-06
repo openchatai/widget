@@ -2,7 +2,7 @@ import React from "react";
 import { Avatar, AvatarImage } from "@ui/avatar";
 import { cn } from "src/utils";
 import { BotMessageType } from "@core/types/messages";
-import { VoteButtons } from "./VoteButtons";
+import { VoteButtons } from "../components/VoteButtons";
 
 export function BotResponseWrapper({
   children,
