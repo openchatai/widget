@@ -58,7 +58,7 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
             profile_picture: history.sender.avatar
         },
         data: {
-            text: history.content.text
+            message: history.content.text
         },
     };
 }

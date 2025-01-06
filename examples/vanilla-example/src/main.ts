@@ -83,12 +83,9 @@ const configOptions: CoreOptions = {
 };
 
 const config = createConfig(configOptions);
-const apiConfig = config.getApiConfig();
 
 const api = new ApiCaller({
-    apiUrl: apiConfig.apiUrl,
-    token: configOptions.token,
-    coreOptions: configOptions,
+    config: config.getConfig(),
 });
 
 const platform: Platform = {
