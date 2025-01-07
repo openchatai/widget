@@ -11,7 +11,7 @@ import {
     Platform,
 } from 'react-native';
 import { useChatContext } from '../hooks/useChatContext';
-import { BotMessageType, MessageType } from '../../../core';
+import { BotMessageType, MessageType } from '@opencx/widget';
 import { usePubsub } from '../hooks/usePubsub';
 
 export const ChatWidget = () => {
@@ -55,8 +55,6 @@ export const ChatWidget = () => {
     return (
         <KeyboardAvoidingView
             style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 90 : 0}
         >
             <View style={styles.header}>
                 <Text style={styles.headerTitle}>

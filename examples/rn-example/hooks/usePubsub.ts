@@ -1,18 +1,6 @@
-import { useEffect, useState } from 'react';
-import { PubSub } from '../../../core';
+import { useEffect, useState, useSyncExternalStore } from 'react';
+import { PubSub } from '@opencx/widget';
 
 export function usePubsub<S>(pubsub: PubSub<S>): S {
-    const [state, setState] = useState<S>(pubsub.getState());
-
-    useEffect(() => {
-        const unsubscribe = pubsub.subscribe((newState) => {
-            setState(newState);
-        });
-
-        return () => {
-            unsubscribe();
-        };
-    }, [pubsub]);
-
-    return state;
+    return useSyncExternalStore(pubsub.subscribe, pubsub.getState);
 } 

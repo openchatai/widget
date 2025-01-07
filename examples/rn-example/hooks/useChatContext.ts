@@ -1,10 +1,6 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createChat, createConfig, ApiCaller, Platform } from '@core/index';
-import { createLogger } from '../../../core/platform/logger';
-
-const socketUrl = 'http://localhost:8080';
-const apiUrl = 'http://localhost:8080/backend';
+import { createChat, createConfig, ApiCaller, Platform } from '@opencx/widget';
 
 export const platform: Platform = {
     env: {
@@ -47,11 +43,6 @@ export const platform: Platform = {
             return isAvailable;
         }
     },
-    logger: createLogger({
-        level: 'debug',
-        prefix: '[OpenChat RN]',
-        enabled: true
-    })
 };
 
 export type PreludeData = {
@@ -69,9 +60,7 @@ const ChatContext = createContext<ChatContextType | null>(null);
 export const useInitChat = () => {
     const chat = useMemo(() => {
         const config = createConfig({
-            token: '6cb3b1b746e45441b4d2a874dd60d44a',
-            socketUrl,
-            apiUrl,
+            token: 'fe8f11971f5de916ab745d9c0408c7ef',
             settings: {
                 persistSession: true,
             },

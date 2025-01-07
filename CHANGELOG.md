@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.4.4-rn.0
+
+### Patch Changes
+
+- rn
+
 ## 2.4.3
 
 ### Patch Changes
