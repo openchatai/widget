@@ -45,18 +45,18 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
             deliveredAt: history.sentAt || "",
         };
     }
-    
+
     if (history.sender.kind === 'agent') {
         return {
-          id: history.publicId || genUuid(),
-          type: "FROM_AGENT",
-          component: history.type,
-          data: {
-              text: history.content.text
-          },
-          timestamp: history.sentAt?.toISOString(),
-          attachments: history.attachments || undefined
-      }
+            id: history.publicId || genUuid(),
+            type: "FROM_AGENT",
+            component: history.type,
+            data: {
+                text: history.content.text
+            },
+            timestamp: history.sentAt || "",
+            attachments: history.attachments || undefined
+        }
     }
 
     return {
@@ -92,7 +92,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
 
         // Get the latest message timestamp
         const lastMessage = messages[messages.length - 1];
-        const lastTimestamp = new Date(lastMessage.timestamp);
+        const lastTimestamp = lastMessage.timestamp ? new Date(lastMessage.timestamp) : new Date();
         // Add 1 second to avoid getting the same message
         lastTimestamp.setSeconds(lastTimestamp.getSeconds() + 1);
         const lastMessageTimestamp = lastTimestamp.toISOString();
