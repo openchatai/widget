@@ -102,7 +102,7 @@ export const useInitChat = () => {
 
     useEffect(() => {
         return () => {
-            chat.chat.cleanup();
+            chat.chat.cleanup(false);
         };
     }, [chat]);
 

@@ -352,14 +352,14 @@ function createSessionManager(
     /**
      * Cleans up the session and stops polling
      */
-    function cleanup() {
+    function cleanup(removeSession = false) {
         try {
             if (stopPolling) {
                 stopPolling();
                 stopPolling = null;
             }
 
-            if (persistSession && storage && isStorageAvailable(storage)) {
+            if (removeSession && persistSession && storage && isStorageAvailable(storage)) {
                 storage.removeItem(sessionStorageKey);
             }
 
@@ -532,6 +532,6 @@ export function createChat(options: ChatOptions) {
         sendMessage,
         createSession: sessionManager.createSession,
         clearSession: sessionManager.clearSession,
-        cleanup: sessionManager.cleanup
+        cleanup: (removeSession = false) => sessionManager.cleanup(removeSession)
     };
 } 

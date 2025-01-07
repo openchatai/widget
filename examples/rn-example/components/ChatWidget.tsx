@@ -124,7 +124,7 @@ export const ChatWidget = () => {
                     onPress: async () => {
                         try {
                             setIsResetting(true);
-                            await chat.cleanup();
+                            await chat.cleanup(true);
                             setMessageInput('');
                             // Reload prelude data to reinitialize the chat
                             await retryPrelude();
