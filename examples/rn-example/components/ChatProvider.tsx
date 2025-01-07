@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import ChatContext, { useInitChat, PreludeData } from '../hooks/useChatContext';
+import ChatContext, { useInitChat } from '../hooks/useChatContext';
+import { ApiCaller } from '@opencx/widget';
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [prelude, setPrelude] = useState<PreludeData | null>(null);
+    const [prelude, setPrelude] = useState<Awaited<ReturnType<typeof ApiCaller['prototype']['widgetPrelude']>> | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     const chat = useInitChat();
@@ -11,10 +12,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const loadPrelude = async () => {
             try {
                 const data = await chat.api.widgetPrelude();
-                setPrelude({
-                    organizationName: data.organizationName,
-                    initialQuestions: data.initialQuestions
-                });
+                setPrelude(data);
             } catch (error) {
                 console.error('Failed to load prelude:', error);
             } finally {

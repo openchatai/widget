@@ -46,8 +46,11 @@ export const ChatWidget = () => {
     if (isLoading) {
         return (
             <SafeAreaView style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#2b6cb0" />
-                <Text style={styles.loadingText}>Loading chat...</Text>
+                <View style={styles.loadingContent}>
+                    <ActivityIndicator size="large" color="#2b6cb0" />
+                    <Text style={styles.loadingTitle}>Initializing Chat</Text>
+                    <Text style={styles.loadingText}>Loading organization details...</Text>
+                </View>
             </SafeAreaView>
         );
     }
@@ -59,12 +62,20 @@ export const ChatWidget = () => {
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
             >
                 <View style={styles.header}>
-                    <Text style={styles.headerTitle}>
-                        {prelude?.organizationName || 'Chat Assistant'}
-                    </Text>
-                    {chatState?.loading.isLoading && (
-                        <ActivityIndicator size="small" color="#2b6cb0" style={styles.headerLoader} />
-                    )}
+                    <View style={styles.headerLeft}>
+                        <Text style={styles.headerTitle}>
+                            {prelude?.organizationName || 'Chat Assistant'}
+                        </Text>
+                        {chatState?.loading.isLoading && (
+                            <ActivityIndicator size="small" color="#2b6cb0" style={styles.headerLoader} />
+                        )}
+                    </View>
+                    <View style={styles.connectionStatus}>
+                        <View style={[styles.statusDot, { backgroundColor: chatState?.loading.isLoading ? '#f59e0b' : '#10b981' }]} />
+                        <Text style={styles.statusText}>
+                            {chatState?.loading.isLoading ? 'Processing...' : 'Ready'}
+                        </Text>
+                    </View>
                 </View>
 
                 <ScrollView
@@ -161,15 +172,25 @@ const styles = StyleSheet.create({
     },
     loadingContainer: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#f7f9fc',
     },
+    loadingContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    loadingTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2d3748',
+        marginTop: 20,
+        marginBottom: 8,
+    },
     loadingText: {
-        marginTop: 12,
         fontSize: 16,
         color: '#4a5568',
-        fontWeight: '500',
+        textAlign: 'center',
     },
     header: {
         flexDirection: 'row',
@@ -297,5 +318,28 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 15,
         fontWeight: 'bold',
+    },
+    headerLeft: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    connectionStatus: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f7f9fc',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 20,
+    },
+    statusDot: {
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        marginRight: 6,
+    },
+    statusText: {
+        fontSize: 13,
+        color: '#4a5568',
+        fontWeight: '500',
     },
 }); 

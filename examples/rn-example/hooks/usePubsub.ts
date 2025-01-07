@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useSyncExternalStore } from 'react';
 import { PubSub } from '@opencx/widget';
 
 export function usePubsub<S>(pubsub: PubSub<S>): S {

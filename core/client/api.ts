@@ -1,7 +1,7 @@
 import { createFetch, CustomFetch } from "../utils/create-fetch";
 import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
-import { CoreOptions, ConsumerType } from "../types";
 import { NormalizedConfig } from "./config";
+import { ConsumerType } from "@core/types/schemas";
 
 export interface ApiCallerOptions {
     config: NormalizedConfig;
@@ -97,20 +97,5 @@ export class ApiCaller {
             method: 'GET'
         })
         return response.json()
-    }
-
-    async createContact(user: {
-        external_id?: string;
-        name?: string;
-        email?: string;
-        phone?: string;
-        customData?: Record<string, string>;
-        avatarUrl?: string;
-    }): Promise<ConsumerType> {
-        const response = await this.#fetch('/contact/upsert', {
-            method: 'POST',
-            body: JSON.stringify(user)
-        });
-        return response.json();
     }
 }

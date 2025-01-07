@@ -130,7 +130,6 @@ export const Chat = () => {
     const chatInstance = React.useMemo(() => {
         const config = createConfig({
             token: '6cb3b1b746e45441b4d2a874dd60d44a',
-            socketUrl: 'http://localhost:8080',
             apiUrl: 'http://localhost:8080/backend',
             user: {
                 email: "test@test.com",

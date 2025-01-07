@@ -1,9 +1,9 @@
 import { PubSub } from "../types/pub-sub";
-import { ConsumerType } from "../types";
 import { ApiCaller } from "./api";
-import { Platform, Storage, isStorageAvailable, safeStorageOperation } from "../platform";
+import { Platform, isStorageAvailable, safeStorageOperation } from "../platform";
 import { LoadingState, ErrorState } from "../types/helpers";
 import { ConfigInstance } from "./config";
+import { ConsumerType } from "@core/types/schemas";
 
 type ContactState = {
     contact: ConsumerType | null;
@@ -48,7 +48,7 @@ export function createContact(options: ContactOptions) {
     // Subscribe to state changes to persist
     if (isStorageAvailable(storage)) {
         state.subscribe((currentState) => {
-            const result = safeStorageOperation(
+            safeStorageOperation(
                 async () => {
                     if (currentState.contact) {
                         await storage.setItem(storageKey, JSON.stringify(currentState.contact));

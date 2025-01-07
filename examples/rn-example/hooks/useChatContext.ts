@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createChat, createConfig, ApiCaller, Platform } from '@opencx/widget';
+import { createChat, createConfig, ApiCaller, Platform, createLogger, } from '@opencx/widget';
 
 export const platform: Platform = {
     env: {
@@ -43,15 +43,17 @@ export const platform: Platform = {
             return isAvailable;
         }
     },
+    logger: createLogger({
+        level: 'debug',
+        prefix: '[OpenCX RN]',
+        enabled: true
+    })
 };
 
-export type PreludeData = {
-    organizationName: string;
-    initialQuestions: string[];
-};
+
 
 export type ChatContextType = ReturnType<typeof useInitChat> & {
-    prelude: PreludeData | null;
+    prelude: Awaited<ReturnType<typeof ApiCaller['prototype']['widgetPrelude']>> | null;
     isLoading: boolean;
 };
 

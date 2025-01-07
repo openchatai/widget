@@ -48,7 +48,6 @@ const useInitChat = () => {
     const chat = useMemo(() => {
         const config = createConfig({
             token: '6cb3b1b746e45441b4d2a874dd60d44a',
-            socketUrl,
             apiUrl,
             settings: {
                 persistSession: true,

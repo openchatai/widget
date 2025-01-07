@@ -12,8 +12,8 @@ importers:
         specifier: ^14.0.2
         version: 14.0.4
       '@opencx/widget':
-        specifier: 2.4.4-rn.0
-        version: 2.4.4-rn.0(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)
+        specifier: 2.4.4-rn.1
+        version: 2.4.4-rn.1(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)
       '@react-native-async-storage/async-storage':
         specifier: ^1.23.1
         version: 1.24.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))
@@ -999,8 +999,8 @@ packages:
     resolution: {integrity: sha512-q9CRWjpHCMIh5sVyefoD1cA7PkvILqCZsnSOEUUivORLjxCO/Irmue2DprETiNgEqktDBZaM1Bi+jrarx1XdCg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  '@opencx/widget@2.4.4-rn.0':
-    resolution: {integrity: sha512-SzXjBsERNUbY+wC4tiR85MJHSCK8Uu08kt6hCpFyVS2XskHqkLhnMqRhbSKFbsrxL7vGGP+xtQVT2eJe9QzcEg==}
+  '@opencx/widget@2.4.4-rn.1':
+    resolution: {integrity: sha512-YoREGv2MnfO3FxCVqE/94b6At+bRUy0rG4qNQpUsCvxcC4NHUzGHpO5SCwuj5wWdpeHCOcXLQjP0PY60abmfng==}
     peerDependencies:
       lucide-react: ^0.412.0
       react: ^18.3.1
@@ -5842,7 +5842,7 @@ snapshots:
     dependencies:
       semver: 7.6.3
 
-  '@opencx/widget@2.4.4-rn.0(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)':
+  '@opencx/widget@2.4.4-rn.1(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)':
     dependencies:
       '@radix-ui/react-avatar': 1.1.2(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dropdown-menu': 2.1.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
