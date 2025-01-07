@@ -74,6 +74,7 @@ export const useInitChat = () => {
                 persistSession: true,
             },
             user: {
+                external_id: "123",
                 email: "test@test.com",
                 name: "Test User"
             }

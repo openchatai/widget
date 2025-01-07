@@ -170,3 +170,4 @@ export type WidgetSessionSchema = z.infer<typeof widgetSessionSchema>;
 export type WidgetHistorySchema = z.infer<typeof widgetHistorySchema>;
 export type WidgetPreludeSchema = z.infer<typeof widgetPreludeSchema>;
 export type WidgetVoteSchema = z.infer<typeof widgetVoteSchema>;
+export type ChatAttachmentType = z.infer<typeof chatAttachmentSchema>;

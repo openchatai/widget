@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
     View,
     Text,
@@ -10,13 +10,79 @@ import {
     KeyboardAvoidingView,
     Platform,
     SafeAreaView,
+    Alert,
+    Animated,
 } from 'react-native';
 import { useChatContext } from '../hooks/useChatContext';
 import { BotMessageType, MessageType } from '@opencx/widget';
 import { usePubsub } from '../hooks/usePubsub';
 
+const LoadingIndicator = () => {
+    const [animations] = useState(() => [
+        new Animated.Value(0),
+        new Animated.Value(0),
+        new Animated.Value(0),
+    ]);
+
+    useEffect(() => {
+        const animate = () => {
+            const sequence = animations.map((anim, index) =>
+                Animated.sequence([
+                    Animated.delay(index * 120),
+                    Animated.timing(anim, {
+                        toValue: 1,
+                        duration: 400,
+                        useNativeDriver: true,
+                    }),
+                    Animated.timing(anim, {
+                        toValue: 0,
+                        duration: 400,
+                        useNativeDriver: true,
+                    }),
+                ])
+            );
+
+            Animated.loop(
+                Animated.parallel(sequence)
+            ).start();
+        };
+
+        animate();
+    }, []);
+
+    return (
+        <View style={styles.loadingMessageContainer}>
+            <View style={styles.loadingBubble}>
+                <View style={styles.loadingDots}>
+                    {animations.map((anim, index) => (
+                        <Animated.View
+                            key={index}
+                            style={[
+                                styles.loadingDot,
+                                {
+                                    transform: [{
+                                        scale: anim.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: [1, 1.5]
+                                        })
+                                    }],
+                                    opacity: anim.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [0.3, 0.7]
+                                    })
+                                }
+                            ]}
+                        />
+                    ))}
+                </View>
+            </View>
+        </View>
+    );
+};
+
 export const ChatWidget = () => {
     const [messageInput, setMessageInput] = useState('');
+    const [isResetting, setIsResetting] = useState(false);
     const scrollViewRef = useRef<ScrollView>(null);
     const { chat, prelude, isLoading, preludeError, retryPrelude } = useChatContext();
 
@@ -41,6 +107,40 @@ export const ChatWidget = () => {
 
     const handleQuestionPress = (question: string) => {
         setMessageInput(question);
+    };
+
+    const handleReset = () => {
+        Alert.alert(
+            "Reset Chat",
+            "Are you sure you want to reset the chat? This will clear all messages.",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Reset",
+                    style: "destructive",
+                    onPress: async () => {
+                        try {
+                            setIsResetting(true);
+                            await chat.cleanup();
+                            setMessageInput('');
+                            // Reload prelude data to reinitialize the chat
+                            await retryPrelude();
+                        } catch (error) {
+                            console.error('Failed to reset chat:', error);
+                            Alert.alert(
+                                "Error",
+                                "Failed to reset chat. Please try again."
+                            );
+                        } finally {
+                            setIsResetting(false);
+                        }
+                    }
+                }
+            ]
+        );
     };
 
     if (isLoading) {
@@ -90,11 +190,27 @@ export const ChatWidget = () => {
                             <ActivityIndicator size="small" color="#2b6cb0" style={styles.headerLoader} />
                         )}
                     </View>
-                    <View style={styles.connectionStatus}>
-                        <View style={[styles.statusDot, { backgroundColor: chatState?.loading.isLoading ? '#f59e0b' : '#10b981' }]} />
-                        <Text style={styles.statusText}>
-                            {chatState?.loading.isLoading ? 'Processing...' : 'Ready'}
-                        </Text>
+                    <View style={styles.headerRight}>
+                        <TouchableOpacity
+                            style={[
+                                styles.resetButton,
+                                isResetting && styles.resetButtonDisabled
+                            ]}
+                            onPress={handleReset}
+                            disabled={isResetting}
+                        >
+                            {isResetting ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <Text style={styles.resetButtonText}>Reset</Text>
+                            )}
+                        </TouchableOpacity>
+                        <View style={styles.connectionStatus}>
+                            <View style={[styles.statusDot, { backgroundColor: chatState?.loading.isLoading ? '#f59e0b' : '#10b981' }]} />
+                            <Text style={styles.statusText}>
+                                {chatState?.loading.isLoading ? 'Processing...' : 'Ready'}
+                            </Text>
+                        </View>
                     </View>
                 </View>
 
@@ -146,6 +262,8 @@ export const ChatWidget = () => {
                             </Text>
                         </View>
                     ))}
+
+                    {chatState?.loading.isLoading && <LoadingIndicator />}
                 </ScrollView>
 
                 <View style={styles.inputContainer}>
@@ -343,6 +461,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
     },
+    headerRight: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    resetButton: {
+        backgroundColor: '#ef4444',
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 6,
+        marginRight: 8,
+        minWidth: 60,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    resetButtonDisabled: {
+        backgroundColor: '#fca5a5',
+    },
+    resetButtonText: {
+        color: '#fff',
+        fontSize: 13,
+        fontWeight: '600',
+    },
     connectionStatus: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -394,5 +534,35 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    loadingMessageContainer: {
+        alignSelf: 'flex-start',
+        marginBottom: 12,
+        marginLeft: 16,
+    },
+    loadingBubble: {
+        backgroundColor: '#fff',
+        padding: 12,
+        borderRadius: 16,
+        borderBottomLeftRadius: 4,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+        elevation: 1,
+    },
+    loadingDots: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 24,
+        width: 50,
+    },
+    loadingDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: '#2b6cb0',
+        marginHorizontal: 2,
     },
 }); 

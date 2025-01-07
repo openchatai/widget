@@ -9,7 +9,8 @@ export type MakeKeysNotNullable<T, K extends keyof T> = Omit<T, K> & {
 };
 
 export type LoadingReason =
-  | 'sending_message'
+  | 'sending_message_to_bot'
+  | 'sending_message_to_agent'
   | 'creating_session'
   | 'polling'
   | 'loading_contact'

@@ -12,17 +12,15 @@ import pkg from "../../package.json";
 import {
   AIClosureType,
   type ChatSessionType,
-  MessageType,
-  SendMessageInput,
   SessionStatus,
-  UserMessageType,
-} from "@core/types";
+} from "@core/types/schemas";
 import { useSyncedState } from "./useSyncState";
 import useAsyncFn from "react-use/lib/useAsyncFn";
 import { mapChatHistoryToMessage } from "@core/utils/history-to-widget-messages";
 import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
 import { genId } from "@core/utils/genId";
+import { MessageType, SendMessageInput, UserMessageType } from "@core/types";
 
 /**
  * IMPORTANT: both intervals must have the same value, otherwise the one with the longer duration will be cleared and recreated and so on, and never actually fired

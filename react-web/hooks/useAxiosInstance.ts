@@ -1,4 +1,4 @@
-import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@core/types";
+import { ChatHistoryMessageType, ChatSessionType, ConsumerType } from "@core/types/schemas";
 import axios, { AxiosRequestConfig } from "axios";
 import { useMemo } from "react";
 import { version } from "../../package.json";

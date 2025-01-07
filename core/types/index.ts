@@ -1,4 +1,4 @@
-import { ChatAttachmentType } from "./schemas"
+import { ChatAttachmentType } from "./schemas-v2"
 
 export * from "./messages"
 export * from "./schemas-v2"

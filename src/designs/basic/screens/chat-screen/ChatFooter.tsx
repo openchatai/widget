@@ -22,11 +22,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
-import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { AIClosureType } from "@core/types";
 import { cn } from "src/utils";
 import { MotionDiv } from "@ui/MotionDiv";
+import { AIClosureType } from "@core/types/schemas";
 
 function FileDisplay({
   file: { status, file, error },

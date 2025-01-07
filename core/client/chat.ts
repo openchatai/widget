@@ -184,6 +184,9 @@ function createSessionManager(
     const storage = options.platform?.storage;
     const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
     const persistSession = options.config.getSettings().persistSession;
+    /**
+     * Restores the session from storage
+     */
     async function restoreSession() {
         if (!storage) return;
         try {
@@ -201,6 +204,9 @@ function createSessionManager(
         }
     }
 
+    /**
+     * Sets up session persistence
+     */
     function setupSessionPersistence() {
         if (!storage) return;
 
@@ -227,6 +233,9 @@ function createSessionManager(
         });
     }
 
+    /**
+     * Starts polling for the session and messages
+     */
     function startPolling() {
         if (stopPolling) return;
 
@@ -269,6 +278,10 @@ function createSessionManager(
         };
     }
 
+    /**
+     * Creates a new session
+     * @returns The session
+     */
     async function createSession() {
         try {
             logger?.info('Creating new session');
@@ -298,6 +311,9 @@ function createSessionManager(
         }
     }
 
+    /**
+     * Clears the session and stops polling
+     */
     async function clearSession() {
         const session = sessionState.getState();
         if (!session?.id) return;
@@ -333,6 +349,9 @@ function createSessionManager(
         }
     }
 
+    /**
+     * Cleans up the session and stops polling
+     */
     function cleanup() {
         try {
             if (stopPolling) {
@@ -366,6 +385,28 @@ function createSessionManager(
         }
     }
 
+    /**
+     * Fetches the session from the API
+     * @param id - The ID of the session to fetch
+     * @returns The session
+     */
+    async function fetchSession(id: string) {
+        return api.getSession(id);
+    }
+
+    /**
+     * Refetches the session and updates the state
+     */
+    async function refetchSession() {
+        const session = sessionState.getState();
+        if (!session?.id) return;
+        const newSession = await fetchSession(session.id);
+        if (newSession) {
+            sessionState.setState(newSession);
+        }
+        return newSession;
+    }
+
     // Initialize session if persistence is enabled
     if (persistSession && isStorageAvailable(storage)) {
         restoreSession();
@@ -376,7 +417,9 @@ function createSessionManager(
         createSession,
         clearSession,
         cleanup,
-        startPolling
+        startPolling,
+        fetchSession,
+        refetchSession
     };
 }
 
@@ -405,18 +448,31 @@ export function createChat(options: ChatOptions) {
 
     async function sendMessage(input: SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">) {
         let session = sessionState.getState();
+
         if (!session?.id) {
             logger?.debug('No active session, creating new session');
             session = await sessionManager.createSession();
             if (!session) return false;
         }
 
+        if (session.assignee.kind === 'ai') {
+            // get the latest session to be sure that the agent is assigned
+            session = await sessionManager.refetchSession() || session;
+        }
+
         try {
             logger?.debug('Sending message', { sessionId: session.id });
-            state.setStatePartial({
-                loading: { isLoading: true, reason: 'sending_message' },
-                error: { hasError: false }
-            });
+            if (session.assignee.kind === 'ai') {
+                state.setStatePartial({
+                    loading: { isLoading: true, reason: 'sending_message_to_agent' },
+                    error: { hasError: false }
+                });
+            } else {
+                state.setStatePartial({
+                    loading: { isLoading: true, reason: 'sending_message_to_bot' },
+                    error: { hasError: false }
+                });
+            }
 
             const userMessage = messageHandler.addUserMessage(input.content, input.attachments || undefined);
             const currentMessages = state.getState().messages;
