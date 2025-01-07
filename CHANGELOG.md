@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.5.0
+
+### Minor Changes
+
+- change chat messages styles
+
 ## 2.4.4
 
 ### Patch Changes
