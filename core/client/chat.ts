@@ -456,20 +456,20 @@ export function createChat(options: ChatOptions) {
         }
 
         if (session.assignee.kind === 'ai') {
-            // get the latest session to be sure that the agent is assigned
-            session = await sessionManager.refetchSession() || session;
+            // get the latest session
+            session = (await sessionManager.refetchSession()) ?? session;
         }
 
         try {
             logger?.debug('Sending message', { sessionId: session.id });
             if (session.assignee.kind === 'ai') {
                 state.setStatePartial({
-                    loading: { isLoading: true, reason: 'sending_message_to_agent' },
+                    loading: { isLoading: true, reason: 'sending_message_to_bot' },
                     error: { hasError: false }
                 });
             } else {
                 state.setStatePartial({
-                    loading: { isLoading: true, reason: 'sending_message_to_bot' },
+                    loading: { isLoading: true, reason: 'sending_message_to_agent' },
                     error: { hasError: false }
                 });
             }
@@ -486,6 +486,7 @@ export function createChat(options: ChatOptions) {
                 headers: config.headers,
                 query_params: config.queryParams,
                 session_id: session.id,
+                user: config.user,
                 ...input,
             });
 

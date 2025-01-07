@@ -14,7 +14,7 @@ import {
     Animated,
 } from 'react-native';
 import { useChatContext } from '../hooks/useChatContext';
-import { BotMessageType, MessageType } from '@opencx/widget';
+import type { BotMessageType, MessageType } from '@opencx/widget';
 import { usePubsub } from '../hooks/usePubsub';
 
 const LoadingIndicator = () => {
@@ -263,7 +263,7 @@ export const ChatWidget = () => {
                         </View>
                     ))}
 
-                    {chatState?.loading.isLoading && <LoadingIndicator />}
+                    {chatState?.loading.isLoading && chatState.loading.reason === 'sending_message_to_bot' && <LoadingIndicator />}
                 </ScrollView>
 
                 <View style={styles.inputContainer}>

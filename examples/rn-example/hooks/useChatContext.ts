@@ -30,16 +30,18 @@ export const platform: Platform = {
             }
         },
         isAvailable: () => {
-            let isAvailable = false;
+            let isAvailable = true;
             try {
                 AsyncStorage.setItem('test', 'test').then(() => {
                     AsyncStorage.removeItem('test').then(() => {
-                        isAvailable = true;
+                        // do nothing
                     });
                 });
-            } catch {
+            } catch (error) {
                 isAvailable = false;
+                console.error('Failed to check storage availability:', error);
             }
+            console.log('isAvailable', isAvailable);
             return isAvailable;
         }
     },

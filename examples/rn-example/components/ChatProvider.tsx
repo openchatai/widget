@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ChatContext, { useInitChat } from '../hooks/useChatContext';
-import { ApiCaller } from '@opencx/widget';
+import type { WidgetPreludeSchema } from '@opencx/widget';
 
 type PreludeError = {
     hasError: boolean;
@@ -8,7 +8,7 @@ type PreludeError = {
 };
 
 export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [prelude, setPrelude] = useState<Awaited<ReturnType<typeof ApiCaller['prototype']['widgetPrelude']>> | null>(null);
+    const [prelude, setPrelude] = useState<WidgetPreludeSchema | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [preludeError, setPreludeError] = useState<PreludeError>({ hasError: false });
 

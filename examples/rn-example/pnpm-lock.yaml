@@ -12,11 +12,11 @@ importers:
         specifier: ^14.0.2
         version: 14.0.4
       '@opencx/widget':
-        specifier: 2.4.4-rn.1
-        version: 2.4.4-rn.1(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)
+        specifier: 2.4.4-rn.3
+        version: 2.4.4-rn.3(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)
       '@react-native-async-storage/async-storage':
         specifier: ^1.23.1
-        version: 1.24.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))
+        version: 1.23.1(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))
       '@react-navigation/bottom-tabs':
         specifier: ^7.2.0
         version: 7.2.0(@react-navigation/native@7.0.14(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native-safe-area-context@4.12.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native-screens@4.4.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1))(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))(react@18.3.1)
@@ -999,8 +999,8 @@ packages:
     resolution: {integrity: sha512-q9CRWjpHCMIh5sVyefoD1cA7PkvILqCZsnSOEUUivORLjxCO/Irmue2DprETiNgEqktDBZaM1Bi+jrarx1XdCg==}
     engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
 
-  '@opencx/widget@2.4.4-rn.1':
-    resolution: {integrity: sha512-YoREGv2MnfO3FxCVqE/94b6At+bRUy0rG4qNQpUsCvxcC4NHUzGHpO5SCwuj5wWdpeHCOcXLQjP0PY60abmfng==}
+  '@opencx/widget@2.4.4-rn.3':
+    resolution: {integrity: sha512-qk0s8TwTQlKDhVkuPH4ZT4bitJChygYDkQTbxm3AgceVbldo3h6Ep9DOVmv9nNjAD4lnpyORjPFDZZ3qkq8cRQ==}
     peerDependencies:
       lucide-react: ^0.412.0
       react: ^18.3.1
@@ -1341,8 +1341,8 @@ packages:
   '@radix-ui/rect@1.1.0':
     resolution: {integrity: sha512-A9+lCBZoaMJlVKcRBz2YByCG+Cp2t6nAnMnNba+XiWxnj6r4JUFqfsgwocMBZU9LPtdxC6wB56ySYpc7LQIoJg==}
 
-  '@react-native-async-storage/async-storage@1.24.0':
-    resolution: {integrity: sha512-W4/vbwUOYOjco0x3toB8QCr7EjIP6nE9G7o8PMguvvjYT5Awg09lyV4enACRx4s++PPulBiBSjL0KTFx2u0Z/g==}
+  '@react-native-async-storage/async-storage@1.23.1':
+    resolution: {integrity: sha512-Qd2kQ3yi6Y3+AcUlrHxSLlnBvpdCEMVGFlVBneVOjaFaPU61g1huc38g339ysXspwY1QZA2aNhrk/KlHGO+ewA==}
     peerDependencies:
       react-native: ^0.0.0-0 || >=0.60 <1.0
 
@@ -5842,7 +5842,7 @@ snapshots:
     dependencies:
       semver: 7.6.3
 
-  '@opencx/widget@2.4.4-rn.1(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)':
+  '@opencx/widget@2.4.4-rn.3(@types/react@18.3.18)(lucide-react@0.412.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rehype-raw@7.0.0)':
     dependencies:
       '@radix-ui/react-avatar': 1.1.2(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dropdown-menu': 2.1.4(@types/react@18.3.18)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -6164,7 +6164,7 @@ snapshots:
 
   '@radix-ui/rect@1.1.0': {}
 
-  '@react-native-async-storage/async-storage@1.24.0(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))':
+  '@react-native-async-storage/async-storage@1.23.1(react-native@0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1))':
     dependencies:
       merge-options: 3.0.4
       react-native: 0.76.5(@babel/core@7.26.0)(@babel/preset-env@7.26.0(@babel/core@7.26.0))(@types/react@18.3.18)(react@18.3.1)
