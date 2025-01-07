@@ -41,7 +41,7 @@ function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
           break;
         case "agent_message":
           messages.push({
-            type: "FROM_BOT",
+            type: "FROM_AGENT",
             component: "TEXT",
             data: {
               message: msg.message ?? "",

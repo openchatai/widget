@@ -32,6 +32,19 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
             timestamp: history.sentAt?.toISOString()
         };
     }
+    
+    if (history.sender.kind === 'agent') {
+        return {
+          id: history.publicId || genId(),
+          type: "FROM_AGENT",
+          component: history.type,
+          data: {
+              text: history.content.text
+          },
+          timestamp: history.sentAt?.toISOString(),
+          attachments: history.attachments || undefined
+      }
+    }
 
     return {
         id: history.publicId || genId(),

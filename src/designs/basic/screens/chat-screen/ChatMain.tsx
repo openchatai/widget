@@ -1,12 +1,24 @@
 import { useChat, useConfigData } from "@react/index";
-import { UserMessage } from "@ui/userMessage";
-import React, { ComponentType, useEffect, useRef } from "react";
-import { BotMessage } from "src/@components/BotMessage";
-import { BotResponseWrapper } from "src/@components/BotMessageWrapper";
+import { UserMessageGroup } from "@ui/UserMessageGroup";
+import React, { ComponentType, useEffect, useMemo, useRef } from "react";
+import { BotOrAgentMessage } from "src/@components/BotOrAgentMessage";
+import { BotOrAgentMessageGroup } from "src/@components/BotOrAgentMessageGroup";
+import { BotOrAgentMessageWrapper } from "src/@components/BotOrAgentMessageWrapper";
+import {
+  groupMessagesByType,
+  isAgentMessageGroup,
+  isBotMessageGroup,
+  isUserMessageGroup,
+} from "../../utils/group-messages-by-type";
 
 export function ChatMain() {
   const { state, hookState, session } = useChat();
   const { componentStore, initialMessages, ...config } = useConfigData();
+
+  const groupedMessages = useMemo(
+    () => groupMessagesByType(state.messages),
+    [state.messages.length],
+  );
 
   const LoadingComponent = componentStore.getComponent(
     "loading",
@@ -35,7 +47,7 @@ export function ChatMain() {
     >
       {state.messages.length === 0 &&
         (initialMessages?.map((message, index) => (
-          <BotMessage
+          <BotOrAgentMessage
             key={index}
             message={{
               component: "text",
@@ -43,11 +55,11 @@ export function ChatMain() {
               id: `initial-${index}`,
               type: "FROM_BOT",
             }}
-            Wrapper={BotResponseWrapper}
+            Wrapper={BotOrAgentMessageWrapper}
             wrapperProps={{ agent: config.bot }}
           />
         )) ?? (
-          <BotMessage
+          <BotOrAgentMessage
             key={"default-welcome"}
             message={{
               component: "text",
@@ -56,34 +68,29 @@ export function ChatMain() {
               type: "FROM_BOT",
               agent: config.bot,
             }}
-            Wrapper={BotResponseWrapper}
+            Wrapper={BotOrAgentMessageWrapper}
             wrapperProps={{ agent: config.bot }}
           />
         ))}
-      {state.messages.map((message) => {
-        if (message.type === "FROM_USER") {
+      {groupedMessages.map((group, index) => {
+        const type = group?.[0].type;
+        if (!type) return null;
+
+        if (isUserMessageGroup(group)) {
+          return <UserMessageGroup key={index} messages={group} />;
+        }
+
+        if (isBotMessageGroup(group) || isAgentMessageGroup(group)) {
+          const agent = group[0]?.agent;
           return (
-            <UserMessage key={message.id} message={message} user={config.user}>
-              {message.content}
-            </UserMessage>
-          );
-        } else if (message.type === "FROM_BOT") {
-          if (message.component == "CHAT_EVENT") {
-            return <BotMessage message={message} key={message.id} />;
-          }
-          return (
-            <BotMessage
-              key={message.id}
-              message={message}
-              Wrapper={BotResponseWrapper}
-              wrapperProps={{
-                agent: message.agent,
-                messageId: message.id,
-                sessionId: session?.id,
-              }}
+            <BotOrAgentMessageGroup
+              key={index}
+              messages={group}
+              agent={agent}
             />
           );
         }
+
         return null;
       })}
       {hookState.state === "loading" && <LoadingComponent />}

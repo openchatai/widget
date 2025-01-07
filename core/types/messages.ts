@@ -31,7 +31,18 @@ export type BotMessageType<TData = unknown> = {
   attachments?: ChatAttachmentType[];
 };
 
-export type MessageType = UserMessageType | BotMessageType;
+export type AgentMessageType<TData = unknown> = {
+  id: string;
+  type: "FROM_AGENT";
+  component: string;
+  data: TData;
+  timestamp?: string;
+  original?: ChatHistoryMessageType;
+  agent?: AgentType;
+  attachments?: ChatAttachmentType[];
+};
+
+export type MessageType = UserMessageType | BotMessageType | AgentMessageType;
 
 export interface SendMessageInput {
   content: {

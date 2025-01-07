@@ -1,15 +1,15 @@
 import { useConfigData } from "@react/providers/ConfigDataProvider";
-import type { BotMessageType } from "@core/types";
+import type { AgentMessageType, BotMessageType } from "@core/types";
 import React, { type ComponentType } from "react";
 import { VoteButtons } from "../components/VoteButtons";
 
 interface BotMessageProps<W extends React.ElementType> {
-  message: BotMessageType;
+  message: BotMessageType | AgentMessageType;
   Wrapper?: W;
   wrapperProps?: Omit<React.ComponentProps<W>, "children">;
 }
 
-export function BotMessage<W extends React.ElementType>({
+export function BotOrAgentMessage<W extends React.ElementType>({
   message,
   Wrapper,
   wrapperProps,
@@ -20,7 +20,7 @@ export function BotMessage<W extends React.ElementType>({
     message.component,
     config.debug,
   ) as ComponentType<{
-    data: BotMessageType["data"];
+    data: BotMessageType["data"] | AgentMessageType['data'];
     id: string;
   }>;
 
