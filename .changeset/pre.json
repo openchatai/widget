@@ -5,6 +5,7 @@
     "@opencx/widget": "2.4.3"
   },
   "changesets": [
-    "tasty-scissors-poke"
+    "tasty-scissors-poke",
+    "thirty-falcons-warn"
   ]
 }
