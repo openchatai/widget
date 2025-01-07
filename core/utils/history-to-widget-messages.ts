@@ -1,6 +1,6 @@
 import { MessageType } from "../types/messages";
 import { ChatHistoryMessageType } from "../types/schemas";
-import { genId } from "./genId";
+import { genUuid } from "./genUuid";
 
 // temp
 function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
@@ -13,7 +13,7 @@ function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
         messages.push({
           type: "FROM_USER",
           content: msg.message,
-          id: msg.publicId || genId(),
+          id: msg.publicId,
           deliveredAt: msg.created_at || "",
           attachments: msg.attachments,
           timestamp: msg.created_at || "",
@@ -28,7 +28,7 @@ function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
             data: {
               message: msg.message ?? "",
             },
-            id: msg.publicId || genId(),
+            id: msg.publicId,
             timestamp: msg.created_at || "",
             original: msg,
             attachments: msg.attachments,
@@ -47,7 +47,7 @@ function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
             data: {
               message: msg.message ?? "",
             },
-            id: msg.publicId || genId(),
+            id: msg.publicId,
             timestamp: msg.created_at || "",
             original: msg,
             attachments: msg.attachments,
@@ -67,7 +67,7 @@ function mapChatHistoryToMessage(value: ChatHistoryMessageType[]) {
               event: msg.type,
               message: msg.message ?? "",
             },
-            id: msg.publicId || genId(),
+            id: msg.publicId || genUuid(),
             original: msg,
             attachments: msg.attachments,
             timestamp: msg.created_at || "",

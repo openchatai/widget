@@ -1,7 +1,7 @@
 import { PubSub } from "../types/pub-sub";
 import { MessageType } from "../types";
 import { ApiCaller } from "./api";
-import { genId } from "../utils/genId";
+import { genUuid } from "../utils/genUuid";
 import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetSessionSchema } from "../types/schemas-v2";
 import { LoadingState, ErrorState, SomeOptional } from "../types/helpers";
 import { ConfigInstance } from "./config";
@@ -32,7 +32,7 @@ type ChatOptions = {
 // Message Mapping
 function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
     const commonFields = {
-        id: history.publicId || genId(),
+        id: history.publicId || genUuid(),
         timestamp: history.sentAt || "",
         attachments: history.attachments || undefined
     };
@@ -48,7 +48,7 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
     
     if (history.sender.kind === 'agent') {
         return {
-          id: history.publicId || genId(),
+          id: history.publicId || genUuid(),
           type: "FROM_AGENT",
           component: history.type,
           data: {
@@ -126,7 +126,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
 
     function addUserMessage(content: string, attachments?: any[]) {
         return {
-            id: genId(),
+            id: genUuid(),
             type: "FROM_USER" as const,
             content,
             deliveredAt: new Date().toISOString(),
@@ -139,7 +139,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
         if (response.success && response.autopilotResponse) {
             return {
                 type: "FROM_BOT" as const,
-                id: response.autopilotResponse.id || genId(),
+                id: response.autopilotResponse.id || genUuid(),
                 timestamp: new Date().toISOString(),
                 component: "TEXT",
                 data: {
@@ -152,7 +152,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
             const uiVal = response.uiResponse.value;
             return {
                 type: "FROM_BOT" as const,
-                id: genId(),
+                id: genUuid(),
                 timestamp: new Date().toISOString(),
                 component: uiVal.name,
                 data: uiVal.request_response,
@@ -165,7 +165,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
     function addErrorMessage(message: string) {
         return {
             type: "FROM_BOT" as const,
-            id: genId(),
+            id: genUuid(),
             timestamp: new Date().toISOString(),
             component: "TEXT",
             data: {

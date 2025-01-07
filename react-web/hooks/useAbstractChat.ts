@@ -19,7 +19,7 @@ import useAsyncFn from "react-use/lib/useAsyncFn";
 import { mapChatHistoryToMessage } from "@core/utils/history-to-widget-messages";
 import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
-import { genId } from "@core/utils/genId";
+import { genUuid } from "@core/utils/genUuid";
 import { MessageType, SendMessageInput, UserMessageType } from "@core/types";
 
 const POLLING_INTERVAL = 5000; // every 5 seconds
@@ -450,7 +450,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
         throw error;
       }
 
-      const msgId = genId();
+      const msgId = genUuid();
       const { headers, queryParams } = config;
 
       // Add message to local state first
@@ -523,7 +523,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
             type: "ADD_RESPONSE_MESSAGE",
             payload: {
               type: "FROM_BOT",
-              id: data.autopilotResponse.id || genId(),
+              id: data.autopilotResponse.id || genUuid(),
               timestamp: new Date().toISOString(),
               component: "TEXT",
               data: {
@@ -538,7 +538,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
             type: "ADD_RESPONSE_MESSAGE",
             payload: {
               type: "FROM_BOT",
-              id: genId(),
+              id: genUuid(),
               timestamp: new Date().toISOString(),
               component: uiVal.name,
               data: uiVal.request_response,
@@ -551,7 +551,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
           type: "ADD_RESPONSE_MESSAGE",
           payload: {
             type: "FROM_BOT",
-            id: genId(),
+            id: genUuid(),
             timestamp: new Date().toISOString(),
             component: "TEXT",
             data: {

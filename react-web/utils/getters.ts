@@ -1,4 +1,4 @@
-import { ChatHistoryMessageType } from "@core/types";
+import { ChatHistoryMessageType } from "@core/types/schemas";
 
 interface DayOfficeHours {
   from: string;

@@ -1,10 +1,11 @@
-import { AgentMessageType, AgentType, BotMessageType } from "@core/types";
+import { AgentMessageType, BotMessageType } from "@core/types";
 import { Avatar, AvatarImage } from "@ui/avatar";
 import React from "react";
 import { cn } from "src/utils";
 import { BotOrAgentMessage } from "./BotOrAgentMessage";
 import { BotOrAgentMessageWrapper } from "./BotOrAgentMessageWrapper";
 import { useChat } from "@react/index";
+import { AgentType } from "@core/types/schemas";
 
 export function BotOrAgentMessageGroup({
   messages,

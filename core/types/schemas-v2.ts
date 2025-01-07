@@ -50,7 +50,7 @@ export enum MessageTypeEnum {
 }
 
 const widgetHistorySchema = z.object({
-    publicId: z.string().optional().nullable(),
+    publicId: z.string(),
     type: z.nativeEnum(MessageTypeEnum),
     sender: z.object({
         kind: z.enum(['user', 'agent', 'ai', 'none', 'unknown']),
