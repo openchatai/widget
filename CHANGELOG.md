@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.5.1
+
+### Patch Changes
+
+- provide uuid when saving user messages
+
 ## 2.5.0
 
 ### Minor Changes
