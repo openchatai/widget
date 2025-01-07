@@ -10,7 +10,7 @@ export type UserMessageType = {
   content: string;
   deliveredAt: string | null;
   attachments?: ChatAttachmentType[];
-  timestamp?: string;
+  timestamp: string;
   user?: {
     name?: string;
     email?: string;
@@ -25,7 +25,7 @@ export type BotMessageType<TData = unknown> = {
   type: "FROM_BOT";
   component: string;
   data: TData;
-  timestamp?: string;
+  timestamp: string;
   original?: ChatHistoryMessageType;
   agent?: AgentType;
   attachments?: ChatAttachmentType[];

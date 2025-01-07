@@ -9,7 +9,7 @@ const DEFAULT_THEME = {
     triggerOffset: "20px"
 };
 
-type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
+export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
     contactToken: string | undefined | null;
     soundEffectFiles: {
         messageArrived: string;
@@ -24,7 +24,7 @@ type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
     };
 };
 
-type ConfigInstance = {
+export type ConfigInstance = {
     getConfig: () => NormalizedConfig;
     getApiConfig: () => {
         apiUrl: string;
@@ -42,17 +42,23 @@ type ConfigInstance = {
     getDebugMode: () => boolean;
 };
 
+const MIN_POLLING_INTERVAL = 1000 * 3;
+
 export function createConfig(options: CoreOptions): ConfigInstance {
+    if (!options.token) {
+        throw new Error("Token is required");
+    }
+
+    if (options.pollingInterval && options.pollingInterval < MIN_POLLING_INTERVAL) {
+        throw new Error("Polling interval must be at least 3 seconds");
+    }
+
     const normalizedConfig: NormalizedConfig = {
         ...options,
+        collectUserData: options.collectUserData ?? false,
         apiUrl: options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
-        socketUrl: options.socketUrl ?? "https://api-v2.opencopilot.so",
-        transport: options.transport ?? 'socket',
         pollingInterval: options.pollingInterval ?? 3000,
-        headers: {
-            ...(options.headers ?? {}),
-            "X-Bot-Token": options.token,
-        },
+        headers: options.headers ?? {},
         queryParams: options.queryParams ?? {},
         pathParams: options.pathParams ?? {},
         bot: {
@@ -75,7 +81,7 @@ export function createConfig(options: CoreOptions): ConfigInstance {
         settings: {
             persistSession: options.settings?.persistSession ?? false,
             useSoundEffects: options.settings?.useSoundEffects ?? false
-        }
+        },
     };
 
     return {

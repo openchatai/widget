@@ -10,16 +10,15 @@
   },
   "dependencies": {
     "@opencx/widget": "^2.0.0",
-    "@tweakpane/core": "^2.0.5",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "tweakpane": "^4.0.5"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",
     "globals": "^15.12.0",
+    "lightningcss": "^1.28.2",
     "typescript": "~5.6.2",
     "vite": "^6.0.1"
   }

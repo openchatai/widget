@@ -1,4 +1,3 @@
-import { useLocale } from "../providers/LocalesProvider";
 import { useConfigData } from "../providers/ConfigDataProvider";
 import { UserObject } from "@react/types";
 import { create } from "mutative";
@@ -12,19 +11,16 @@ import {
 import pkg from "../../package.json";
 import {
   AIClosureType,
-  ChatAttachmentType,
   type ChatSessionType,
-  MessageType,
-  SendMessageInput,
   SessionStatus,
-  UserMessageType,
-} from "@core/types";
+} from "@core/types/schemas";
 import { useSyncedState } from "./useSyncState";
 import useAsyncFn from "react-use/lib/useAsyncFn";
 import { mapChatHistoryToMessage } from "@core/utils/history-to-widget-messages";
 import lodashSet from "lodash.set";
 import { useWidgetSoundEffects } from "@react/providers/use-widget-sfx";
 import { genId } from "@core/utils/genId";
+import { MessageType, SendMessageInput, UserMessageType } from "@core/types";
 
 const POLLING_INTERVAL = 5000; // every 5 seconds
 
@@ -464,6 +460,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
           type: "FROM_USER",
           id: msgId,
           content: content.text,
+          timestamp: new Date().toISOString(),
           user: {
             ...config.user,
             ...user
@@ -555,6 +552,7 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
           payload: {
             type: "FROM_BOT",
             id: genId(),
+            timestamp: new Date().toISOString(),
             component: "TEXT",
             data: {
               message: errorMessage,

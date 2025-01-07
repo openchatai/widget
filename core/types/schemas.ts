@@ -1,4 +1,5 @@
 import z from "zod";
+import { chatAttachmentSchema } from "./schemas-v2";
 
 export enum SessionStatus {
   OPEN = 0,
@@ -61,21 +62,8 @@ export const chatSessionSchema = z.object({
   sentiment: z.nativeEnum(SentimentEnum).nullable(),
 });
 
-export type ChatAttachmentType = {
-  id: string;
-  name: string;
-  size: number;
-  type: string;
-  url: string;
-};
 
-export const chatAttachmentSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  size: z.number(),
-  type: z.string(),
-  url: z.string(),
-}) as z.ZodType<ChatAttachmentType>;
+
 
 export const chatHistoryMessageSchema = z.object({
   publicId: z.string().uuid(),
@@ -189,11 +177,14 @@ type StructuredSocketMessageType = z.infer<
   typeof structuredSocketMessageSchema
 >;
 type ChatHistoryMessageType = z.infer<typeof chatHistoryMessageSchema>;
+type ChatAttachmentType = z.infer<typeof chatAttachmentSchema>;
+
 export type {
   AgentType,
   ConsumerType,
   ChatSessionType,
   StructuredSocketMessageType,
   ChatHistoryMessageType,
+  ChatAttachmentType,
   ChatSessionWithStatus,
 };

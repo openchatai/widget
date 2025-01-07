@@ -1,5 +1,45 @@
 # @opencx/widget
 
+## 2.4.4
+
+### Patch Changes
+
+- 9e1a329: disable storage cleanups
+- bad8a80: .
+- d726352: some changes
+- a90a3c3: rn
+- 5b62158: export more stuff
+
+## 2.4.4-rn.4
+
+### Patch Changes
+
+- disable storage cleanups
+
+## 2.4.4-rn.3
+
+### Patch Changes
+
+- .
+
+## 2.4.4-rn.2
+
+### Patch Changes
+
+- some changes
+
+## 2.4.4-rn.1
+
+### Patch Changes
+
+- export more stuff
+
+## 2.4.4-rn.0
+
+### Patch Changes
+
+- rn
+
 ## 2.4.3
 
 ### Patch Changes

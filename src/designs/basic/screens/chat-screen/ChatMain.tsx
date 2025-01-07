@@ -54,6 +54,7 @@ export function ChatMain() {
               data: { message },
               id: `initial-${index}`,
               type: "FROM_BOT",
+              timestamp: Date.now().toString(),
             }}
             Wrapper={BotOrAgentMessageWrapper}
             wrapperProps={{ agent: config.bot }}
@@ -67,6 +68,7 @@ export function ChatMain() {
               id: "default-welcome",
               type: "FROM_BOT",
               agent: config.bot,
+              timestamp: Date.now().toString(),
             }}
             Wrapper={BotOrAgentMessageWrapper}
             wrapperProps={{ agent: config.bot }}

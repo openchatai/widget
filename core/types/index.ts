@@ -1,7 +1,7 @@
-import { ChatAttachmentType } from "./schemas"
+import { ChatAttachmentType } from "./schemas-v2"
 
 export * from "./messages"
-export * from "./schemas"
+export * from "./schemas-v2"
 export * from "./pub-sub"
 export * from "./helpers"
 
@@ -27,11 +27,10 @@ export interface SendMessageInput extends Record<string, unknown> {
 export interface CoreOptions {
     token: string
     apiUrl?: string
-    transport?: 'socket' | 'http'
-    socketUrl?: string
     headers?: Record<string, string>
     queryParams?: Record<string, string>
     pathParams?: Record<string, string>
+    collectUserData?: boolean
     debug?: boolean
     language?: string
     user?: User

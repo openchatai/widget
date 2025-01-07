@@ -6,7 +6,7 @@ import { LocaleProvider } from "./LocalesProvider";
 import { useAxiosInstance, useSyncedState } from "@react/hooks";
 import { ComponentRegistry } from "./componentRegistry";
 import AgentIcon from "../static/agent-icon.png";
-import { AgentType } from "@core/types";
+import { AgentType } from "@core/types/schemas";
 
 const defaultTheme: WidgetThemeOptions = {
   primaryColor: "hsl(0,0%,0%)",

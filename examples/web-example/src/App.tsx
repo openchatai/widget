@@ -1,110 +1,148 @@
-import "./App.css";
-import { type WidgetOptions } from "@opencx/widget/react";
-import { Widget, WidgetRoot } from "@opencx/widget/basic";
-import { Pane } from "tweakpane";
-import { useEffect, useState } from "react";
+import React, { useState, useRef } from 'react';
+import { BotMessageType } from '../../../core';
+import usePubsub from './usePubsub';
+import { ChatProvider, useChat } from './ChatContext';
+import './App.css';
 
-const pane = new Pane({
-  title: "Widget Options",
-  expanded: true,
-});
+function ChatWidget() {
+  const [messageInput, setMessageInput] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { chat, prelude, isLoading } = useChat();
 
-function App() {
-  const [options, setOptions] = useState<WidgetOptions>({
-    token: "",
-    initialMessages: [],
-    apiUrl: "",
-    socketUrl: "",
-    debug: false,
-    language: "en",
-    user: {
-      name: "",
-      email: "",
-      phone: "",
-      customData: {},
-      avatarUrl: "",
-    },
-    bot: {
-      name: "",
-      avatarUrl: "",
-    },
-    theme: {
-      primaryColor: "hsl(211,65%,59%)",
-      triggerOffset: "20px",
-    },
-    settings: {
-      persistSession: false,
-      useSoundEffects: false,
-    },
-    collectUserData: false,
-    soundEffectFiles: {
-      messageArrived: "",
-    },
-  });
+  const chatState = usePubsub(
+    chat.chatState,
+  );
 
-  useEffect(() => {
-    const opts = { ...options };
-    pane.addBinding(opts, "token");
-    pane.addBinding(opts, "initialMessages", {
-      view: "textarea",
-      multiline: true,
-    });
-    pane.addBinding(opts, "apiUrl");
-    pane.addBinding(opts, "socketUrl");
-    pane.addBinding(opts, "debug");
-    pane.addBinding(opts, "language");
+  const handleSendMessage = async () => {
+    if (!messageInput.trim() || !chat) return;
 
-    const userFolder = pane.addFolder({ title: "User" });
-    if (opts.user) {
-      userFolder.addBinding(opts.user, "name");
-      userFolder.addBinding(opts.user, "email");
-      userFolder.addBinding(opts.user, "phone");
-      userFolder.addBinding(opts.user, "avatarUrl");
+    try {
+      const success = await chat.sendMessage({
+        content: messageInput,
+      });
+
+      if (success) {
+        setMessageInput('');
+      }
+    } catch (error) {
+      console.error('Failed to send message:', error);
     }
+  };
 
-    const botFolder = pane.addFolder({ title: "Bot" });
-    if (opts.bot) {
-      botFolder.addBinding(opts.bot, "name");
-      botFolder.addBinding(opts.bot, "avatarUrl");
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
+  };
 
-    const themeFolder = pane.addFolder({ title: "Theme" });
-    if (opts.theme) {
-      themeFolder.addBinding(opts.theme, "primaryColor");
-      themeFolder.addBinding(opts.theme, "triggerOffset");
-    }
+  const handleQuestionClick = (question: string) => {
+    setMessageInput(question);
+  };
 
-    const settingsFolder = pane.addFolder({ title: "Settings" });
-    if (opts.settings) {
-      settingsFolder.addBinding(opts.settings, "persistSession");
-      settingsFolder.addBinding(opts.settings, "useSoundEffects");
-    }
-
-    pane.addBinding(opts, "collectUserData");
-
-    const soundEffectFilesFolder = pane.addFolder({ title: "Sound Effects" });
-    if (opts.soundEffectFiles) {
-      soundEffectFilesFolder.addBinding(opts.soundEffectFiles, "messageArrived");
-    }
-
-    pane.on("change", (ev) => {
-      setOptions((prevOptions) => ({
-        ...prevOptions,
-        ...opts,
-      }));
-    });
-
-    return () => {
-      pane.dispose();
-    };
-  }, [options]);
+  if (isLoading) {
+    return (
+      <div className="chat-widget">
+        <div className="chat-header">
+          <div className="chat-header-icon">🤖</div>
+          <div className="chat-header-content">
+            <span className="chat-header-title">Loading...</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <WidgetRoot options={options}>
-        <Widget style={{ height: "500px", width: "400px" }} />
-      </WidgetRoot>
+    <div className="chat-widget">
+      <div className="chat-header">
+        <div className="chat-header-icon">🤖</div>
+        <div className="chat-header-content">
+          <span className="chat-header-title">{prelude?.organizationName || 'Chat Assistant'}</span>
+        </div>
+      </div>
+
+      <div className="chat-messages" ref={messagesEndRef}>
+        {!chatState?.messages.length && prelude?.initialQuestions && (
+          <div className="initial-questions">
+            <div className="welcome-message">
+              Welcome! Here are some questions you can ask:
+            </div>
+            <div className="questions-list">
+              {prelude.initialQuestions.map((question, index) => (
+                <button
+                  key={index}
+                  className="question-chip"
+                  onClick={() => handleQuestionClick(question)}
+                >
+                  {question}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {chatState?.messages.map((message) => (
+          <div
+            key={message.id}
+            className={`message animate__animated animate__fadeIn ${message.type === 'FROM_USER' ? 'user' : 'bot'
+              }`}
+          >
+            {message.type === 'FROM_USER'
+              ? message.content
+              : (message as BotMessageType<{ message: string }>).data.message
+            }
+          </div>
+        ))}
+      </div>
+
+      <div className="chat-input">
+        <input
+          type="text"
+          value={messageInput}
+          onChange={(e) => setMessageInput(e.target.value)}
+          onKeyDown={handleKeyPress}
+          placeholder="Type your message..."
+          aria-label="Message input"
+          disabled={chatState?.loading.isLoading}
+        />
+        <button
+          onClick={handleSendMessage}
+          disabled={chatState?.loading.isLoading}
+        >
+          {chatState?.loading.isLoading ? 'Sending...' : 'Send'}
+        </button>
+      </div>
     </div>
+  );
+}
+
+function App() {
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+    if (!isChatOpen && !isInitialized) {
+      setIsInitialized(true);
+    }
+  };
+
+  return (
+    <ChatProvider>
+      <div className="app">
+        <h1 className="app-title">OpenChat Widget</h1>
+        <p className="app-description">
+          Experience our modern chat interface. Click the chat button in the bottom right corner to start a conversation!
+        </p>
+
+        <button className="toggle-chat" onClick={toggleChat} aria-label="Toggle chat">
+          💬
+        </button>
+
+        {isChatOpen && <ChatWidget />}
+      </div>
+    </ChatProvider>
   );
 }
 

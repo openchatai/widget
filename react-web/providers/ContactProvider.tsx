@@ -3,9 +3,9 @@ import { createSafeContext } from "@react/utils/create-safe-context";
 import { ReactNode, useEffect, useMemo } from "react";
 import { useConfigData } from "./ConfigDataProvider";
 import { useSyncedState } from "@react/hooks";
-import { ConsumerType } from "@core/types";
 import useAsyncFn from "react-use/lib/useAsyncFn";
 import { UserObject } from "@react/types";
+import { ConsumerType } from "@core/types/schemas";
 
 type T = ConsumerType;
 
