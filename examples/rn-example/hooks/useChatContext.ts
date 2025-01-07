@@ -52,9 +52,16 @@ export const platform: Platform = {
 
 
 
+export type PreludeError = {
+    hasError: boolean;
+    message?: string;
+};
+
 export type ChatContextType = ReturnType<typeof useInitChat> & {
     prelude: Awaited<ReturnType<typeof ApiCaller['prototype']['widgetPrelude']>> | null;
     isLoading: boolean;
+    preludeError: PreludeError;
+    retryPrelude: () => Promise<void>;
 };
 
 const ChatContext = createContext<ChatContextType | null>(null);

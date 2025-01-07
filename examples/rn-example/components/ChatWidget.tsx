@@ -18,7 +18,7 @@ import { usePubsub } from '../hooks/usePubsub';
 export const ChatWidget = () => {
     const [messageInput, setMessageInput] = useState('');
     const scrollViewRef = useRef<ScrollView>(null);
-    const { chat, prelude, isLoading } = useChatContext();
+    const { chat, prelude, isLoading, preludeError, retryPrelude } = useChatContext();
 
     const chatState = usePubsub(chat.chatState);
 
@@ -50,6 +50,26 @@ export const ChatWidget = () => {
                     <ActivityIndicator size="large" color="#2b6cb0" />
                     <Text style={styles.loadingTitle}>Initializing Chat</Text>
                     <Text style={styles.loadingText}>Loading organization details...</Text>
+                </View>
+            </SafeAreaView>
+        );
+    }
+
+    if (preludeError.hasError) {
+        return (
+            <SafeAreaView style={styles.loadingContainer}>
+                <View style={styles.errorContent}>
+                    <Text style={styles.errorIcon}>⚠️</Text>
+                    <Text style={styles.errorTitle}>Connection Error</Text>
+                    <Text style={styles.errorText}>
+                        {preludeError.message || 'Failed to load chat. Please try again.'}
+                    </Text>
+                    <TouchableOpacity
+                        style={styles.retryButton}
+                        onPress={retryPrelude}
+                    >
+                        <Text style={styles.retryButtonText}>Retry</Text>
+                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
         );
@@ -341,5 +361,38 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: '#4a5568',
         fontWeight: '500',
+    },
+    errorContent: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    errorIcon: {
+        fontSize: 48,
+        marginBottom: 16,
+    },
+    errorTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#e53e3e',
+        marginBottom: 8,
+    },
+    errorText: {
+        fontSize: 16,
+        color: '#4a5568',
+        textAlign: 'center',
+        marginBottom: 24,
+    },
+    retryButton: {
+        backgroundColor: '#2b6cb0',
+        paddingHorizontal: 24,
+        paddingVertical: 12,
+        borderRadius: 8,
+    },
+    retryButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 }); 
