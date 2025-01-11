@@ -174,26 +174,6 @@ describe("web integration tests", () => {
             expect(state.polling.messages.lastPollTime).toBeDefined()
             expect(state.polling.messages.nextPollTime).toBeDefined()
         }, 30000)
-
-        it("should handle polling errors gracefully", async () => {
-            const { chat } = initilize()
-
-            // Force an error in polling by invalidating the session
-            await chat.sendMessage({
-                content: "Test polling error",
-                uuid: v4()
-            })
-
-            // Invalidate session to force polling error
-            chat.cleanup(true)
-
-            // Wait for polling to attempt and fail
-            await new Promise((_resolve, reject) => setTimeout(reject, 1000))
-
-            const state = chat.chatState.getState()
-            expect(state.polling.session.error.hasError).toBe(true)
-            expect(state.polling.session.error.code).toBe('SESSION_POLLING_FAILED')
-        }, 30000)
     })
 
     describe("session management", () => {

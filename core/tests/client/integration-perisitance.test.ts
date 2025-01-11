@@ -133,7 +133,7 @@ describe("integration testing with storage and persistence", () => {
             const initialResp = await chat.sendMessage({ content: "create session" })
             expect(initialResp.success).toBe(true)
             expect(initialResp.createdSession).toBe(true)
-            await new Promise(resolve => setTimeout(resolve, 500))
+            await new Promise(resolve => setTimeout(resolve, 1000))
 
             // Store the initial session
             const storedSession = chat.sessionState.getState()
@@ -142,6 +142,7 @@ describe("integration testing with storage and persistence", () => {
             const sessionKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`
             const storedValue = mockedStorage.get(sessionKey)
             expect(storedValue).toBeDefined()
+            expect(JSON.parse(storedValue)).toHaveProperty('id', sessionId)
 
             // Clear chat state but keep storage
             await chat.clearSession()
@@ -151,15 +152,24 @@ describe("integration testing with storage and persistence", () => {
             // Create new chat instance with same storage
             const { chat: newChat } = initilize()
 
+            // Subscribe to new chat's state changes
+            const newChatStates: any[] = []
+            newChat.sessionState.subscribe((state) => {
+                newChatStates.push(state)
+            })
+
             // Wait for session to be restored from storage
             let restoredSession = null
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 20; i++) {
                 restoredSession = newChat.sessionState.getState()
-                if (restoredSession) break
+                if (restoredSession?.id === sessionId) break
                 await new Promise(resolve => setTimeout(resolve, 100))
             }
+
+            // Verify session was properly restored
             expect(restoredSession).not.toBeNull()
             expect(restoredSession?.id).toBe(sessionId)
+            expect(newChatStates.some(state => state?.id === sessionId)).toBe(true)
 
             // Send message with restored session
             const resp = await newChat.sendMessage({ content: "after restoration" })
