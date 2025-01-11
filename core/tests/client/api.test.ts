@@ -124,7 +124,7 @@ describe('ApiCaller', () => {
                 const timestamp = '2024-01-01T00:00:00Z';
                 await apiCaller.getSessionHistory('test-session', timestamp);
                 expect(mockFetch).toHaveBeenCalledWith(
-                    `/session/history/test-session?lastMessageTimestamp=${timestamp}`,
+                    `/session/history/test-session?lastMessageTimestamp=${encodeURIComponent(timestamp)}`,
                     { method: 'GET' }
                 );
             });
