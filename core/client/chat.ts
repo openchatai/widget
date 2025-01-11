@@ -712,6 +712,7 @@ export function createChat(options: ChatOptions) {
         createSession: sessionManager.createSession,
         clearSession: sessionManager.clearSession,
         cleanup: sessionManager.cleanup,
-        initialState
+        initialState,
+        sessionStorageKey: sessionManager.sessionStorageKey
     };
 } 
