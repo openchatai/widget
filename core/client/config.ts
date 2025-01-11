@@ -3,7 +3,9 @@ import { CoreOptions } from "../types";
 const DEFAULT_SOUND_EFFECTS = {
     messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3"
 };
-
+/**
+ * exclusive for web client
+ */
 const DEFAULT_THEME = {
     primaryColor: "hsl(211,65%,59%)",
     triggerOffset: "20px"

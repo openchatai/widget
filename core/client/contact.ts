@@ -17,11 +17,9 @@ export type CreateContactOptions = {
     config: ConfigInstance
 };
 
-export function createContact(options: CreateContactOptions) {
-    const config = options.config.getConfig();
-    options.config.getConfig
-    const storageKey = `${config.token}:contact:${config.user.external_id}`;
-    const storage = isStorageAvailable(options.platform.storage) ? options.platform.storage : undefined;
+export function createContact({ config, api, platform }: CreateContactOptions) {
+    const storageKey = `${config.getConfig().token}:contact:${config.getConfig().user.external_id}`;
+    const storage = isStorageAvailable(platform.storage) ? platform.storage : undefined;
 
     // Initialize state from storage if available
     let initialContact: ConsumerType | null = null;
@@ -168,7 +166,7 @@ export function createContact(options: CreateContactOptions) {
     function shouldCollectData(): { should: boolean; reason?: string } {
         const currentState = state.getState();
 
-        if (!currentState.contact?.id && config.collectUserData) {
+        if (!currentState.contact?.id && config.getConfig().collectUserData) {
             return {
                 should: true,
                 reason: "No contact id and collectUserData is true"
@@ -206,7 +204,6 @@ export function createContact(options: CreateContactOptions) {
 
             state.clear();
         } catch (error) {
-            console.error("Error cleaning up contact:", error);
             state.setStatePartial({
                 error: {
                     hasError: true,

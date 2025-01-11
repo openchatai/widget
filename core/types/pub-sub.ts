@@ -38,8 +38,8 @@ export class PubSub<S> {
             listeners.forEach(listener => {
                 try {
                     listener(eventData);
-                } catch (error) {
-                    console.error('Error in lifecycle listener:', error);
+                } catch {
+                    // ignore error
                 }
             });
         }
@@ -52,7 +52,6 @@ export class PubSub<S> {
                 callback(state);
             } catch (error) {
                 this.emitLifecycle(LifecycleEvent.ERROR, { error });
-                console.error('Error in subscriber:', error);
             }
         });
     }

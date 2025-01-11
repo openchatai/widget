@@ -8,6 +8,7 @@ import { ConfigInstance } from "./config";
 import { Platform, isStorageAvailable } from "../platform";
 import { Logger } from "../platform/logger";
 import { ExternalIdNotDefinedError, StorageNotAvailableError } from "@core/errors";
+import { isAudioAvailable, safeAudioOperation } from "@core/platform/audio";
 
 // Constants
 const POLLING_INTERVALS = {
@@ -91,7 +92,7 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
 }
 
 // Message Handling
-function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?: Logger) {
+function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?: Logger, config?: ConfigInstance, platform?: Platform) {
     async function fetchHistoryMessages(session: WidgetSessionSchema) {
         const messages = state.getState().messages;
         if (messages.length === 0) {
@@ -125,6 +126,18 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
                     messageIds: newMessages.map(m => m.id),
                     messageTypes: newMessages.map(m => m.type)
                 });
+
+                // Play notification sound for new messages if enabled
+                if (config?.getSettings().useSoundEffects && platform?.audio && isAudioAvailable(platform.audio)) {
+                    const botMessages = newMessages.filter(msg => msg.type === "FROM_BOT");
+                    if (botMessages.length > 0) {
+                        await safeAudioOperation(
+                            () => platform.audio!.playNotification(),
+                            'Failed to play notification sound for new messages'
+                        );
+                    }
+                }
+
                 state.setStatePartial({
                     messages: [...messages, ...newMessages]
                 });
@@ -472,7 +485,6 @@ function createSessionManager(
 
             options.onSessionDestroy?.();
         } catch (error) {
-            console.error("Error clearing session:", error);
             chatState.setStatePartial({
                 error: {
                     hasError: true,
@@ -522,7 +534,6 @@ function createSessionManager(
             chatState.clear();
             sessionState.clear();
         } catch (error) {
-            console.error("Error in cleanup:", error);
             chatState.setStatePartial({
                 error: {
                     hasError: true,
@@ -598,7 +609,7 @@ export function createChat(options: ChatOptions) {
     const state = new PubSub<ChatState>(initialState);
 
     const sessionState = new PubSub<WidgetSessionSchema | null>(null);
-    const messageHandler = createMessageHandler(options.api, state, logger);
+    const messageHandler = createMessageHandler(options.api, state, logger, options.config, options.platform);
     const sessionManager = createSessionManager(
         options.api,
         sessionState,

@@ -48,7 +48,6 @@ export async function safeAudioOperation(
         await operation();
         return { success: true, error: null };
     } catch (error) {
-        console.error(errorContext, error);
         return {
             success: false,
             error: {
