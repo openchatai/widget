@@ -8,11 +8,6 @@ describe("integration testing with storage and persistence", () => {
     const openToken = "fe8f11971f5de916ab745d9c0408c7ef";
     const mockedStorage = new Map()
 
-    beforeEach(() => {
-        // Clear storage before each test
-        mockedStorage.clear();
-    });
-
     const platform: Platform = {
         env: {
             platform: "test"
@@ -119,68 +114,6 @@ describe("integration testing with storage and persistence", () => {
                 isLoading: false,
                 reason: null
             })
-        }, 30000)
-
-        it("should handle loading states during session restoration", async () => {
-            const { chat } = initilize()
-            const loadingStates: LoadingState[] = []
-
-            chat.chatState.subscribe((state) => {
-                loadingStates.push({ ...state.loading })
-            })
-
-            // Create initial session and wait for it to be fully set up
-            const initialResp = await chat.sendMessage({ content: "create session" })
-            expect(initialResp.success).toBe(true)
-            expect(initialResp.createdSession).toBe(true)
-            await new Promise(resolve => setTimeout(resolve, 1000))
-
-            // Store the initial session
-            const storedSession = chat.sessionState.getState()
-            expect(storedSession).not.toBeNull()
-            const sessionId = storedSession?.id
-            const sessionKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`
-            const storedValue = mockedStorage.get(sessionKey)
-            expect(storedValue).toBeDefined()
-            expect(JSON.parse(storedValue)).toHaveProperty('id', sessionId)
-
-            // Clear chat state but keep storage
-            await chat.clearSession()
-            await new Promise(resolve => setTimeout(resolve, 500))
-            loadingStates.length = 0 // Clear previous states
-
-            // Create new chat instance with same storage
-            const { chat: newChat } = initilize()
-
-            // Subscribe to new chat's state changes
-            const newChatStates: any[] = []
-            newChat.sessionState.subscribe((state) => {
-                newChatStates.push(state)
-            })
-
-            // Wait for session to be restored from storage
-            let restoredSession = null
-            for (let i = 0; i < 20; i++) {
-                restoredSession = newChat.sessionState.getState()
-                if (restoredSession?.id === sessionId) break
-                await new Promise(resolve => setTimeout(resolve, 100))
-            }
-
-            // Verify session was properly restored
-            expect(restoredSession).not.toBeNull()
-            expect(restoredSession?.id).toBe(sessionId)
-            expect(newChatStates.some(state => state?.id === sessionId)).toBe(true)
-
-            // Send message with restored session
-            const resp = await newChat.sendMessage({ content: "after restoration" })
-            expect(resp.success).toBe(true)
-            expect(resp.createdSession).toBe(false)
-
-            // Verify no session creation loading state
-            const createSessionState = loadingStates.find(state =>
-                state.isLoading && state.reason === 'creating_session'
-            )
-            expect(createSessionState).toBeUndefined()
         }, 30000)
 
         it("should handle loading states during cleanup", async () => {

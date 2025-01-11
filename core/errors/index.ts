@@ -46,3 +46,17 @@ export class FileUploadError extends OpenCXError {
     this.name = "FileUploadError";
   }
 }
+
+export class StorageNotAvailableError extends OpenCXError {
+  constructor(message = "Storage is not available") {
+    super(message);
+    this.name = "StorageNotAvailableError";
+  }
+}
+
+export class ExternalIdNotDefinedError extends OpenCXError {
+  constructor(message = "External ID is not defined") {
+    super(message);
+    this.name = "ExternalIdNotDefinedError";
+  }
+}

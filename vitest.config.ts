@@ -10,6 +10,7 @@ export default defineConfig({
     typecheck: {
       enabled: true,
     },
+    printConsoleTrace: true,
     include: [
       "./lib/**/*.test.{ts,tsx}",
       "./core/**/*.test.{ts,tsx}",

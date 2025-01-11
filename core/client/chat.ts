@@ -7,6 +7,7 @@ import { LoadingState, ErrorState, SomeOptional } from "../types/helpers";
 import { ConfigInstance } from "./config";
 import { Platform, isStorageAvailable } from "../platform";
 import { Logger } from "../platform/logger";
+import { ExternalIdNotDefinedError, StorageNotAvailableError } from "@core/errors";
 
 // Constants
 const POLLING_INTERVALS = {
@@ -202,8 +203,17 @@ function createSessionManager(
     const logger = options.platform?.logger;
     let stopPolling: (() => void) | null = null;
     const storage = options.platform?.storage;
-    const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
     const persistSession = config.getSettings().persistSession;
+
+    if (persistSession && !isStorageAvailable(storage)) {
+        throw new StorageNotAvailableError()
+    }
+
+    if (persistSession && !config.getConfig().user.external_id) {
+        throw new ExternalIdNotDefinedError("session persistence is enabled but external id is not defined")
+    }
+
+    const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
     /**
      * Restores the session from storage
      */
