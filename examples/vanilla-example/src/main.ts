@@ -1,4 +1,4 @@
-import { createChat, createConfig, ApiCaller, type MessageType, type BotMessageType, type CoreOptions, createContact, Platform } from '@core/index';
+import { createChat, createConfig, ApiCaller, type MessageType, type BotMessageType, type CoreOptions, Platform } from '@core/index';
 import { createLogger } from '@core/platform/logger';
 import "./index.css"
 // DOM Elements
@@ -23,7 +23,6 @@ const orgTagline = document.getElementById('orgTagline') as HTMLSpanElement;
 const orgLogo = document.getElementById('orgLogo') as HTMLDivElement;
 const welcomeMessage = document.getElementById('welcomeMessage') as HTMLParagraphElement;
 
-const socketUrl = 'http://localhost:8080';
 const apiUrl = 'http://localhost:8080/backend';
 
 // Error handling utilities
@@ -108,12 +107,6 @@ const platform: Platform = {
         enabled: true
     })
 }
-
-const contact = createContact({
-    api,
-    config,
-    platform
-});
 
 const chat = createChat({
     api,
@@ -242,7 +235,7 @@ chatErrorRetry.addEventListener('click', async () => {
     try {
         hideChatError();
         await handleSendMessage();
-    } catch (error) {
+    } catch {
         showChatError('Still having trouble. Please try again later.');
     }
 });
