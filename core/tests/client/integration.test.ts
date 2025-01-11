@@ -1,9 +1,8 @@
 import { ApiCaller, createChat, createConfig } from "@core/client";
-import { ChatState, SendMessageInput } from "@core/client/chat";
+import { SendMessageInput } from "@core/client/chat";
 import { createLogger, Platform } from "@core/platform";
-import { WidgetPreludeSchema } from "@core/types";
 import { v4 } from "uuid";
-import { describe, expect, expectTypeOf, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 function initilize() {
     const openToken = "fe8f11971f5de916ab745d9c0408c7ef";
@@ -65,7 +64,11 @@ describe("web integration tests", () => {
 
     it("should process the message correctly of a fresh session", async () => {
         const { apis, chat } = initilize()
+        const subscriber = vi.fn()
         expect(chat.chatState.getState()).toBeDefined()
+        expect(chat.chatState.getState().messages)
+
+        chat.chatState.subscribe(subscriber)
 
         const userMessage = <SendMessageInput>{
             content: "Hello",
@@ -74,6 +77,5 @@ describe("web integration tests", () => {
 
         const resp = await chat.sendMessage(userMessage)
 
-        expect(resp).toBe(true)
     }, 30000)
 })

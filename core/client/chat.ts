@@ -451,17 +451,18 @@ export function createChat(options: ChatOptions) {
         options
     );
 
-    async function sendMessage(input: SendMessageInput) {
+    async function sendMessage(input: SendMessageInput, abort?: AbortSignal) {
         let session = sessionState.getState();
+        let createdSession = false;
 
         if (!session?.id) {
             logger?.debug('No active session, creating new session');
             session = await sessionManager.createSession();
+            createdSession = true;
             if (!session) return false;
         }
 
         if (session.assignee.kind === 'ai') {
-            // get the latest session
             session = (await sessionManager.refetchSession()) ?? session;
         }
 
@@ -494,7 +495,7 @@ export function createChat(options: ChatOptions) {
                 session_id: session.id,
                 user: config.user,
                 ...input,
-            });
+            }, abort);
 
             if (data.success) {
                 logger?.debug('Message sent successfully');
@@ -505,6 +506,11 @@ export function createChat(options: ChatOptions) {
                         messages: [...updatedMessages, botMessage]
                     });
                 }
+                return {
+                    success: true,
+                    createdSession,
+                    botMessage
+                }
             } else {
                 logger?.warn('Message send failed', data.error);
                 const errorMessage = messageHandler.addErrorMessage(data.error?.message || "Unknown error occurred");
@@ -512,9 +518,12 @@ export function createChat(options: ChatOptions) {
                 state.setStatePartial({
                     messages: [...currentMessages, errorMessage]
                 });
+                return {
+                    success: false,
+                    createdSession,
+                    error: data.error
+                }
             }
-
-            return true;
         } catch (error) {
             logger?.error('Error sending message:', error);
             state.setStatePartial({
@@ -524,7 +533,11 @@ export function createChat(options: ChatOptions) {
                     code: 'MESSAGE_SEND_FAILED'
                 }
             });
-            return false;
+            return {
+                success: false,
+                createdSession,
+                error
+            }
         } finally {
             state.setStatePartial({
                 loading: { isLoading: false, reason: null }

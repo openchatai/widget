@@ -59,11 +59,12 @@ export class ApiCaller {
         return response.json()
     }
 
-    async handleMessage(message: HttpChatInputSchema) {
+    async handleMessage(message: HttpChatInputSchema, abortSignal?: AbortSignal) {
         // POST /chat/send
         const response = await this.#fetch('/chat/send', {
             method: "POST",
-            body: JSON.stringify(message)
+            body: JSON.stringify(message),
+            signal: abortSignal
         })
         return response.json() as Promise<HandleContactMessageOutputSchema>
     }
