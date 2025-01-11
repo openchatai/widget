@@ -11,13 +11,13 @@ type ContactState = {
     error: ErrorState;
 };
 
-type ContactOptions = {
+export type CreateContactOptions = {
     api: ApiCaller;
     platform: Platform;
     config: ConfigInstance
 };
 
-export function createContact(options: ContactOptions) {
+export function createContact(options: CreateContactOptions) {
     const config = options.config.getConfig();
     options.config.getConfig
     const storageKey = `${config.token}:contact:${config.user.external_id}`;
