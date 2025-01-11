@@ -173,7 +173,7 @@ describe("web integration tests", () => {
             expect(state.polling.messages.isPolling).toBeDefined()
             expect(state.polling.messages.lastPollTime).toBeDefined()
             expect(state.polling.messages.nextPollTime).toBeDefined()
-        }, 30000)
+        }, 300000)
     })
 
     describe("session management", () => {

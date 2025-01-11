@@ -154,14 +154,10 @@ describe("integration testing with storage and persistence", () => {
                 loadingStates.push({ ...state.loading })
             })
 
-            // Send multiple messages concurrently
             const messages = ["msg1", "msg2", "msg3"]
             await Promise.all(messages.map(content =>
                 chat.sendMessage({ content })
             ))
-            await new Promise(resolve => setTimeout(resolve, 100))
-
-            // Verify loading states maintained consistency
             const finalLoadingState = chat.chatState.getState().loading
             expect(finalLoadingState.isLoading).toBe(false)
             expect(finalLoadingState.reason).toBe(null)
