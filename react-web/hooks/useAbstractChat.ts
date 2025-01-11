@@ -514,55 +514,58 @@ function useAbstractChat({ onSessionDestroy }: useChatOptions) {
           deliveredAt: new Date().toISOString(),
         },
       });
-
-      // Handle response
-      if (response.data.success) {
-        const data = response.data;
-        if (data.autopilotResponse) {
-          dispatch({
-            type: "ADD_RESPONSE_MESSAGE",
-            payload: {
-              type: "FROM_BOT",
-              id: data.autopilotResponse.id || genUuid(),
-              timestamp: new Date().toISOString(),
-              component: "TEXT",
-              data: {
-                message: data.autopilotResponse.value.content,
+      function handleResponse() {
+        if (response.data.success) {
+          const data = response.data;
+          if (data.uiResponse) {
+            const uiVal = data.uiResponse.value;
+            dispatch({
+              type: "ADD_RESPONSE_MESSAGE",
+              payload: {
+                type: "FROM_BOT",
+                id: genUuid(),
+                timestamp: new Date().toISOString(),
+                component: uiVal.name,
+                data: uiVal.request_response,
               }
-            }
-          });
-        }
-        if (data.uiResponse) {
-          const uiVal = data.uiResponse.value;
+            });
+            return;
+          }
+          if (data.autopilotResponse) {
+            dispatch({
+              type: "ADD_RESPONSE_MESSAGE",
+              payload: {
+                type: "FROM_BOT",
+                id: data.autopilotResponse.id || genUuid(),
+                timestamp: new Date().toISOString(),
+                component: "TEXT",
+                data: {
+                  message: data.autopilotResponse.value.content,
+                }
+              }
+            });
+            return;
+          }
+        } else {
+          const errorMessage = response.data.error?.message || "Unknown error occurred";
           dispatch({
             type: "ADD_RESPONSE_MESSAGE",
             payload: {
               type: "FROM_BOT",
               id: genUuid(),
               timestamp: new Date().toISOString(),
-              component: uiVal.name,
-              data: uiVal.request_response,
+              component: "TEXT",
+              data: {
+                message: errorMessage,
+                variant: "error"
+              }
             }
           });
+          setHookState({ state: "error", error: errorMessage });
         }
-      } else {
-        const errorMessage = response.data.error?.message || "Unknown error occurred";
-        dispatch({
-          type: "ADD_RESPONSE_MESSAGE",
-          payload: {
-            type: "FROM_BOT",
-            id: genUuid(),
-            timestamp: new Date().toISOString(),
-            component: "TEXT",
-            data: {
-              message: errorMessage,
-              variant: "error"
-            }
-          }
-        });
-        setHookState({ state: "error", error: errorMessage });
       }
-
+      // Handle response
+      handleResponse()
       setHookState({ state: "idle" });
       return { id: msgId };
     } catch (error) {

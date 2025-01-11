@@ -1,3 +1,4 @@
+import "whatwg-fetch";
 type RequestInterceptor = (config: RequestConfig) => RequestConfig | Promise<RequestConfig>;
 type ResponseInterceptor = (response: Response) => Response | Promise<Response>;
 type ErrorInterceptor = (error: any) => any;
@@ -22,7 +23,9 @@ export interface CustomFetch {
     };
 }
 
-export function createFetch(defaultConfig: RequestConfig = {}): CustomFetch {
+type Fetch = typeof globalThis.fetch;
+
+export function createFetch(defaultConfig: RequestConfig = {}, fetch: Fetch = globalThis.fetch): CustomFetch {
     const requestInterceptors: RequestInterceptor[] = [];
     const responseInterceptors: ResponseInterceptor[] = [];
     const errorInterceptors: ErrorInterceptor[] = [];

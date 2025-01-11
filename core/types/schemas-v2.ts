@@ -88,6 +88,7 @@ const widgetSessionSchema = z.object({
 })
 
 const httpChatInputDto = z.object({
+    uuid: z.string().uuid().optional(),
     content: z.string(),
     session_id: z.string(),
     headers: z.record(z.string(), z.string()).optional().nullable(),

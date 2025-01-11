@@ -32,7 +32,7 @@ type ChatOptions = {
 // Message Mapping
 function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
     const commonFields = {
-        id: history.publicId || genUuid(),
+        id: history.publicId,
         timestamp: history.sentAt || "",
         attachments: history.attachments || undefined
     };
@@ -48,7 +48,7 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
 
     if (history.sender.kind === 'agent') {
         return {
-            id: history.publicId || genUuid(),
+            id: history.publicId,
             type: "FROM_AGENT",
             component: history.type,
             data: {
@@ -89,14 +89,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
             }
             return;
         }
-
-        // Get the latest message timestamp
-        const lastMessage = messages[messages.length - 1];
-        const lastTimestamp = lastMessage.timestamp ? new Date(lastMessage.timestamp) : new Date();
-        // Add 1 second to avoid getting the same message
-        lastTimestamp.setSeconds(lastTimestamp.getSeconds() + 1);
-        const lastMessageTimestamp = lastTimestamp.toISOString();
-
+        const lastMessageTimestamp = state.getState().messages.at(-1)?.timestamp
         logger?.debug('Fetching history messages after timestamp', {
             sessionId: session.id,
             lastMessageTimestamp,
@@ -222,7 +215,6 @@ function createSessionManager(
      */
     function setupSessionPersistence() {
         if (!storage) return;
-
         logger?.debug('Setting up session persistence');
         sessionState.subscribe(async (session) => {
             try {
@@ -495,6 +487,7 @@ export function createChat(options: ChatOptions) {
 
             const config = options.config.getConfig();
             const data = await options.api.handleMessage({
+                uuid: input.uuid || genUuid(),
                 bot_token: config.token,
                 headers: config.headers,
                 query_params: config.queryParams,

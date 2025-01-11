@@ -54,6 +54,7 @@
     "react-hot-toast": "^2.4.1",
     "tinycolor2": "^1.6.0",
     "uuid": "^11.0.4",
+    "whatwg-fetch": "^3.6.20",
     "zod": "^3.23.8"
   },
   "overrides": {

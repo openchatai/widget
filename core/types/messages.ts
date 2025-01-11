@@ -44,6 +44,7 @@ export type AgentMessageType<TData = unknown> = {
 
 export type MessageType = UserMessageType | BotMessageType | AgentMessageType;
 
+// shouldn't be used in @core
 export interface SendMessageInput {
   content: {
     text: string;
