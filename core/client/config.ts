@@ -1,4 +1,6 @@
+import { Platform, isStorageAvailable } from "@core/platform";
 import { CoreOptions } from "../types";
+import { PubSub } from "../types/pub-sub";
 
 const DEFAULT_SOUND_EFFECTS = {
     messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3"
@@ -9,6 +11,17 @@ const DEFAULT_THEME = {
     triggerOffset: "20px"
 };
 
+export type WidgetSettings = {
+    persistSession: boolean;
+    useSoundEffects: boolean;
+};
+
+const DEFAULT_SETTINGS: WidgetSettings = {
+    persistSession: false,
+    useSoundEffects: false
+};
+
+
 export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
     contactToken: string | undefined | null;
     soundEffectFiles: {
@@ -18,33 +31,70 @@ export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
         primaryColor: string;
         triggerOffset: string;
     };
-    settings: {
-        persistSession: boolean;
-        useSoundEffects: boolean;
-    };
-};
-
-export type ConfigInstance = {
-    getConfig: () => NormalizedConfig;
-    getApiConfig: () => {
-        apiUrl: string;
-        token: string;
-        headers: Record<string, string>;
-        queryParams: Record<string, string>;
-        pathParams: Record<string, string>;
-    };
-    getBotConfig: () => NormalizedConfig['bot'];
-    getThemeConfig: () => NormalizedConfig['theme'];
-    getSettings: () => NormalizedConfig['settings'];
-    getSoundEffects: () => NormalizedConfig['soundEffectFiles'];
-    getUser: () => NormalizedConfig['user'];
-    getLanguage: () => string;
-    getDebugMode: () => boolean;
+    settings: WidgetSettings;
 };
 
 const MIN_POLLING_INTERVAL = 1000 * 3;
 
-export function createConfig(options: CoreOptions): ConfigInstance {
+function createSettingsManager(
+    initialSettings: NormalizedConfig['settings'],
+    platform: Platform,
+    token: string
+) {
+    const logger = platform.logger;
+    const storage = platform.storage;
+    const storageKey = `${token}:settings`;
+    const settingsState = new PubSub<WidgetSettings>(initialSettings);
+
+    async function restoreSettings() {
+        if (!storage || !isStorageAvailable(storage)) return;
+        try {
+            logger?.debug('Attempting to restore settings from storage');
+            const storedSettings = await storage.getItem(storageKey);
+            if (storedSettings) {
+                const settings = JSON.parse(storedSettings) as NormalizedConfig['settings'];
+                logger?.debug('Settings restored from storage', settings);
+                settingsState.setState({
+                    ...initialSettings,
+                    ...settings
+                });
+            }
+        } catch (error) {
+            logger?.error('Error restoring settings:', error);
+        }
+    }
+
+    async function persistSettings(settings: WidgetSettings) {
+        if (!storage || !isStorageAvailable(storage)) return;
+        try {
+            await storage.setItem(storageKey, JSON.stringify(settings));
+            logger?.debug('Settings persisted to storage', settings);
+        } catch (error) {
+            logger?.error('Error persisting settings:', error);
+        }
+    }
+
+    function updateSettings(newSettings: Partial<WidgetSettings>) {
+        const currentSettings = settingsState.getState();
+        const mergedSettings = {
+            ...currentSettings,
+            ...newSettings
+        };
+
+        settingsState.setState(mergedSettings);
+        persistSettings(mergedSettings);
+    }
+
+    // Initialize settings
+    restoreSettings();
+
+    return {
+        updateSettings,
+        settingsState
+    };
+}
+
+export function createConfig(options: CoreOptions, platform: Platform) {
     if (!options.token) {
         throw new Error("Token is required");
     }
@@ -79,26 +129,28 @@ export function createConfig(options: CoreOptions): ConfigInstance {
             triggerOffset: options.theme?.triggerOffset ?? DEFAULT_THEME.triggerOffset
         },
         settings: {
-            persistSession: options.settings?.persistSession ?? false,
-            useSoundEffects: options.settings?.useSoundEffects ?? false
+            persistSession: options.settings?.persistSession ?? DEFAULT_SETTINGS.persistSession,
+            useSoundEffects: options.settings?.useSoundEffects ?? DEFAULT_SETTINGS.useSoundEffects
         },
     };
 
+    const { settingsState, updateSettings } = createSettingsManager(normalizedConfig.settings, platform, normalizedConfig.token);
+
     return {
-        getConfig: () => normalizedConfig,
-        getApiConfig: () => ({
-            apiUrl: normalizedConfig.apiUrl,
-            token: normalizedConfig.token,
-            headers: normalizedConfig.headers,
-            queryParams: normalizedConfig.queryParams,
-            pathParams: normalizedConfig.pathParams
+        getConfig: () => ({
+            ...normalizedConfig,
+            settings: settingsState.getState()
         }),
         getBotConfig: () => normalizedConfig.bot,
         getThemeConfig: () => normalizedConfig.theme,
-        getSettings: () => normalizedConfig.settings,
+        getSettings: () => settingsState.getState(),
         getSoundEffects: () => normalizedConfig.soundEffectFiles,
         getUser: () => normalizedConfig.user,
         getLanguage: () => normalizedConfig.language,
-        getDebugMode: () => normalizedConfig.debug
+        getDebugMode: () => normalizedConfig.debug,
+        updateSettings,
+        settingsState
     };
-} 
+}
+
+export type ConfigInstance = ReturnType<typeof createConfig>;

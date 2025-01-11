@@ -7,7 +7,7 @@ import { useAxiosInstance, useSyncedState } from "@react/hooks";
 import { ComponentRegistry } from "./componentRegistry";
 import AgentIcon from "../static/agent-icon.png";
 import { AgentType } from "@core/types/schemas";
-
+import { ApiCaller, createConfig, createLogger, Platform } from "@core/index"
 const defaultTheme: WidgetThemeOptions = {
   primaryColor: "hsl(0,0%,0%)",
   triggerOffset: "20px",
@@ -50,6 +50,7 @@ function useNormalizeOptions(data: WidgetOptions) {
     };
   }, [data]);
 }
+
 export type NormalizedWidgetOptions = ReturnType<typeof useNormalizeOptions>;
 type WidgetSettings = {
   persistSession: boolean;
@@ -72,6 +73,25 @@ const [useConfigData, ConfigDataSafeProvider] = createSafeContext<ConfigData>();
 
 const DEFAULT_LANG = "en";
 
+const platform: Platform = {
+  env: { platform: "web" },
+  logger: createLogger(),
+  storage: {
+    getItem: async (key: string) => {
+      return window.localStorage.getItem(key);
+    },
+    setItem: async (key: string, value: string) => {
+      return window.localStorage.setItem(key, value);
+    },
+    removeItem: async (key: string) => {
+      return window.localStorage.removeItem(key);
+    },
+    isAvailable() {
+      return true;
+    },
+  },
+};
+
 export function ConfigDataProvider({
   children,
   data,
@@ -87,17 +107,32 @@ export function ConfigDataProvider({
     [data],
   );
 
+  const [widgetSettings, _setSettings] = useSyncedState(
+    "open_settings",
+    {
+      persistSession: data.settings?.persistSession ?? false,
+      useSoundEffects: data.settings?.useSoundEffects ?? false
+    },
+    "local",
+  );
+
+  const config = useMemo(() => {
+    const config = createConfig(data, platform);
+    const apis = new ApiCaller({
+      config: config.getConfig(),
+    });
+    return {
+      config,
+      apis,
+    }
+  }, [data, platform]);
+
   const _data = useNormalizeOptions(data);
+
   const http = useAxiosInstance({
     apiUrl: _data.apiUrl,
     botToken: _data.token,
   });
-
-  const [widgetSettings, _setSettings] = useSyncedState(
-    "open_settings",
-    _data.defaultSettings,
-    "local",
-  );
 
   const setSettings = (_settings: Partial<WidgetSettings>) => {
     const merged = Object.assign(
