@@ -41,7 +41,7 @@ export function createContact(options: CreateContactOptions) {
 
     const state = new PubSub<ContactState>({
         contact: initialContact,
-        loading: { isLoading: false },
+        loading: { isLoading: false, reason: null },
         error: { hasError: false }
     });
 
@@ -200,7 +200,7 @@ export function createContact(options: CreateContactOptions) {
 
             state.setState({
                 contact: null,
-                loading: { isLoading: false },
+                loading: { isLoading: false, reason: null },
                 error: { hasError: false }
             });
 
