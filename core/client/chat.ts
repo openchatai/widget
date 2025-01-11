@@ -567,7 +567,8 @@ function createSessionManager(
         cleanup,
         startPolling,
         fetchSession,
-        refetchSession
+        refetchSession,
+        sessionStorageKey
     };
 }
 export type SendMessageInput = SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">
