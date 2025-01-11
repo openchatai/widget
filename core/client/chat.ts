@@ -15,11 +15,25 @@ const POLLING_INTERVALS = {
 } as const;
 
 // Types
+export type PollingType = 'session' | 'messages';
+
+export type PollingState = {
+    isPolling: boolean;
+    lastPollTime: string | null;
+    nextPollTime: string | null;
+    error: ErrorState;
+};
+
+export type PollingStates = {
+    [K in PollingType]: PollingState;
+};
+
 export type ChatState = {
     messages: MessageType[];
     keyboard: { options: string[] } | null;
     loading: LoadingState;
     error: ErrorState;
+    polling: PollingStates;
 };
 
 type ChatOptions = {
@@ -254,12 +268,49 @@ function createSessionManager(
                 if (!session?.id) return;
 
                 try {
+                    const now = new Date();
+                    chatState.setStatePartial({
+                        polling: {
+                            ...chatState.getState().polling,
+                            session: {
+                                isPolling: true,
+                                lastPollTime: now.toISOString(),
+                                nextPollTime: new Date(now.getTime() + POLLING_INTERVALS.SESSION).toISOString(),
+                                error: { hasError: false }
+                            }
+                        }
+                    });
+
                     const response = await api.getSession(session.id);
                     if (response) {
                         sessionState.setState(response);
                     }
+
+                    chatState.setStatePartial({
+                        polling: {
+                            ...chatState.getState().polling,
+                            session: {
+                                ...chatState.getState().polling.session,
+                                isPolling: false
+                            }
+                        }
+                    });
                 } catch (error) {
                     logger?.error('Error polling session:', error);
+                    chatState.setStatePartial({
+                        polling: {
+                            ...chatState.getState().polling,
+                            session: {
+                                ...chatState.getState().polling.session,
+                                isPolling: false,
+                                error: {
+                                    hasError: true,
+                                    message: error instanceof Error ? error.message : 'Failed to poll session',
+                                    code: 'SESSION_POLLING_FAILED'
+                                }
+                            }
+                        }
+                    });
                 }
             }, POLLING_INTERVALS.SESSION)
         );
@@ -270,9 +321,46 @@ function createSessionManager(
                 const session = sessionState.getState();
                 if (!session?.id) return;
                 try {
+                    const now = new Date();
+                    chatState.setStatePartial({
+                        polling: {
+                            ...chatState.getState().polling,
+                            messages: {
+                                isPolling: true,
+                                lastPollTime: now.toISOString(),
+                                nextPollTime: new Date(now.getTime() + POLLING_INTERVALS.MESSAGES).toISOString(),
+                                error: { hasError: false }
+                            }
+                        }
+                    });
+
                     await messageHandler.fetchHistoryMessages(session);
+
+                    chatState.setStatePartial({
+                        polling: {
+                            ...chatState.getState().polling,
+                            messages: {
+                                ...chatState.getState().polling.messages,
+                                isPolling: false
+                            }
+                        }
+                    });
                 } catch (error) {
                     logger?.error('Error polling messages:', error);
+                    chatState.setStatePartial({
+                        polling: {
+                            ...chatState.getState().polling,
+                            messages: {
+                                ...chatState.getState().polling.messages,
+                                isPolling: false,
+                                error: {
+                                    hasError: true,
+                                    message: error instanceof Error ? error.message : 'Failed to poll messages',
+                                    code: 'MESSAGES_POLLING_FAILED'
+                                }
+                            }
+                        }
+                    });
                 }
             }, POLLING_INTERVALS.MESSAGES)
         );
@@ -280,6 +368,23 @@ function createSessionManager(
         stopPolling = () => {
             logger?.debug('Stopping polling');
             intervals.forEach(clearInterval);
+            // Reset polling states
+            chatState.setStatePartial({
+                polling: {
+                    session: {
+                        isPolling: false,
+                        lastPollTime: null,
+                        nextPollTime: null,
+                        error: { hasError: false }
+                    },
+                    messages: {
+                        isPolling: false,
+                        lastPollTime: null,
+                        nextPollTime: null,
+                        error: { hasError: false }
+                    }
+                }
+            });
         };
     }
 
@@ -337,8 +442,22 @@ function createSessionManager(
             chatState.setState({
                 messages: [],
                 keyboard: null,
-                loading: { isLoading: false },
-                error: { hasError: false }
+                loading: { isLoading: false, reason: null },
+                error: { hasError: false },
+                polling: {
+                    session: {
+                        isPolling: false,
+                        lastPollTime: null,
+                        nextPollTime: null,
+                        error: { hasError: false }
+                    },
+                    messages: {
+                        isPolling: false,
+                        lastPollTime: null,
+                        nextPollTime: null,
+                        error: { hasError: false }
+                    }
+                }
             });
 
             options.onSessionDestroy?.();
@@ -371,8 +490,22 @@ function createSessionManager(
             chatState.setState({
                 messages: [],
                 keyboard: null,
-                loading: { isLoading: false },
-                error: { hasError: false }
+                loading: { isLoading: false, reason: null },
+                error: { hasError: false },
+                polling: {
+                    session: {
+                        isPolling: false,
+                        lastPollTime: null,
+                        nextPollTime: null,
+                        error: { hasError: false }
+                    },
+                    messages: {
+                        isPolling: false,
+                        lastPollTime: null,
+                        nextPollTime: null,
+                        error: { hasError: false }
+                    }
+                }
             });
 
             sessionState.setState(null);
@@ -431,12 +564,25 @@ export type SendMessageInput = SomeOptional<Omit<HttpChatInputSchema, "bot_token
 // Main Chat Function
 export function createChat(options: ChatOptions) {
     const logger = options.platform?.logger;
-    logger?.info('Initializing chat');
     const initialState = <ChatState>{
         messages: [],
         keyboard: null,
-        loading: { isLoading: false },
-        error: { hasError: false }
+        loading: { isLoading: false, reason: null },
+        error: { hasError: false },
+        polling: {
+            session: {
+                isPolling: false,
+                lastPollTime: null,
+                nextPollTime: null,
+                error: { hasError: false }
+            },
+            messages: {
+                isPolling: false,
+                lastPollTime: null,
+                nextPollTime: null,
+                error: { hasError: false }
+            }
+        }
     }
     const state = new PubSub<ChatState>(initialState);
 
@@ -458,8 +604,11 @@ export function createChat(options: ChatOptions) {
         if (!session?.id) {
             logger?.debug('No active session, creating new session');
             session = await sessionManager.createSession();
+            if (!session) return {
+                success: false,
+                createdSession,
+            }
             createdSession = true;
-            if (!session) return false;
         }
 
         if (session.assignee.kind === 'ai') {

@@ -10,7 +10,7 @@ export type { Storage, Audio, Logger };
 
 export interface Platform {
   storage?: Storage;
-  logger: Logger;
+  logger?: Logger;
   env: {
     platform: string;
   };

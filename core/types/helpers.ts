@@ -20,13 +20,15 @@ export type LoadingReason =
 
 export type LoadingState = {
   isLoading: boolean;
-  reason?: LoadingReason;
+  reason: LoadingReason;
 };
 
 export type ErrorCode =
   | 'SESSION_CREATION_FAILED'
   | 'SESSION_CLEAR_FAILED'
   | 'SESSION_PERSISTENCE_FAILED'
+  | 'SESSION_POLLING_FAILED'
+  | 'MESSAGES_POLLING_FAILED'
   | 'MESSAGE_SEND_FAILED'
   | 'NO_ACTIVE_SESSION'
   | 'CONTACT_PERSISTENCE_FAILED'
