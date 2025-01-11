@@ -92,13 +92,6 @@ const platform: Platform = {
     })
 };
 
-type ChatState = {
-    messages: MessageType[];
-    keyboard: { options: string[] } | null;
-    loading: { isLoading: boolean };
-    error: { hasError: boolean };
-};
-
 function MessagesRenderer({ messages }: { messages: MessageType[] }) {
     if (messages.length === 0) return null;
 
@@ -156,7 +149,7 @@ export const Chat = () => {
         }
     }, []);
 
-    const chatState = usePubsub<ChatState>(chatInstance.chat.chatState)
+    const chatState = usePubsub(chatInstance.chat.chatState)
     const session = usePubsub(chatInstance.chat.sessionState)
     // Load prelude data
     useEffect(() => {
