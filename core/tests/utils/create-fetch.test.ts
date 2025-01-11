@@ -36,7 +36,7 @@ describe('createFetch', () => {
         });
 
         it('should handle paths without leading slash', async () => {
-            const customFetch = createFetch({ baseURL: 'https://api.example.com' });
+            const customFetch = createFetch({ baseURL: 'https://api.example.com/' });
             await customFetch('endpoint');
 
             expect(mockFetch).toHaveBeenCalledWith(
