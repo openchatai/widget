@@ -15,7 +15,7 @@ const POLLING_INTERVALS = {
 } as const;
 
 // Types
-type ChatState = {
+export type ChatState = {
     messages: MessageType[];
     keyboard: { options: string[] } | null;
     loading: LoadingState;
@@ -189,7 +189,7 @@ function createSessionManager(
     let stopPolling: (() => void) | null = null;
     const storage = options.platform?.storage;
     const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
-    const persistSession = options.config.getSettings().persistSession;
+    const persistSession = config.getSettings().persistSession;
     /**
      * Restores the session from storage
      */
@@ -330,8 +330,8 @@ function createSessionManager(
             }
             sessionState.setState(null);
 
-            if (persistSession && storage && isStorageAvailable(storage)) {
-                storage.removeItem(sessionStorageKey);
+            if (persistSession && storage) {
+                await storage.removeItem(sessionStorageKey);
             }
 
             chatState.setState({
@@ -427,18 +427,18 @@ function createSessionManager(
         refetchSession
     };
 }
-
+export type SendMessageInput = SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">
 // Main Chat Function
 export function createChat(options: ChatOptions) {
     const logger = options.platform?.logger;
     logger?.info('Initializing chat');
-
-    const state = new PubSub<ChatState>({
+    const initialState = <ChatState>{
         messages: [],
         keyboard: null,
         loading: { isLoading: false },
         error: { hasError: false }
-    });
+    }
+    const state = new PubSub<ChatState>(initialState);
 
     const sessionState = new PubSub<WidgetSessionSchema | null>(null);
     const messageHandler = createMessageHandler(options.api, state, logger);
@@ -451,7 +451,7 @@ export function createChat(options: ChatOptions) {
         options
     );
 
-    async function sendMessage(input: SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">) {
+    async function sendMessage(input: SendMessageInput) {
         let session = sessionState.getState();
 
         if (!session?.id) {
@@ -538,6 +538,7 @@ export function createChat(options: ChatOptions) {
         sendMessage,
         createSession: sessionManager.createSession,
         clearSession: sessionManager.clearSession,
-        cleanup: (removeSession = false) => sessionManager.cleanup(removeSession)
+        cleanup: sessionManager.cleanup,
+        initialState
     };
 } 

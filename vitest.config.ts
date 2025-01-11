@@ -6,6 +6,10 @@ export default defineConfig({
   clearScreen: true,
   logLevel: "info",
   test: {
+    testTimeout: 10 * 1000,
+    typecheck: {
+      enabled: true,
+    },
     include: [
       "./lib/**/*.test.{ts,tsx}",
       "./core/**/*.test.{ts,tsx}",
