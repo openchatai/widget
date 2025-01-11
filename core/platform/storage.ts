@@ -48,24 +48,31 @@ export function isStorageAvailable(storage: Storage | undefined): storage is Sto
  * Type for the result of a safe storage operation
  */
 export type StorageOperationResult<T> =
-    | { success: true; result: T }
-    | { success: false; error: Error };
+    | { success: true; result: T; error: null }
+    | { success: false; result: null; error: { message: string; code: string; context: string } };
 
 /**
  * Helper function to safely perform storage operations
  */
 export async function safeStorageOperation<T>(
     operation: () => Promise<T>,
-    errorMessage: string
+    errorContext: string
 ): Promise<StorageOperationResult<T>> {
     try {
         const result = await operation();
-        return { success: true, result };
+        return { success: true, result, error: null };
     } catch (error) {
-        console.error(errorMessage, error);
+        console.error(errorContext, error);
         return {
             success: false,
-            error: error instanceof Error ? error : new Error(errorMessage)
+            result: null,
+            error: {
+                message: error instanceof Error
+                    ? (error.message || 'Unknown error')
+                    : (error?.toString() || 'Unknown error'),
+                code: 'STORAGE_OPERATION_FAILED',
+                context: errorContext
+            }
         };
     }
 } 

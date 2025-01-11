@@ -35,8 +35,26 @@ export class PubSub<S> {
                 timestamp: Date.now(),
                 data
             };
-            listeners.forEach(listener => listener(eventData));
+            listeners.forEach(listener => {
+                try {
+                    listener(eventData);
+                } catch (error) {
+                    console.error('Error in lifecycle listener:', error);
+                }
+            });
         }
+    }
+
+    private notifySubscribers = (state: S) => {
+        const subscribersArray = Array.from(this.subscribers);
+        subscribersArray.forEach(callback => {
+            try {
+                callback(state);
+            } catch (error) {
+                this.emitLifecycle(LifecycleEvent.ERROR, { error });
+                console.error('Error in subscriber:', error);
+            }
+        });
     }
 
     /**
@@ -46,8 +64,7 @@ export class PubSub<S> {
      */
     subscribe = (callback: Subscriber<S>): () => void => {
         this.subscribers.add(callback);
-        callback(this.#state);
-
+        // Don't call the callback immediately with current state
         return () => {
             this.subscribers.delete(callback);
         };
@@ -89,19 +106,14 @@ export class PubSub<S> {
             this.#state = newState;
             this.#lastUpdated = Date.now();
             this.emitLifecycle(LifecycleEvent.STATE_CHANGE, { state: newState });
-            this.subscribers.forEach(callback => {
-                try {
-                    callback(newState);
-                } catch (error) {
-                    this.emitLifecycle(LifecycleEvent.ERROR, { error });
-                }
-            });
+            this.notifySubscribers(newState);
         }
 
         this.emitLifecycle(LifecycleEvent.AFTER_UPDATE, { state: newState });
     }
 
     setStatePartial = (_s: Partial<S>): void => {
+        if (_s === undefined || _s === null) return;
         const newState = { ...this.#state, ..._s };
         this.setState(newState);
     }
@@ -111,8 +123,8 @@ export class PubSub<S> {
      */
     clear = (): void => {
         this.emitLifecycle(LifecycleEvent.DESTROY);
-        this.subscribers.clear();
-        this.lifecycleListeners.clear();
+        this.subscribers = new Set(); // Create a new Set instead of just clearing
+        this.lifecycleListeners = new Map();
     }
 
     reset = (): void => {
