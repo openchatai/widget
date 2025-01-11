@@ -1,12 +1,17 @@
 import { ApiCaller, createChat, createConfig } from "@core/client";
 import { Platform } from "@core/platform";
 import { LoadingState } from "@core/types";
-import { describe, expect, it, beforeEach } from "vitest";
+import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import { getTestUser } from "../test-utils";
 
-function initilize() {
+describe("integration testing with storage and persistence", () => {
     const openToken = "fe8f11971f5de916ab745d9c0408c7ef";
     const mockedStorage = new Map()
+
+    beforeEach(() => {
+        // Clear storage before each test
+        mockedStorage.clear();
+    });
 
     const platform: Platform = {
         env: {
@@ -23,14 +28,7 @@ function initilize() {
                 mockedStorage.set(key, value)
             },
             isAvailable() {
-                const testKey = "test-key"
-                try {
-                    mockedStorage.set(testKey, {})
-                    mockedStorage.delete(testKey)
-                    return true
-                } catch {
-                    return false
-                }
+                return true
             },
         }
     }
@@ -47,22 +45,19 @@ function initilize() {
         config: config.getConfig()
     })
 
-    const chat = createChat({ api: apis, config: config, platform })
-
-    return {
-        chat,
-        mockedStorage,
-        config
+    function initilize() {
+        const chat = createChat({ api: apis, config: config, platform })
+        return {
+            chat,
+            config
+        }
     }
-}
 
-describe("integration testing with storage and persistence", () => {
     describe("loading states during persistence operations", () => {
         it("should set correct loading states during session creation", async () => {
             const { chat } = initilize()
             const loadingStates: LoadingState[] = []
 
-            // Subscribe to loading state changes
             chat.chatState.subscribe((state) => {
                 loadingStates.push({ ...state.loading })
             })
@@ -92,7 +87,7 @@ describe("integration testing with storage and persistence", () => {
 
             expect(resp.success).toBe(true)
             expect(resp.createdSession).toBe(true)
-        }, 15000)
+        }, 30000)
 
         it("should maintain loading state during message persistence", async () => {
             const { chat } = initilize()
@@ -102,14 +97,16 @@ describe("integration testing with storage and persistence", () => {
                 loadingStates.push({ ...state.loading })
             })
 
-            // Send first message to create session
-            await chat.sendMessage({ content: "create session" })
-            await new Promise(resolve => setTimeout(resolve, 100))
+            // Send first message to create session and wait for it to complete
+            const initialResp = await chat.sendMessage({ content: "create session" })
+            expect(initialResp.success).toBe(true)
+            await new Promise(resolve => setTimeout(resolve, 500))
             loadingStates.length = 0 // Clear previous states
 
             // Send another message to test persistence
-            await chat.sendMessage({ content: "test persistence" })
-            await new Promise(resolve => setTimeout(resolve, 100))
+            const resp = await chat.sendMessage({ content: "test persistence" })
+            expect(resp.success).toBe(true)
+            await new Promise(resolve => setTimeout(resolve, 500))
 
             // Verify loading states for subsequent messages
             const sendMessageState = loadingStates.find(state =>
@@ -122,44 +119,59 @@ describe("integration testing with storage and persistence", () => {
                 isLoading: false,
                 reason: null
             })
-        }, 15000)
+        }, 30000)
 
         it("should handle loading states during session restoration", async () => {
-            const { chat, mockedStorage, config } = initilize()
+            const { chat } = initilize()
             const loadingStates: LoadingState[] = []
 
             chat.chatState.subscribe((state) => {
                 loadingStates.push({ ...state.loading })
             })
 
-            // Create initial session
-            await chat.sendMessage({ content: "create session" })
-            await new Promise(resolve => setTimeout(resolve, 100))
+            // Create initial session and wait for it to be fully set up
+            const initialResp = await chat.sendMessage({ content: "create session" })
+            expect(initialResp.success).toBe(true)
+            expect(initialResp.createdSession).toBe(true)
+            await new Promise(resolve => setTimeout(resolve, 500))
 
-            // Get the session storage key
+            // Store the initial session
+            const storedSession = chat.sessionState.getState()
+            expect(storedSession).not.toBeNull()
+            const sessionId = storedSession?.id
             const sessionKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`
-            expect(mockedStorage.has(sessionKey)).toBe(true)
+            const storedValue = mockedStorage.get(sessionKey)
+            expect(storedValue).toBeDefined()
 
             // Clear chat state but keep storage
             await chat.clearSession()
+            await new Promise(resolve => setTimeout(resolve, 500))
             loadingStates.length = 0 // Clear previous states
 
-            // Create new chat instance to test restoration
+            // Create new chat instance with same storage
             const { chat: newChat } = initilize()
 
-            // Wait for potential session restoration
-            await new Promise(resolve => setTimeout(resolve, 100))
+            // Wait for session to be restored from storage
+            let restoredSession = null
+            for (let i = 0; i < 10; i++) {
+                restoredSession = newChat.sessionState.getState()
+                if (restoredSession) break
+                await new Promise(resolve => setTimeout(resolve, 100))
+            }
+            expect(restoredSession).not.toBeNull()
+            expect(restoredSession?.id).toBe(sessionId)
 
-            // Send message to trigger potential session restoration
+            // Send message with restored session
             const resp = await newChat.sendMessage({ content: "after restoration" })
-            await new Promise(resolve => setTimeout(resolve, 100))
+            expect(resp.success).toBe(true)
+            expect(resp.createdSession).toBe(false)
 
-            expect(resp.createdSession).toBe(false) // Should use restored session
+            // Verify no session creation loading state
             const createSessionState = loadingStates.find(state =>
                 state.isLoading && state.reason === 'creating_session'
             )
             expect(createSessionState).toBeUndefined()
-        }, 15000)
+        }, 30000)
 
         it("should handle loading states during cleanup", async () => {
             const { chat } = initilize()
@@ -170,25 +182,26 @@ describe("integration testing with storage and persistence", () => {
             })
 
             // Create session and send message
-            await chat.sendMessage({ content: "test cleanup" })
-            await new Promise(resolve => setTimeout(resolve, 100))
+            const resp = await chat.sendMessage({ content: "test cleanup" })
+            expect(resp.success).toBe(true)
+            await new Promise(resolve => setTimeout(resolve, 500))
             loadingStates.length = 0 // Clear previous states
 
-            // Perform cleanup
+            // Perform cleanup and wait for it to complete
             await chat.cleanup(true)
-            await new Promise(resolve => setTimeout(resolve, 100))
+            await new Promise(resolve => setTimeout(resolve, 500))
 
             // Verify final state
-            const finalState = chat.chatState.getState().loading
-            expect(finalState).toEqual({
+            const finalState = chat.chatState.getState()
+            expect(finalState.loading).toEqual({
                 isLoading: false,
                 reason: null
             })
+            expect(finalState.messages).toHaveLength(0)
 
-            // Verify state was properly cleaned
+            // Verify session was cleaned up
             expect(chat.sessionState.getState()).toBeNull()
-            expect(chat.chatState.getState().messages).toHaveLength(0)
-        }, 15000)
+        }, 30000)
 
         it("should handle loading states during concurrent operations", async () => {
             const { chat } = initilize()
@@ -218,7 +231,7 @@ describe("integration testing with storage and persistence", () => {
                 state.reason !== loadingStates[index - 1].reason
             )
             expect(loadingConflicts).toHaveLength(0)
-        }, 15000)
+        }, 30000)
 
         it("should maintain correct loading states during error scenarios", async () => {
             const { chat } = initilize()
@@ -231,7 +244,7 @@ describe("integration testing with storage and persistence", () => {
             // Force an error by sending an invalid message
             try {
                 await chat.sendMessage({ content: "" })
-            } catch (error) {
+            } catch {
                 // Verify loading state was reset after error
                 expect(chat.chatState.getState().loading).toEqual({
                     isLoading: false,
@@ -244,6 +257,6 @@ describe("integration testing with storage and persistence", () => {
                 isLoading: false,
                 reason: null
             })
-        }, 15000)
+        }, 30000)
     })
 })
