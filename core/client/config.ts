@@ -56,7 +56,7 @@ export function createConfig(options: CoreOptions): ConfigInstance {
     const normalizedConfig: NormalizedConfig = {
         ...options,
         collectUserData: options.collectUserData ?? false,
-        apiUrl: options.apiUrl ?? "https://api-v2.opencopilot.so/backend",
+        apiUrl: options.apiUrl ?? "https://api.open.cx/backend",
         pollingInterval: options.pollingInterval ?? 3000,
         headers: options.headers ?? {},
         queryParams: options.queryParams ?? {},
