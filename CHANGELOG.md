@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.6.0
+
+### Minor Changes
+
+- just another version :p
+
 ## 2.5.1
 
 ### Patch Changes
