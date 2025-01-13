@@ -131,7 +131,7 @@ export const Chat = () => {
             settings: {
                 persistSession: true,
             }
-        });
+        }, platform);
         const api = new ApiCaller({
             config: config.getConfig(),
         });

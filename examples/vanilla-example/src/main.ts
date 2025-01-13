@@ -79,13 +79,6 @@ const configOptions: CoreOptions = {
         name: "Test User"
     }
 };
-
-const config = createConfig(configOptions);
-
-const api = new ApiCaller({
-    config: config.getConfig(),
-});
-
 const platform: Platform = {
     env: {
         platform: 'web'
@@ -107,6 +100,13 @@ const platform: Platform = {
         enabled: true
     })
 }
+
+const config = createConfig(configOptions, platform);
+
+const api = new ApiCaller({
+    config: config.getConfig(),
+});
+
 
 const chat = createChat({
     api,

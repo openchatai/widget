@@ -56,7 +56,7 @@ const useInitChat = () => {
                 email: "test@test.com",
                 name: "Test User"
             }
-        });
+        }, platform);
         const api = new ApiCaller({
             config: config.getConfig(),
         });
