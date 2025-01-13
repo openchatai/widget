@@ -83,8 +83,10 @@ const widgetSessionSchema = z.object({
     assignee: z.object({
         kind: z.enum(['human', 'ai', 'none', 'unknown']),
         name: z.string().nullable(),
+        avatarUrl: z.string().nullable(),
     }),
     channel: z.string(),
+    isVerified: z.boolean(),
 })
 
 const httpChatInputDto = z.object({

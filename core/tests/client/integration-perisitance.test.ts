@@ -1,7 +1,7 @@
 import { ApiCaller, createChat, createConfig } from "@core/client";
 import { Platform } from "@core/platform";
 import { LoadingState } from "@core/types";
-import { describe, expect, it, beforeEach, afterEach } from "vitest";
+import { describe, expect, it } from "vitest";
 import { getTestUser } from "../test-utils";
 
 describe("integration testing with storage and persistence", () => {

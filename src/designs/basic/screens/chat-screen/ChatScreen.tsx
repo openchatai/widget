@@ -15,7 +15,6 @@ import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
 export function ChatScreen() {
   const { chatState, chat } = useChatState();
   const preludeSWR = usePreludeData();
-  console.log('preludeSWR', preludeSWR);
   const initialQuestions = preludeSWR.data?.initialQuestions;
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,

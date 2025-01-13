@@ -18,7 +18,7 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
-  const { contactManager } = useContact()
+  const contactManager = useContact()
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
   const { config } = useConfig();
@@ -33,7 +33,10 @@ export function WelcomeScreen() {
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
       if (result.success) {
-        await contactManager.saveContact(result.data);
+        // await contactManager.contactState.setStatePartial({
+        //   name: result.data.name,
+        //   email: result.data.email,
+        // });
       }
     },
   );

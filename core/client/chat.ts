@@ -2,13 +2,14 @@ import { PubSub } from "../types/pub-sub";
 import { MessageType } from "../types";
 import { ApiCaller } from "./api";
 import { genUuid } from "../utils/genUuid";
-import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetSessionSchema } from "../types/schemas-v2";
+import { ChatAttachmentType, HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetSessionSchema } from "../types/schemas-v2";
 import { LoadingState, ErrorState, SomeOptional } from "../types/helpers";
 import { ConfigInstance } from "./config";
-import { Platform, isStorageAvailable } from "../platform";
+import { Platform, isStorageAvailable, safeStorageOperation } from "../platform";
 import { Logger } from "../platform/logger";
 import { ExternalIdNotDefinedError, StorageNotAvailableError } from "@core/errors";
 import { isAudioAvailable, safeAudioOperation } from "@core/platform/audio";
+import { createContact } from "./contact";
 
 // Constants
 const POLLING_INTERVALS = {
@@ -95,27 +96,11 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
 function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?: Logger, config?: ConfigInstance, platform?: Platform) {
     async function fetchHistoryMessages(session: WidgetSessionSchema) {
         const messages = state.getState().messages;
-        if (messages.length === 0) {
-            logger?.debug('No messages yet, fetching all history', { sessionId: session.id });
-            const response = await api.getSessionHistory(session.id, "");
-            if (response && response.length > 0) {
-                state.setStatePartial({
-                    messages: response.map(mapHistoryToMessage)
-                });
-            }
-            return;
-        }
         const lastMessageTimestamp = state.getState().messages.at(-1)?.timestamp
-        logger?.debug('Fetching history messages after timestamp', {
-            sessionId: session.id,
-            lastMessageTimestamp,
-            currentMessageCount: messages.length
-        });
 
         const response = await api.getSessionHistory(session.id, lastMessageTimestamp);
 
         if (response && response.length > 0) {
-            // Map and filter out any potential duplicates by ID
             const newMessages = response
                 .map(mapHistoryToMessage)
                 .filter(newMsg => !messages.some(existingMsg => existingMsg.id === newMsg.id));
@@ -126,9 +111,9 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
                     messageIds: newMessages.map(m => m.id),
                     messageTypes: newMessages.map(m => m.type)
                 });
-
+                const useSoundEffects = config?.getConfig().settings.useSoundEffects;
                 // Play notification sound for new messages if enabled
-                if (config?.getSettings().useSoundEffects && platform?.audio && isAudioAvailable(platform.audio)) {
+                if (useSoundEffects && platform?.audio && isAudioAvailable(platform.audio)) {
                     const botMessages = newMessages.filter(msg => msg.type === "FROM_BOT");
                     if (botMessages.length > 0) {
                         await safeAudioOperation(
@@ -145,7 +130,7 @@ function createMessageHandler(api: ApiCaller, state: PubSub<ChatState>, logger?:
         }
     }
 
-    function addUserMessage(content: string, attachments?: any[]) {
+    function addUserMessage(content: string, attachments?: ChatAttachmentType[]) {
         return {
             id: genUuid(),
             type: "FROM_USER" as const,
@@ -213,37 +198,38 @@ function createSessionManager(
     config: ConfigInstance,
     options: ChatOptions
 ) {
-    const logger = options.platform?.logger;
     let stopPolling: (() => void) | null = null;
+    const logger = options.platform?.logger;
     const storage = options.platform?.storage;
-    const persistSession = config.getSettings().persistSession;
+    const persistSession = () => config.getConfig().settings.persistSession;
 
-    if (persistSession && !isStorageAvailable(storage)) {
+    if (persistSession() && !isStorageAvailable(storage)) {
         throw new StorageNotAvailableError()
     }
 
-    if (persistSession && !config.getConfig().user.external_id) {
+    if (persistSession() && !config.getConfig().user.external_id) {
         throw new ExternalIdNotDefinedError("session persistence is enabled but external id is not defined")
     }
 
-    const sessionStorageKey = `${config.getConfig().user.external_id}:${config.getConfig().token}:session`;
+    const { token, user } = config.getConfig()
+    const sessionStorageKey = `${user.external_id}:${token}:session`;
     /**
      * Restores the session from storage
      */
     async function restoreSession() {
-        if (!storage) return;
-        try {
-            logger?.debug('Attempting to restore session from storage');
-            const storedSession = await storage.getItem(sessionStorageKey);
-            if (storedSession) {
-                const session = JSON.parse(storedSession) as WidgetSessionSchema;
-                logger?.info('Session restored from storage', { sessionId: session.id });
-                sessionState.setState(session);
-                await messageHandler.fetchHistoryMessages(session);
-                startPolling();
-            }
-        } catch (error) {
-            logger?.error('Error restoring session from storage:', error);
+        logger?.debug('Restoring session from storage', { sessionStorageKey, stroageAvailable: isStorageAvailable(storage) });
+        if (isStorageAvailable(storage)) {
+            safeStorageOperation(async () => {
+                logger?.debug('Attempting to restore session from storage');
+                const storedSession = await storage.getItem(sessionStorageKey);
+                if (storedSession) {
+                    const session = JSON.parse(storedSession) as WidgetSessionSchema;
+                    logger?.info('Session restored from storage', { sessionId: session.id });
+                    sessionState.setState(session);
+                    await messageHandler.fetchHistoryMessages(session);
+                    startPolling();
+                }
+            }, "Error restoring session from storage")
         }
     }
 
@@ -251,8 +237,8 @@ function createSessionManager(
      * Sets up session persistence
      */
     function setupSessionPersistence() {
-        if (!storage) return;
-        logger?.debug('Setting up session persistence');
+        logger?.debug('Setting up session persistence', { sessionStorageKey, stroageAvailable: isStorageAvailable(storage) });
+        if (!isStorageAvailable(storage)) return;
         sessionState.subscribe(async (session) => {
             try {
                 if (session) {
@@ -458,7 +444,7 @@ function createSessionManager(
             }
             sessionState.setState(null);
 
-            if (persistSession && storage) {
+            if (persistSession() && storage) {
                 await storage.removeItem(sessionStorageKey);
             }
 
@@ -505,8 +491,12 @@ function createSessionManager(
                 stopPolling = null;
             }
 
-            if (removeSession && persistSession && storage && isStorageAvailable(storage)) {
-                storage.removeItem(sessionStorageKey);
+            if (removeSession && persistSession() && isStorageAvailable(storage)) {
+                console.log('removing session data', sessionStorageKey);
+                safeStorageOperation(
+                    () => storage.removeItem(sessionStorageKey),
+                    "Error removing session data"
+                )
             }
 
             chatState.setState({
@@ -567,7 +557,8 @@ function createSessionManager(
     }
 
     // Initialize session if persistence is enabled
-    if (persistSession && isStorageAvailable(storage)) {
+    if (persistSession() && isStorageAvailable(storage)) {
+        logger?.debug('Initializing session persistence', { sessionStorageKey, stroageAvailable: isStorageAvailable(storage) });
         restoreSession();
         setupSessionPersistence();
     }
@@ -582,7 +573,9 @@ function createSessionManager(
         sessionStorageKey
     };
 }
+
 export type SendMessageInput = SomeOptional<Omit<HttpChatInputSchema, "bot_token">, "session_id" | "user">
+
 // Main Chat Function
 export function createChat(options: ChatOptions) {
     const logger = options.platform?.logger;
@@ -606,14 +599,18 @@ export function createChat(options: ChatOptions) {
             }
         }
     }
-    const state = new PubSub<ChatState>(initialState);
+    const chatState = new PubSub<ChatState>(initialState);
+
+    const { contactState, cleanup: cleanupContact, shouldCollectData } = createContact({ config: options.config, api: options.api }, options.platform);
 
     const sessionState = new PubSub<WidgetSessionSchema | null>(null);
-    const messageHandler = createMessageHandler(options.api, state, logger, options.config, options.platform);
+
+    const messageHandler = createMessageHandler(options.api, chatState, logger, options.config, options.platform);
+
     const sessionManager = createSessionManager(
         options.api,
         sessionState,
-        state,
+        chatState,
         messageHandler,
         options.config,
         options
@@ -640,26 +637,26 @@ export function createChat(options: ChatOptions) {
         try {
             logger?.debug('Sending message', { sessionId: session.id });
             if (session.assignee.kind === 'ai') {
-                state.setStatePartial({
+                chatState.setStatePartial({
                     loading: { isLoading: true, reason: 'sending_message_to_bot' },
                     error: { hasError: false }
                 });
             } else {
-                state.setStatePartial({
+                chatState.setStatePartial({
                     loading: { isLoading: true, reason: 'sending_message_to_agent' },
                     error: { hasError: false }
                 });
             }
 
             const userMessage = messageHandler.addUserMessage(input.content, input.attachments || undefined);
-            const currentMessages = state.getState().messages;
-            state.setStatePartial({
+            const currentMessages = chatState.getState().messages;
+            chatState.setStatePartial({
                 messages: [...currentMessages, userMessage]
             });
 
             const config = options.config.getConfig();
             const data = await options.api.handleMessage({
-                uuid: input.uuid || genUuid(),
+                uuid: userMessage.id,
                 bot_token: config.token,
                 headers: config.headers,
                 query_params: config.queryParams,
@@ -672,8 +669,8 @@ export function createChat(options: ChatOptions) {
                 logger?.debug('Message sent successfully');
                 const botMessage = messageHandler.addBotMessage(data);
                 if (botMessage) {
-                    const updatedMessages = state.getState().messages;
-                    state.setStatePartial({
+                    const updatedMessages = chatState.getState().messages;
+                    chatState.setStatePartial({
                         messages: [...updatedMessages, botMessage]
                     });
                 }
@@ -685,8 +682,8 @@ export function createChat(options: ChatOptions) {
             } else {
                 logger?.warn('Message send failed', data.error);
                 const errorMessage = messageHandler.addErrorMessage(data.error?.message || "Unknown error occurred");
-                const currentMessages = state.getState().messages;
-                state.setStatePartial({
+                const currentMessages = chatState.getState().messages;
+                chatState.setStatePartial({
                     messages: [...currentMessages, errorMessage]
                 });
                 return {
@@ -697,7 +694,7 @@ export function createChat(options: ChatOptions) {
             }
         } catch (error) {
             logger?.error('Error sending message:', error);
-            state.setStatePartial({
+            chatState.setStatePartial({
                 error: {
                     hasError: true,
                     message: error instanceof Error ? error.message : 'Failed to send message',
@@ -710,7 +707,7 @@ export function createChat(options: ChatOptions) {
                 error
             }
         } finally {
-            state.setStatePartial({
+            chatState.setStatePartial({
                 loading: { isLoading: false, reason: null }
             });
         }
@@ -720,15 +717,23 @@ export function createChat(options: ChatOptions) {
         await sessionManager.clearSession();
         await sessionManager.createSession();
     }
+
+    const cleanup = () => {
+        cleanupContact();
+        sessionManager.cleanup();
+    }
+
     return {
-        chatState: state,
+        chatState,
         sessionState,
         sendMessage,
         createSession: sessionManager.createSession,
         clearSession: sessionManager.clearSession,
-        cleanup: sessionManager.cleanup,
+        cleanup,
         initialState,
         sessionStorageKey: sessionManager.sessionStorageKey,
-        recreateSession
+        recreateSession,
+        contactState,
+        shouldCollectData
     };
 } 

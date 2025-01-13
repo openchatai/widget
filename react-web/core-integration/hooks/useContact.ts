@@ -2,11 +2,11 @@ import { useChat } from '../ChatProvider';
 import { usePubsub } from './usePubsub';
 
 export function useContact() {
-    const { contact: contactManager } = useChat();
-    const contactState = usePubsub(contactManager.contactState);
+    const { chat } = useChat();
+    const contactState = usePubsub(chat.contactState);
 
     return {
         contactState,
-        contactManager
+        shouldCollectData: chat.shouldCollectData,
     };
 }

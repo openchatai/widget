@@ -50,7 +50,6 @@ export type ConfigInstance = {
     };
     getBotConfig: () => NormalizedConfig['bot'];
     getThemeConfig: () => NormalizedConfig['theme'];
-    getSettings: () => NormalizedConfig['settings'];
     getSoundEffects: () => NormalizedConfig['soundEffectFiles'];
     getUser: () => NormalizedConfig['user'];
     getLanguage: () => string;
@@ -169,7 +168,6 @@ export function createConfig(options: CoreOptions, platform: Platform): ConfigIn
         }),
         getBotConfig: () => normalizedConfig.bot,
         getThemeConfig: () => normalizedConfig.theme,
-        getSettings: () => normalizedConfig.settings,
         getSoundEffects: () => normalizedConfig.soundEffectFiles,
         getUser: () => normalizedConfig.user,
         getLanguage: () => normalizedConfig.language,

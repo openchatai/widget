@@ -15,7 +15,7 @@ interface Colors {
 
 export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
   const primary = tc(colors.primary).toHsl();
-  const primaryForeground = tc(colors.primary).isLight()
+  const primaryForeground = tc(colors.primary).isDark()
     ? "240 10% 3.9%"
     : "0 0% 100%";
 

@@ -1,4 +1,4 @@
-import { CoreOptions, createChat, createConfig, ApiCaller, createContact, Platform } from "@core/index"
+import { CoreOptions, createChat, createConfig, ApiCaller, Platform, createLogger } from "@core/index"
 import { ComponentType } from "@react/types";
 import { createSafeContext } from "@react/utils/create-safe-context";
 import React, { useMemo, useEffect } from "react";
@@ -18,6 +18,7 @@ const defaultPlatform: Platform = {
         platform: 'web'
     },
     storage: defaultStorage,
+    logger: createLogger({ level: "debug" })
 };
 
 interface InitializeChatOptions {
@@ -47,14 +48,9 @@ function useInitializeChat({ options, platform: customPlatform }: InitializeChat
             platform,
         });
 
-        const contact = createContact({
-            api,
-            config,
-        }, platform);
 
         return {
             chat,
-            contact,
             api,
             config,
             platform,
@@ -63,10 +59,9 @@ function useInitializeChat({ options, platform: customPlatform }: InitializeChat
 
     useEffect(() => {
         return () => {
-            context.contact.cleanup();
             context.chat.cleanup();
         };
-    }, [context]);
+    }, []);
 
     return context;
 }
