@@ -1,6 +1,5 @@
 import useAsyncFn from "react-use/lib/useAsyncFn";
 import { useChat } from "../ChatProvider";
-import { useChatSession } from "./useChatSession";
 
 /**
  * @param id 
@@ -17,7 +16,7 @@ export function useVote(id: string, sessionId: string, onSuccess?: () => void) {
         return api.vote({ action: "downvote", messagePublicId: id, sessionId }).then(onSuccess);
       }
     },
-    [api, id, onSuccess],
+    [api, id, sessionId, onSuccess],
   );
 }
 
@@ -26,12 +25,11 @@ export function useVote(id: string, sessionId: string, onSuccess?: () => void) {
  * @param onSuccess 
  * @deprecated use useVote instead
 */
-export function useUpvote(id: string, onSuccess?: () => void) {
+export function useUpvote(id: string, sessionId: string, onSuccess?: () => void) {
   const { api } = useChat();
-  const { chatSession } = useChatSession()
   return useAsyncFn(
-    async () => api.vote({ action: "upvote", messagePublicId: id, sessionId: chatSession?.id }).then(onSuccess),
-    [api, id, onSuccess],
+    async () => api.vote({ action: "upvote", messagePublicId: id, sessionId }).then(onSuccess),
+    [api, id, sessionId, onSuccess],
   );
 }
 
@@ -40,11 +38,10 @@ export function useUpvote(id: string, onSuccess?: () => void) {
  * @param onSuccess 
  * @deprecated use useVote instead
 */
-export function useDownvote(id: string, onSuccess?: () => void) {
+export function useDownvote(id: string, sessionId: string, onSuccess?: () => void) {
   const { api } = useChat();
-  const { chatSession } = useChatSession()
   return useAsyncFn(
-    async () => api.vote({ action: "downvote", messagePublicId: id, sessionId: chatSession?.id }).then(onSuccess),
-    [api, id, onSuccess],
+    async () => api.vote({ action: "downvote", messagePublicId: id, sessionId }).then(onSuccess),
+    [api, id, sessionId, onSuccess],
   );
 }

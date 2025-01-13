@@ -6,3 +6,4 @@ export { usePreludeData } from './hooks/usePreludeData';
 export { useLocale } from './hooks/useLocale';
 export { type FileWithProgress, useUploadFiles } from './hooks/useUploadFiles';
 export { useContact } from './hooks/useContact';
+export { useVote } from './hooks/useVote';
