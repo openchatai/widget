@@ -3,13 +3,15 @@ import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { ChatScreen } from "./chat-screen/ChatScreen";
 import { WelcomeScreen } from "./welcome-screen/WelcomeScreen";
+import { useContact } from "@react/core-integration";
 
 export function RootScreen() {
-  const shouldCollectDataFirst = false;
+  const { contactManager } = useContact()
+  const shouldCollectDataFirst = contactManager.shouldCollectData()
   return (
     <div className="bg-background size-full">
       <AnimatePresence mode="wait">
-        {shouldCollectDataFirst ? (
+        {shouldCollectDataFirst.should ? (
           <MotionDiv
             key="welcome-screen"
             fadeIn="right"

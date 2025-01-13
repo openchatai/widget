@@ -1,5 +1,5 @@
 import type { AgentMessageType, BotMessageType } from "@core/types";
-import { useChat, useConfig } from "@react/core-integration";
+import { useChat } from "@react/core-integration";
 import React, { type ComponentType } from "react";
 
 interface BotMessageProps<W extends React.ElementType> {

@@ -9,7 +9,7 @@ import {
   WIDGET_CONTENT_MIN_HEIGHT_PX,
 } from "src/designs/constants";
 import { cn } from "src/utils";
-import { useConfig, useLocale, usePreludeData } from "@react/core-integration";
+import { useConfig, useContact, useLocale, usePreludeData } from "@react/core-integration";
 import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
 
 const schema = z.object({
@@ -18,21 +18,23 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
+  const { contactManager } = useContact()
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
   const { config } = useConfig();
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
+
   const [handleSubmitState, handleSubmit] = useAsyncFn(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const formData = new FormData(event.currentTarget);
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
-      // if (result.success) {
-      //   await createContactAsync(result.data);
-      // }
+      if (result.success) {
+        await contactManager.saveContact(result.data);
+      }
     },
   );
 
@@ -44,17 +46,6 @@ export function WelcomeScreen() {
         "h-fit bg-primary rounded-3xl flex flex-col",
       )}
     >
-      {/* <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1579548122080-c35fd6820ecb?q=80&w=2970&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          height: '240px'
-        }}
-      /> */}
-
       <div className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10">
         <div className="flex items-center justify-between w-full mb-2">
           {config.assets?.organizationLogo ? (
