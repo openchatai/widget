@@ -6,25 +6,36 @@ import { ComponentRegistry } from "./components";
 import { TranslationKeysType } from "./locales/en.locale";
 import { getStr, LangType } from "./locales";
 
-const platform: Platform = {
+const defaultStorage = {
+    getItem: async (key: string) => localStorage.getItem(key),
+    setItem: async (key: string, value: string) => localStorage.setItem(key, value),
+    removeItem: async (key: string) => localStorage.removeItem(key),
+    isAvailable: () => true
+};
+
+const defaultPlatform: Platform = {
     env: {
         platform: 'web'
     },
-    storage: {
-        getItem: async (key: string) => {
-            return localStorage.getItem(key);
-        },
-        setItem: async (key: string, value: string) => {
-            localStorage.setItem(key, value);
-        },
-        removeItem: async (key: string) => {
-            localStorage.removeItem(key);
-        }
-    },
+    storage: defaultStorage,
+};
+
+interface InitializeChatOptions {
+    options: CoreOptions;
+    platform?: Partial<Platform>;
 }
 
-function useInitializeChat(options: CoreOptions) {
+function useInitializeChat({ options, platform: customPlatform }: InitializeChatOptions) {
     const context = useMemo(() => {
+        const platform: Platform = {
+            env: {
+                platform: customPlatform?.env?.platform ?? defaultPlatform.env.platform
+            },
+            storage: customPlatform?.storage ?? defaultPlatform.storage,
+            logger: customPlatform?.logger ?? defaultPlatform.logger,
+            audio: customPlatform?.audio ?? defaultPlatform.audio
+        };
+
         const config = createConfig(options, platform);
         const api = new ApiCaller({
             config: config.getConfig(),
@@ -49,7 +60,7 @@ function useInitializeChat(options: CoreOptions) {
             config,
             platform,
         };
-    }, [options]);
+    }, [options, customPlatform]);
 
     useEffect(() => {
         return () => {
@@ -73,11 +84,15 @@ interface ChatProviderValue extends ReturnType<typeof useInitializeChat> {
 
 const [useChat, SafeProvider] = createSafeContext<ChatProviderValue>();
 
-function ChatProvider({ options, children, components }: {
-    options: CoreOptions, children: React.ReactNode,
+interface ChatProviderProps {
+    options: CoreOptions;
+    children: React.ReactNode;
     components?: ComponentType[];
-}) {
-    const context = useInitializeChat(options);
+    platform?: Partial<Platform>;
+}
+
+function ChatProvider({ options, children, components, platform }: ChatProviderProps) {
+    const context = useInitializeChat({ options, platform });
 
     const componentStore = useMemo(
         () =>
