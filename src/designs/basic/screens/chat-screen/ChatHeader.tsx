@@ -1,5 +1,4 @@
 import { useChat, useLocale, usePreludeData } from "@react/core-integration";
-import { useWidgetSettings } from "@react/core-integration/hooks/useSettings";
 import { Button } from "@ui/button";
 import {
   DropdownMenu,
@@ -27,15 +26,15 @@ function OptionsMenu() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
 
-  const { settingsState, updateSettings } = useWidgetSettings();
+  const { widgetSettings, setWidgetSettings } = useChat();
   const { chat } = useChat();
 
   const togglePersistSession = () => {
-    updateSettings({ persistSession: !settingsState.persistSession });
+    setWidgetSettings({ ...widgetSettings, persistSession: !widgetSettings.persistSession });
   };
 
   const toggleSoundEffects = () => {
-    updateSettings({ useSoundEffects: !settingsState.useSoundEffects });
+    setWidgetSettings({ ...widgetSettings, useSoundEffects: !widgetSettings.useSoundEffects });
   };
 
   return (
@@ -55,7 +54,7 @@ function OptionsMenu() {
             }}
           >
             <AnimatePresence mode="wait">
-              {settingsState.persistSession ? (
+              {widgetSettings.persistSession ? (
                 <MotionDiv key="save" fadeIn="right" distance={4} snapExit>
                   <SaveIcon />
                 </MotionDiv>
@@ -68,7 +67,7 @@ function OptionsMenu() {
             {locale.get("persist-session")}
             <Switch
               className="ml-auto"
-              checked={settingsState.persistSession}
+              checked={widgetSettings.persistSession}
               onCheckedChange={togglePersistSession}
             />
           </DropdownMenuItem>
@@ -79,7 +78,7 @@ function OptionsMenu() {
             }}
           >
             <AnimatePresence mode="wait">
-              {settingsState.useSoundEffects ? (
+              {widgetSettings.useSoundEffects ? (
                 <MotionDiv key="volume-2" fadeIn="right" distance={4} snapExit>
                   <Volume2Icon />
                 </MotionDiv>
@@ -97,7 +96,7 @@ function OptionsMenu() {
             {locale.get("sound-effects")}
             <Switch
               className="ml-auto"
-              checked={settingsState.useSoundEffects}
+              checked={widgetSettings.useSoundEffects}
               onCheckedChange={toggleSoundEffects}
             />
           </DropdownMenuItem>

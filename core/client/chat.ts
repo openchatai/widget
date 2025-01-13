@@ -208,11 +208,11 @@ function createSessionManager(
     }
 
     if (persistSession() && !config.getConfig().user.external_id) {
-        throw new ExternalIdNotDefinedError("session persistence is enabled but external id is not defined")
+        logger?.error("session persistence is enabled but external id is not defined")
     }
 
     const { token, user } = config.getConfig()
-    const sessionStorageKey = `${user.external_id}:${token}:session`;
+    const sessionStorageKey = `${user.external_id ?? user.email ?? "unknown"}:${token}:session`;
     /**
      * Restores the session from storage
      */

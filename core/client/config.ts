@@ -38,7 +38,6 @@ export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken' | 'init
 
 export type ConfigInstance = {
     config: NormalizedConfig;
-    settingsState: PubSub<WidgetSettings>;
     updateSettings: (newSettings: Partial<WidgetSettings>) => void;
     getConfig: () => NormalizedConfig;
     getApiConfig: () => {
@@ -66,7 +65,7 @@ export type WidgetSettings = {
 function createSettingsManager(initialSettings: NormalizedConfig['settings'], platform: Platform, settingsStorageKey: string) {
     const logger = platform.logger;
     const storage = platform.storage;
-    const settingsState = createPubSub<WidgetSettings>(initialSettings ?? DEFAULT_SETTINGS);
+    let settings = initialSettings ?? DEFAULT_SETTINGS;
 
     async function restoreSettings() {
         if (!storage || !isStorageAvailable(storage)) return;
@@ -74,41 +73,40 @@ function createSettingsManager(initialSettings: NormalizedConfig['settings'], pl
             logger?.debug('Attempting to restore settings from storage');
             const storedSettings = await storage.getItem(settingsStorageKey);
             if (storedSettings) {
-                const settings = JSON.parse(storedSettings) as WidgetSettings;
+                settings = JSON.parse(storedSettings) as WidgetSettings;
                 logger?.debug('Settings restored from storage', settings);
-                settingsState.setState(settings);
             }
         } catch (error) {
             logger?.error('Error restoring settings:', error);
         }
     }
 
-    async function persistSettings(settings: WidgetSettings) {
+    async function persistSettings(newSettings: WidgetSettings) {
         if (!storage || !isStorageAvailable(storage)) return;
         try {
-            await storage.setItem(settingsStorageKey, JSON.stringify(settings));
-            logger?.debug('Settings persisted to storage', settings);
+            await storage.setItem(settingsStorageKey, JSON.stringify(newSettings));
+            logger?.debug('Settings persisted to storage', newSettings);
         } catch (error) {
             logger?.error('Error persisting settings:', error);
         }
     }
 
     function updateSettings(newSettings: Partial<WidgetSettings>) {
-        const currentSettings = settingsState.getState();
-        const mergedSettings = {
-            ...currentSettings,
+        settings = {
+            ...settings,
             ...newSettings
         };
+        persistSettings(settings);
+    }
 
-        settingsState.setState(mergedSettings);
-        persistSettings(mergedSettings);
+    function getSettings() {
+        return settings;
     }
 
     // Initialize settings
     restoreSettings();
     return {
-        settingsState,
-        restoreSettings,
+        getSettings,
         updateSettings
     }
 }
@@ -149,15 +147,14 @@ export function createConfig(options: CoreOptions, platform: Platform): ConfigIn
         }
     };
     const settingsStorageKey = `${normalizedConfig.token}:settings`;
-    const { settingsState, updateSettings } = createSettingsManager(normalizedConfig.settings, platform, settingsStorageKey);
+    const { getSettings, updateSettings } = createSettingsManager(normalizedConfig.settings, platform, settingsStorageKey);
 
     return {
         config: normalizedConfig,
-        settingsState,
         updateSettings,
         getConfig: () => ({
             ...normalizedConfig,
-            settings: settingsState.getState()
+            settings: getSettings()
         }),
         getApiConfig: () => ({
             apiUrl: normalizedConfig.apiUrl,

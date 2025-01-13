@@ -1,10 +1,12 @@
-import { CoreOptions, createChat, createConfig, ApiCaller, Platform, createLogger } from "@core/index"
+import { CoreOptions, createChat, createConfig, ApiCaller, Platform, createLogger, isStorageAvailable } from "@core/index"
 import { ComponentType } from "@react/types";
 import { createSafeContext } from "@react/utils/create-safe-context";
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { ComponentRegistry } from "./components";
 import { TranslationKeysType } from "./locales/en.locale";
 import { getStr, LangType } from "./locales";
+import { WidgetSettings } from "@core/client/config";
+import { z } from "zod";
 
 const defaultStorage = {
     getItem: async (key: string) => localStorage.getItem(key),
@@ -26,9 +28,19 @@ interface InitializeChatOptions {
     platform?: Partial<Platform>;
 }
 
+const widgetSettingsSchema = z.object({
+    persistSession: z.boolean().optional(),
+    useSoundEffects: z.boolean().optional(),
+})
+
 function useInitializeChat({ options, platform: customPlatform }: InitializeChatOptions) {
-    const context = useMemo(() => {
-        const platform: Platform = {
+    const [widgetSettings, setWidgetSettings] = useState<z.infer<typeof widgetSettingsSchema>>({
+        persistSession: options.settings?.persistSession ?? false,
+        useSoundEffects: options.settings?.useSoundEffects ?? false,
+    })
+
+    const platform = useMemo<Platform>(() => {
+        return {
             env: {
                 platform: customPlatform?.env?.platform ?? defaultPlatform.env.platform
             },
@@ -36,34 +48,63 @@ function useInitializeChat({ options, platform: customPlatform }: InitializeChat
             logger: customPlatform?.logger ?? defaultPlatform.logger,
             audio: customPlatform?.audio ?? defaultPlatform.audio
         };
+    }, [customPlatform])
 
-        const config = createConfig(options, platform);
-        const api = new ApiCaller({
+    const config = useMemo(() => {
+        return createConfig({
+            ...options,
+            settings: widgetSettings,
+        }, platform);
+    }, [options, platform, widgetSettings])
+
+    // Load initial settings from storage only once
+    useEffect(() => {
+        const init = async () => {
+            if (isStorageAvailable(platform.storage)) {
+                try {
+                    const settings = await platform.storage.getItem(`${options.token}:settings`);
+                    if (settings) {
+                        const parsedSettings = widgetSettingsSchema.parse(JSON.parse(settings));
+                        setWidgetSettings(prev => ({
+                            ...prev,
+                            ...parsedSettings
+                        }));
+                    }
+                } catch (error) {
+                    console.error('Failed to load settings:', error);
+                }
+            }
+        };
+        init();
+    }, [platform.storage, options.token]);
+
+    const api = useMemo(() => {
+        return new ApiCaller({
             config: config.getConfig(),
         });
+    }, [config.config])
 
-        const chat = createChat({
+    const chat = useMemo(() => {
+        return createChat({
             api,
             config,
             platform,
         });
-
-
-        return {
-            chat,
-            api,
-            config,
-            platform,
-        };
-    }, [options, customPlatform]);
+    }, [config, platform, api]);
 
     useEffect(() => {
         return () => {
-            context.chat.cleanup();
+            chat.cleanup();
         };
-    }, []);
+    }, [chat]);
 
-    return context;
+    return {
+        config,
+        chat,
+        api,
+        widgetSettings,
+        setWidgetSettings,
+    }
 }
 
 interface ChatProviderValue extends ReturnType<typeof useInitializeChat> {
