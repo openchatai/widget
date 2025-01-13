@@ -34,7 +34,7 @@ describe("integration testing with storage and persistence", () => {
         settings: {
             persistSession: true
         }
-    })
+    }, platform)
 
     const apis = new ApiCaller({
         config: config.getConfig()

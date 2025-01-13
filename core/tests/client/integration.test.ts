@@ -19,7 +19,7 @@ function initilize() {
     const config = createConfig({
         token: openToken,
         user: getTestUser()
-    })
+    }, platform)
 
     const apis = new ApiCaller({
         config: config.getConfig()
