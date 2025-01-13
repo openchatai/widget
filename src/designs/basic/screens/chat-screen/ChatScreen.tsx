@@ -9,13 +9,13 @@ import { cn } from "src/utils";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useChat, useChatState, usePreludeData } from "@react/core-integration";
+import { useChatState, usePreludeData } from "@react/core-integration";
 import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
 
 export function ChatScreen() {
   const { chatState, chat } = useChatState();
   const preludeSWR = usePreludeData();
-
+  console.log('preludeSWR', preludeSWR);
   const initialQuestions = preludeSWR.data?.initialQuestions;
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,

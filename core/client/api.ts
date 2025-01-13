@@ -41,63 +41,63 @@ export class ApiCaller {
         });
     }
 
-    async me(): Promise<{
-        contactId: string;
-        contactName: string;
-    }> {
-        const { data } = await this.#axios.get('/me');
+    me = async () => {
+        const { data } = await this.#axios.get<{
+            contactId: string;
+            contactName: string;
+        }>('/me');
         return data;
     }
 
-    async widgetPrelude(): Promise<WidgetPreludeSchema> {
-        const { data } = await this.#axios.get('/prelude');
+    widgetPrelude = async () => {
+        const { data } = await this.#axios.get<WidgetPreludeSchema>('/prelude');
         return data;
     }
 
-    async handleMessage(message: HttpChatInputSchema, abortSignal?: AbortSignal) {
-        const { data } = await this.#axios.post('/chat/send', message, { signal: abortSignal });
-        return data as HandleContactMessageOutputSchema;
+    handleMessage = async (message: HttpChatInputSchema, abortSignal?: AbortSignal) => {
+        const { data } = await this.#axios.post<HandleContactMessageOutputSchema>('/chat/send', message, { signal: abortSignal });
+        return data
     }
 
-    async getSessionHistory(sessionId: string, lastMessageTimestamp?: string): Promise<WidgetHistorySchema[]> {
+    getSessionHistory = async (sessionId: string, lastMessageTimestamp?: string) => {
         const params = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
-        const { data } = await this.#axios.get(`/session/history/${sessionId}`, { params });
+        const { data } = await this.#axios.get<WidgetHistorySchema[]>(`/session/history/${sessionId}`, { params });
         return data;
     }
 
-    async createSession(): Promise<WidgetSessionSchema> {
-        const { data } = await this.#axios.post('/create-session');
+    createSession = async () => {
+        const { data } = await this.#axios.post<WidgetSessionSchema>('/create-session');
         return data;
     }
 
-    async getSession(sessionId: string): Promise<WidgetSessionSchema> {
-        const { data } = await this.#axios.get(`/session/${sessionId}`);
+    getSession = async (sessionId: string) => {
+        const { data } = await this.#axios.get<WidgetSessionSchema>(`/session/${sessionId}`);
         return data;
     }
 
-    async uploadFile(
+    uploadFile = async (
         file: {
             id: string;
             file: File;
         },
         config: Partial<AxiosRequestConfig> = {}
-    ) {
+    ) => {
         const formData = new FormData();
         formData.append("file", file.file);
-        const { data } = await this.#axios.post(`/upload?fileId=${file.id}`, formData, {
+        const { data } = await this.#axios.post<{
+            fileName: string;
+            fileUrl: string;
+            clientFileId: string;
+        }>(`/upload?fileId=${file.id}`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             },
             ...config
         });
-        return data as {
-            fileName: string;
-            fileUrl: string;
-            clientFileId: string;
-        };
+        return data
     }
 
-    async vote(vote: WidgetVoteSchema) {
+    vote = async (vote: WidgetVoteSchema) => {
         const { data } = await this.#axios.post<WidgetVoteResponseSchema>(`/chat/vote`, vote)
         return data
     }

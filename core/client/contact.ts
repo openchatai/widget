@@ -12,11 +12,10 @@ type ContactState = {
 
 export type CreateContactOptions = {
     api: ApiCaller;
-    platform: Platform;
     config: ConfigInstance
 };
 
-export function createContact({ config, api, platform }: CreateContactOptions) {
+export function createContact({ config }: CreateContactOptions, platform: Platform) {
     const storageKey = `${config.getConfig().token}:contact:${config.getConfig().user.external_id}`;
     const storage = isStorageAvailable(platform.storage) ? platform.storage : undefined;
 

@@ -50,8 +50,7 @@ function useInitializeChat({ options, platform: customPlatform }: InitializeChat
         const contact = createContact({
             api,
             config,
-            platform,
-        });
+        }, platform);
 
         return {
             chat,

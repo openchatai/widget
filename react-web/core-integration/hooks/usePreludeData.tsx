@@ -5,7 +5,7 @@ import { useChat } from "../ChatProvider";
 function usePreludeData() {
   const { api } = useChat();
   const config = useConfig();
-  return useSWR(config.config, api.widgetPrelude);
+  return useSWR([config.config.apiUrl], api.widgetPrelude);
 }
 
 export { usePreludeData };

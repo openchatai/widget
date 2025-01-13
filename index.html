@@ -29,12 +29,11 @@
       const socketUrl = 'http://localhost:8080';
       const apiUrl = 'http://localhost:8080/backend';
       const token = import.meta.env.VITE_ORG_TOKEN;
-
+      
       window.addEventListener('DOMContentLoaded', () => {
         initOpenScript({
           token: token,
           apiUrl: apiUrl,
-          socketUrl: socketUrl,
           language: 'en',
           initialMessages: [
             'How can we help you?',
