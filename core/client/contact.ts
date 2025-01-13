@@ -3,10 +3,9 @@ import { ApiCaller } from "./api";
 import { Platform, isStorageAvailable, safeStorageOperation } from "../platform";
 import { LoadingState, ErrorState } from "../types/helpers";
 import { ConfigInstance } from "./config";
-import { ConsumerType } from "@core/types/schemas";
 
 type ContactState = {
-    contact: ConsumerType | null;
+    contact: any | null;
     loading: LoadingState;
     error: ErrorState;
 };
@@ -22,7 +21,7 @@ export function createContact({ config, api, platform }: CreateContactOptions) {
     const storage = isStorageAvailable(platform.storage) ? platform.storage : undefined;
 
     // Initialize state from storage if available
-    let initialContact: ConsumerType | null = null;
+    let initialContact: any | null = null;
     if (storage) {
         safeStorageOperation(
             async () => {
@@ -114,7 +113,7 @@ export function createContact({ config, api, platform }: CreateContactOptions) {
         }
     }
 
-    async function saveContact(contactData: Partial<ConsumerType>) {
+    async function saveContact(contactData: Partial<any>) {
         try {
             state.setStatePartial({
                 loading: { isLoading: true, reason: 'saving_contact' },
@@ -122,7 +121,7 @@ export function createContact({ config, api, platform }: CreateContactOptions) {
             });
 
             const currentContact = state.getState().contact;
-            const updatedContact: ConsumerType = {
+            const updatedContact: any = {
                 id: contactData.id || currentContact?.id || '',
                 name: contactData.name ?? currentContact?.name ?? null,
                 created_at: contactData.created_at || currentContact?.created_at || new Date().toISOString(),

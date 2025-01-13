@@ -1,11 +1,10 @@
-import { AgentMessageType, BotMessageType } from "@core/types";
+import { AgentMessageType, AgentType, BotMessageType } from "@core/types";
 import { Avatar, AvatarImage } from "@ui/avatar";
 import React from "react";
 import { cn } from "src/utils";
 import { BotOrAgentMessage } from "./BotOrAgentMessage";
 import { BotOrAgentMessageWrapper } from "./BotOrAgentMessageWrapper";
-import { useChat } from "@react/index";
-import { AgentType } from "@core/types/schemas";
+import { useChatSession } from "@react/core-integration";
 
 export function BotOrAgentMessageGroup({
   messages,
@@ -14,12 +13,12 @@ export function BotOrAgentMessageGroup({
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentType | undefined;
 }) {
-  const { session } = useChat();
+  const { chatSession, } = useChatSession();
 
   return (
     <div className={cn("flex flex-col items-start gap-2", "pr-8")}>
       <Avatar>
-        <AvatarImage src={agent?.profile_picture ?? ""} alt="Agent Icon" />
+        <AvatarImage src={agent?.avatar ?? ""} alt="Agent Icon" />
       </Avatar>
       {messages.map((message) => {
         if (message.component == "CHAT_EVENT") {
@@ -31,9 +30,10 @@ export function BotOrAgentMessageGroup({
             message={message}
             Wrapper={BotOrAgentMessageWrapper}
             wrapperProps={{
-              agent: message.agent,
+              // @TODO
+              agent: message.agent as any,
               messageId: message.id,
-              sessionId: session?.id,
+              sessionId: chatSession?.id,
             }}
           />
         );

@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 import { externalizeDeps } from "vite-plugin-externalize-deps";
 import tsconfigPaths from "vite-tsconfig-paths";
-
+import { version } from "./package.json";
 export default defineConfig({
   plugins: [
     tsconfigPaths(),
@@ -31,6 +31,9 @@ export default defineConfig({
       },
     },
     sourcemap: true,
+  },
+  define: {
+    __VERSION__: JSON.stringify(version),
   },
   clearScreen: false,
 });

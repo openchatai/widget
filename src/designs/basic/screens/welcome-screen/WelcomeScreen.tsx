@@ -1,21 +1,16 @@
 import React from "react";
-import {
-  useConfigData,
-  useContact,
-  useLocale,
-  usePreludeData,
-} from "@react/index";
 import { Input } from "@ui/input";
 import { Button } from "@ui/button";
 import { SendHorizontal } from "lucide-react";
 import { z } from "zod";
 import useAsyncFn from "react-use/lib/useAsyncFn";
-import { useWidgetContentHeight } from "@react/hooks";
 import {
   DEFAULT_STYLES,
   WIDGET_CONTENT_MIN_HEIGHT_PX,
 } from "src/designs/constants";
 import { cn } from "src/utils";
+import { useConfig, useLocale, usePreludeData } from "@react/core-integration";
+import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -25,8 +20,7 @@ const schema = z.object({
 export function WelcomeScreen() {
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
-  const { createContactAsync } = useContact();
-  const { assets } = useConfigData();
+  const { config } = useConfig();
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
@@ -36,9 +30,9 @@ export function WelcomeScreen() {
       const formData = new FormData(event.currentTarget);
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
-      if (result.success) {
-        await createContactAsync(result.data);
-      }
+      // if (result.success) {
+      //   await createContactAsync(result.data);
+      // }
     },
   );
 
@@ -63,15 +57,15 @@ export function WelcomeScreen() {
 
       <div className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10">
         <div className="flex items-center justify-between w-full mb-2">
-          {assets?.organizationLogo ? (
+          {config.assets?.organizationLogo ? (
             <img
-              src={assets?.organizationLogo}
+              src={config.assets?.organizationLogo}
               alt="Company Logo"
               className="h-8 w-auto object-contain"
             />
           ) : (
             <h2 className="font-bold text-xl text-primary-foreground">
-              {preludeData?.organization_name}
+              {preludeData?.organizationName}
             </h2>
           )}
         </div>

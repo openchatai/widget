@@ -1,3 +1,4 @@
+import { AgentType } from "./messages"
 import { ChatAttachmentType } from "./schemas-v2"
 
 export * from "./messages"
@@ -32,15 +33,11 @@ export interface CoreOptions {
     pathParams?: Record<string, string>
     collectUserData?: boolean
     debug?: boolean
+    initialMessages?: string[]
     language?: string
     user?: User
-    contactToken?: string
-    bot?: {
-        name?: string
-        avatarUrl?: string
-        id?: number | null
-        is_ai?: boolean
-    }
+    contactToken?: string;
+    bot?: AgentType;
     pollingInterval?: number
     soundEffectFiles?: {
         messageArrived?: string
@@ -52,5 +49,8 @@ export interface CoreOptions {
     settings?: {
         persistSession?: boolean
         useSoundEffects?: boolean
+    }
+    assets?: {
+        organizationLogo?: string
     }
 }

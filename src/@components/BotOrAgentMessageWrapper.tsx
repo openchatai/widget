@@ -1,7 +1,6 @@
 import React from "react";
 import { cn } from "src/utils";
-import { BotMessageType } from "@core/types/messages";
-import { VoteButtons } from "../components/VoteButtons";
+import { AgentType } from "@core/types/messages";
 
 export function BotOrAgentMessageWrapper({
   children,
@@ -11,7 +10,7 @@ export function BotOrAgentMessageWrapper({
   sessionId,
 }: {
   children: React.ReactNode;
-  agent: BotMessageType["agent"];
+  agent: AgentType;
   className?: string;
   messageId?: string;
   sessionId?: string;

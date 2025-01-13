@@ -1,4 +1,3 @@
-import { useChat, useConfigData } from "@react/index";
 import { UserMessageGroup } from "@ui/UserMessageGroup";
 import React, { ComponentType, useEffect, useMemo, useRef } from "react";
 import { BotOrAgentMessage } from "src/@components/BotOrAgentMessage";
@@ -10,14 +9,15 @@ import {
   isBotMessageGroup,
   isUserMessageGroup,
 } from "../../utils/group-messages-by-type";
+import { useChat, useChatState, useConfig } from "@react/core-integration";
 
 export function ChatMain() {
-  const { state, hookState, session } = useChat();
-  const { componentStore, initialMessages, ...config } = useConfigData();
-
+  const { chatState, chat } = useChatState();
+  const { componentStore } = useChat();
+  const config = useConfig();
   const groupedMessages = useMemo(
-    () => groupMessagesByType(state.messages),
-    [state.messages.length],
+    () => groupMessagesByType(chatState.messages),
+    [chatState.messages.length],
   );
 
   const LoadingComponent = componentStore.getComponent(
@@ -37,16 +37,17 @@ export function ChatMain() {
 
   useEffect(() => {
     handleNewMessage();
-  }, [state.messages]);
+  }, [chatState.messages]);
 
+  const noMessages = chatState.messages.length === 0;
   return (
     <div
       data-messages
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
-      {state.messages.length === 0 &&
-        (initialMessages?.map((message, index) => (
+      {noMessages &&
+        (config.config.initialMessages?.map((message, index) => (
           <BotOrAgentMessage
             key={index}
             message={{
@@ -57,23 +58,23 @@ export function ChatMain() {
               timestamp: Date.now().toString(),
             }}
             Wrapper={BotOrAgentMessageWrapper}
-            wrapperProps={{ agent: config.bot }}
+            wrapperProps={{ agent: config.getBotConfig() }}
           />
         )) ?? (
-          <BotOrAgentMessage
-            key={"default-welcome"}
-            message={{
-              component: "text",
-              data: { message: "Hello, how can I help?" },
-              id: "default-welcome",
-              type: "FROM_BOT",
-              agent: config.bot,
-              timestamp: Date.now().toString(),
-            }}
-            Wrapper={BotOrAgentMessageWrapper}
-            wrapperProps={{ agent: config.bot }}
-          />
-        ))}
+            <BotOrAgentMessage
+              key={"default-welcome"}
+              message={{
+                component: "text",
+                data: { message: "Hello, how can I help?" },
+                id: "default-welcome",
+                type: "FROM_BOT",
+                agent: config.getBotConfig(),
+                timestamp: Date.now().toString(),
+              }}
+              Wrapper={BotOrAgentMessageWrapper}
+              wrapperProps={{ agent: config.getBotConfig() }}
+            />
+          ))}
       {groupedMessages.map((group, index) => {
         const type = group?.[0].type;
         if (!type) return null;
@@ -95,7 +96,7 @@ export function ChatMain() {
 
         return null;
       })}
-      {hookState.state === "loading" && <LoadingComponent />}
+      {chatState.loading.isLoading && chatState.loading.reason === "sending_message_to_bot" && <LoadingComponent />}
     </div>
   );
 }

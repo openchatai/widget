@@ -1,5 +1,5 @@
-import type { LangType } from "../locales";
-import type { ComponentType } from "./components";
+import { CoreOptions } from "@core/types";
+import { LangType } from "@react/core-integration/locales";
 
 export type UserObject = {
   external_id?: string;
@@ -15,32 +15,6 @@ export interface WidgetThemeOptions {
   triggerOffset: string;
 }
 
-export type WidgetOptions = {
-  token: string;
-  headers?: Record<string, string>;
-  queryParams?: Record<string, string>;
-  pathParams?: Record<string, string>;
-  initialMessages: string[];
-  apiUrl?: string;
-  theme?: Partial<WidgetThemeOptions>;
-  settings?: {
-    persistSession?: boolean;
-    useSoundEffects?: boolean;
-  };
-  collectUserData?: boolean;
-  soundEffectFiles?: {
-    messageArrived?: string;
-  };
-  socketUrl?: string;
-  debug?: boolean;
+export interface WidgetOptions extends CoreOptions {
   language?: LangType;
-  user?: UserObject;
-  assets?: {
-    organizationLogo?: string;
-  };
-  bot?: {
-    name?: string;
-    avatarUrl?: string;
-  };
-  components?: ComponentType[];
-};
+}

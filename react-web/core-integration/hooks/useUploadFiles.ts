@@ -1,6 +1,6 @@
-import { useConfigData } from "@react/providers/ConfigDataProvider";
-import { genId } from "@core/utils/genId";
 import { useEffect, useMemo, useState } from "react";
+import { useChat } from "../ChatProvider";
+import { v4 } from "uuid";
 
 const uploadAbortControllers: Map<string, AbortController> = new Map();
 
@@ -15,11 +15,11 @@ interface FileWithProgress {
 
 function useUploadFiles() {
   const [files, setFiles] = useState<FileWithProgress[]>([]);
-  const { http } = useConfigData();
+  const { api } = useChat();
   function appendFiles(files: File[]) {
     const newFiles = files.map((file) => ({
       file,
-      id: genId(10),
+      id: v4(),
       status: "pending" as const,
       progress: 0,
     }));
@@ -49,7 +49,7 @@ function useUploadFiles() {
         ),
       );
 
-      const response = await http.apis.uploadFile(fileItem, {
+      const response = await api.uploadFile(fileItem, {
         signal: controller.signal,
         onUploadProgress: (progressEvent) => {
           if (!progressEvent.total) return;
@@ -64,7 +64,7 @@ function useUploadFiles() {
 
       updateFileById(fileItem.id, {
         status: "success",
-        fileUrl: response.data.fileUrl,
+        fileUrl: response.fileUrl,
         progress: 100,
       });
     } catch (error) {

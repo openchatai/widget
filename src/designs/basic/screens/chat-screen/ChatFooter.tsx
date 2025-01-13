@@ -1,11 +1,3 @@
-import {
-  FileWithProgress,
-  useChat,
-  useConfigData,
-  useContact,
-  useLocale,
-  useUploadFiles,
-} from "@react/index";
 import { Button } from "@ui/button";
 import {
   AlertCircle,
@@ -25,7 +17,8 @@ import { AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "src/utils";
 import { MotionDiv } from "@ui/MotionDiv";
-import { AIClosureType } from "@core/types/schemas";
+import { FileWithProgress, useChat, useConfig, useLocale, useUploadFiles } from "@react/core-integration";
+import { usePubsub } from "@react/core-integration/hooks/usePubsub";
 
 function FileDisplay({
   file: { status, file, error },
@@ -119,10 +112,11 @@ function FileDisplay({
 const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
 function ChatInput() {
-  const { collectUserData } = useConfigData();
+  const { config } = useConfig();
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { sendMessage, hookState, session } = useChat();
-  const { contact } = useContact();
+  const { chat } = useChat();
+  const session = usePubsub(chat.sessionState)
+  const chatState = usePubsub(chat.chatState)
   const locale = useLocale();
 
   const [inputText, setInputText] = useState("");
@@ -136,10 +130,7 @@ function ChatInput() {
     successFiles,
   } = useUploadFiles();
 
-  const shouldAcceptAttachments =
-    session &&
-    (session?.isAssignedToHuman ||
-      session.ai_closure_type === AIClosureType.handed_off);
+  const shouldAcceptAttachments = session && (session?.isHandedOff || session.assignee.kind === 'human')
 
   const handleFileDrop = (acceptedFiles: File[]) => {
     if (!shouldAcceptAttachments) {
@@ -149,7 +140,8 @@ function ChatInput() {
   };
 
   const handleSubmit = async () => {
-    if (hookState.state === "loading") return;
+    const loading = chatState.loading.isLoading
+    if (loading) return;
     if (isUploading) {
       // TODO use something other than toast
       const message = "please wait for the file(s) to upload";
@@ -161,14 +153,12 @@ function ChatInput() {
     setInputText("");
     emptyTheFiles();
 
-    await sendMessage({
-      content: {
-        text: inputText.trim(),
-      },
-      user: {
-        email: contact?.email ?? undefined,
-        name: contact?.name ?? undefined,
-      },
+    await chat.sendMessage({
+      content: inputText.trim(),
+      // user: {
+      //   email: contact?.email ?? undefined,
+      //   name: contact?.name ?? undefined,
+      // },
       attachments: successFiles.map((f) => ({
         url: f.fileUrl!,
         type: f.file.type,
@@ -202,9 +192,8 @@ function ChatInput() {
     },
   });
 
-  const isLoading = hookState.state === "loading";
-
-  const shouldCollectDataFirst = collectUserData && !contact?.id;
+  // TODO: add this back in
+  const shouldCollectDataFirst = false
 
   const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const clipboardData = event.clipboardData;
@@ -213,6 +202,8 @@ function ChatInput() {
       handleFileDrop(Array.from(clipboardData.files));
     }
   };
+
+  const isProcessingMessage = chatState.loading.isLoading && (chatState.loading.reason === 'sending_message_to_bot' || chatState.loading.reason === 'sending_message_to_agent')
 
   return (
     <div className="p-2 relative space-y-1" {...dropzone__getRootProps()}>
@@ -240,7 +231,7 @@ function ChatInput() {
           ref={inputRef}
           id="chat-input"
           dir="auto"
-          disabled={isLoading}
+          disabled={isProcessingMessage}
           value={inputText}
           rows={3}
           className={cn(
@@ -293,10 +284,10 @@ function ChatInput() {
             <Button
               size="fit"
               onClick={handleSubmit}
-              disabled={isLoading || shouldCollectDataFirst || isUploading}
+              disabled={isProcessingMessage || shouldCollectDataFirst || isUploading}
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
-              {isLoading ? (
+              {isProcessingMessage ? (
                 <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
               ) : (
                 <SendHorizonal className="size-4 rtl:-scale-100" />
@@ -310,7 +301,7 @@ function ChatInput() {
 }
 
 function SessionClosedSection() {
-  const { recreateSession } = useChat();
+  const { chat } = useChat();
   const locale = useLocale();
 
   return (
@@ -324,7 +315,7 @@ function SessionClosedSection() {
         </div>
 
         <div>
-          <Button onClick={recreateSession} className="rounded-2xl w-full">
+          <Button onClick={chat.recreateSession} className="rounded-2xl w-full">
             {locale.get("create-new-ticket")}
           </Button>
         </div>
@@ -334,17 +325,13 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
-  const { session, hookState } = useChat();
-
-  const isSessionClosed =
-    session &&
-    session.isSessionClosed === true &&
-    hookState.state !== "loading";
+  const { chat } = useChat();
+  const session = usePubsub(chat.sessionState)
 
   return (
     <div>
       <AnimatePresence mode="wait">
-        {isSessionClosed ? (
+        {(session && !session.isOpened) ? (
           <MotionDiv
             key="session-closed"
             className="overflow-hidden"

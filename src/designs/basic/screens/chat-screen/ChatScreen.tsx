@@ -1,6 +1,3 @@
-import { useWidgetContentHeight } from "@react/hooks";
-import { useChat } from "@react/index";
-import { usePreludeData } from "@react/providers/usePreludeData";
 import { Button } from "@ui/button";
 import { Keyboard } from "@ui/keyboard";
 import React from "react";
@@ -12,14 +9,19 @@ import { cn } from "src/utils";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
+import { useChat, useChatState, usePreludeData } from "@react/core-integration";
+import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
 
 export function ChatScreen() {
-  const { state, sendMessage, noMessages, handleKeyboard } = useChat();
+  const { chatState, chat } = useChatState();
   const preludeSWR = usePreludeData();
-  const initialQuestions = preludeSWR.data?.initial_questions;
+
+  const initialQuestions = preludeSWR.data?.initialQuestions;
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });
+
+  const noMessages = chatState.messages.length === 0;
 
   return (
     <div
@@ -40,10 +42,12 @@ export function ChatScreen() {
         <div className="flex bg-background shadow-lg flex-col w-full flex-1 overflow-auto">
           <ChatMain />
           <footer>
-            {state.keyboard && (
+            {chatState.keyboard && (
               <Keyboard
-                options={state.keyboard.options}
-                onKeyboardClick={handleKeyboard}
+                options={chatState.keyboard.options}
+                onKeyboardClick={(option) => {
+                  chat.sendMessage({ content: option })
+                }}
               />
             )}
 
@@ -56,8 +60,8 @@ export function ChatScreen() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      sendMessage({
-                        content: { text: iq },
+                      chat.sendMessage({
+                        content: iq,
                       });
                     }}
                   >

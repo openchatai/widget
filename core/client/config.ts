@@ -1,4 +1,5 @@
-import { CoreOptions } from "../types";
+import { isStorageAvailable, Platform } from "@core/platform";
+import { CoreOptions, createPubSub, PubSub } from "../types";
 
 const DEFAULT_SOUND_EFFECTS = {
     messageArrived: "https://cloud.opencopilot.so/sfx/notification3.mp3"
@@ -11,8 +12,14 @@ const DEFAULT_THEME = {
     triggerOffset: "20px"
 };
 
-export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
+const DEFAULT_SETTINGS = {
+    persistSession: false,
+    useSoundEffects: false
+};
+
+export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken' | 'initialMessages'>> & {
     contactToken: string | undefined | null;
+    initialMessages: string[];
     soundEffectFiles: {
         messageArrived: string;
     };
@@ -24,9 +31,15 @@ export type NormalizedConfig = Required<Omit<CoreOptions, 'contactToken'>> & {
         persistSession: boolean;
         useSoundEffects: boolean;
     };
+    assets: {
+        organizationLogo: string;
+    };
 };
 
 export type ConfigInstance = {
+    config: NormalizedConfig;
+    settingsState: PubSub<WidgetSettings>;
+    updateSettings: (newSettings: Partial<WidgetSettings>) => void;
     getConfig: () => NormalizedConfig;
     getApiConfig: () => {
         apiUrl: string;
@@ -46,7 +59,62 @@ export type ConfigInstance = {
 
 const MIN_POLLING_INTERVAL = 1000 * 3;
 
-export function createConfig(options: CoreOptions): ConfigInstance {
+export type WidgetSettings = {
+    persistSession: boolean;
+    useSoundEffects: boolean;
+};
+
+function createSettingsManager(initialSettings: NormalizedConfig['settings'], platform: Platform, settingsStorageKey: string) {
+    const logger = platform.logger;
+    const storage = platform.storage;
+    const settingsState = createPubSub<WidgetSettings>(initialSettings ?? DEFAULT_SETTINGS);
+
+    async function restoreSettings() {
+        if (!storage || !isStorageAvailable(storage)) return;
+        try {
+            logger?.debug('Attempting to restore settings from storage');
+            const storedSettings = await storage.getItem(settingsStorageKey);
+            if (storedSettings) {
+                const settings = JSON.parse(storedSettings) as WidgetSettings;
+                logger?.debug('Settings restored from storage', settings);
+                settingsState.setState(settings);
+            }
+        } catch (error) {
+            logger?.error('Error restoring settings:', error);
+        }
+    }
+
+    async function persistSettings(settings: WidgetSettings) {
+        if (!storage || !isStorageAvailable(storage)) return;
+        try {
+            await storage.setItem(settingsStorageKey, JSON.stringify(settings));
+            logger?.debug('Settings persisted to storage', settings);
+        } catch (error) {
+            logger?.error('Error persisting settings:', error);
+        }
+    }
+
+    function updateSettings(newSettings: Partial<WidgetSettings>) {
+        const currentSettings = settingsState.getState();
+        const mergedSettings = {
+            ...currentSettings,
+            ...newSettings
+        };
+
+        settingsState.setState(mergedSettings);
+        persistSettings(mergedSettings);
+    }
+
+    // Initialize settings
+    restoreSettings();
+    return {
+        settingsState,
+        restoreSettings,
+        updateSettings
+    }
+}
+
+export function createConfig(options: CoreOptions, platform: Platform): ConfigInstance {
     if (!options.token) {
         throw new Error("Token is required");
     }
@@ -58,6 +126,7 @@ export function createConfig(options: CoreOptions): ConfigInstance {
     const normalizedConfig: NormalizedConfig = {
         ...options,
         collectUserData: options.collectUserData ?? false,
+        initialMessages: options.initialMessages ?? [],
         apiUrl: options.apiUrl ?? "https://api.open.cx/backend",
         pollingInterval: options.pollingInterval ?? 3000,
         headers: options.headers ?? {},
@@ -65,29 +134,32 @@ export function createConfig(options: CoreOptions): ConfigInstance {
         pathParams: options.pathParams ?? {},
         bot: {
             name: options.bot?.name ?? "Bot",
-            avatarUrl: options.bot?.avatarUrl,
+            avatar: options.bot?.avatar ?? null,
             id: options.bot?.id ?? null,
-            is_ai: options.bot?.is_ai ?? true
+            isAi: options.bot?.isAi ?? true
         },
         contactToken: options.contactToken,
         debug: options.debug ?? false,
         language: options.language ?? "en",
         user: options.user ?? {},
-        soundEffectFiles: {
-            messageArrived: options.soundEffectFiles?.messageArrived ?? DEFAULT_SOUND_EFFECTS.messageArrived
-        },
-        theme: {
-            primaryColor: options.theme?.primaryColor ?? DEFAULT_THEME.primaryColor,
-            triggerOffset: options.theme?.triggerOffset ?? DEFAULT_THEME.triggerOffset
-        },
-        settings: {
-            persistSession: options.settings?.persistSession ?? false,
-            useSoundEffects: options.settings?.useSoundEffects ?? false
-        },
+        soundEffectFiles: Object.assign({}, DEFAULT_SOUND_EFFECTS, options.soundEffectFiles),
+        theme: Object.assign({}, DEFAULT_THEME, options.theme),
+        settings: Object.assign({}, DEFAULT_SETTINGS, options.settings),
+        assets: {
+            organizationLogo: options.assets?.organizationLogo ?? ""
+        }
     };
+    const settingsStorageKey = `${normalizedConfig.token}:settings`;
+    const { settingsState, updateSettings } = createSettingsManager(normalizedConfig.settings, platform, settingsStorageKey);
 
     return {
-        getConfig: () => normalizedConfig,
+        config: normalizedConfig,
+        settingsState,
+        updateSettings,
+        getConfig: () => ({
+            ...normalizedConfig,
+            settings: settingsState.getState()
+        }),
         getApiConfig: () => ({
             apiUrl: normalizedConfig.apiUrl,
             token: normalizedConfig.token,

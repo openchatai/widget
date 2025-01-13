@@ -1,9 +1,5 @@
-import {
-  useChat,
-  useConfigData,
-  useLocale,
-  usePreludeData,
-} from "@react/index";
+import { useChat, useLocale, usePreludeData } from "@react/core-integration";
+import { useWidgetSettings } from "@react/core-integration/hooks/useSettings";
 import { Button } from "@ui/button";
 import {
   DropdownMenu,
@@ -31,15 +27,15 @@ function OptionsMenu() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
 
-  const { clearSession } = useChat();
-  const { widgetSettings, setSettings } = useConfigData();
+  const { settingsState, updateSettings } = useWidgetSettings();
+  const { chat } = useChat();
 
   const togglePersistSession = () => {
-    setSettings({ persistSession: !widgetSettings?.persistSession });
+    updateSettings({ persistSession: !settingsState.persistSession });
   };
 
   const toggleSoundEffects = () => {
-    setSettings({ useSoundEffects: !widgetSettings?.useSoundEffects });
+    updateSettings({ useSoundEffects: !settingsState.useSoundEffects });
   };
 
   return (
@@ -59,7 +55,7 @@ function OptionsMenu() {
             }}
           >
             <AnimatePresence mode="wait">
-              {widgetSettings?.persistSession ? (
+              {settingsState.persistSession ? (
                 <MotionDiv key="save" fadeIn="right" distance={4} snapExit>
                   <SaveIcon />
                 </MotionDiv>
@@ -72,7 +68,7 @@ function OptionsMenu() {
             {locale.get("persist-session")}
             <Switch
               className="ml-auto"
-              checked={widgetSettings?.persistSession}
+              checked={settingsState.persistSession}
               onCheckedChange={togglePersistSession}
             />
           </DropdownMenuItem>
@@ -83,7 +79,7 @@ function OptionsMenu() {
             }}
           >
             <AnimatePresence mode="wait">
-              {widgetSettings?.useSoundEffects ? (
+              {settingsState.useSoundEffects ? (
                 <MotionDiv key="volume-2" fadeIn="right" distance={4} snapExit>
                   <Volume2Icon />
                 </MotionDiv>
@@ -101,7 +97,7 @@ function OptionsMenu() {
             {locale.get("sound-effects")}
             <Switch
               className="ml-auto"
-              checked={widgetSettings?.useSoundEffects}
+              checked={settingsState.useSoundEffects}
               onCheckedChange={toggleSoundEffects}
             />
           </DropdownMenuItem>
@@ -112,7 +108,7 @@ function OptionsMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onSelect={() => {
-              clearSession();
+              chat.clearSession();
               setOpen(false);
             }}
           >
@@ -141,7 +137,7 @@ export function ChatHeader() {
           {isLoading ? (
             <Skeleton className="h-4 w-2/3" />
           ) : (
-            <h2 className="font-semibold">{data?.organization_name}</h2>
+            <h2 className="font-semibold">{data?.organizationName}</h2>
           )}
         </div>
         <OptionsMenu />

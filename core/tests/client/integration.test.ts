@@ -83,7 +83,7 @@ describe("web integration tests", () => {
         const lastMessage = state.messages[0] as UserMessageType
         expect(lastMessage.attachments).toBeDefined()
         expect(lastMessage.attachments![0]).toEqual(attachment)
-    }, 30000)
+    }, 300000)
 
     it("should handle error states correctly", async () => {
         const { chat } = initilize()

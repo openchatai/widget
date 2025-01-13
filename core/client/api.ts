@@ -1,14 +1,13 @@
-import { createFetch, CustomFetch } from "../utils/create-fetch";
-import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema } from "../types/schemas-v2";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { HandleContactMessageOutputSchema, HttpChatInputSchema, WidgetHistorySchema, WidgetPreludeSchema, WidgetSessionSchema, WidgetVoteResponseSchema, WidgetVoteSchema } from "../types/schemas-v2";
 import { NormalizedConfig } from "./config";
-import { ConsumerType } from "@core/types/schemas";
 
 export interface ApiCallerOptions {
     config: NormalizedConfig;
 }
 
 export class ApiCaller {
-    #fetch: CustomFetch
+    #axios: AxiosInstance;
     constructor(private readonly options: ApiCallerOptions) {
         const user = this.options.config.user;
         const consumerHeader = {
@@ -20,7 +19,6 @@ export class ApiCaller {
             consumerHeader.claim = 'email';
             consumerHeader.value = user.email;
         }
-
         else if (user?.phone) {
             consumerHeader.claim = 'phone';
             consumerHeader.value = user.phone;
@@ -33,70 +31,74 @@ export class ApiCaller {
             "Accept": "application/json"
         }
 
-        // Only add Authorization header if contactToken exists
         if (this.options.config.contactToken) {
             headers['Authorization'] = `Bearer ${this.options.config.contactToken}`
         }
 
-        this.#fetch = createFetch({
+        this.#axios = axios.create({
             baseURL: `${this.options.config.apiUrl}/widget/v2`,
             headers
-        })
+        });
     }
 
     async me(): Promise<{
         contactId: string;
         contactName: string;
     }> {
-        // GET /me
-        const response = await this.#fetch('/me')
-        return response.json()
+        const { data } = await this.#axios.get('/me');
+        return data;
     }
 
     async widgetPrelude(): Promise<WidgetPreludeSchema> {
-        // GET /prelude
-        const response = await this.#fetch('/prelude')
-        return response.json()
+        const { data } = await this.#axios.get('/prelude');
+        return data;
     }
 
     async handleMessage(message: HttpChatInputSchema, abortSignal?: AbortSignal) {
-        // POST /chat/send
-        const response = await this.#fetch('/chat/send', {
-            method: "POST",
-            body: JSON.stringify(message),
-            signal: abortSignal
-        })
-        return response.json() as Promise<HandleContactMessageOutputSchema>
+        const { data } = await this.#axios.post('/chat/send', message, { signal: abortSignal });
+        return data as HandleContactMessageOutputSchema;
     }
 
     async getSessionHistory(sessionId: string, lastMessageTimestamp?: string): Promise<WidgetHistorySchema[]> {
-        // session/history/:sessionId
-        const queryParams = new URLSearchParams({
-            lastMessageTimestamp: lastMessageTimestamp || ''
-        })
-
-        const url = `/session/history/${sessionId}?${queryParams.toString()}`
-
-        const response = await this.#fetch(url, {
-            method: 'GET'
-        })
-
-        return response.json()
+        const params = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
+        const { data } = await this.#axios.get(`/session/history/${sessionId}`, { params });
+        return data;
     }
 
     async createSession(): Promise<WidgetSessionSchema> {
-        // POST /create-session
-        const response = await this.#fetch('/create-session', {
-            method: 'POST'
-        })
-        return response.json()
+        const { data } = await this.#axios.post('/create-session');
+        return data;
     }
 
     async getSession(sessionId: string): Promise<WidgetSessionSchema> {
-        // GET /session/:sessionId
-        const response = await this.#fetch(`/session/${sessionId}`, {
-            method: 'GET'
-        })
-        return response.json()
+        const { data } = await this.#axios.get(`/session/${sessionId}`);
+        return data;
+    }
+
+    async uploadFile(
+        file: {
+            id: string;
+            file: File;
+        },
+        config: Partial<AxiosRequestConfig> = {}
+    ) {
+        const formData = new FormData();
+        formData.append("file", file.file);
+        const { data } = await this.#axios.post(`/upload?fileId=${file.id}`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+            ...config
+        });
+        return data as {
+            fileName: string;
+            fileUrl: string;
+            clientFileId: string;
+        };
+    }
+
+    async vote(vote: WidgetVoteSchema) {
+        const { data } = await this.#axios.post<WidgetVoteResponseSchema>(`/chat/vote`, vote)
+        return data
     }
 }

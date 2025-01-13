@@ -1,9 +1,3 @@
-import {
-  useChat,
-  useConfigData,
-  WidgetOptions,
-  WidgetRoot as OriginalWidgetRoot,
-} from "@react/index";
 import { TooltipProvider } from "@ui/tooltip";
 import React, { ComponentPropsWithoutRef, ReactNode } from "react";
 import {
@@ -21,6 +15,8 @@ import { useState } from "react";
 import "../../index.css";
 import styles from "../../index.css?inline";
 import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
+import { ChatProvider, useChat, useConfig } from "@react/core-integration";
+import { WidgetOptions } from "@react/types";
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -42,7 +38,7 @@ html, body {
 
 function Widget({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const chat = useChat();
-  const { theme } = useConfigData();
+  const { config: { theme } } = useConfig();
   const [isOpen, setIsOpened] = useState(false);
 
   return (
@@ -140,27 +136,25 @@ function WidgetRoot({
   children,
 }: { options: WidgetOptions; children: ReactNode }) {
   return (
-    <OriginalWidgetRoot
-      options={{
-        ...options,
-        components: [
-          {
-            key: "LOADING",
-            component: BotLoadingComponent,
-          },
-          {
-            key: "FALLBACK",
-            component: FallbackComponent,
-          },
-          {
-            key: "TEXT",
-            component: BotTextResponse,
-          },
-        ],
-      }}
+    <ChatProvider
+      components={[
+        {
+          key: "LOADING",
+          component: BotLoadingComponent,
+        },
+        {
+          key: "FALLBACK",
+          component: FallbackComponent,
+        },
+        {
+          key: "TEXT",
+          component: BotTextResponse,
+        },
+      ]}
+      options={options}
     >
       {children}
-    </OriginalWidgetRoot>
+    </ChatProvider>
   );
 }
 

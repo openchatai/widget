@@ -1,10 +1,10 @@
 import { UserMessageType } from "@core/types";
-import { useConfigData } from "@react/index";
 import { formatDistance } from "date-fns";
 import React, { useMemo } from "react";
 import { cn } from "src/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
 import { RenderAttachment } from "./RenderFile";
+import { useConfig } from "@react/core-integration";
 
 function UserMessage({
   message,
@@ -51,7 +51,8 @@ function UserMessage({
 export function UserMessageGroup({
   messages,
 }: { messages: UserMessageType[] }) {
-  const { user } = useConfigData();
+  const { getUser } = useConfig();
+  const user = getUser();
 
   return (
     <div

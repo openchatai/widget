@@ -82,8 +82,8 @@ function mapHistoryToMessage(history: WidgetHistorySchema): MessageType {
         agent: {
             id: null,
             name: history.sender.name || '',
-            is_ai: history.sender.kind === 'ai',
-            profile_picture: history.sender.avatar
+            isAi: history.sender.kind === 'ai',
+            avatar: history.sender.avatar || null
         },
         data: {
             message: history.content.text
@@ -716,6 +716,10 @@ export function createChat(options: ChatOptions) {
         }
     }
 
+    async function recreateSession() {
+        await sessionManager.clearSession();
+        await sessionManager.createSession();
+    }
     return {
         chatState: state,
         sessionState,
@@ -724,6 +728,7 @@ export function createChat(options: ChatOptions) {
         clearSession: sessionManager.clearSession,
         cleanup: sessionManager.cleanup,
         initialState,
-        sessionStorageKey: sessionManager.sessionStorageKey
+        sessionStorageKey: sessionManager.sessionStorageKey,
+        recreateSession
     };
 } 

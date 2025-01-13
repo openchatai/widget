@@ -1,5 +1,5 @@
-import { useConfigData } from "@react/providers/ConfigDataProvider";
 import type { AgentMessageType, BotMessageType } from "@core/types";
+import { useChat, useConfig } from "@react/core-integration";
 import React, { type ComponentType } from "react";
 
 interface BotMessageProps<W extends React.ElementType> {
@@ -13,11 +13,11 @@ export function BotOrAgentMessage<W extends React.ElementType>({
   Wrapper,
   wrapperProps,
 }: BotMessageProps<W>) {
-  const config = useConfigData();
-
-  const Component = config.componentStore.getComponent(
+  const { componentStore, config } = useChat();
+  const debug = config.getDebugMode();
+  const Component = componentStore.getComponent(
     message.component,
-    config.debug,
+    debug,
   ) as ComponentType<{
     data: BotMessageType["data"] | AgentMessageType['data'];
     id: string;

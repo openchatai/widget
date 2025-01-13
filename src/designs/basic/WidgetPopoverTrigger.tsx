@@ -1,8 +1,8 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { useConfigData } from "@react/index";
+import { useConfig } from "@react/core-integration";
 import { Wobble } from "@ui/wobble";
-import { AnimatePresence, motion } from "framer-motion";
-import { MessageSquareDot, XIcon } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
+import { XIcon } from "lucide-react";
 import React from "react";
 import { cn } from "src/utils";
 import { cssVars } from "../constants";
@@ -10,7 +10,7 @@ import { OpenLogoSvg } from "src/@components/OpenLogoSvg";
 import { MotionDiv } from "@ui/MotionDiv";
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
-  const { theme } = useConfigData();
+  const { config: { theme } } = useConfig();
 
   return (
     <PopoverPrimitive.PopoverTrigger
