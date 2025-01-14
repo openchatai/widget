@@ -19,6 +19,7 @@ import { cn } from "src/utils";
 import { MotionDiv } from "@ui/MotionDiv";
 import { FileWithProgress, useChat, useConfig, useLocale, useUploadFiles } from "@react/core-integration";
 import { usePubsub } from "@react/core-integration/hooks/usePubsub";
+import { genUuid } from "@core/utils/genUuid";
 
 function FileDisplay({
   file: { status, file, error },

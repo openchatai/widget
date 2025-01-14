@@ -59,7 +59,7 @@ export function WelcomeScreen() {
             />
           ) : (
             <h2 className="font-bold text-xl text-primary-foreground">
-              {preludeData?.organizationName}
+              {preludeData?.data?.organizationName}
             </h2>
           )}
         </div>

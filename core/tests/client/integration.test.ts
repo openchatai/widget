@@ -51,7 +51,6 @@ describe("web integration tests", () => {
 
         const userMessage: SendMessageInput = {
             content: "Hello",
-            uuid: v4()
         }
 
         const resp = await chat.sendMessage(userMessage)
@@ -74,7 +73,6 @@ describe("web integration tests", () => {
 
         const userMessage: SendMessageInput = {
             content: "Here's an image",
-            uuid: v4(),
             attachments: [attachment]
         }
 
@@ -89,7 +87,6 @@ describe("web integration tests", () => {
         const { chat } = initilize()
         const invalidMessage: SendMessageInput = {
             content: "", // Empty content should trigger error
-            uuid: v4()
         }
 
         try {
@@ -108,7 +105,6 @@ describe("web integration tests", () => {
 
         const sendPromise = chat.sendMessage({
             content: "Test loading",
-            uuid: v4()
         })
 
         // Check loading state immediately after sending
@@ -125,7 +121,6 @@ describe("web integration tests", () => {
 
         await chat.sendMessage({
             content: "Hello bot",
-            uuid: v4()
         })
 
         // Wait for bot response
@@ -144,7 +139,6 @@ describe("web integration tests", () => {
             // Send a message to create a session
             await chat.sendMessage({
                 content: "Start polling test",
-                uuid: v4()
             })
 
             // Wait for polling to start
@@ -161,8 +155,7 @@ describe("web integration tests", () => {
             const { chat } = initilize()
 
             await chat.sendMessage({
-                content: "Test message polling",
-                uuid: v4()
+                content: "Test message polling"
             })
 
             // Wait for polling to start
@@ -183,11 +176,10 @@ describe("web integration tests", () => {
             // Create a session with some messages
             await chat.sendMessage({
                 content: "Test cleanup",
-                uuid: v4()
             })
 
             // Cleanup
-            chat.cleanup(true)
+            chat.cleanup()
 
             const state = chat.chatState.getState()
             expect(state.messages).toHaveLength(0)

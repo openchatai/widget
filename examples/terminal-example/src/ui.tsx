@@ -10,6 +10,7 @@ import type { MessageType } from "../../../core/types/messages.js"
 import type { Platform, Storage } from "../../../core/platform/index.js"
 import { cwd } from 'node:process';
 import { createLogger } from '@core/platform/logger.js';
+import { genUuid } from '@core/utils/genUuid.js';
 
 // Create storage directory in current working directory
 const STORAGE_DIR = join(cwd(), '.tui-data');
@@ -123,7 +124,7 @@ export const Chat = () => {
     const chatInstance = React.useMemo(() => {
         const config = createConfig({
             token: '6cb3b1b746e45441b4d2a874dd60d44a',
-            apiUrl: 'http://localhost:8080/backend',
+            apiUrl: 'http://localhost:8080',
             user: {
                 email: "test@test.com",
                 name: "Test User"
@@ -154,12 +155,12 @@ export const Chat = () => {
     // Load prelude data
     useEffect(() => {
         const loadPrelude = async () => {
-            try {
-                const data = await chatInstance.api.widgetPrelude();
-                setOrganizationName(data.organizationName);
-                setInitialQuestions(data.initialQuestions);
-            } catch (error) {
-                console.error('Failed to load prelude:', error);
+            const { data, error } = await chatInstance.api.widgetPrelude();
+            if (data) {
+              setOrganizationName(data.organizationName);
+              setInitialQuestions(data.initialQuestions);
+            } else {
+              console.error('Failed to load prelude:', error);
             }
         };
 

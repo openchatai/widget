@@ -124,7 +124,7 @@ export function createConfig(options: CoreOptions, platform: Platform): ConfigIn
         ...options,
         collectUserData: options.collectUserData ?? false,
         initialMessages: options.initialMessages ?? [],
-        apiUrl: options.apiUrl ?? "https://api.open.cx/backend",
+        apiUrl: options.apiUrl ?? "https://api.open.cx",
         pollingInterval: options.pollingInterval ?? 3000,
         headers: options.headers ?? {},
         queryParams: options.queryParams ?? {},

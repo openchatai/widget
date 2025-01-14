@@ -209,6 +209,11 @@ export interface components {
                 url: string;
             }[] | null;
         };
+        UploadWidgetFileDto: {
+            fileName: string;
+            fileUrl: string;
+            clientFileId: string;
+        };
         WidgetContactDto: {
             authenticationStatus: {
                 /** @enum {boolean} */
@@ -540,11 +545,13 @@ export interface operations {
             };
         };
         responses: {
-            201: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["UploadWidgetFileDto"];
+                };
             };
             /** @description Internal Server Error */
             500: {

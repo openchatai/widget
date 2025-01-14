@@ -136,7 +136,7 @@ export function ChatHeader() {
           {isLoading ? (
             <Skeleton className="h-4 w-2/3" />
           ) : (
-            <h2 className="font-semibold">{data?.organizationName}</h2>
+            <h2 className="font-semibold">{data?.data?.organizationName}</h2>
           )}
         </div>
         <OptionsMenu />

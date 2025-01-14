@@ -14,7 +14,7 @@ type PreludeData = {
 };
 
 const socketUrl = 'http://localhost:8080';
-const apiUrl = 'http://localhost:8080/backend';
+const apiUrl = 'http://localhost:8080';
 
 
 export const platform: Platform = {

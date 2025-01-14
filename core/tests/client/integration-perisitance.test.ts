@@ -131,7 +131,7 @@ describe("integration testing with storage and persistence", () => {
             loadingStates.length = 0 // Clear previous states
 
             // Perform cleanup and wait for it to complete
-            await chat.cleanup(true)
+            await chat.cleanup()
             await new Promise(resolve => setTimeout(resolve, 500))
 
             // Verify final state

@@ -23,7 +23,7 @@ const orgTagline = document.getElementById('orgTagline') as HTMLSpanElement;
 const orgLogo = document.getElementById('orgLogo') as HTMLDivElement;
 const welcomeMessage = document.getElementById('welcomeMessage') as HTMLParagraphElement;
 
-const apiUrl = 'http://localhost:8080/backend';
+const apiUrl = 'http://localhost:8080';
 
 // Error handling utilities
 function showErrorToast(message: string, duration = 5000) {

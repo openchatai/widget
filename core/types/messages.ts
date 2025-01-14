@@ -1,18 +1,18 @@
-import { ChatAttachmentType, WidgetHistorySchema } from "./schemas-v2";
+import { ChatAttachmentType, WidgetHistoryDto } from './schemas-v2';
 
 export type AgentType = {
   isAi: boolean;
   id: string | null;
   name: string;
   avatar: string | null;
-}
+};
 
 export type UserMessageType = {
   id: string;
-  type: "FROM_USER";
+  type: 'FROM_USER';
   content: string;
   deliveredAt: string | null;
-  attachments?: ChatAttachmentType[];
+  attachments?: ChatAttachmentType[] | null;
   timestamp: string;
   user?: {
     name?: string;
@@ -25,22 +25,22 @@ export type UserMessageType = {
 
 export type BotMessageType<TData = unknown> = {
   id: string;
-  type: "FROM_BOT";
+  type: 'FROM_BOT';
   component: string;
   data: TData;
   timestamp: string;
-  original?: WidgetHistorySchema;
+  original?: WidgetHistoryDto;
   agent?: AgentType;
   attachments?: ChatAttachmentType[];
 };
 
 export type AgentMessageType<TData = unknown> = {
   id: string;
-  type: "FROM_AGENT";
+  type: 'FROM_AGENT';
   component: string;
   data: TData;
   timestamp?: string;
-  original?: WidgetHistorySchema;
+  original?: WidgetHistoryDto;
   agent?: AgentType;
   attachments?: ChatAttachmentType[];
 };
