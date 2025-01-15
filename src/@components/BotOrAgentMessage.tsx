@@ -19,7 +19,7 @@ export function BotOrAgentMessage<W extends React.ElementType>({
     message.component,
     debug,
   ) as ComponentType<{
-    data: BotMessageType["data"] | AgentMessageType['data'];
+    data: BotMessageType["data"] | AgentMessageType["data"];
     id: string;
   }>;
 

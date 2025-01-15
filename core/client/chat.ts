@@ -1,42 +1,42 @@
-import { PubSub } from '../types/pub-sub';
-import { MessageType, UserMessageType } from '../types';
-import { ApiCaller } from './api';
-import { genUuid } from '../utils/genUuid';
+import { PubSub } from "../types/pub-sub";
+import { BotMessageType, MessageType, UserMessageType } from "../types";
+import { ApiCaller } from "./api";
+import { genUuid } from "../utils/genUuid";
 import {
   ChatAttachmentType,
   HandleContactMessageOutputSchema,
   SendChatDto,
   WidgetHistoryDto,
-  WidgetSessionDto
-} from '../types/schemas-v2';
+  WidgetSessionDto,
+} from "../types/schemas-v2";
 import {
   LoadingState,
   ErrorState,
   SomeOptional,
-  SafeOmit
-} from '../types/helpers';
-import { ConfigInstance } from './config';
+  SafeOmit,
+} from "../types/helpers";
+import { ConfigInstance } from "./config";
 import {
   Platform,
   isStorageAvailable,
-  safeStorageOperation
-} from '../platform';
-import { Logger } from '../platform/logger';
+  safeStorageOperation,
+} from "../platform";
+import { Logger } from "../platform/logger";
 import {
   ExternalIdNotDefinedError,
-  StorageNotAvailableError
-} from '@core/errors';
-import { isAudioAvailable, safeAudioOperation } from '@core/platform/audio';
-import { createContact } from './contact';
+  StorageNotAvailableError,
+} from "@core/errors";
+import { isAudioAvailable, safeAudioOperation } from "@core/platform/audio";
+import { createContact } from "./contact";
 
 // Constants
 const POLLING_INTERVALS = {
   SESSION: 10000, // every 10 seconds
-  MESSAGES: 5000 // every 5 seconds
+  MESSAGES: 5000, // every 5 seconds
 } as const;
 
 // Types
-export type PollingType = 'session' | 'messages';
+export type PollingType = "session" | "messages";
 
 export type PollingState = {
   isPolling: boolean;
@@ -68,45 +68,45 @@ type ChatOptions = {
 function mapHistoryToMessage(history: WidgetHistoryDto): MessageType {
   const commonFields = {
     id: history.publicId,
-    timestamp: history.sentAt || '',
-    attachments: history.attachments || undefined
+    timestamp: history.sentAt || "",
+    attachments: history.attachments || undefined,
   };
 
-  if (history.sender.kind === 'user') {
+  if (history.sender.kind === "user") {
     return {
       ...commonFields,
-      type: 'FROM_USER',
-      content: history.content.text || '',
-      deliveredAt: history.sentAt || ''
+      type: "FROM_USER",
+      content: history.content.text || "",
+      deliveredAt: history.sentAt || "",
     };
   }
 
-  if (history.sender.kind === 'agent') {
+  if (history.sender.kind === "agent") {
     return {
       id: history.publicId,
-      type: 'FROM_AGENT',
-      component: history.type,
+      type: "FROM_AGENT",
+      component: "agent_message",
       data: {
-        text: history.content.text
+        message: history.content.text || "",
       },
-      timestamp: history.sentAt || '',
-      attachments: history.attachments || undefined
+      timestamp: history.sentAt || "",
+      attachments: history.attachments || undefined,
     };
   }
 
   return {
     ...commonFields,
-    type: 'FROM_BOT',
-    component: 'TEXT',
+    type: "FROM_BOT",
+    component: "bot_message",
     agent: {
       id: null,
-      name: history.sender.name || '',
-      isAi: history.sender.kind === 'ai',
-      avatar: history.sender.avatar || null
+      name: history.sender.name || "",
+      isAi: history.sender.kind === "ai",
+      avatar: history.sender.avatar || null,
     },
     data: {
-      message: history.content.text
-    }
+      message: history.content.text,
+    },
   };
 }
 
@@ -116,7 +116,7 @@ function createMessageHandler(
   state: PubSub<ChatState>,
   logger?: Logger,
   config?: ConfigInstance,
-  platform?: Platform
+  platform?: Platform,
 ) {
   async function fetchHistoryMessages(session: WidgetSessionDto) {
     const messages = state.getState().messages;
@@ -124,7 +124,7 @@ function createMessageHandler(
 
     const { data: response } = await api.getSessionHistory(
       session.id,
-      lastMessageTimestamp
+      lastMessageTimestamp,
     );
 
     if (response && response.length > 0) {
@@ -132,14 +132,14 @@ function createMessageHandler(
         .map(mapHistoryToMessage)
         .filter(
           (newMsg) =>
-            !messages.some((existingMsg) => existingMsg.id === newMsg.id)
+            !messages.some((existingMsg) => existingMsg.id === newMsg.id),
         );
 
       if (newMessages.length > 0) {
-        logger?.debug('Adding new messages to state', {
+        logger?.debug("Adding new messages to state", {
           count: newMessages.length,
           messageIds: newMessages.map((m) => m.id),
-          messageTypes: newMessages.map((m) => m.type)
+          messageTypes: newMessages.map((m) => m.type),
         });
         const useSoundEffects = config?.getConfig().settings.useSoundEffects;
         // Play notification sound for new messages if enabled
@@ -149,18 +149,18 @@ function createMessageHandler(
           isAudioAvailable(platform.audio)
         ) {
           const botMessages = newMessages.filter(
-            (msg) => msg.type === 'FROM_BOT'
+            (msg) => msg.type === "FROM_BOT",
           );
           if (botMessages.length > 0) {
             await safeAudioOperation(
               () => platform.audio!.playNotification(),
-              'Failed to play notification sound for new messages'
+              "Failed to play notification sound for new messages",
             );
           }
         }
 
         state.setStatePartial({
-          messages: [...messages, ...newMessages]
+          messages: [...messages, ...newMessages],
         });
       }
     }
@@ -168,39 +168,41 @@ function createMessageHandler(
 
   function toUserMessage(
     content: string,
-    attachments?: ChatAttachmentType[]
+    attachments?: ChatAttachmentType[],
   ): UserMessageType {
     return {
       id: genUuid(),
-      type: 'FROM_USER',
+      type: "FROM_USER",
       content,
       deliveredAt: new Date().toISOString(),
       attachments,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
   }
 
-  function addBotMessage(response: HandleContactMessageOutputSchema) {
+  function toBotMessage(
+    response: HandleContactMessageOutputSchema,
+  ): BotMessageType | null {
     if (response.success && response.autopilotResponse) {
       return {
-        type: 'FROM_BOT' as const,
+        type: "FROM_BOT",
         id: response.autopilotResponse.id || genUuid(),
         timestamp: new Date().toISOString(),
-        component: 'TEXT',
+        component: "bot_message",
         data: {
-          message: response.autopilotResponse.value.content
-        }
+          message: response.autopilotResponse.value.content,
+        },
       };
     }
 
     if (response.success && response.uiResponse) {
       const uiVal = response.uiResponse.value;
       return {
-        type: 'FROM_BOT' as const,
+        type: "FROM_BOT" as const,
         id: genUuid(),
         timestamp: new Date().toISOString(),
         component: uiVal.name,
-        data: uiVal.request_response
+        data: uiVal.request_response,
       };
     }
 
@@ -209,22 +211,22 @@ function createMessageHandler(
 
   function addErrorMessage(message: string) {
     return {
-      type: 'FROM_BOT' as const,
+      type: "FROM_BOT" as const,
       id: genUuid(),
       timestamp: new Date().toISOString(),
-      component: 'TEXT',
+      component: "TEXT",
       data: {
         message,
-        variant: 'error'
-      }
+        variant: "error",
+      },
     };
   }
 
   return {
     fetchHistoryMessages,
     toUserMessage,
-    addBotMessage,
-    addErrorMessage
+    toBotMessage,
+    addErrorMessage,
   };
 }
 
@@ -235,7 +237,7 @@ function createSessionManager(
   chatState: PubSub<ChatState>,
   messageHandler: ReturnType<typeof createMessageHandler>,
   config: ConfigInstance,
-  options: ChatOptions
+  options: ChatOptions,
 ) {
   let stopPolling: (() => void) | null = null;
   const logger = options.platform?.logger;
@@ -248,36 +250,36 @@ function createSessionManager(
 
   if (persistSession() && !config.getConfig().user.external_id) {
     logger?.error(
-      'session persistence is enabled but external id is not defined'
+      "session persistence is enabled but external id is not defined",
     );
   }
 
   const { token, user } = config.getConfig();
   const sessionStorageKey = `${
-    user.external_id ?? user.email ?? 'unknown'
+    user.external_id ?? user.email ?? "unknown"
   }:${token}:session`;
   /**
    * Restores the session from storage
    */
   async function restoreSession() {
-    logger?.debug('Restoring session from storage', {
+    logger?.debug("Restoring session from storage", {
       sessionStorageKey,
-      stroageAvailable: isStorageAvailable(storage)
+      stroageAvailable: isStorageAvailable(storage),
     });
     if (isStorageAvailable(storage)) {
       safeStorageOperation(async () => {
-        logger?.debug('Attempting to restore session from storage');
+        logger?.debug("Attempting to restore session from storage");
         const storedSession = await storage.getItem(sessionStorageKey);
         if (storedSession) {
           const session = JSON.parse(storedSession) as WidgetSessionDto;
-          logger?.info('Session restored from storage', {
-            sessionId: session.id
+          logger?.info("Session restored from storage", {
+            sessionId: session.id,
           });
           sessionState.setState(session);
           await messageHandler.fetchHistoryMessages(session);
           startPolling();
         }
-      }, 'Error restoring session from storage');
+      }, "Error restoring session from storage");
     }
   }
 
@@ -285,33 +287,33 @@ function createSessionManager(
    * Sets up session persistence
    */
   function setupSessionPersistence() {
-    logger?.debug('Setting up session persistence', {
+    logger?.debug("Setting up session persistence", {
       sessionStorageKey,
-      stroageAvailable: isStorageAvailable(storage)
+      stroageAvailable: isStorageAvailable(storage),
     });
     if (!isStorageAvailable(storage)) return;
     sessionState.subscribe(async (session) => {
       try {
         if (session) {
           await storage.setItem(sessionStorageKey, JSON.stringify(session));
-          logger?.debug('Session persisted to storage', {
-            sessionId: session.id
+          logger?.debug("Session persisted to storage", {
+            sessionId: session.id,
           });
         } else {
           await storage.removeItem(sessionStorageKey);
-          logger?.debug('Session removed from storage');
+          logger?.debug("Session removed from storage");
         }
       } catch (error) {
-        logger?.error('Error persisting session:', error);
+        logger?.error("Error persisting session:", error);
         chatState.setStatePartial({
           error: {
             hasError: true,
             message:
               error instanceof Error
                 ? error.message
-                : 'Failed to persist session',
-            code: 'SESSION_PERSISTENCE_FAILED'
-          }
+                : "Failed to persist session",
+            code: "SESSION_PERSISTENCE_FAILED",
+          },
         });
       }
     });
@@ -323,7 +325,7 @@ function createSessionManager(
   function startPolling() {
     if (stopPolling) return;
 
-    logger?.debug('Starting polling');
+    logger?.debug("Starting polling");
     const intervals: NodeJS.Timeout[] = [];
 
     // Poll session
@@ -341,11 +343,11 @@ function createSessionManager(
                 isPolling: true,
                 lastPollTime: now.toISOString(),
                 nextPollTime: new Date(
-                  now.getTime() + POLLING_INTERVALS.SESSION
+                  now.getTime() + POLLING_INTERVALS.SESSION,
                 ).toISOString(),
-                error: { hasError: false }
-              }
-            }
+                error: { hasError: false },
+              },
+            },
           });
 
           const { data } = await api.getSession(session.id);
@@ -358,12 +360,12 @@ function createSessionManager(
               ...chatState.getState().polling,
               session: {
                 ...chatState.getState().polling.session,
-                isPolling: false
-              }
-            }
+                isPolling: false,
+              },
+            },
           });
         } catch (error) {
-          logger?.error('Error polling session:', error);
+          logger?.error("Error polling session:", error);
           chatState.setStatePartial({
             polling: {
               ...chatState.getState().polling,
@@ -375,14 +377,14 @@ function createSessionManager(
                   message:
                     error instanceof Error
                       ? error.message
-                      : 'Failed to poll session',
-                  code: 'SESSION_POLLING_FAILED'
-                }
-              }
-            }
+                      : "Failed to poll session",
+                  code: "SESSION_POLLING_FAILED",
+                },
+              },
+            },
           });
         }
-      }, POLLING_INTERVALS.SESSION)
+      }, POLLING_INTERVALS.SESSION),
     );
 
     // Poll messages
@@ -399,11 +401,11 @@ function createSessionManager(
                 isPolling: true,
                 lastPollTime: now.toISOString(),
                 nextPollTime: new Date(
-                  now.getTime() + POLLING_INTERVALS.MESSAGES
+                  now.getTime() + POLLING_INTERVALS.MESSAGES,
                 ).toISOString(),
-                error: { hasError: false }
-              }
-            }
+                error: { hasError: false },
+              },
+            },
           });
 
           await messageHandler.fetchHistoryMessages(session);
@@ -413,12 +415,12 @@ function createSessionManager(
               ...chatState.getState().polling,
               messages: {
                 ...chatState.getState().polling.messages,
-                isPolling: false
-              }
-            }
+                isPolling: false,
+              },
+            },
           });
         } catch (error) {
-          logger?.error('Error polling messages:', error);
+          logger?.error("Error polling messages:", error);
           chatState.setStatePartial({
             polling: {
               ...chatState.getState().polling,
@@ -430,18 +432,18 @@ function createSessionManager(
                   message:
                     error instanceof Error
                       ? error.message
-                      : 'Failed to poll messages',
-                  code: 'MESSAGES_POLLING_FAILED'
-                }
-              }
-            }
+                      : "Failed to poll messages",
+                  code: "MESSAGES_POLLING_FAILED",
+                },
+              },
+            },
           });
         }
-      }, POLLING_INTERVALS.MESSAGES)
+      }, POLLING_INTERVALS.MESSAGES),
     );
 
     stopPolling = () => {
-      logger?.debug('Stopping polling');
+      logger?.debug("Stopping polling");
       intervals.forEach(clearInterval);
       // Reset polling states
       chatState.setStatePartial({
@@ -450,15 +452,15 @@ function createSessionManager(
             isPolling: false,
             lastPollTime: null,
             nextPollTime: null,
-            error: { hasError: false }
+            error: { hasError: false },
           },
           messages: {
             isPolling: false,
             lastPollTime: null,
             nextPollTime: null,
-            error: { hasError: false }
-          }
-        }
+            error: { hasError: false },
+          },
+        },
       });
     };
   }
@@ -468,33 +470,33 @@ function createSessionManager(
    * @returns The session
    */
   async function createSession() {
-    logger?.info('Creating new session');
+    logger?.info("Creating new session");
     chatState.setStatePartial({
-      loading: { isLoading: true, reason: 'creating_session' },
-      error: { hasError: false }
+      loading: { isLoading: true, reason: "creating_session" },
+      error: { hasError: false },
     });
 
     const { data: session, error } = await api.createSession();
     if (session) {
-      logger?.info('Session created successfully', { sessionId: session.id });
+      logger?.info("Session created successfully", { sessionId: session.id });
       sessionState.setState(session);
       chatState.setStatePartial({
-        loading: { isLoading: false, reason: null }
+        loading: { isLoading: false, reason: null },
       });
       startPolling();
       return session;
     }
 
-    logger?.error('Failed to create session:', error);
+    logger?.error("Failed to create session:", error);
     const errorState = {
       hasError: true,
       message:
-        error instanceof Error ? error.message : 'Failed to create session',
-      code: 'SESSION_CREATION_FAILED' as const
+        error instanceof Error ? error.message : "Failed to create session",
+      code: "SESSION_CREATION_FAILED" as const,
     };
     chatState.setStatePartial({
       error: errorState,
-      loading: { isLoading: false, reason: null }
+      loading: { isLoading: false, reason: null },
     });
     return null;
   }
@@ -527,15 +529,15 @@ function createSessionManager(
             isPolling: false,
             lastPollTime: null,
             nextPollTime: null,
-            error: { hasError: false }
+            error: { hasError: false },
           },
           messages: {
             isPolling: false,
             lastPollTime: null,
             nextPollTime: null,
-            error: { hasError: false }
-          }
-        }
+            error: { hasError: false },
+          },
+        },
       });
 
       options.onSessionDestroy?.();
@@ -544,9 +546,9 @@ function createSessionManager(
         error: {
           hasError: true,
           message:
-            error instanceof Error ? error.message : 'Failed to clear session',
-          code: 'SESSION_CLEAR_FAILED'
-        }
+            error instanceof Error ? error.message : "Failed to clear session",
+          code: "SESSION_CLEAR_FAILED",
+        },
       });
     }
   }
@@ -562,10 +564,10 @@ function createSessionManager(
       }
 
       if (removeSession && persistSession() && isStorageAvailable(storage)) {
-        console.log('removing session data', sessionStorageKey);
+        console.log("removing session data", sessionStorageKey);
         safeStorageOperation(
           () => storage.removeItem(sessionStorageKey),
-          'Error removing session data'
+          "Error removing session data",
         );
       }
 
@@ -579,15 +581,15 @@ function createSessionManager(
             isPolling: false,
             lastPollTime: null,
             nextPollTime: null,
-            error: { hasError: false }
+            error: { hasError: false },
           },
           messages: {
             isPolling: false,
             lastPollTime: null,
             nextPollTime: null,
-            error: { hasError: false }
-          }
-        }
+            error: { hasError: false },
+          },
+        },
       });
 
       sessionState.setState(null);
@@ -597,9 +599,9 @@ function createSessionManager(
       chatState.setStatePartial({
         error: {
           hasError: true,
-          message: error instanceof Error ? error.message : 'Failed to cleanup',
-          code: 'SESSION_CLEAR_FAILED'
-        }
+          message: error instanceof Error ? error.message : "Failed to cleanup",
+          code: "SESSION_CLEAR_FAILED",
+        },
       });
     }
   }
@@ -628,9 +630,9 @@ function createSessionManager(
 
   // Initialize session if persistence is enabled
   if (persistSession() && isStorageAvailable(storage)) {
-    logger?.debug('Initializing session persistence', {
+    logger?.debug("Initializing session persistence", {
       sessionStorageKey,
-      stroageAvailable: isStorageAvailable(storage)
+      stroageAvailable: isStorageAvailable(storage),
     });
     restoreSession();
     setupSessionPersistence();
@@ -643,13 +645,13 @@ function createSessionManager(
     startPolling,
     fetchSession,
     refetchSession,
-    sessionStorageKey
+    sessionStorageKey,
   };
 }
 
 export type SendMessageInput = SomeOptional<
-  SafeOmit<SendChatDto, 'bot_token' | 'uuid'>,
-  'session_id' | 'user'
+  SafeOmit<SendChatDto, "bot_token" | "uuid">,
+  "session_id" | "user"
 >;
 
 // Main Chat Function
@@ -665,25 +667,25 @@ export function createChat(options: ChatOptions) {
         isPolling: false,
         lastPollTime: null,
         nextPollTime: null,
-        error: { hasError: false }
+        error: { hasError: false },
       },
       messages: {
         isPolling: false,
         lastPollTime: null,
         nextPollTime: null,
-        error: { hasError: false }
-      }
-    }
+        error: { hasError: false },
+      },
+    },
   };
   const chatState = new PubSub<ChatState>(initialState);
 
   const {
     contactState,
     cleanup: cleanupContact,
-    shouldCollectData
+    shouldCollectData,
   } = createContact(
     { config: options.config, api: options.api },
-    options.platform
+    options.platform,
   );
 
   const sessionState = new PubSub<WidgetSessionDto | null>(null);
@@ -693,7 +695,7 @@ export function createChat(options: ChatOptions) {
     chatState,
     logger,
     options.config,
-    options.platform
+    options.platform,
   );
 
   const sessionManager = createSessionManager(
@@ -702,7 +704,7 @@ export function createChat(options: ChatOptions) {
     chatState,
     messageHandler,
     options.config,
-    options
+    options,
   );
 
   async function sendMessage(input: SendMessageInput, abort?: AbortSignal) {
@@ -710,41 +712,41 @@ export function createChat(options: ChatOptions) {
     let createdSession = false;
 
     if (!session?.id) {
-      logger?.debug('No active session, creating new session');
+      logger?.debug("No active session, creating new session");
       session = await sessionManager.createSession();
       if (!session)
         return {
           success: false,
-          createdSession
+          createdSession,
         };
       createdSession = true;
     }
 
-    if (session.assignee.kind === 'ai') {
+    if (session.assignee.kind === "ai") {
       session = (await sessionManager.refetchSession()) ?? session;
     }
 
     try {
-      logger?.debug('Sending message', { sessionId: session.id });
-      if (session.assignee.kind === 'ai') {
+      logger?.debug("Sending message", { sessionId: session.id });
+      if (session.assignee.kind === "ai") {
         chatState.setStatePartial({
-          loading: { isLoading: true, reason: 'sending_message_to_bot' },
-          error: { hasError: false }
+          loading: { isLoading: true, reason: "sending_message_to_bot" },
+          error: { hasError: false },
         });
       } else {
         chatState.setStatePartial({
-          loading: { isLoading: true, reason: 'sending_message_to_agent' },
-          error: { hasError: false }
+          loading: { isLoading: true, reason: "sending_message_to_agent" },
+          error: { hasError: false },
         });
       }
 
       const userMessage = messageHandler.toUserMessage(
         input.content,
-        input.attachments || undefined
+        input.attachments || undefined,
       );
       const currentMessages = chatState.getState().messages;
       chatState.setStatePartial({
-        messages: [...currentMessages, userMessage]
+        messages: [...currentMessages, userMessage],
       });
 
       const config = options.config.getConfig();
@@ -756,58 +758,58 @@ export function createChat(options: ChatOptions) {
           query_params: config.queryParams,
           session_id: session.id,
           user: config.user,
-          ...input
+          ...input,
         },
-        abort
+        abort,
       );
 
       if (data?.success) {
-        logger?.debug('Message sent successfully');
-        const botMessage = messageHandler.addBotMessage(data);
+        logger?.debug("Message sent successfully");
+        const botMessage = messageHandler.toBotMessage(data);
         if (botMessage) {
           const updatedMessages = chatState.getState().messages;
           chatState.setStatePartial({
-            messages: [...updatedMessages, botMessage]
+            messages: [...updatedMessages, botMessage],
           });
         }
         return {
           success: true,
           createdSession,
-          botMessage
+          botMessage,
         };
       } else {
-        logger?.warn('Message send failed', data?.error);
+        logger?.warn("Message send failed", data?.error);
         const errorMessage = messageHandler.addErrorMessage(
-          data?.error?.message || 'Unknown error occurred'
+          data?.error?.message || "Unknown error occurred",
         );
         const currentMessages = chatState.getState().messages;
         chatState.setStatePartial({
-          messages: [...currentMessages, errorMessage]
+          messages: [...currentMessages, errorMessage],
         });
         return {
           success: false,
           createdSession,
-          error: data?.error
+          error: data?.error,
         };
       }
     } catch (error) {
-      logger?.error('Error sending message:', error);
+      logger?.error("Error sending message:", error);
       chatState.setStatePartial({
         error: {
           hasError: true,
           message:
-            error instanceof Error ? error.message : 'Failed to send message',
-          code: 'MESSAGE_SEND_FAILED'
-        }
+            error instanceof Error ? error.message : "Failed to send message",
+          code: "MESSAGE_SEND_FAILED",
+        },
       });
       return {
         success: false,
         createdSession,
-        error
+        error,
       };
     } finally {
       chatState.setStatePartial({
-        loading: { isLoading: false, reason: null }
+        loading: { isLoading: false, reason: null },
       });
     }
   }
@@ -833,6 +835,6 @@ export function createChat(options: ChatOptions) {
     sessionStorageKey: sessionManager.sessionStorageKey,
     recreateSession,
     contactState,
-    shouldCollectData
+    shouldCollectData,
   };
 }

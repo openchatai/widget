@@ -5,7 +5,7 @@ import rehypeRaw from "rehype-raw";
 import { RenderAttachment } from "@ui/RenderFile";
 import { DefaultTextComponentProps } from "@react/types";
 
-export function BotTextResponse({
+export function BotOrAgentTextResponse({
   data,
   id,
   type,
@@ -14,11 +14,15 @@ export function BotTextResponse({
   const { message, variant = "default" } = data;
 
   if (variant === "error") {
-    return <div>
-      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
-        <div className="leading-snug font-medium text-sm text-rose-500">{message}</div>
+    return (
+      <div>
+        <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
+          <div className="leading-snug font-medium text-sm text-rose-500">
+            {message}
+          </div>
+        </div>
       </div>
-    </div>
+    );
   }
 
   return (

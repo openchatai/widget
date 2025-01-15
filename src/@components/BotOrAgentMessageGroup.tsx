@@ -13,31 +13,26 @@ export function BotOrAgentMessageGroup({
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentType | undefined;
 }) {
-  const { chatSession, } = useChatSession();
+  const { chatSession } = useChatSession();
 
   return (
     <div className={cn("flex flex-col items-start gap-2", "pr-8")}>
       <Avatar>
         <AvatarImage src={agent?.avatar ?? ""} alt="Agent Icon" />
       </Avatar>
-      {messages.map((message) => {
-        if (message.component == "CHAT_EVENT") {
-          return <BotOrAgentMessage message={message} key={message.id} />;
-        }
-        return (
-          <BotOrAgentMessage
-            key={message.id}
-            message={message}
-            Wrapper={BotOrAgentMessageWrapper}
-            wrapperProps={{
-              // @TODO
-              agent: message.agent as any,
-              messageId: message.id,
-              sessionId: chatSession?.id,
-            }}
-          />
-        );
-      })}
+      {messages.map((message) => (
+        <BotOrAgentMessage
+          key={message.id}
+          message={message}
+          Wrapper={BotOrAgentMessageWrapper}
+          wrapperProps={{
+            // @TODO
+            agent: message.agent as any,
+            messageId: message.id,
+            sessionId: chatSession?.id,
+          }}
+        />
+      ))}
     </div>
   );
 }

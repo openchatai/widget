@@ -51,7 +51,7 @@ export function ChatMain() {
           <BotOrAgentMessage
             key={index}
             message={{
-              component: "text",
+              component: "bot_message",
               data: { message },
               id: `initial-${index}`,
               type: "FROM_BOT",
@@ -64,7 +64,7 @@ export function ChatMain() {
             <BotOrAgentMessage
               key={"default-welcome"}
               message={{
-                component: "text",
+                component: "bot_message",
                 data: { message: "Hello, how can I help?" },
                 id: "default-welcome",
                 type: "FROM_BOT",

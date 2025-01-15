@@ -2,7 +2,7 @@ import { TooltipProvider } from "@ui/tooltip";
 import React, { ComponentPropsWithoutRef, ReactNode } from "react";
 import {
   BotLoadingComponent,
-  BotTextResponse,
+  BotOrAgentTextResponse,
   FallbackComponent,
 } from "src/@components";
 import { cn } from "src/utils";
@@ -38,7 +38,9 @@ html, body {
 
 function Widget({ className, ...props }: ComponentPropsWithoutRef<"div">) {
   const chat = useChat();
-  const { config: { theme } } = useConfig();
+  const {
+    config: { theme },
+  } = useConfig();
   const [isOpen, setIsOpened] = useState(false);
 
   return (
@@ -139,16 +141,20 @@ function WidgetRoot({
     <ChatProvider
       components={[
         {
-          key: "LOADING",
+          key: "loading",
           component: BotLoadingComponent,
         },
         {
-          key: "FALLBACK",
+          key: "fallback",
           component: FallbackComponent,
         },
         {
-          key: "TEXT",
-          component: BotTextResponse,
+          key: "bot_message",
+          component: BotOrAgentTextResponse,
+        },
+        {
+          key: "agent_message",
+          component: BotOrAgentTextResponse,
         },
       ]}
       options={options}
