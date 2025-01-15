@@ -3,7 +3,7 @@ import {
     createChat,
     createConfig,
     ApiCaller,
-    createContact,
+    createContactHandler,
     Platform,
 } from '../../../core';
 import { createLogger } from '../../../core/platform/logger';
@@ -65,11 +65,10 @@ const useInitChat = () => {
             config,
             platform
         });
-        const contact = createContact({
+        const contact = createContactHandler({
             api,
             config,
-            platform
-        });
+        }, platform);
         return {
             chat,
             contact,
