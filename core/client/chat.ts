@@ -29,9 +29,9 @@ import { isAudioAvailable, safeAudioOperation } from "@core/platform/audio";
 import { createContactHandler } from "./contact";
 
 // Constants
-const POLLING_INTERVALS = {
-    SESSION: 10000, // every 10 seconds
-    MESSAGES: 5000, // every 5 seconds
+const POLLING_INTERVALS_MS = {
+    SESSION: 1000,
+    MESSAGES: 1000,
 } as const;
 
 // Types
@@ -341,7 +341,7 @@ function createSessionManager(
                                 isPolling: true,
                                 lastPollTime: now.toISOString(),
                                 nextPollTime: new Date(
-                                    now.getTime() + POLLING_INTERVALS.SESSION,
+                                    now.getTime() + POLLING_INTERVALS_MS.SESSION,
                                 ).toISOString(),
                                 error: { hasError: false },
                             },
@@ -382,7 +382,7 @@ function createSessionManager(
                         },
                     });
                 }
-            }, POLLING_INTERVALS.SESSION),
+            }, POLLING_INTERVALS_MS.SESSION),
         );
 
         // Poll messages
@@ -399,7 +399,7 @@ function createSessionManager(
                                 isPolling: true,
                                 lastPollTime: now.toISOString(),
                                 nextPollTime: new Date(
-                                    now.getTime() + POLLING_INTERVALS.MESSAGES,
+                                    now.getTime() + POLLING_INTERVALS_MS.MESSAGES,
                                 ).toISOString(),
                                 error: { hasError: false },
                             },
@@ -437,7 +437,7 @@ function createSessionManager(
                         },
                     });
                 }
-            }, POLLING_INTERVALS.MESSAGES),
+            }, POLLING_INTERVALS_MS.MESSAGES),
         );
 
         stopPolling = () => {
