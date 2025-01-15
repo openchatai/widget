@@ -6,7 +6,6 @@ import {
     Platform,
     createLogger,
     isStorageAvailable,
-    createContact,
 } from "@core/index";
 import { WidgetComponentType } from "@react/types";
 import { createSafeContext } from "@react/utils/create-safe-context";
@@ -14,7 +13,6 @@ import React, { useMemo, useEffect, useState } from "react";
 import { ComponentRegistry } from "./components";
 import { TranslationKeysType } from "./locales/en.locale";
 import { getStr, LangType } from "./locales";
-import { WidgetSettings } from "@core/client/config";
 import { z } from "zod";
 
 const defaultStorage = {
