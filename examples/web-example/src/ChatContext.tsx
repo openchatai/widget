@@ -13,9 +13,7 @@ type PreludeData = {
     initialQuestions: string[];
 };
 
-const socketUrl = 'http://localhost:8080';
 const apiUrl = 'http://localhost:8080';
-
 
 export const platform: Platform = {
     env: {
