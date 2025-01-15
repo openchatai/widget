@@ -6,7 +6,7 @@ import { WelcomeScreen } from "./welcome-screen/WelcomeScreen";
 import { useContact } from "@react/core-integration";
 
 export function RootScreen() {
-  const contactManager = useContact()
+  const { contactManager } = useContact()
   const shouldCollectDataFirst = contactManager.shouldCollectData()
   return (
     <div className="bg-background size-full">

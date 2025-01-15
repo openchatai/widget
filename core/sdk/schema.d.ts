@@ -158,8 +158,8 @@ export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
         CreateContactDto: {
-            email?: string;
-            name?: string;
+            email: string;
+            name: string;
         };
         FileUploadDto: {
             /** Format: binary */

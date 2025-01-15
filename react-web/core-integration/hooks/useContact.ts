@@ -7,6 +7,6 @@ export function useContact() {
 
     return {
         contactState,
-        shouldCollectData: chat.shouldCollectData,
+        contactManager: chat.contactManager
     };
 }

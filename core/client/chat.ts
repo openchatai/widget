@@ -26,7 +26,7 @@ import {
     StorageNotAvailableError,
 } from "@core/errors";
 import { isAudioAvailable, safeAudioOperation } from "@core/platform/audio";
-import { createContact } from "./contact";
+import { createContactHandler } from "./contact";
 
 // Constants
 const POLLING_INTERVALS = {
@@ -681,7 +681,8 @@ export function createChat(options: ChatOptions) {
         contactState,
         cleanup: cleanupContact,
         shouldCollectData,
-    } = createContact(
+        createUnauthenticatedContact
+    } = createContactHandler(
         { config: options.config, api: options.api },
         options.platform,
     );
@@ -833,6 +834,9 @@ export function createChat(options: ChatOptions) {
         sessionStorageKey: sessionManager.sessionStorageKey,
         recreateSession,
         contactState,
-        shouldCollectData,
+        contactManager: {
+            shouldCollectData,
+            createUnauthenticatedContact,
+        }
     };
 }

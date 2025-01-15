@@ -26,14 +26,12 @@
 
   <body>
     <script type="module">
-      const socketUrl = 'http://localhost:8080';
       const apiUrl = 'http://localhost:8080';
       const token = import.meta.env.VITE_ORG_TOKEN;
       
       window.addEventListener('DOMContentLoaded', () => {
         initOpenScript({
           token: token,
-          apiUrl: apiUrl,
           language: 'en',
           initialMessages: [
             'How can we help you?',

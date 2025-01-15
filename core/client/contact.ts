@@ -3,8 +3,8 @@ import { ApiCaller } from "./api";
 import { Platform } from "../platform";
 import { LoadingState, ErrorState } from "../types/helpers";
 import { ConfigInstance } from "./config";
-import { Contact, ContactData, ContactStorageData } from "../types/contact";
-
+import { Contact } from "../types/contact";
+import { Dto } from "@core/sdk";
 
 type ContactState = {
     contact: Contact | null;
@@ -18,71 +18,14 @@ export type CreateContactOptions = {
 };
 
 
-
-
-
-export function createContact({ config }: CreateContactOptions, platform: Platform) {
+export function createContactHandler({ config, api }: CreateContactOptions, platform: Platform) {
     const state = new PubSub<ContactState>({
         contact: null,
         loading: { isLoading: false, reason: null },
         error: { hasError: false }
     });
 
-    const { token, user } = config.getConfig();
-    const STORAGE_KEY = `${token}:contact:${user.external_id ?? ""}`;
-
-    async function setStoredContact(platform: Platform, data: ContactStorageData): Promise<void> {
-        if (!platform.storage) {
-            throw new Error('Storage not available');
-        }
-        try {
-            await platform.storage.setItem(STORAGE_KEY, JSON.stringify(data));
-        } catch (error) {
-            console.error('Failed to save contact data:', error);
-            throw new Error('Failed to save contact data');
-        }
-    }
-
-    async function removeStoredContact(platform: Platform): Promise<void> {
-        if (!platform.storage) {
-            throw new Error('Storage not available');
-        }
-        try {
-            await platform.storage.removeItem(STORAGE_KEY);
-        } catch (error) {
-            console.error('Failed to remove contact data:', error);
-            throw new Error('Failed to remove contact data');
-        }
-    }
-    async function getStoredContact(platform: Platform): Promise<ContactStorageData | null> {
-        try {
-            if (!platform.storage) return null;
-            const data = await platform.storage.getItem(STORAGE_KEY);
-            return data ? JSON.parse(data) : null;
-        } catch {
-            return null;
-        }
-    }
-    async function loadStoredContact() {
-        try {
-            const storedContact = await getStoredContact(platform);
-            if (storedContact) {
-                state.setStatePartial({
-                    contact: {
-                        authenticationStatus: {
-                            is: storedContact.isAuthenticated as false
-                        },
-                        contactId: storedContact.id,
-                        contactName: storedContact.name
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Failed to load stored contact:', error);
-        }
-    }
-
-    function shouldCollectData(): { should: boolean; reason?: string } {
+    function shouldCollectData() {
         const currentState = state.getState();
 
         if (!currentState.contact?.contactId && config.getConfig().collectUserData) {
@@ -97,16 +40,12 @@ export function createContact({ config }: CreateContactOptions, platform: Platfo
         };
     }
 
-    async function cleanup(removeContact: boolean = false) {
+    async function cleanup() {
         try {
             state.setStatePartial({
                 loading: { isLoading: true, reason: 'cleaning_up' },
                 error: { hasError: false }
             });
-            if (removeContact) {
-                await removeStoredContact(platform);
-            }
-
             state.setState({
                 contact: null,
                 loading: { isLoading: false, reason: null },
@@ -129,11 +68,40 @@ export function createContact({ config }: CreateContactOptions, platform: Platfo
         }
     }
 
-    loadStoredContact();
+    async function createUnauthenticatedContact(payload: Dto['CreateContactDto']): Promise<Dto['WidgetContactDto'] | null> {
+        state.setStatePartial({
+            loading: { isLoading: true, reason: 'creating_unauthenticated_contact' },
+            error: { hasError: false }
+        });
+
+        const { data, error } = await api.createContact(payload);
+        if (data?.contactId) {
+            state.setStatePartial({
+                contact: {
+                    authenticationStatus: {
+                        is: false
+                    },
+                    contactId: data.contactId,
+                    contactName: data.contactName
+                }
+            });
+            return data
+        }
+
+        if (error) {
+            state.setStatePartial({
+                loading: { isLoading: false, reason: null },
+                error: { hasError: true, message: error?.message, code: 'CONTACT_CREATION_FAILED' }
+            });
+        }
+
+        return null;
+    }
 
     return {
         contactState: state,
         shouldCollectData,
         cleanup,
+        createUnauthenticatedContact
     };
 } 

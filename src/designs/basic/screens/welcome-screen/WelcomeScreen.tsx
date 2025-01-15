@@ -18,10 +18,10 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
-  const contactManager = useContact()
+  const { contactManager } = useContact()
+  const { config } = useConfig();
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
-  const { config } = useConfig();
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
@@ -33,10 +33,10 @@ export function WelcomeScreen() {
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
       if (result.success) {
-        // await contactManager.contactState.setStatePartial({
-        //   name: result.data.name,
-        //   email: result.data.email,
-        // });
+        await contactManager.createUnauthenticatedContact({
+          email: result.data.email,
+          name: result.data.name,
+        })
       }
     },
   );

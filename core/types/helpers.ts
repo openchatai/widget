@@ -16,6 +16,7 @@ export type LoadingReason =
   | 'loading_contact'
   | 'saving_contact'
   | 'cleaning_up'
+  | 'creating_unauthenticated_contact'
   | null;
 
 export type LoadingState = {
@@ -34,7 +35,8 @@ export type ErrorCode =
   | 'CONTACT_PERSISTENCE_FAILED'
   | 'CONTACT_LOAD_FAILED'
   | 'CONTACT_SAVE_FAILED'
-  | 'CONTACT_CLEANUP_FAILED';
+  | 'CONTACT_CLEANUP_FAILED'
+  | 'CONTACT_CREATION_FAILED';
 
 export type ErrorState = {
   hasError: boolean;
