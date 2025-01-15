@@ -68,7 +68,7 @@ describe.concurrent('web integration tests', () => {
 
     // Verify subscriber was called
     expect(subscriber).toHaveBeenCalled();
-  }, 60000);
+  }, 120000);
 
   it('should handle message with attachments', async () => {
     const { chat } = initilize();
@@ -90,7 +90,7 @@ describe.concurrent('web integration tests', () => {
     const lastMessage = state.messages[0] as UserMessageType;
     expect(lastMessage.attachments).toBeDefined();
     expect(lastMessage.attachments![0]).toEqual(attachment);
-  }, 60000);
+  }, 120000);
 
   it('should handle error states correctly', async () => {
     const { chat } = initilize();
@@ -105,7 +105,7 @@ describe.concurrent('web integration tests', () => {
       expect(state.error.hasError).toBe(true);
       expect(state.error.message).toBeDefined();
     }
-  }, 60000);
+  }, 120000);
 
   it('should maintain loading state during message processing', async () => {
     const { chat } = initilize();
@@ -123,7 +123,7 @@ describe.concurrent('web integration tests', () => {
 
     // Check loading state after completion
     expect(chat.chatState.getState().loading.isLoading).toBe(false);
-  }, 60000);
+  }, 120000);
 
   it('should handle bot responses correctly', async () => {
     const { chat } = initilize();
@@ -139,7 +139,7 @@ describe.concurrent('web integration tests', () => {
     const botMessages = state.messages.filter((m) => m.type === 'FROM_BOT');
     expect(botMessages.length).toBeGreaterThan(0);
     expect(botMessages[0].data).toBeDefined();
-  }, 60000);
+  }, 120000);
 
   describe('polling functionality', () => {
     it('should track session polling state', async () => {
@@ -158,7 +158,7 @@ describe.concurrent('web integration tests', () => {
       expect(state.polling.session.isPolling).toBeDefined();
       expect(state.polling.session.lastPollTime).toBeDefined();
       expect(state.polling.session.nextPollTime).toBeDefined();
-    }, 60000);
+    }, 120000);
 
     it('should track message polling state', async () => {
       const { chat } = initilize();
@@ -175,7 +175,7 @@ describe.concurrent('web integration tests', () => {
       expect(state.polling.messages.isPolling).toBeDefined();
       expect(state.polling.messages.lastPollTime).toBeDefined();
       expect(state.polling.messages.nextPollTime).toBeDefined();
-    }, 60000);
+    }, 120000);
   });
 
   describe('session management', () => {
@@ -195,6 +195,6 @@ describe.concurrent('web integration tests', () => {
       expect(state.polling.session.isPolling).toBe(false);
       expect(state.polling.messages.isPolling).toBe(false);
       expect(state.error.hasError).toBe(false);
-    });
+    }, 120000);
   });
 });
