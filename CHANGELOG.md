@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.6.1
+
+### Patch Changes
+
+- integrate with new core
+
 ## 2.6.0
 
 ### Minor Changes

@@ -1,14 +1,14 @@
 {
   "name": "@opencx/widget",
   "private": false,
-  "version": "2.6.0",
+  "version": "2.6.1",
   "type": "module",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
-    "clean:dist": "rm -rf ./dist ./dist-embed",    
+    "clean:dist": "rm -rf ./dist ./dist-embed",
     "dev": "vite -c vite.config.ts",
     "build:lib": "vite build",
     "build:embed": "vite build -c vite.embed.config.ts",
