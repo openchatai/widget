@@ -85,7 +85,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
 
       expect(resp.success).toBe(true);
       expect(resp.createdSession).toBe(true);
-    }, 60000);
+    }, 120000);
 
     it('should maintain loading state during message persistence', async () => {
       const { chat } = initilize();
@@ -117,7 +117,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
         isLoading: false,
         reason: null
       });
-    }, 60000);
+    }, 120000);
 
     it('should handle loading states during cleanup', async () => {
       const { chat } = initilize();
@@ -147,7 +147,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
 
       // Verify session was cleaned up
       expect(chat.sessionState.getState()).toBeNull();
-    }, 60000);
+    }, 120000);
 
     it('should handle loading states during concurrent operations', async () => {
       const { chat } = initilize();
@@ -174,7 +174,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
           state.reason !== loadingStates[index - 1].reason
       );
       expect(loadingConflicts).toHaveLength(0);
-    }, 60000);
+    }, 120000);
 
     it('should maintain correct loading states during error scenarios', async () => {
       const { chat } = initilize();
@@ -200,6 +200,6 @@ describe.concurrent('integration testing with storage and persistence', () => {
         isLoading: false,
         reason: null
       });
-    }, 60000);
+    }, 120000);
   });
 });

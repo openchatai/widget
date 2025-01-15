@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.6.2
+
+### Patch Changes
+
+- fix collect user data
+
 ## 2.6.1
 
 ### Patch Changes
