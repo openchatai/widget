@@ -1,11 +1,5 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import {
-  HandleContactMessageOutputSchema,
   SendChatDto,
-  WidgetHistoryDto,
-  WidgetPreludeDto,
-  WidgetSessionDto,
-  WidgetVoteResponseDto,
   WidgetVoteDto
 } from '../types/schemas-v2';
 import { NormalizedConfig } from './config';
