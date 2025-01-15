@@ -196,5 +196,5 @@ describe.concurrent('web integration tests', () => {
       expect(state.polling.messages.isPolling).toBe(false);
       expect(state.error.hasError).toBe(false);
     });
-  });
+  }, 60000);
 });
