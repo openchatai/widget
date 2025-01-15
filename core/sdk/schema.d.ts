@@ -133,10 +133,34 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/backend/widget/v2/me/create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Create a contact for the widget
+         * @description Create a contact for the widget, in un-authenticated contexts
+         */
+        post: operations["createContact"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CreateContactDto: {
+            email?: string;
+            name?: string;
+        };
         FileUploadDto: {
             /** Format: binary */
             file: string;
@@ -583,6 +607,40 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["WidgetVoteResponseDto"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    createContact: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-bot-token": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateContactDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WidgetContactDto"];
                 };
             };
             /** @description Internal Server Error */
