@@ -17,7 +17,13 @@ import { AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "src/utils";
 import { MotionDiv } from "@ui/MotionDiv";
-import { FileWithProgress, useChat, useConfig, useLocale, useUploadFiles } from "@react/core-integration";
+import {
+  FileWithProgress,
+  useChat,
+  useConfig,
+  useLocale,
+  useUploadFiles,
+} from "@react/core-integration";
 import { usePubsub } from "@react/core-integration/hooks/usePubsub";
 import { genUuid } from "@core/utils/genUuid";
 
@@ -116,8 +122,8 @@ function ChatInput() {
   const { config } = useConfig();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { chat } = useChat();
-  const session = usePubsub(chat.sessionState)
-  const chatState = usePubsub(chat.chatState)
+  const session = usePubsub(chat.sessionState);
+  const chatState = usePubsub(chat.chatState);
   const locale = useLocale();
 
   const [inputText, setInputText] = useState("");
@@ -131,7 +137,13 @@ function ChatInput() {
     successFiles,
   } = useUploadFiles();
 
-  const shouldAcceptAttachments = session && (session?.isHandedOff || session.assignee.kind === 'human')
+  const shouldAcceptAttachments =
+    session && (session?.isHandedOff || session.assignee.kind === "human");
+
+  const isSendingMessage =
+    chatState.loading.isLoading &&
+    (chatState.loading.reason === "sending_message_to_bot" ||
+      chatState.loading.reason === "sending_message_to_agent");
 
   const handleFileDrop = (acceptedFiles: File[]) => {
     if (!shouldAcceptAttachments) {
@@ -141,8 +153,8 @@ function ChatInput() {
   };
 
   const handleSubmit = async () => {
-    const loading = chatState.loading.isLoading
-    if (loading) return;
+    if (isSendingMessage) return;
+
     if (isUploading) {
       // TODO use something other than toast
       const message = "please wait for the file(s) to upload";
@@ -193,9 +205,6 @@ function ChatInput() {
     },
   });
 
-  // TODO: add this back in
-  const shouldCollectDataFirst = false
-
   const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
     const clipboardData = event.clipboardData;
     if (!clipboardData) return;
@@ -203,8 +212,6 @@ function ChatInput() {
       handleFileDrop(Array.from(clipboardData.files));
     }
   };
-
-  const isProcessingMessage = chatState.loading.isLoading && (chatState.loading.reason === 'sending_message_to_bot' || chatState.loading.reason === 'sending_message_to_agent')
 
   return (
     <div className="p-2 relative space-y-1" {...dropzone__getRootProps()}>
@@ -232,7 +239,6 @@ function ChatInput() {
           ref={inputRef}
           id="chat-input"
           dir="auto"
-          disabled={isProcessingMessage}
           value={inputText}
           rows={3}
           className={cn(
@@ -285,10 +291,10 @@ function ChatInput() {
             <Button
               size="fit"
               onClick={handleSubmit}
-              disabled={isProcessingMessage || shouldCollectDataFirst || isUploading}
+              disabled={isSendingMessage || isUploading}
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
-              {isProcessingMessage ? (
+              {isSendingMessage ? (
                 <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
               ) : (
                 <SendHorizonal className="size-4 rtl:-scale-100" />
@@ -327,12 +333,12 @@ function SessionClosedSection() {
 
 export function ChatFooter() {
   const { chat } = useChat();
-  const session = usePubsub(chat.sessionState)
+  const session = usePubsub(chat.sessionState);
 
   return (
     <div>
       <AnimatePresence mode="wait">
-        {(session && !session.isOpened) ? (
+        {session && !session.isOpened ? (
           <MotionDiv
             key="session-closed"
             className="overflow-hidden"

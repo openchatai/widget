@@ -40,6 +40,7 @@ export function ChatMain() {
   }, [chatState.messages]);
 
   const noMessages = chatState.messages.length === 0;
+
   return (
     <div
       data-messages
@@ -61,20 +62,20 @@ export function ChatMain() {
             wrapperProps={{ agent: config.getBotConfig() }}
           />
         )) ?? (
-            <BotOrAgentMessage
-              key={"default-welcome"}
-              message={{
-                component: "bot_message",
-                data: { message: "Hello, how can I help?" },
-                id: "default-welcome",
-                type: "FROM_BOT",
-                agent: config.getBotConfig(),
-                timestamp: Date.now().toString(),
-              }}
-              Wrapper={BotOrAgentMessageWrapper}
-              wrapperProps={{ agent: config.getBotConfig() }}
-            />
-          ))}
+          <BotOrAgentMessage
+            key={"default-welcome"}
+            message={{
+              component: "bot_message",
+              data: { message: "Hello, how can I help?" },
+              id: "default-welcome",
+              type: "FROM_BOT",
+              agent: config.getBotConfig(),
+              timestamp: Date.now().toString(),
+            }}
+            Wrapper={BotOrAgentMessageWrapper}
+            wrapperProps={{ agent: config.getBotConfig() }}
+          />
+        ))}
       {groupedMessages.map((group, index) => {
         const type = group?.[0].type;
         if (!type) return null;
@@ -96,7 +97,10 @@ export function ChatMain() {
 
         return null;
       })}
-      {chatState.loading.isLoading && chatState.loading.reason === "sending_message_to_bot" && <LoadingComponent />}
+      {chatState.loading.isLoading &&
+        chatState.loading.reason === "sending_message_to_bot" && (
+          <LoadingComponent />
+        )}
     </div>
   );
 }
