@@ -1,3 +1,4 @@
+import { User } from "@core/types";
 import { SendChatDto, WidgetVoteDto } from "../types/schemas-v2";
 import { NormalizedConfig } from "./config";
 import { basicClient, Dto } from "@core/sdk";
@@ -10,7 +11,10 @@ export class ApiCaller {
   #client: ReturnType<typeof basicClient>;
 
   constructor(private readonly options: ApiCallerOptions) {
-    const user = this.options.config.user;
+    this.#client = this.createClient(options.config.user)
+  }
+
+  createClient = (user: User) => {
     const consumerHeader = {
       claim: "",
       value: "",
@@ -24,7 +28,7 @@ export class ApiCaller {
       consumerHeader.value = user.phone;
     }
 
-    this.#client = basicClient({
+    return basicClient({
       baseUrl: this.options.config.apiUrl,
       onRequest: ({ request }) => {
         request.headers.set("X-Bot-Token", this.options.config.token);
@@ -42,6 +46,10 @@ export class ApiCaller {
         }
       },
     });
+  }
+
+  setUser = (user: User) => {
+    this.#client = this.createClient(user)
   }
 
   me = async () => {

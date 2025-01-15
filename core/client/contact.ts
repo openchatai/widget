@@ -85,6 +85,7 @@ export function createContactHandler({ config, api }: CreateContactOptions, plat
                     contactName: data.contactName
                 }
             });
+            api.setUser({ email: payload.email, name: payload.name })
             return data
         }
 
