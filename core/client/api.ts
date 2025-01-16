@@ -1,8 +1,8 @@
-import { SafeExtract, User } from "@core/types";
-import { SendChatDto, WidgetVoteDto } from "../types/schemas-v2";
-import { NormalizedConfig } from "./config";
-import { basicClient, Dto, Endpoint } from "@core/sdk";
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { SafeExtract, User } from '@core/types';
+import { SendChatDto, WidgetVoteDto } from '../types/schemas-v2';
+import { NormalizedConfig } from './config';
+import { basicClient, Dto, Endpoint } from '@core/sdk';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export interface ApiCallerOptions {
   config: NormalizedConfig;
@@ -14,43 +14,27 @@ export class ApiCaller {
 
   constructor(private readonly options: ApiCallerOptions) {
     const { baseUrl, headers } = this.constructClientOptions(
-      options.config.user,
+      options.config.contactToken
     );
     this.#client = this.createOpenAPIClient({ baseUrl, headers });
     this.#uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   }
 
-  constructClientOptions = (user: User) => {
-    const consumerHeader = {
-      claim: "",
-      value: "",
-    };
-
-    if (user?.email) {
-      consumerHeader.claim = "email";
-      consumerHeader.value = user.email;
-    } else if (user?.phone) {
-      consumerHeader.claim = "phone";
-      consumerHeader.value = user.phone;
-    }
-
+  private constructClientOptions = (token: string | null | undefined) => {
     const baseUrl = this.options.config.apiUrl;
     const headers = {
-      "X-Bot-Token": this.options.config.token,
-      "X-Consumer-Id": `${consumerHeader.claim}:${consumerHeader.value}`,
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      ["Authorization"]: this.options.config.contactToken
-        ? `Bearer ${this.options.config.contactToken}`
-        : undefined,
+      'X-Bot-Token': this.options.config.token,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      Authorization: token ? `Bearer ${token}` : undefined
     };
 
     return { baseUrl, headers };
   };
 
-  createOpenAPIClient = ({
+  private createOpenAPIClient = ({
     baseUrl,
-    headers,
+    headers
   }: ReturnType<typeof this.constructClientOptions>) => {
     return basicClient({
       baseUrl,
@@ -60,68 +44,64 @@ export class ApiCaller {
             request.headers.set(key, value);
           }
         });
-      },
+      }
     });
   };
-  createAxiosUploadClient = ({
+  private createAxiosUploadClient = ({
     baseUrl,
-    headers,
+    headers
   }: ReturnType<typeof this.constructClientOptions>) => {
-    const uploadPath = "/backend/widget/v2/upload" satisfies Endpoint;
+    const uploadPath = '/backend/widget/v2/upload' satisfies Endpoint;
     return axios.create({
       baseURL: `${baseUrl}${uploadPath}`,
-      headers,
+      headers
     });
   };
 
-  setUser = (user: User) => {
-    const { baseUrl, headers } = this.constructClientOptions(user);
+  setAuthToken = (token: string) => {
+    const { baseUrl, headers } = this.constructClientOptions(token);
     this.#client = this.createOpenAPIClient({ baseUrl, headers });
     this.#uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   };
 
-  me = async () => {
-    return await this.#client.GET("/backend/widget/v2/me");
-  };
-
   widgetPrelude = async () => {
-    return await this.#client.GET("/backend/widget/v2/prelude", {
-      params: { header: { "X-Bot-Token": this.options.config.token } },
+    return await this.#client.GET('/backend/widget/v2/prelude', {
+      params: { header: { 'X-Bot-Token': this.options.config.token } }
     });
   };
 
   handleMessage = async (body: SendChatDto, abortSignal?: AbortSignal) => {
-    return await this.#client.POST("/backend/widget/v2/chat/send", {
+    return await this.#client.POST('/backend/widget/v2/chat/send', {
       body,
-      signal: abortSignal,
+      signal: abortSignal
     });
   };
 
   getSessionHistory = async (
     sessionId: string,
-    lastMessageTimestamp?: string,
+    lastMessageTimestamp?: string
   ) => {
     const query = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
     return await this.#client.GET(
-      "/backend/widget/v2/session/history/{sessionId}",
-      { params: { path: { sessionId }, query } },
+      '/backend/widget/v2/session/history/{sessionId}',
+      { params: { path: { sessionId }, query } }
     );
   };
 
-  createContact = async (body: Dto["CreateContactDto"]) => {
-    return await this.#client.POST("/backend/widget/v2/me/create", {
-      params: { header: { "x-bot-token": this.options.config.token } },
-      body,
+  createContact = async (body: Dto['CreateContactDto']) => {
+    return await this.#client.POST('/backend/widget/v2/contact/create-unverified', {
+      params: { header: { 'x-bot-token': this.options.config.token } },
+      body
     });
   };
 
   createSession = async () => {
-    return await this.#client.POST("/backend/widget/v2/create-session");
+    return await this.#client.POST('/backend/widget/v2/create-session');
   };
 
   getSession = async (sessionId: string) => {
-    return await this.#client.GET("/backend/widget/v2/session/{sessionId}", {
-      params: { path: { sessionId } },
+    return await this.#client.GET('/backend/widget/v2/session/{sessionId}', {
+      params: { path: { sessionId } }
     });
   };
 
@@ -130,26 +110,24 @@ export class ApiCaller {
       id: string;
       file: File;
     },
-    config: Partial<AxiosRequestConfig> = {},
+    config: Partial<AxiosRequestConfig> = {}
   ) => {
     const formData = new FormData();
-    formData.append("file", file.file);
+    formData.append('file', file.file);
 
     // Couldn't get this to work with the openapi client... dunno why...
-    const { data } = await this.#uploadFileClient.post<Dto["UploadWidgetFileResponseDto"]>(
-      "",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-        ...config,
+    const { data } = await this.#uploadFileClient.post<
+      Dto['UploadWidgetFileResponseDto']
+    >('', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       },
-    );
+      ...config
+    });
     return data;
   };
 
   vote = async (body: WidgetVoteDto) => {
-    return await this.#client.POST("/backend/widget/v2/chat/vote", { body });
+    return await this.#client.POST('/backend/widget/v2/chat/vote', { body });
   };
 }

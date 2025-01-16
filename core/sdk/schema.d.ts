@@ -4,22 +4,6 @@
  */
 
 export interface paths {
-    "/backend/widget/v2/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["getCurrentContact"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/backend/widget/v2/prelude": {
         parameters: {
             query?: never;
@@ -134,7 +118,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/backend/widget/v2/me/create": {
+    "/backend/widget/v2/contact/create-unverified": {
         parameters: {
             query?: never;
             header?: never;
@@ -143,10 +127,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Create a contact for the widget
-         * @description Create a contact for the widget, in un-authenticated contexts
-         */
+        /** Create an unverified contact for the widget */
         post: operations["createContact"];
         delete?: never;
         options?: never;
@@ -238,20 +219,9 @@ export interface components {
             fileName: string;
             fileUrl: string;
         };
-        WidgetContactDto: {
-            authenticationStatus: {
-                /** @enum {boolean} */
-                is: true;
-            };
-            contactId: string;
-            contactName: string;
-        } | {
-            authenticationStatus: {
-                /** @enum {boolean} */
-                is: false;
-            };
-            contactId: unknown;
-            contactName: string;
+        WidgetContactTokenResponseDto: {
+            /** @description The JWT token to use for further requests */
+            token: string;
         };
         WidgetHistoryDto: {
             publicId: string;
@@ -369,34 +339,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getCurrentContact: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["WidgetContactDto"];
-                };
-            };
-            /** @description Internal Server Error */
-            500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
     widgetPrelude: {
         parameters: {
             query?: never;
@@ -635,7 +577,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["WidgetContactDto"];
+                    "application/json": components["schemas"]["WidgetContactTokenResponseDto"];
                 };
             };
             /** @description Internal Server Error */
