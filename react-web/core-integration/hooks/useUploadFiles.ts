@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useChat } from '../ChatProvider';
-import { v4 } from 'uuid';
+import { useEffect, useMemo, useState } from "react";
+import { useChat } from "../ChatProvider";
+import { v4 } from "uuid";
 
 const uploadAbortControllers: Map<string, AbortController> = new Map();
 
 interface FileWithProgress {
-  status: 'pending' | 'uploading' | 'success' | 'error';
+  status: "pending" | "uploading" | "success" | "error";
   id: string;
   file: File;
   fileUrl?: string;
@@ -20,8 +20,8 @@ function useUploadFiles() {
     const newFiles = files.map((file) => ({
       file,
       id: v4(),
-      status: 'pending' as const,
-      progress: 0
+      status: "pending" as const,
+      progress: 0,
     }));
 
     setFiles((prev) => [...prev, ...newFiles]);
@@ -30,7 +30,7 @@ function useUploadFiles() {
 
   function updateFileById(id: string, update: Partial<FileWithProgress>) {
     setFiles((prev) =>
-      prev.map((f) => (f.id === id ? { ...f, ...update } : f))
+      prev.map((f) => (f.id === id ? { ...f, ...update } : f)),
     );
   }
 
@@ -42,33 +42,42 @@ function useUploadFiles() {
     const controller = new AbortController();
     uploadAbortControllers.set(fileItem.id, controller);
 
-    setFiles((prev) =>
-      prev.map((f) =>
-        f.id === fileItem.id ? { ...f, status: 'uploading', progress: 0 } : f
-      )
-    );
+    try {
+      setFiles((prev) =>
+        prev.map((f) =>
+          f.id === fileItem.id ? { ...f, status: "uploading", progress: 0 } : f,
+        ),
+      );
 
-    const { data, error } = await api.uploadFile({
-      file: fileItem,
-      abortSignal: controller.signal
-    });
+      const response = await api.uploadFile(fileItem, {
+        signal: controller.signal,
+        onUploadProgress: (progressEvent) => {
+          if (!progressEvent.total) return;
 
-    if (data) {
-      updateFileById(fileItem.id, {
-        status: 'success',
-        fileUrl: data.fileUrl,
-        progress: 100
+          const progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+
+          updateFileById(fileItem.id, { progress });
+        },
       });
-    } else {
+
+      updateFileById(fileItem.id, {
+        status: "success",
+        fileUrl: response.fileUrl,
+        progress: 100,
+      });
+    } catch (error) {
       if (!controller.signal.aborted) {
         updateFileById(fileItem.id, {
-          status: 'error',
-          error: error.message || 'Upload failed',
-          progress: 0
+          status: "error",
+          error: error instanceof Error ? error.message : "Upload failed",
+          progress: 0,
         });
       }
+    } finally {
+      uploadAbortControllers.delete(fileItem.id);
     }
-    uploadAbortControllers.delete(fileItem.id);
   };
 
   const handleCancelUpload = (fileId: string) => {
@@ -81,7 +90,7 @@ function useUploadFiles() {
   };
 
   const successFiles = useMemo(() => {
-    return files.filter((f) => f.status === 'success' && f.fileUrl);
+    return files.filter((f) => f.status === "success" && f.fileUrl);
   }, [files]);
 
   function emptyTheFiles() {
@@ -107,8 +116,8 @@ function useUploadFiles() {
     getUploadProgress: (id: string) =>
       files.find((f) => f.id === id)?.progress ?? 0,
     getUploadStatus: (id: string) => files.find((f) => f.id === id)?.status,
-    hasErrors: files.some((f) => f.status === 'error'),
-    isUploading: files.some((f) => f.status === 'uploading')
+    hasErrors: files.some((f) => f.status === "error"),
+    isUploading: files.some((f) => f.status === "uploading"),
   };
 }
 

@@ -1,7 +1,8 @@
-import { User } from "@core/types";
+import { SafeExtract, User } from "@core/types";
 import { SendChatDto, WidgetVoteDto } from "../types/schemas-v2";
 import { NormalizedConfig } from "./config";
-import { basicClient, Dto } from "@core/sdk";
+import { basicClient, Dto, Endpoint } from "@core/sdk";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export interface ApiCallerOptions {
   config: NormalizedConfig;
@@ -9,12 +10,17 @@ export interface ApiCallerOptions {
 
 export class ApiCaller {
   #client: ReturnType<typeof basicClient>;
+  #uploadFileClient: AxiosInstance;
 
   constructor(private readonly options: ApiCallerOptions) {
-    this.#client = this.createClient(options.config.user)
+    const { baseUrl, headers } = this.constructClientOptions(
+      options.config.user,
+    );
+    this.#client = this.createOpenAPIClient({ baseUrl, headers });
+    this.#uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   }
 
-  createClient = (user: User) => {
+  constructClientOptions = (user: User) => {
     const consumerHeader = {
       claim: "",
       value: "",
@@ -28,29 +34,51 @@ export class ApiCaller {
       consumerHeader.value = user.phone;
     }
 
+    const baseUrl = this.options.config.apiUrl;
+    const headers = {
+      "X-Bot-Token": this.options.config.token,
+      "X-Consumer-Id": `${consumerHeader.claim}:${consumerHeader.value}`,
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      ["Authorization"]: this.options.config.contactToken
+        ? `Bearer ${this.options.config.contactToken}`
+        : undefined,
+    };
+
+    return { baseUrl, headers };
+  };
+
+  createOpenAPIClient = ({
+    baseUrl,
+    headers,
+  }: ReturnType<typeof this.constructClientOptions>) => {
     return basicClient({
-      baseUrl: this.options.config.apiUrl,
+      baseUrl,
       onRequest: ({ request }) => {
-        request.headers.set("X-Bot-Token", this.options.config.token);
-        request.headers.set(
-          "X-Consumer-Id",
-          `${consumerHeader.claim}:${consumerHeader.value}`,
-        );
-        request.headers.set("Content-Type", "application/json");
-        request.headers.set("Accept", "application/json");
-        if (this.options.config.contactToken) {
-          request.headers.set(
-            "Authorization",
-            `Bearer ${this.options.config.contactToken}`,
-          );
-        }
+        Object.entries(headers).forEach(([key, value]) => {
+          if (value) {
+            request.headers.set(key, value);
+          }
+        });
       },
     });
-  }
+  };
+  createAxiosUploadClient = ({
+    baseUrl,
+    headers,
+  }: ReturnType<typeof this.constructClientOptions>) => {
+    const uploadPath = "/backend/widget/v2/upload" satisfies Endpoint;
+    return axios.create({
+      baseURL: `${baseUrl}${uploadPath}`,
+      headers,
+    });
+  };
 
   setUser = (user: User) => {
-    this.#client = this.createClient(user)
-  }
+    const { baseUrl, headers } = this.constructClientOptions(user);
+    this.#client = this.createOpenAPIClient({ baseUrl, headers });
+    this.#uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
+  };
 
   me = async () => {
     return await this.#client.GET("/backend/widget/v2/me");
@@ -97,27 +125,28 @@ export class ApiCaller {
     });
   };
 
-  uploadFile = async ({
-    file,
-    abortSignal,
-  }: {
+  uploadFile = async (
     file: {
       id: string;
       file: File;
-    };
-    abortSignal?: AbortSignal;
-  }) => {
+    },
+    config: Partial<AxiosRequestConfig> = {},
+  ) => {
     const formData = new FormData();
     formData.append("file", file.file);
 
-    return await this.#client.POST("/backend/widget/v2/upload", {
-      params: { query: { fileId: file.id, sessionId: "" } },
-      body: formData as unknown as Dto["FileUploadDto"],
-      signal: abortSignal,
-      headers: {
-        "Content-Type": "multipart/form-data",
+    // Couldn't get this to work with the openapi client... dunno why...
+    const { data } = await this.#uploadFileClient.post<Dto["UploadWidgetFileResponseDto"]>(
+      "",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        ...config,
       },
-    });
+    );
+    return data;
   };
 
   vote = async (body: WidgetVoteDto) => {

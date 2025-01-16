@@ -1,32 +1,32 @@
-import createClient, { type Middleware } from 'openapi-fetch';
-import type { paths } from './schema';
-import type { components } from './schema';
+import createClient, { type Middleware } from "openapi-fetch";
+import type { paths } from "./schema";
+import type { components } from "./schema";
 
 type Options = {
   baseUrl: string;
-  onRequest?: Middleware['onRequest'];
-  onResponse?: Middleware['onResponse'];
-  onError?: Middleware['onError'];
+  onRequest?: Middleware["onRequest"];
+  onResponse?: Middleware["onResponse"];
+  onError?: Middleware["onError"];
 };
 
-const defaultOnError: Middleware['onError'] = (onErrorOptions) => {
+const defaultOnError: Middleware["onError"] = (onErrorOptions) => {
   console.log(onErrorOptions.error);
 };
 
 export const basicClient = (options: Options) => {
   const client = createClient<paths>({
-    baseUrl: options.baseUrl
+    baseUrl: options.baseUrl,
   });
 
   const middlewares: Middleware = {
     onRequest: options.onRequest,
     onResponse: options.onResponse,
-    onError: options.onError || defaultOnError
+    onError: options.onError || defaultOnError,
   };
 
   client.use(middlewares);
   return client;
 };
 
-export type Dto = components['schemas'];
-
+export type Endpoint = keyof paths;
+export type Dto = components["schemas"];
