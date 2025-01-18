@@ -36,7 +36,11 @@ html, body {
 </body>
 </html>`;
 
-function Widget({ className, opened = false, ...props }: ComponentPropsWithoutRef<"div"> & { opened?: boolean }) {
+function Widget({
+  className,
+  opened = false,
+  ...props
+}: ComponentPropsWithoutRef<"div"> & { opened?: boolean }) {
   const chat = useChat();
   const {
     config: { theme },

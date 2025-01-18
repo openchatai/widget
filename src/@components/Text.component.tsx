@@ -17,7 +17,10 @@ export function BotOrAgentTextResponse({
     return (
       <div data-test="error-message-container">
         <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
-          <div className="leading-snug font-medium text-sm text-rose-500" data-test="error-message">
+          <div
+            className="leading-snug font-medium text-sm text-rose-500"
+            data-test="error-message"
+          >
             {message}
           </div>
         </div>
@@ -27,7 +30,10 @@ export function BotOrAgentTextResponse({
 
   return (
     <div data-test="message-container">
-      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start" data-test="attachments-container">
+      <div
+        className="gap-0.5 flex flex-row flex-wrap items-center justify-start"
+        data-test="attachments-container"
+      >
         {attachments?.map((attachment) => {
           return (
             <RenderAttachment

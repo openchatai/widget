@@ -5,5 +5,5 @@ export default defineConfig({
   plugins: [react()],
   css: {
     transformer: "lightningcss",
-  }
+  },
 });

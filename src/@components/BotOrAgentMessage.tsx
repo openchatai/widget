@@ -37,7 +37,11 @@ export function BotOrAgentMessage<W extends React.ElementType>({
 
   return (
     // @ts-ignore
-    <Wrapper {...wrapperProps} key={message.id} data-test={`message-wrapper-${message.id}`}>
+    <Wrapper
+      {...wrapperProps}
+      key={message.id}
+      data-test={`message-wrapper-${message.id}`}
+    >
       <Component {...message} id={message.id} />
     </Wrapper>
   );

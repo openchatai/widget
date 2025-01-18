@@ -1,18 +1,17 @@
-import { SendMessageInput } from '@core/client/chat';
-import { UserMessageType } from '@core/types';
-import { v4 } from 'uuid';
-import { describe, expect, it, vi } from 'vitest';
-import { initilize } from '../test-utils';
+import { SendMessageInput } from "@core/client/chat";
+import { UserMessageType } from "@core/types";
+import { v4 } from "uuid";
+import { describe, expect, it, vi } from "vitest";
+import { initilize } from "../test-utils";
 
-
-describe.concurrent('web integration tests', () => {
-  it('should get the preluade data correctly', async () => {
+describe.concurrent("web integration tests", () => {
+  it("should get the preluade data correctly", async () => {
     const { apis } = initilize();
     const preludeData = await apis.widgetPrelude();
     expect(preludeData).toBeDefined();
   });
 
-  it('should process the message correctly of a fresh session', async () => {
+  it("should process the message correctly of a fresh session", async () => {
     const { chat } = initilize();
     const subscriber = vi.fn();
     expect(chat.chatState.getState()).toBeDefined();
@@ -21,7 +20,7 @@ describe.concurrent('web integration tests', () => {
     chat.chatState.subscribe(subscriber);
 
     const userMessage: SendMessageInput = {
-      content: 'Hello'
+      content: "Hello",
     };
 
     const resp = await chat.sendMessage(userMessage);
@@ -31,26 +30,26 @@ describe.concurrent('web integration tests', () => {
     const state = chat.chatState.getState();
     expect(state.messages.length).toBeGreaterThan(0);
     const lastMessage = state.messages[0] as UserMessageType;
-    expect(lastMessage.type).toBe('FROM_USER');
-    expect(lastMessage.content).toBe('Hello');
+    expect(lastMessage.type).toBe("FROM_USER");
+    expect(lastMessage.content).toBe("Hello");
 
     // Verify subscriber was called
     expect(subscriber).toHaveBeenCalled();
   }, 120000);
 
-  it('should handle message with attachments', async () => {
+  it("should handle message with attachments", async () => {
     const { chat } = initilize();
     const attachment = {
       id: v4(),
-      name: 'test.jpg',
+      name: "test.jpg",
       size: 1024,
-      type: 'image/jpeg',
-      url: 'test.jpg'
+      type: "image/jpeg",
+      url: "test.jpg",
     };
 
     const userMessage: SendMessageInput = {
       content: "Here's an image",
-      attachments: [attachment]
+      attachments: [attachment],
     };
 
     await chat.sendMessage(userMessage);
@@ -60,10 +59,10 @@ describe.concurrent('web integration tests', () => {
     expect(lastMessage.attachments![0]).toEqual(attachment);
   }, 120000);
 
-  it('should handle error states correctly', async () => {
+  it("should handle error states correctly", async () => {
     const { chat } = initilize();
     const invalidMessage: SendMessageInput = {
-      content: '' // Empty content should trigger error
+      content: "", // Empty content should trigger error
     };
 
     try {
@@ -75,13 +74,13 @@ describe.concurrent('web integration tests', () => {
     }
   }, 120000);
 
-  it('should maintain loading state during message processing', async () => {
+  it("should maintain loading state during message processing", async () => {
     const { chat } = initilize();
     const subscriber = vi.fn();
     chat.chatState.subscribe(subscriber);
 
     const sendPromise = chat.sendMessage({
-      content: 'Test loading'
+      content: "Test loading",
     });
 
     // Check loading state immediately after sending
@@ -93,29 +92,29 @@ describe.concurrent('web integration tests', () => {
     expect(chat.chatState.getState().loading.isLoading).toBe(false);
   }, 120000);
 
-  it('should handle bot responses correctly', async () => {
+  it("should handle bot responses correctly", async () => {
     const { chat } = initilize();
 
     await chat.sendMessage({
-      content: 'Hello bot'
+      content: "Hello bot",
     });
 
     // Wait for bot response
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     const state = chat.chatState.getState();
-    const botMessages = state.messages.filter((m) => m.type === 'FROM_BOT');
+    const botMessages = state.messages.filter((m) => m.type === "FROM_BOT");
     expect(botMessages.length).toBeGreaterThan(0);
     expect(botMessages[0].data).toBeDefined();
   }, 120000);
 
-  describe('polling functionality', () => {
-    it('should track session polling state', async () => {
+  describe("polling functionality", () => {
+    it("should track session polling state", async () => {
       const { chat } = initilize();
 
       // Send a message to create a session
       await chat.sendMessage({
-        content: 'Start polling test'
+        content: "Start polling test",
       });
 
       // Wait for polling to start
@@ -128,11 +127,11 @@ describe.concurrent('web integration tests', () => {
       expect(state.polling.session.nextPollTime).toBeDefined();
     }, 120000);
 
-    it('should track message polling state', async () => {
+    it("should track message polling state", async () => {
       const { chat } = initilize();
 
       await chat.sendMessage({
-        content: 'Test message polling'
+        content: "Test message polling",
       });
 
       // Wait for polling to start
@@ -146,13 +145,13 @@ describe.concurrent('web integration tests', () => {
     }, 120000);
   });
 
-  describe('session management', () => {
-    it('should cleanup session state properly', async () => {
+  describe("session management", () => {
+    it("should cleanup session state properly", async () => {
       const { chat } = initilize();
 
       // Create a session with some messages
       await chat.sendMessage({
-        content: 'Test cleanup'
+        content: "Test cleanup",
       });
 
       // Cleanup

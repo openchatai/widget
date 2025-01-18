@@ -30,11 +30,17 @@ function OptionsMenu() {
   const { chat } = useChat();
 
   const togglePersistSession = () => {
-    setWidgetSettings({ ...widgetSettings, persistSession: !widgetSettings.persistSession });
+    setWidgetSettings({
+      ...widgetSettings,
+      persistSession: !widgetSettings.persistSession,
+    });
   };
 
   const toggleSoundEffects = () => {
-    setWidgetSettings({ ...widgetSettings, useSoundEffects: !widgetSettings.useSoundEffects });
+    setWidgetSettings({
+      ...widgetSettings,
+      useSoundEffects: !widgetSettings.useSoundEffects,
+    });
   };
 
   return (

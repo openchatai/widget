@@ -98,7 +98,10 @@ function FileDisplay({
           "flex items-center justify-center shrink-0",
         )}
       >
-        <div className="absolute inset-0 flex items-center justify-center" data-test="file-status">
+        <div
+          className="absolute inset-0 flex items-center justify-center"
+          data-test="file-status"
+        >
           {getStatusIcon()}
         </div>
         <button
@@ -216,7 +219,11 @@ function ChatInput() {
   };
 
   return (
-    <div className="p-2 relative space-y-1" {...dropzone__getRootProps()} data-test="chat-input-container">
+    <div
+      className="p-2 relative space-y-1"
+      {...dropzone__getRootProps()}
+      data-test="chat-input-container"
+    >
       <input {...dropzone__getInputProps()} />
       <div
         className={cn(
@@ -225,7 +232,10 @@ function ChatInput() {
         )}
         data-test="chat-input-wrapper"
       >
-        <div className="flex items-center gap-1 px-2" data-test="file-attachments-container">
+        <div
+          className="flex items-center gap-1 px-2"
+          data-test="file-attachments-container"
+        >
           <AnimatePresence mode="popLayout">
             {allFiles.map((file) => (
               <MotionDiv key={file.id} snapExit>
@@ -262,7 +272,10 @@ function ChatInput() {
           }}
           placeholder={locale.get("write-a-message")}
         />
-        <div className="px-2 flex justify-between" data-test="chat-input-actions">
+        <div
+          className="px-2 flex justify-between"
+          data-test="chat-input-actions"
+        >
           <Tooltippy
             side="top"
             align="start"
@@ -286,11 +299,7 @@ function ChatInput() {
             </Button>
           </Tooltippy>
 
-          <Tooltippy
-            content="send message"
-            side="top"
-            align="end"
-          >
+          <Tooltippy content="send message" side="top" align="end">
             <Button
               size="fit"
               onClick={handleSubmit}
@@ -299,7 +308,10 @@ function ChatInput() {
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
               {isSendingMessage ? (
-                <CircleDashed className="size-4 animate-spin animate-iteration-infinite" data-test="sending-message-indicator" />
+                <CircleDashed
+                  className="size-4 animate-spin animate-iteration-infinite"
+                  data-test="sending-message-indicator"
+                />
               ) : (
                 <SendHorizonal className="size-4 rtl:-scale-100" />
               )}
@@ -317,8 +329,14 @@ function SessionClosedSection() {
 
   return (
     <div className="p-2" data-test="session-closed-container">
-      <div className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2" data-test="session-closed-content">
-        <div className="flex items-center gap-1" data-test="session-closed-header">
+      <div
+        className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2"
+        data-test="session-closed-content"
+      >
+        <div
+          className="flex items-center gap-1"
+          data-test="session-closed-header"
+        >
           <CheckCheckIcon className="size-4 text-emerald-500" />
           <h2 className="text-sm font-medium" dir="auto">
             {locale.get("session-closed-lead")}

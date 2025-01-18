@@ -1,16 +1,16 @@
-import { ApiCaller, createChat, createConfig } from '@core/client';
-import { Platform } from '@core/platform';
-import { LoadingState } from '@core/types';
-import { describe, expect, it } from 'vitest';
-import { getTestUser } from '../test-utils';
+import { ApiCaller, createChat, createConfig } from "@core/client";
+import { Platform } from "@core/platform";
+import { LoadingState } from "@core/types";
+import { describe, expect, it } from "vitest";
+import { getTestUser } from "../test-utils";
 
-describe.concurrent('integration testing with storage and persistence', () => {
-  const openToken = 'fe8f11971f5de916ab745d9c0408c7ef';
+describe.concurrent("integration testing with storage and persistence", () => {
+  const openToken = "fe8f11971f5de916ab745d9c0408c7ef";
   const mockedStorage = new Map();
 
   const platform: Platform = {
     env: {
-      platform: 'test'
+      platform: "test",
     },
     storage: {
       async getItem(key) {
@@ -24,8 +24,8 @@ describe.concurrent('integration testing with storage and persistence', () => {
       },
       isAvailable() {
         return true;
-      }
-    }
+      },
+    },
   };
 
   const config = createConfig(
@@ -33,26 +33,26 @@ describe.concurrent('integration testing with storage and persistence', () => {
       token: openToken,
       user: getTestUser(),
       settings: {
-        persistSession: true
-      }
+        persistSession: true,
+      },
     },
-    platform
+    platform,
   );
 
   const apis = new ApiCaller({
-    config: config.getConfig()
+    config: config.getConfig(),
   });
 
   function initilize() {
     const chat = createChat({ api: apis, config: config, platform });
     return {
       chat,
-      config
+      config,
     };
   }
 
-  describe('loading states during persistence operations', () => {
-    it('should set correct loading states during session creation', async () => {
+  describe("loading states during persistence operations", () => {
+    it("should set correct loading states during session creation", async () => {
       const { chat } = initilize();
       const loadingStates: LoadingState[] = [];
 
@@ -61,33 +61,33 @@ describe.concurrent('integration testing with storage and persistence', () => {
       });
 
       expect(chat.sessionState.getState()).toBe(null);
-      const resp = await chat.sendMessage({ content: 'hello world' });
+      const resp = await chat.sendMessage({ content: "hello world" });
 
       // Wait for all state updates to complete
       await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Verify loading states sequence
       const createSessionState = loadingStates.find(
-        (state) => state.isLoading && state.reason === 'creating_session'
+        (state) => state.isLoading && state.reason === "creating_session",
       );
       expect(createSessionState).toBeDefined();
 
       const sendMessageState = loadingStates.find(
-        (state) => state.isLoading && state.reason === 'sending_message_to_bot'
+        (state) => state.isLoading && state.reason === "sending_message_to_bot",
       );
       expect(sendMessageState).toBeDefined();
 
       const finalState = loadingStates[loadingStates.length - 1];
       expect(finalState).toEqual({
         isLoading: false,
-        reason: null
+        reason: null,
       });
 
       expect(resp.success).toBe(true);
       expect(resp.createdSession).toBe(true);
     }, 120000);
 
-    it('should maintain loading state during message persistence', async () => {
+    it("should maintain loading state during message persistence", async () => {
       const { chat } = initilize();
       const loadingStates: LoadingState[] = [];
 
@@ -96,30 +96,30 @@ describe.concurrent('integration testing with storage and persistence', () => {
       });
 
       // Send first message to create session and wait for it to complete
-      const initialResp = await chat.sendMessage({ content: 'create session' });
+      const initialResp = await chat.sendMessage({ content: "create session" });
       expect(initialResp.success).toBe(true);
       await new Promise((resolve) => setTimeout(resolve, 500));
       loadingStates.length = 0; // Clear previous states
 
       // Send another message to test persistence
-      const resp = await chat.sendMessage({ content: 'test persistence' });
+      const resp = await chat.sendMessage({ content: "test persistence" });
       expect(resp.success).toBe(true);
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Verify loading states for subsequent messages
       const sendMessageState = loadingStates.find(
-        (state) => state.isLoading && state.reason === 'sending_message_to_bot'
+        (state) => state.isLoading && state.reason === "sending_message_to_bot",
       );
       expect(sendMessageState).toBeDefined();
 
       const finalState = loadingStates[loadingStates.length - 1];
       expect(finalState).toEqual({
         isLoading: false,
-        reason: null
+        reason: null,
       });
     }, 120000);
 
-    it('should handle loading states during cleanup', async () => {
+    it("should handle loading states during cleanup", async () => {
       const { chat } = initilize();
       const loadingStates: LoadingState[] = [];
 
@@ -128,7 +128,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
       });
 
       // Create session and send message
-      const resp = await chat.sendMessage({ content: 'test cleanup' });
+      const resp = await chat.sendMessage({ content: "test cleanup" });
       expect(resp.success).toBe(true);
       await new Promise((resolve) => setTimeout(resolve, 500));
       loadingStates.length = 0; // Clear previous states
@@ -141,7 +141,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
       const finalState = chat.chatState.getState();
       expect(finalState.loading).toEqual({
         isLoading: false,
-        reason: null
+        reason: null,
       });
       expect(finalState.messages).toHaveLength(0);
 
@@ -149,7 +149,7 @@ describe.concurrent('integration testing with storage and persistence', () => {
       expect(chat.sessionState.getState()).toBeNull();
     }, 120000);
 
-    it('should handle loading states during concurrent operations', async () => {
+    it("should handle loading states during concurrent operations", async () => {
       const { chat } = initilize();
       const loadingStates: LoadingState[] = [];
 
@@ -157,9 +157,9 @@ describe.concurrent('integration testing with storage and persistence', () => {
         loadingStates.push({ ...state.loading });
       });
 
-      const messages = ['msg1', 'msg2', 'msg3'];
+      const messages = ["msg1", "msg2", "msg3"];
       await Promise.all(
-        messages.map((content) => chat.sendMessage({ content }))
+        messages.map((content) => chat.sendMessage({ content })),
       );
       const finalLoadingState = chat.chatState.getState().loading;
       expect(finalLoadingState.isLoading).toBe(false);
@@ -171,12 +171,12 @@ describe.concurrent('integration testing with storage and persistence', () => {
           index > 0 &&
           state.isLoading &&
           loadingStates[index - 1].isLoading &&
-          state.reason !== loadingStates[index - 1].reason
+          state.reason !== loadingStates[index - 1].reason,
       );
       expect(loadingConflicts).toHaveLength(0);
     }, 120000);
 
-    it('should maintain correct loading states during error scenarios', async () => {
+    it("should maintain correct loading states during error scenarios", async () => {
       const { chat } = initilize();
       const loadingStates: LoadingState[] = [];
 
@@ -186,19 +186,19 @@ describe.concurrent('integration testing with storage and persistence', () => {
 
       // Force an error by sending an invalid message
       try {
-        await chat.sendMessage({ content: '' });
+        await chat.sendMessage({ content: "" });
       } catch {
         // Verify loading state was reset after error
         expect(chat.chatState.getState().loading).toEqual({
           isLoading: false,
-          reason: null
+          reason: null,
         });
       }
 
       // Verify no loading state was left hanging
       expect(loadingStates[loadingStates.length - 1]).toEqual({
         isLoading: false,
-        reason: null
+        reason: null,
       });
     }, 120000);
   });

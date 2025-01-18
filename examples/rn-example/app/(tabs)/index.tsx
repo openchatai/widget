@@ -1,5 +1,5 @@
-import { ChatProvider } from '../../components/ChatProvider';
-import { ChatWidget } from '../../components/ChatWidget';
+import { ChatProvider } from "../../components/ChatProvider";
+import { ChatWidget } from "../../components/ChatWidget";
 
 export default function TabOneScreen() {
   return (

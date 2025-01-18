@@ -1,4 +1,3 @@
-
 // @deprecated
 export interface PreludeData {
   initial_questions?: string[];

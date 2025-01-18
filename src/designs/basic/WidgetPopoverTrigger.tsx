@@ -10,7 +10,9 @@ import { OpenLogoSvg } from "src/@components/OpenLogoSvg";
 import { MotionDiv } from "@ui/MotionDiv";
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
-  const { config: { theme } } = useConfig();
+  const {
+    config: { theme },
+  } = useConfig();
 
   return (
     <PopoverPrimitive.PopoverTrigger

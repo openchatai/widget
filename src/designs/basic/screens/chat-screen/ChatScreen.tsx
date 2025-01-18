@@ -41,7 +41,10 @@ export function ChatScreen() {
         }}
       >
         <ChatHeader />
-        <div className="flex bg-background shadow-lg flex-col w-full flex-1 overflow-auto" data-test="chat-main-container">
+        <div
+          className="flex bg-background shadow-lg flex-col w-full flex-1 overflow-auto"
+          data-test="chat-main-container"
+        >
           <ChatMain />
           <footer data-test="chat-footer">
             {chatState.keyboard && (
@@ -49,13 +52,16 @@ export function ChatScreen() {
                 data-test="chat-keyboard"
                 options={chatState.keyboard.options}
                 onKeyboardClick={(option) => {
-                  chat.sendMessage({ content: option })
+                  chat.sendMessage({ content: option });
                 }}
               />
             )}
 
             {noMessages && initialQuestions && (
-              <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2" data-test="initial-questions-container">
+              <div
+                className="flex items-center flex-row justify-end gap-2 flex-wrap px-2"
+                data-test="initial-questions-container"
+              >
                 {initialQuestions?.map((iq, index) => (
                   <Button
                     key={index}

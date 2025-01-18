@@ -5,6 +5,7 @@ export * from "./components";
 export type DefaultTextComponentBaseProps = {
   message: string;
   variant?: "default" | "error";
-}
+};
 
-export type DefaultTextComponentProps = ComponentProps<DefaultTextComponentBaseProps>;
+export type DefaultTextComponentProps =
+  ComponentProps<DefaultTextComponentBaseProps>;

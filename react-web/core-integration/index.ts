@@ -1,2 +1,2 @@
-export { useChat, ChatProvider } from "./ChatProvider"
-export * from "./hooks"
+export { useChat, ChatProvider } from "./ChatProvider";
+export * from "./hooks";

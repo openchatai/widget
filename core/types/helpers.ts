@@ -9,14 +9,14 @@ export type MakeKeysNotNullable<T, K extends keyof T> = Omit<T, K> & {
 };
 
 export type LoadingReason =
-  | 'sending_message_to_bot'
-  | 'sending_message_to_agent'
-  | 'creating_session'
-  | 'polling'
-  | 'loading_contact'
-  | 'saving_contact'
-  | 'cleaning_up'
-  | 'creating_unauthenticated_contact'
+  | "sending_message_to_bot"
+  | "sending_message_to_agent"
+  | "creating_session"
+  | "polling"
+  | "loading_contact"
+  | "saving_contact"
+  | "cleaning_up"
+  | "creating_unauthenticated_contact"
   | null;
 
 export type LoadingState = {
@@ -25,18 +25,18 @@ export type LoadingState = {
 };
 
 export type ErrorCode =
-  | 'SESSION_CREATION_FAILED'
-  | 'SESSION_CLEAR_FAILED'
-  | 'SESSION_PERSISTENCE_FAILED'
-  | 'SESSION_POLLING_FAILED'
-  | 'MESSAGES_POLLING_FAILED'
-  | 'MESSAGE_SEND_FAILED'
-  | 'NO_ACTIVE_SESSION'
-  | 'CONTACT_PERSISTENCE_FAILED'
-  | 'CONTACT_LOAD_FAILED'
-  | 'CONTACT_SAVE_FAILED'
-  | 'CONTACT_CLEANUP_FAILED'
-  | 'CONTACT_CREATION_FAILED';
+  | "SESSION_CREATION_FAILED"
+  | "SESSION_CLEAR_FAILED"
+  | "SESSION_PERSISTENCE_FAILED"
+  | "SESSION_POLLING_FAILED"
+  | "MESSAGES_POLLING_FAILED"
+  | "MESSAGE_SEND_FAILED"
+  | "NO_ACTIVE_SESSION"
+  | "CONTACT_PERSISTENCE_FAILED"
+  | "CONTACT_LOAD_FAILED"
+  | "CONTACT_SAVE_FAILED"
+  | "CONTACT_CLEANUP_FAILED"
+  | "CONTACT_CREATION_FAILED";
 
 export type ErrorState = {
   hasError: boolean;
@@ -44,7 +44,8 @@ export type ErrorState = {
   code?: ErrorCode;
 };
 
-export type SomeOptional<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
+export type SomeOptional<T, K extends keyof T> = Omit<T, K> &
+  Partial<Pick<T, K>>;
 
 export type SafeOmit<T, K extends keyof T> = Omit<T, K>;
 export type SafeExtract<T, K extends T> = Extract<T, K>;

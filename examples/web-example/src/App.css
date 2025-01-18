@@ -1,28 +1,28 @@
 :root {
   /* Color Variables */
-  --primary-color: #4B50E6;
-  --primary-hover: #3A3FB3;
+  --primary-color: #4b50e6;
+  --primary-hover: #3a3fb3;
   --background-color: #ffffff;
   --text-color: #1a1a1a;
   --border-color: #e5e7eb;
-  --message-user-bg: #EEF2FF;
-  --message-bot-bg: #F9FAFB;
-  --error-color: #EF4444;
-  --error-bg: #FEF2F2;
-  --warning-color: #F59E0B;
-  --warning-bg: #FFFBEB;
-  --success-color: #10B981;
-  --success-bg: #ECFDF5;
-  --chip-bg: #F3F4F6;
-  --chip-hover: #E5E7EB;
-  
+  --message-user-bg: #eef2ff;
+  --message-bot-bg: #f9fafb;
+  --error-color: #ef4444;
+  --error-bg: #fef2f2;
+  --warning-color: #f59e0b;
+  --warning-bg: #fffbeb;
+  --success-color: #10b981;
+  --success-bg: #ecfdf5;
+  --chip-bg: #f3f4f6;
+  --chip-hover: #e5e7eb;
+
   /* Shadows */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-  
+
   /* Typography */
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -215,8 +215,12 @@ body {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeInDown {

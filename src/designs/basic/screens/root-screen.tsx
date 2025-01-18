@@ -6,8 +6,8 @@ import { WelcomeScreen } from "./welcome-screen/WelcomeScreen";
 import { useContact } from "@react/core-integration";
 
 export function RootScreen() {
-  const { contactManager } = useContact()
-  const shouldCollectData = contactManager.shouldCollectData()
+  const { contactManager } = useContact();
+  const shouldCollectData = contactManager.shouldCollectData();
   return (
     <div className="bg-background size-full" data-test="root-screen">
       <AnimatePresence mode="wait">

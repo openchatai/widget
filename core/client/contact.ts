@@ -1,9 +1,9 @@
-import { PubSub } from '../types/pub-sub';
-import { ApiCaller } from './api';
-import { Platform } from '../platform';
-import { LoadingState, ErrorState } from '../types/helpers';
-import { ConfigInstance } from './config';
-import { Dto } from '@core/sdk';
+import { PubSub } from "../types/pub-sub";
+import { ApiCaller } from "./api";
+import { Platform } from "../platform";
+import { LoadingState, ErrorState } from "../types/helpers";
+import { ConfigInstance } from "./config";
+import { Dto } from "@core/sdk";
 
 type ContactState = {
   contact: { token: string } | null;
@@ -18,12 +18,12 @@ export type CreateContactHandlerOptions = {
 
 export function createContactHandler(
   { config, api }: CreateContactHandlerOptions,
-  platform: Platform
+  platform: Platform,
 ) {
   const state = new PubSub<ContactState>({
     contact: null,
     loading: { isLoading: false, reason: null },
-    error: { hasError: false }
+    error: { hasError: false },
   });
 
   function shouldCollectData(): boolean {
@@ -39,13 +39,13 @@ export function createContactHandler(
   async function cleanup() {
     try {
       state.setStatePartial({
-        loading: { isLoading: true, reason: 'cleaning_up' },
-        error: { hasError: false }
+        loading: { isLoading: true, reason: "cleaning_up" },
+        error: { hasError: false },
       });
       state.setState({
         contact: null,
         loading: { isLoading: false, reason: null },
-        error: { hasError: false }
+        error: { hasError: false },
       });
 
       state.clear();
@@ -56,29 +56,29 @@ export function createContactHandler(
           message:
             error instanceof Error
               ? error.message
-              : 'Failed to cleanup contact data',
-          code: 'CONTACT_CLEANUP_FAILED'
-        }
+              : "Failed to cleanup contact data",
+          code: "CONTACT_CLEANUP_FAILED",
+        },
       });
     } finally {
       state.setStatePartial({
-        loading: { isLoading: false, reason: null }
+        loading: { isLoading: false, reason: null },
       });
     }
   }
 
   async function createUnauthenticatedContact(
-    payload: Dto['CreateContactDto']
-  ): Promise<Dto['WidgetContactTokenResponseDto'] | null> {
+    payload: Dto["CreateContactDto"],
+  ): Promise<Dto["WidgetContactTokenResponseDto"] | null> {
     state.setStatePartial({
-      loading: { isLoading: true, reason: 'creating_unauthenticated_contact' },
-      error: { hasError: false }
+      loading: { isLoading: true, reason: "creating_unauthenticated_contact" },
+      error: { hasError: false },
     });
 
     const { data, error } = await api.createContact(payload);
     if (data?.token) {
       state.setStatePartial({
-        contact: { token: data.token }
+        contact: { token: data.token },
       });
       api.setAuthToken(data.token);
       return data;
@@ -90,8 +90,8 @@ export function createContactHandler(
         error: {
           hasError: true,
           message: error?.message,
-          code: 'CONTACT_CREATION_FAILED'
-        }
+          code: "CONTACT_CREATION_FAILED",
+        },
       });
     }
 
@@ -102,6 +102,6 @@ export function createContactHandler(
     contactState: state,
     shouldCollectData,
     cleanup,
-    createUnauthenticatedContact
+    createUnauthenticatedContact,
   };
 }
