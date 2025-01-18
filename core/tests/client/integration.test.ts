@@ -1,41 +1,9 @@
-import { ApiCaller, createChat, createConfig } from '@core/client';
 import { SendMessageInput } from '@core/client/chat';
-import { Platform } from '@core/platform';
 import { UserMessageType } from '@core/types';
 import { v4 } from 'uuid';
 import { describe, expect, it, vi } from 'vitest';
-import { getTestUser } from '../test-utils';
+import { initilize } from '../test-utils';
 
-function initilize() {
-  const openToken = 'fe8f11971f5de916ab745d9c0408c7ef';
-  const mockedStorage = new Map();
-
-  const platform: Platform = {
-    env: {
-      platform: 'test'
-    }
-  };
-
-  const config = createConfig(
-    {
-      token: openToken,
-      user: getTestUser()
-    },
-    platform
-  );
-
-  const apis = new ApiCaller({
-    config: config.getConfig()
-  });
-
-  const chat = createChat({ api: apis, config: config, platform });
-
-  return {
-    apis,
-    chat,
-    mockedStorage
-  };
-}
 
 describe.concurrent('web integration tests', () => {
   it('should get the preluade data correctly', async () => {
@@ -45,7 +13,7 @@ describe.concurrent('web integration tests', () => {
   });
 
   it('should process the message correctly of a fresh session', async () => {
-    const { apis, chat } = initilize();
+    const { chat } = initilize();
     const subscriber = vi.fn();
     expect(chat.chatState.getState()).toBeDefined();
     expect(chat.chatState.getState().messages).toHaveLength(0);
@@ -100,7 +68,7 @@ describe.concurrent('web integration tests', () => {
 
     try {
       await chat.sendMessage(invalidMessage);
-    } catch (error) {
+    } catch {
       const state = chat.chatState.getState();
       expect(state.error.hasError).toBe(true);
       expect(state.error.message).toBeDefined();

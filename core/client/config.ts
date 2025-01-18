@@ -53,6 +53,7 @@ export type ConfigInstance = {
     getUser: () => NormalizedConfig['user'];
     getLanguage: () => string;
     getDebugMode: () => boolean;
+    platform: Platform;
 };
 
 const MIN_POLLING_INTERVAL = 1000 * 3;
@@ -168,6 +169,7 @@ export function createConfig(options: CoreOptions, platform: Platform): ConfigIn
         getSoundEffects: () => normalizedConfig.soundEffectFiles,
         getUser: () => normalizedConfig.user,
         getLanguage: () => normalizedConfig.language,
-        getDebugMode: () => normalizedConfig.debug
+        getDebugMode: () => normalizedConfig.debug,
+        platform
     };
 } 
