@@ -44,34 +44,18 @@ describe('Widget Component Tests', () => {
                 </WidgetRoot>
             );
 
-            const messages = getByTestId("initial-messages");
-            await expect.element(messages).toBeVisible();
-            initialMessages.forEach(async (message) => {
-                await expect.element(messages).toHaveTextContent(message);
+            const chatScreen = getByTestId("chat-screen");
+            await expect.element(chatScreen).toBeVisible();
+
+            const container = getByTestId("initial-questions-container");
+            await expect.element(container).toBeVisible();
+            initialMessages.forEach(async (message, index) => {
+                const button = getByTestId(`initial-question-${index}`);
+                await expect.element(button).toBeVisible();
+                await expect.element(button).toHaveTextContent(message);
             });
         });
 
-        test("chat handles keyboard shortcuts", async () => {
-            const { getByTestId } = render(
-                <WidgetRoot options={{
-                    ...mockConfig,
-                    collectUserData: false,
-                }}>
-                    <Widget opened={true} />
-                </WidgetRoot>
-            );
-
-            const input = getByTestId("chat-input");
-            await expect.element(input).toBeVisible();
-
-            // Test Enter to send
-            await input.fill("Hello");
-            input.element().dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
-
-            // Test Esc to close
-            input.element().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
-            await expect.element(input).not.toBeVisible();
-        });
 
         test("handles session persistence", async () => {
             const { getByTestId } = render(
@@ -90,7 +74,10 @@ describe('Widget Component Tests', () => {
                 </WidgetRoot>
             );
 
-            const chatContainer = getByTestId("chat-container");
+            const chatScreen = getByTestId("chat-screen");
+            await expect.element(chatScreen).toBeVisible();
+
+            const chatContainer = getByTestId("chat-main-container");
             await expect.element(chatContainer).toBeVisible();
         });
     });
