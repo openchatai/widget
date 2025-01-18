@@ -20,7 +20,7 @@ export function createContactHandler({
   api,
 }: CreateContactHandlerOptions) {
   const state = new PubSub<ContactState>({
-    contact: null,
+    contact: config.contactToken ? { token: config.contactToken } : null,
     loading: { isLoading: false, reason: null },
     error: { hasError: false },
   });
