@@ -14,7 +14,7 @@ interface Colors {
 }
 
 export const cssVars = (
-  { primary = "hsl(0, 0%, 100%)" }: Colors,
+  { primary = "hsl(0, 0%, 0%)" }: Colors,
   // _: { triggerOffset: string },
 ) => {
   const _primary = tc(primary).toHsl();
