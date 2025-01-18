@@ -36,12 +36,12 @@ html, body {
 </body>
 </html>`;
 
-function Widget({ className, ...props }: ComponentPropsWithoutRef<"div">) {
+function Widget({ className, opened = false, ...props }: ComponentPropsWithoutRef<"div"> & { opened?: boolean }) {
   const chat = useChat();
   const {
     config: { theme },
   } = useConfig();
-  const [isOpen, setIsOpened] = useState(false);
+  const [isOpen, setIsOpened] = useState(opened);
 
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
@@ -81,6 +81,7 @@ function Widget({ className, ...props }: ComponentPropsWithoutRef<"div">) {
             initialContent={initialContent}
             allowFullScreen
             data-chat-widget
+            data-testid="widget-iframe"
             style={{
               maxHeight: "85dvh",
               width: "350px",

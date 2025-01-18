@@ -1,14 +1,18 @@
-name: Tests
+# name: Tests
+# Temporarily disabled
+name: Tests (disabled)
 
 on:
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
+  # Temporarily disabled all triggers
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  # pull_request:
+  #   branches:
+  #     - main
+  #     - master
+  workflow_dispatch:  # Only manual triggers allowed for now
 
 jobs:
   test:

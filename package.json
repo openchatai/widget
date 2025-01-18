@@ -22,7 +22,8 @@
     "lint": "biome lint --fix",
     "format": "biome format --fix",
     "batman": "pnpm build:lib && pnpm build:embed",
-    "prepublishOnly": "pnpm clean && pnpm test && pnpm batman"
+    "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
+    "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
   "peerDependencies": {
     "lucide-react": "^0.412.0",
@@ -123,6 +124,7 @@
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.set": "^4.3.9",
@@ -132,10 +134,12 @@
     "@types/tinycolor2": "^1.4.6",
     "@uiw/react-iframe": "^1.0.3",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/browser": "^3.0.2",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "jsdom": "^25.0.1",
     "mutative": "^1.0.11",
+    "playwright": "^1.49.1",
     "postcss": "^8.4.41",
     "postcss-prefix-selector": "^1.16.1",
     "react": "^18.3.1",
@@ -153,6 +157,7 @@
     "vite-plugin-dts": "4.0.3",
     "vite-plugin-externalize-deps": "^0.8.0",
     "vite-tsconfig-paths": "^5.0.1",
-    "vitest": "^2.0.5"
+    "vitest": "^3.0.2",
+    "vitest-browser-react": "^0.0.4"
   }
 }
