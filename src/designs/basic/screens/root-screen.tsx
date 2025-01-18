@@ -9,7 +9,7 @@ export function RootScreen() {
   const { contactManager } = useContact()
   const shouldCollectData = contactManager.shouldCollectData()
   return (
-    <div className="bg-background size-full">
+    <div className="bg-background size-full" data-test="root-screen">
       <AnimatePresence mode="wait">
         {shouldCollectData ? (
           <MotionDiv
@@ -17,6 +17,7 @@ export function RootScreen() {
             fadeIn="right"
             className="size-full"
             snapExit
+            data-test="welcome-screen-container"
           >
             <WelcomeScreen />
           </MotionDiv>
@@ -26,6 +27,7 @@ export function RootScreen() {
             fadeIn="right"
             className="size-full"
             snapExit
+            data-test="chat-screen-container"
           >
             <ChatScreen />
           </MotionDiv>

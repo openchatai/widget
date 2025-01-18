@@ -26,6 +26,7 @@ export function ChatScreen() {
   return (
     <div
       ref={observedElementRef}
+      data-test="chat-screen"
       className={cn(
         DEFAULT_STYLES.widgetHeight,
         "w-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0",
@@ -33,17 +34,19 @@ export function ChatScreen() {
     >
       <div
         className="w-full h-full justify-between flex flex-col relative"
+        data-test="chat-screen-content"
         style={{
           background:
             "linear-gradient(333.89deg, rgba(75, 240, 171, 0.8) 58%, rgba(75, 240, 171, 0) 85.74%), linear-gradient(113.43deg, #46B1FF 19.77%, #1883FF 65.81%)",
         }}
       >
         <ChatHeader />
-        <div className="flex bg-background shadow-lg flex-col w-full flex-1 overflow-auto">
+        <div className="flex bg-background shadow-lg flex-col w-full flex-1 overflow-auto" data-test="chat-main-container">
           <ChatMain />
-          <footer>
+          <footer data-test="chat-footer">
             {chatState.keyboard && (
               <Keyboard
+                data-test="chat-keyboard"
                 options={chatState.keyboard.options}
                 onKeyboardClick={(option) => {
                   chat.sendMessage({ content: option })
@@ -52,13 +55,14 @@ export function ChatScreen() {
             )}
 
             {noMessages && initialQuestions && (
-              <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
+              <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2" data-test="initial-questions-container">
                 {initialQuestions?.map((iq, index) => (
                   <Button
                     key={index}
                     dir="auto"
                     variant="outline"
                     size="sm"
+                    data-test={`initial-question-${index}`}
                     onClick={() => {
                       chat.sendMessage({
                         content: iq,

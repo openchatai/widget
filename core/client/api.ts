@@ -1,4 +1,3 @@
-import { SafeExtract, User } from '@core/types';
 import { SendChatDto, WidgetVoteDto } from '../types/schemas-v2';
 import { NormalizedConfig } from './config';
 import { basicClient, Dto, Endpoint } from '@core/sdk';
@@ -89,10 +88,13 @@ export class ApiCaller {
   };
 
   createContact = async (body: Dto['CreateContactDto']) => {
-    return await this.#client.POST('/backend/widget/v2/contact/create-unverified', {
-      params: { header: { 'x-bot-token': this.options.config.token } },
-      body
-    });
+    return await this.#client.POST(
+      '/backend/widget/v2/contact/create-unverified',
+      {
+        params: { header: { 'x-bot-token': this.options.config.token } },
+        body
+      }
+    );
   };
 
   createSession = async () => {
