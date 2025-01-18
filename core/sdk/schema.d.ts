@@ -110,6 +110,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
+        /** Upload file */
         post: operations["uploadFile"];
         delete?: never;
         options?: never;
@@ -233,10 +234,9 @@ export interface components {
                 url: string;
             }[] | null;
         };
-        UploadWidgetFileDto: {
+        UploadWidgetFileResponseDto: {
             fileName: string;
             fileUrl: string;
-            clientFileId: string;
         };
         WidgetContactDto: {
             authenticationStatus: {
@@ -552,12 +552,7 @@ export interface operations {
     };
     uploadFile: {
         parameters: {
-            query: {
-                /** @description The id of the file */
-                fileId: string;
-                /** @description The id of the session */
-                sessionId: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -574,7 +569,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UploadWidgetFileDto"];
+                    "application/json": components["schemas"]["UploadWidgetFileResponseDto"];
                 };
             };
             /** @description Internal Server Error */

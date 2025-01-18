@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 2.6.3
+
+### Patch Changes
+
+- fix file uploads
+
 ## 2.6.2
 
 ### Patch Changes
