@@ -10,9 +10,7 @@ import { OpenLogoSvg } from "src/components/OpenLogoSvg";
 import { MotionDiv } from "src/components/lib/MotionDiv";
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
-  const {
-    config: { theme },
-  } = useConfig();
+  const { theme } = useConfig();
 
   return (
     <PopoverPrimitive.PopoverTrigger
@@ -23,11 +21,13 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         position: "fixed",
         zIndex: 10000000,
         ...cssVars(
-          { primary: theme.primaryColor },
-          { triggerOffset: theme.triggerOffset },
+          { primary: theme?.primaryColor },
+          // { triggerOffset: theme.triggerOffset },
         ),
-        right: theme.triggerOffset,
-        bottom: theme.triggerOffset,
+        // right: theme.triggerOffset,
+        // bottom: theme.triggerOffset,
+        right: "20px",
+        bottom: "20px",
       }}
       className={cn("size-12 font-inter flex items-center justify-center")}
     >

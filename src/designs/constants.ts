@@ -10,12 +10,15 @@ export const DEFAULT_STYLES = {
 } as const;
 
 interface Colors {
-  primary: string;
+  primary?: string;
 }
 
-export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
-  const primary = tc(colors.primary).toHsl();
-  const primaryForeground = tc(colors.primary).isDark()
+export const cssVars = (
+  { primary = "hsl(0, 0%, 100%)" }: Colors,
+  // _: { triggerOffset: string },
+) => {
+  const _primary = tc(primary).toHsl();
+  const primaryForeground = tc(primary).isLight()
     ? "240 10% 3.9%"
     : "0 0% 100%";
 
@@ -23,7 +26,7 @@ export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
     /**
      * Spread the primary color without the `hsl()` call so that we can use tailwind opacity classes on it
      */
-    "--opencx-primary": `${primary.h} ${primary.s}% ${primary.l}%`,
+    "--opencx-primary": `${_primary.h} ${_primary.s}% ${_primary.l}%`,
     "--opencx-primary-foreground": primaryForeground,
 
     "--opencx-background": "0 0% 100%",
@@ -45,6 +48,6 @@ export const cssVars = (colors: Colors, _: { triggerOffset: string }) => {
     "--opencx-border": "240 5.9% 90%",
     "--opencx-ring": "240 5.9% 10%",
 
-    "--opencx-trigger-offset": _.triggerOffset,
+    // "--opencx-trigger-offset": _.triggerOffset,
   } as CSSProperties;
 };

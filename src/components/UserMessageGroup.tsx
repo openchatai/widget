@@ -51,8 +51,7 @@ function UserMessage({
 export function UserMessageGroup({
   messages,
 }: { messages: UserMessageType[] }) {
-  const { getUser } = useConfig();
-  const user = getUser();
+  const { user } = useConfig();
 
   return (
     <div

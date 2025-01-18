@@ -1,10 +1,10 @@
-import { SendChatDto, WidgetVoteDto } from "../types/schemas-v2";
-import { NormalizedConfig } from "./config";
-import { basicClient, Dto, Endpoint } from "core/sdk";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { Dto, Endpoint, basicClient } from "./sdk";
+import { WidgetConfig } from "./types/WidgetConfig";
+import { SendChatDto, WidgetVoteDto } from "./types/schemas";
 
 export interface ApiCallerOptions {
-  config: NormalizedConfig;
+  config: WidgetConfig;
 }
 
 export class ApiCaller {
@@ -20,7 +20,7 @@ export class ApiCaller {
   }
 
   private constructClientOptions = (token: string | null | undefined) => {
-    const baseUrl = this.options.config.apiUrl;
+    const baseUrl = this.options.config.apiUrl || "https://api.open.cx";
     const headers = {
       "X-Bot-Token": this.options.config.token,
       "Content-Type": "application/json",

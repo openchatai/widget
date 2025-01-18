@@ -48,7 +48,7 @@ export function ChatMain() {
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
       {noMessages &&
-        (config.config.initialMessages?.map((message, index) => (
+        (config.initialMessages?.map((message, index) => (
           <BotOrAgentMessage
             key={index}
             message={{
@@ -59,7 +59,6 @@ export function ChatMain() {
               timestamp: Date.now().toString(),
             }}
             Wrapper={BotOrAgentMessageWrapper}
-            wrapperProps={{ agent: config.getBotConfig() }}
           />
         )) ?? (
           <BotOrAgentMessage
@@ -69,11 +68,10 @@ export function ChatMain() {
               data: { message: "Hello, how can I help?" },
               id: "default-welcome",
               type: "FROM_BOT",
-              agent: config.getBotConfig(),
+              agent: config.bot,
               timestamp: Date.now().toString(),
             }}
             Wrapper={BotOrAgentMessageWrapper}
-            wrapperProps={{ agent: config.getBotConfig() }}
           />
         ))}
       {groupedMessages.map((group, index) => {

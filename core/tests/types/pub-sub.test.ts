@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { PubSub } from "../../types/pub-sub";
+import { PubSub } from "../../PubSub";
 
 describe("PubSub", () => {
   describe("State Management", () => {

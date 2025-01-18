@@ -1,9 +1,8 @@
-import { PubSub } from "../types/pub-sub";
+import { PubSub } from "./PubSub";
 import { ApiCaller } from "./api";
-import { Platform } from "../platform";
-import { LoadingState, ErrorState } from "../types/helpers";
-import { ConfigInstance } from "./config";
+import { LoadingState, ErrorState } from "./types/helpers";
 import { Dto } from "core/sdk";
+import { WidgetConfig } from "core/types/WidgetConfig";
 
 type ContactState = {
   contact: { token: string } | null;
@@ -13,13 +12,13 @@ type ContactState = {
 
 export type CreateContactHandlerOptions = {
   api: ApiCaller;
-  config: ConfigInstance;
+  config: WidgetConfig;
 };
 
-export function createContactHandler(
-  { config, api }: CreateContactHandlerOptions,
-  platform: Platform,
-) {
+export function createContactHandler({
+  config,
+  api,
+}: CreateContactHandlerOptions) {
   const state = new PubSub<ContactState>({
     contact: null,
     loading: { isLoading: false, reason: null },
@@ -29,7 +28,7 @@ export function createContactHandler(
   function shouldCollectData(): boolean {
     const currentState = state.getState();
 
-    if (!currentState.contact?.token && config.getConfig().collectUserData) {
+    if (!currentState.contact?.token && config.collectUserData) {
       return true;
     } else {
       return false;

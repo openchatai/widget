@@ -39,7 +39,7 @@ function OptionsMenu() {
   const toggleSoundEffects = () => {
     setWidgetSettings({
       ...widgetSettings,
-      useSoundEffects: !widgetSettings.useSoundEffects,
+      playSoundEffects: !widgetSettings.playSoundEffects,
     });
   };
 
@@ -84,7 +84,7 @@ function OptionsMenu() {
             }}
           >
             <AnimatePresence mode="wait">
-              {widgetSettings.useSoundEffects ? (
+              {widgetSettings.playSoundEffects ? (
                 <MotionDiv key="volume-2" fadeIn="right" distance={4} snapExit>
                   <Volume2Icon />
                 </MotionDiv>
@@ -102,7 +102,7 @@ function OptionsMenu() {
             {locale.get("sound-effects")}
             <Switch
               className="ml-auto"
-              checked={widgetSettings.useSoundEffects}
+              checked={widgetSettings.playSoundEffects}
               onCheckedChange={toggleSoundEffects}
             />
           </DropdownMenuItem>

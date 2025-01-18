@@ -24,7 +24,7 @@ const schema = z.object({
 
 export function WelcomeScreen() {
   const { contactManager } = useContact();
-  const { config } = useConfig();
+  const config = useConfig();
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
   const { observedElementRef } = useWidgetContentHeight({

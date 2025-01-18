@@ -123,7 +123,6 @@ function FileDisplay({
 const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
 function ChatInput() {
-  const { config } = useConfig();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { chat } = useChat();
   const session = usePubsub(chat.sessionState);

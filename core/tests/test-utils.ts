@@ -1,9 +1,8 @@
-import { ApiCaller, createChat, createConfig } from "core/client";
-import { ConfigInstance } from "core/client/config";
-import { Platform } from "core/platform";
-import { User } from "core/types";
+import { ApiCaller } from "core/api";
+import { createChat } from "core/chat";
+import { WidgetConfig } from "core/types";
 
-export function getTestUser(): User {
+export function getTestUser() {
   return {
     email: "test@open.cx",
     name: "testing contact",
@@ -12,35 +11,25 @@ export function getTestUser(): User {
       env: "test",
       fa7lawyIsTesting: "true",
     },
-  };
+  } satisfies WidgetConfig["user"];
 }
 
-export function initilize(_config?: ConfigInstance, _platform?: Platform) {
+export function initilize(_config?: WidgetConfig) {
   const openToken = "fe8f11971f5de916ab745d9c0408c7ef";
   const mockedStorage = new Map();
 
-  const config =
-    _config ||
-    createConfig(
-      {
-        token: openToken,
-        user: getTestUser(),
-      },
-      {
-        env: {
-          platform: "test",
-        },
-      },
-    );
+  const config: WidgetConfig = _config || {
+    token: openToken,
+    user: getTestUser(),
+  };
 
   const apis = new ApiCaller({
-    config: config.getConfig(),
+    config: config,
   });
 
   const chat = createChat({
     api: apis,
     config: config,
-    platform: config.platform,
   });
 
   return {

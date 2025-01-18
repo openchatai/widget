@@ -4,7 +4,7 @@ import {
   ApiCaller,
   type MessageType,
   type BotMessageType,
-  type CoreOptions,
+  type WidgetConfig,
   Platform,
 } from "@core/index";
 import { createLogger } from "@core/platform/logger";
@@ -99,7 +99,7 @@ function hideChatError() {
 }
 
 // Initialize chat
-const configOptions: CoreOptions = {
+const configOptions: WidgetConfig = {
   token: "6cb3b1b746e45441b4d2a874dd60d44a", // Replace with your bot token
   apiUrl,
   user: {

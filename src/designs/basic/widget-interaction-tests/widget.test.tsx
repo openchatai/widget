@@ -2,14 +2,13 @@ import React from "react";
 import { expect, test, describe } from "vitest";
 import { render } from "vitest-browser-react";
 import { Widget, WidgetRoot } from "..";
-import type { WidgetOptions } from "react-web/types";
 import { userEvent } from "@vitest/browser/context";
+import { WidgetConfig } from "core";
 
-const mockConfig: WidgetOptions = {
+const mockConfig: WidgetConfig = {
   token: "test",
   theme: {
     primaryColor: "#1883FF",
-    triggerOffset: "20px",
   },
   assets: {
     organizationLogo: "https://example.com/logo.png",

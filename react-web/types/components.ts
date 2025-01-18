@@ -14,6 +14,10 @@ export type WidgetComponentType = {
   component: React.ElementType;
 };
 
-export type OptionsType = {
-  components?: WidgetComponentType[];
+export type DefaultTextComponentBaseProps = {
+  message: string;
+  variant?: "default" | "error";
 };
+
+export type DefaultTextComponentProps =
+  ComponentProps<DefaultTextComponentBaseProps>;

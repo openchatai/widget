@@ -14,9 +14,14 @@ const locales = {
   pt: ptLocale,
 } as const;
 
-export type LangType = keyof typeof locales;
+export const LOCALES = Object.keys(locales) as (keyof typeof locales)[];
+export type Locale = typeof LOCALES[number];
 
-export function getStr(key: TranslationKeysType, lang: LangType): string {
+export const isSupportedLocale = (lang: string | null | undefined): lang is Locale => {
+  return LOCALES.includes(lang as Locale);
+};
+
+export function getTranslation(key: TranslationKeysType, lang: Locale): string {
   const locale = locales[lang];
   return locale ? locale[key] || "" : "";
 }

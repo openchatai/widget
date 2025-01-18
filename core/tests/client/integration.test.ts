@@ -1,4 +1,4 @@
-import { SendMessageInput } from "core/client/chat";
+import { SendMessageInput } from "core/chat";
 import { UserMessageType } from "core/types";
 import { v4 } from "uuid";
 import { describe, expect, it, vi } from "vitest";

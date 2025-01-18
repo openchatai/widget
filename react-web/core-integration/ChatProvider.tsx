@@ -1,116 +1,47 @@
-import {
-  CoreOptions,
-  createChat,
-  createConfig,
-  ApiCaller,
-  Platform,
-  createLogger,
-  isStorageAvailable,
-} from "core";
+import { WidgetConfig, createChat, ApiCaller } from "core";
 import { WidgetComponentType } from "react-web/types";
 import { createSafeContext } from "react-web/utils/create-safe-context";
 import React, { useMemo, useEffect, useState } from "react";
 import { ComponentRegistry } from "./components";
 import { TranslationKeysType } from "./locales/en.locale";
-import { getStr, LangType } from "./locales";
+import { getTranslation, isSupportedLocale, Locale } from "./locales";
 import { z } from "zod";
 
-const defaultStorage = {
-  getItem: async (key: string) => localStorage.getItem(key),
-  setItem: async (key: string, value: string) =>
-    localStorage.setItem(key, value),
-  removeItem: async (key: string) => localStorage.removeItem(key),
-  isAvailable: () => true,
-};
-
-const defaultPlatform: Platform = {
-  env: {
-    platform: "web",
-  },
-  storage: defaultStorage,
-  logger: createLogger({ level: "debug" }),
-};
-
 interface InitializeChatOptions {
-  options: CoreOptions;
-  platform?: Partial<Platform>;
+  widgetConfig: WidgetConfig;
 }
 
 const widgetSettingsSchema = z.object({
   persistSession: z.boolean().optional(),
-  useSoundEffects: z.boolean().optional(),
+  playSoundEffects: z.boolean().optional(),
 });
 
-function useInitializeChat({
-  options,
-  platform: customPlatform,
-}: InitializeChatOptions) {
+function useInitializeChat({ widgetConfig }: InitializeChatOptions) {
   const [widgetSettings, setWidgetSettings] = useState<
     z.infer<typeof widgetSettingsSchema>
   >({
-    persistSession: options.settings?.persistSession ?? false,
-    useSoundEffects: options.settings?.useSoundEffects ?? false,
+    persistSession: widgetConfig.settings?.persistSession ?? false,
+    playSoundEffects: widgetConfig.settings?.playSoundEffects ?? false,
   });
 
-  const platform = useMemo<Platform>(() => {
-    return {
-      env: {
-        platform: customPlatform?.env?.platform ?? defaultPlatform.env.platform,
-      },
-      storage: customPlatform?.storage ?? defaultPlatform.storage,
-      logger: customPlatform?.logger ?? defaultPlatform.logger,
-      audio: customPlatform?.audio ?? defaultPlatform.audio,
-    };
-  }, [customPlatform]);
-
-  const config = useMemo(() => {
-    return createConfig(
-      {
-        ...options,
-        settings: widgetSettings,
-      },
-      platform,
-    );
-  }, [options, platform, widgetSettings]);
-
-  // Load initial settings from storage only once
-  useEffect(() => {
-    const init = async () => {
-      if (isStorageAvailable(platform.storage)) {
-        try {
-          const settings = await platform.storage.getItem(
-            `${options.token}:settings`,
-          );
-          if (settings) {
-            const parsedSettings = widgetSettingsSchema.parse(
-              JSON.parse(settings),
-            );
-            setWidgetSettings((prev) => ({
-              ...prev,
-              ...parsedSettings,
-            }));
-          }
-        } catch (error) {
-          console.error("Failed to load settings:", error);
-        }
-      }
-    };
-    init();
-  }, [platform.storage, options.token]);
+  const config: WidgetConfig = {
+    ...widgetConfig,
+    settings: widgetSettings,
+  };
 
   const api = useMemo(() => {
     return new ApiCaller({
-      config: config.getConfig(),
+      config: config,
     });
-  }, [config.config]);
+  }, [config]);
 
   const chat = useMemo(() => {
     return createChat({
       api,
       config,
-      platform,
     });
-  }, [config, platform, api]);
+  }, [config, api]);
+
   useEffect(() => {
     return () => {
       chat.cleanup();
@@ -131,27 +62,21 @@ interface ChatProviderValue extends ReturnType<typeof useInitializeChat> {
   componentStore: ComponentRegistry;
   version: string;
   locale: {
-    get: (key: TranslationKeysType, pfx?: string) => string;
-    lang: LangType;
+    get: (key: TranslationKeysType) => string;
+    lang: Locale;
   };
 }
 
 const [useChat, SafeProvider] = createSafeContext<ChatProviderValue>();
 
 interface ChatProviderProps {
-  options: CoreOptions;
+  options: WidgetConfig;
   children: React.ReactNode;
   components?: WidgetComponentType[];
-  platform?: Partial<Platform>;
 }
 
-function ChatProvider({
-  options,
-  children,
-  components,
-  platform,
-}: ChatProviderProps) {
-  const context = useInitializeChat({ options, platform });
+function ChatProvider({ options, children, components }: ChatProviderProps) {
+  const context = useInitializeChat({ widgetConfig: options });
 
   const componentStore = useMemo(
     () =>
@@ -162,13 +87,15 @@ function ChatProvider({
   );
 
   const locale = useMemo<ChatProviderValue["locale"]>(() => {
-    const config = context.config.getConfig();
+    const config = context.config;
+    const language: Locale = isSupportedLocale(config.language)
+      ? config.language
+      : "en";
     return {
-      get: (key: TranslationKeysType, pfx?: string) =>
-        getStr(key, config.language as LangType) + (pfx ?? ""),
-      lang: config.language as LangType,
+      get: (key: TranslationKeysType) => getTranslation(key, language),
+      lang: language,
     };
-  }, [context.config.getConfig().language]);
+  }, [context.config.language]);
 
   return (
     <SafeProvider

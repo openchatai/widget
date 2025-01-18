@@ -1,16 +1,10 @@
+import { ChatAttachmentType, WidgetHistoryDto } from "./schemas";
+import { SafeExtract, StringOrLiteral } from "./helpers";
+import { AgentOrBotType } from "./agent-or-bot";
 import {
   DefaultTextComponentBaseProps,
   WidgetLiteralComponentKey,
-} from "react-web/types";
-import { ChatAttachmentType, WidgetHistoryDto } from "./schemas-v2";
-import { SafeExtract, StringOrLiteral } from "./helpers";
-
-export type AgentType = {
-  isAi: boolean;
-  id: string | null;
-  name: string;
-  avatar: string | null;
-};
+} from "../../react-web/types";
 
 export type UserMessageType = {
   id: string;
@@ -40,7 +34,7 @@ export type BotMessageType<TData = DefaultTextComponentBaseProps | unknown> = {
   data: TData;
   timestamp: string;
   original?: WidgetHistoryDto;
-  agent?: AgentType;
+  agent?: AgentOrBotType;
   attachments?: ChatAttachmentType[];
 };
 
@@ -51,26 +45,8 @@ export type AgentMessageType = {
   data: DefaultTextComponentBaseProps;
   timestamp?: string;
   original?: WidgetHistoryDto;
-  agent?: AgentType;
+  agent?: AgentOrBotType;
   attachments?: ChatAttachmentType[];
 };
 
 export type MessageType = UserMessageType | BotMessageType | AgentMessageType;
-
-// shouldn't be used in @core
-export interface SendMessageInput {
-  content: {
-    text: string;
-  };
-  attachments?: ChatAttachmentType[];
-  id?: string;
-  language?: string;
-  user?: {
-    external_id?: string;
-    name?: string;
-    email?: string;
-    phone?: string;
-    customData?: Record<string, string>;
-    avatarUrl?: string;
-  };
-}

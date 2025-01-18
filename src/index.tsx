@@ -1,6 +1,6 @@
 import React from "react";
 import { version } from "../package.json";
-import { WidgetOptions } from "react-web/types";
+import { WidgetConfig } from "core";
 import { Widget, WidgetRoot } from "./designs/basic";
 import { render } from "./render";
 
@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-function initOpenScript(options: WidgetOptions) {
+function initOpenScript(options: WidgetConfig) {
   render(
     defaultRootId,
     <WidgetRoot options={options}>

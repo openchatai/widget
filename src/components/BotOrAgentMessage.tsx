@@ -13,11 +13,10 @@ export function BotOrAgentMessage<W extends React.ElementType>({
   Wrapper,
   wrapperProps,
 }: BotMessageProps<W>) {
-  const { componentStore, config } = useChat();
-  const debug = config.getDebugMode();
+  const { componentStore } = useChat();
   const Component = componentStore.getComponent(
     message.component,
-    debug,
+    false,
   ) as ComponentType<{
     data: BotMessageType["data"] | AgentMessageType["data"];
     id: string;

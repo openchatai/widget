@@ -1,4 +1,4 @@
-import { AgentMessageType, AgentType, BotMessageType } from "core/types";
+import { AgentMessageType, AgentOrBotType, BotMessageType } from "core/types";
 import { Avatar, AvatarImage } from "./lib/avatar";
 import React from "react";
 import { cn } from "src/utils";
@@ -11,7 +11,7 @@ export function BotOrAgentMessageGroup({
   agent,
 }: {
   messages: BotMessageType[] | AgentMessageType[];
-  agent: AgentType | undefined;
+  agent: AgentOrBotType | undefined;
 }) {
   const { chatSession } = useChatSession();
 
@@ -26,8 +26,6 @@ export function BotOrAgentMessageGroup({
           message={message}
           Wrapper={BotOrAgentMessageWrapper}
           wrapperProps={{
-            // @TODO
-            agent: message.agent as any,
             messageId: message.id,
             sessionId: chatSession?.id,
           }}

@@ -11,7 +11,7 @@ import "../../index.css";
 import styles from "../../index.css?inline";
 import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
 import { ChatProvider, useChat, useConfig } from "react-web/core-integration";
-import { WidgetOptions } from "react-web/types";
+import { WidgetConfig } from "core";
 import { BotLoadingComponent } from "src/components/Loading.component";
 import { FallbackComponent } from "src/components/Fallback.component";
 import { BotOrAgentTextResponse } from "src/components/Text.component";
@@ -40,9 +40,7 @@ function Widget({
   ...props
 }: ComponentPropsWithoutRef<"div"> & { opened?: boolean }) {
   const chat = useChat();
-  const {
-    config: { theme },
-  } = useConfig();
+  const { theme } = useConfig();
   const [isOpen, setIsOpened] = useState(opened);
 
   return (
@@ -111,8 +109,8 @@ function Widget({
                 style={{
                   display: "contents",
                   ...cssVars(
-                    { primary: theme.primaryColor },
-                    { triggerOffset: theme.triggerOffset },
+                    { primary: theme?.primaryColor },
+                    // { triggerOffset: theme.triggerOffset },
                   ),
                 }}
                 data-chat-widget
@@ -141,7 +139,7 @@ function Widget({
 function WidgetRoot({
   options,
   children,
-}: { options: WidgetOptions; children: ReactNode }) {
+}: { options: WidgetConfig; children: ReactNode }) {
   return (
     <ChatProvider
       components={[

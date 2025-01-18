@@ -11,7 +11,7 @@ npm install
 
 2. Update the configuration in `src/main.ts`:
 ```typescript
-const configOptions: CoreOptions = {
+const configOptions: WidgetOptions = {
     token: 'YOUR_BOT_TOKEN', // Replace with your bot token
     apiUrl: 'YOUR_API_URL', // Replace with your API URL
 };
