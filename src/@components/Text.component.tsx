@@ -15,9 +15,9 @@ export function BotOrAgentTextResponse({
 
   if (variant === "error") {
     return (
-      <div>
+      <div data-test="error-message-container">
         <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
-          <div className="leading-snug font-medium text-sm text-rose-500">
+          <div className="leading-snug font-medium text-sm text-rose-500" data-test="error-message">
             {message}
           </div>
         </div>
@@ -26,15 +26,20 @@ export function BotOrAgentTextResponse({
   }
 
   return (
-    <div>
-      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
+    <div data-test="message-container">
+      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start" data-test="attachments-container">
         {attachments?.map((attachment) => {
           return (
-            <RenderAttachment attachment={attachment} key={attachment.id} />
+            <RenderAttachment
+              data-test={`attachment-${attachment.id}`}
+              attachment={attachment}
+              key={attachment.id}
+            />
           );
         })}
       </div>
       <MemoizedReactMarkdown
+        data-test="message-content"
         data-type={type}
         data-id={id}
         remarkPlugins={[remarkGfm]}
@@ -42,7 +47,7 @@ export function BotOrAgentTextResponse({
         components={{
           a: ({ children, ...props }) => {
             return (
-              <a target="_top" {...props}>
+              <a target="_top" {...props} data-test="message-link">
                 {children}
               </a>
             );

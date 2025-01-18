@@ -90,6 +90,7 @@ function FileDisplay({
       }
     >
       <div
+        data-test="file-display"
         className={cn(
           status === "uploading" && "opacity-50",
           "group",
@@ -97,10 +98,11 @@ function FileDisplay({
           "flex items-center justify-center shrink-0",
         )}
       >
-        <div className="absolute inset-0 flex items-center justify-center">
+        <div className="absolute inset-0 flex items-center justify-center" data-test="file-status">
           {getStatusIcon()}
         </div>
         <button
+          data-test="file-cancel-button"
           className={cn(
             "absolute bg-black/50 inset-0 size-full z-10 opacity-0",
             "flex items-center justify-center",
@@ -214,15 +216,16 @@ function ChatInput() {
   };
 
   return (
-    <div className="p-2 relative space-y-1" {...dropzone__getRootProps()}>
+    <div className="p-2 relative space-y-1" {...dropzone__getRootProps()} data-test="chat-input-container">
       <input {...dropzone__getInputProps()} />
       <div
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
           "relative space-y-2 border transition-all shadow py-2",
         )}
+        data-test="chat-input-wrapper"
       >
-        <div className="flex items-center gap-1 px-2">
+        <div className="flex items-center gap-1 px-2" data-test="file-attachments-container">
           <AnimatePresence mode="popLayout">
             {allFiles.map((file) => (
               <MotionDiv key={file.id} snapExit>
@@ -241,6 +244,7 @@ function ChatInput() {
           dir="auto"
           value={inputText}
           rows={3}
+          data-test="chat-message-input"
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
@@ -258,11 +262,10 @@ function ChatInput() {
           }}
           placeholder={locale.get("write-a-message")}
         />
-        <div className="px-2 flex justify-between">
+        <div className="px-2 flex justify-between" data-test="chat-input-actions">
           <Tooltippy
             side="top"
             align="start"
-            // TODO translation
             content="attach files, (maximum size 5mb)"
           >
             <Button
@@ -272,6 +275,7 @@ function ChatInput() {
               }}
               size="fit"
               variant="outline"
+              data-test="attach-file-button"
               className={cn(
                 "disabled:opacity-0",
                 "rounded-full size-8 flex items-center justify-center p-0",
@@ -283,7 +287,6 @@ function ChatInput() {
           </Tooltippy>
 
           <Tooltippy
-            // TODO translation
             content="send message"
             side="top"
             align="end"
@@ -292,10 +295,11 @@ function ChatInput() {
               size="fit"
               onClick={handleSubmit}
               disabled={isSendingMessage || isUploading}
+              data-test="send-message-button"
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
               {isSendingMessage ? (
-                <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
+                <CircleDashed className="size-4 animate-spin animate-iteration-infinite" data-test="sending-message-indicator" />
               ) : (
                 <SendHorizonal className="size-4 rtl:-scale-100" />
               )}
@@ -312,9 +316,9 @@ function SessionClosedSection() {
   const locale = useLocale();
 
   return (
-    <div className="p-2">
-      <div className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2">
-        <div className="flex items-center gap-1">
+    <div className="p-2" data-test="session-closed-container">
+      <div className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2" data-test="session-closed-content">
+        <div className="flex items-center gap-1" data-test="session-closed-header">
           <CheckCheckIcon className="size-4 text-emerald-500" />
           <h2 className="text-sm font-medium" dir="auto">
             {locale.get("session-closed-lead")}
@@ -322,7 +326,11 @@ function SessionClosedSection() {
         </div>
 
         <div>
-          <Button onClick={chat.recreateSession} className="rounded-2xl w-full">
+          <Button
+            onClick={chat.recreateSession}
+            className="rounded-2xl w-full"
+            data-test="create-new-ticket-button"
+          >
             {locale.get("create-new-ticket")}
           </Button>
         </div>

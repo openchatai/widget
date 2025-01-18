@@ -28,12 +28,16 @@ export function BotOrAgentMessage<W extends React.ElementType>({
   }
 
   if (!Wrapper) {
-    return <Component {...message} id={message.id} key={message.id} />;
+    return (
+      <div data-test={`message-${message.id}`}>
+        <Component {...message} id={message.id} key={message.id} />
+      </div>
+    );
   }
 
   return (
     // @ts-ignore
-    <Wrapper {...wrapperProps} key={message.id}>
+    <Wrapper {...wrapperProps} key={message.id} data-test={`message-wrapper-${message.id}`}>
       <Component {...message} id={message.id} />
     </Wrapper>
   );

@@ -8,8 +8,8 @@ type Props = ComponentProps<unknown>;
  */
 export function FallbackComponent(props: Props) {
   return (
-    <div className="w-full max-w-full overflow-auto shrink-0">
-      <pre dir="auto" className="text-xs leading-tight">
+    <div className="w-full max-w-full overflow-auto shrink-0" data-test="fallback-container">
+      <pre dir="auto" className="text-xs leading-tight" data-test="fallback-content">
         {JSON.stringify(props, null, 1)}
       </pre>
     </div>
