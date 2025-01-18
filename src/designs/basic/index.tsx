@@ -49,6 +49,8 @@ function Widget({ className, opened = false, ...props }: ComponentPropsWithoutRe
       <PopoverPrimitive.Content
         onInteractOutside={(ev) => ev.preventDefault()}
         side="top"
+        data-aria-expanded={isOpen}
+        data-testid="widget-popover-content"
         forceMount
         style={{
           zIndex: 1000000,

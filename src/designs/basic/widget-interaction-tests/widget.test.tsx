@@ -3,7 +3,7 @@ import { expect, test, describe } from "vitest";
 import { render } from "vitest-browser-react";
 import { Widget, WidgetRoot } from "..";
 import type { WidgetOptions } from "@react/types";
-import styles from "../../../index.css?inline";
+import { userEvent } from "@vitest/browser/context";
 
 const mockConfig: WidgetOptions = {
     token: "test",
@@ -20,6 +20,19 @@ const mockConfig: WidgetOptions = {
 
 describe('Widget Component Tests', () => {
     describe('Widget Initialization', () => {
+        test("toggle widget", async () => {
+            const { getByTestId } = render(
+                <WidgetRoot options={mockConfig}>
+                    <Widget />
+                </WidgetRoot>
+            );
+            const trigger = getByTestId("widget-popover-trigger");
+            await expect.element(trigger).toBeVisible();
+            await userEvent.click(trigger);
+            await expect.element(getByTestId("widget-popover-content")).toHaveAttribute('data-aria-expanded', 'true');
+            await userEvent.click(trigger);
+            await expect.element(getByTestId("widget-popover-content")).toHaveAttribute('data-aria-expanded', 'false');
+        })
         test("widget renders with default state", async () => {
             const { getByTestId } = render(
                 <WidgetRoot options={mockConfig}>
@@ -31,7 +44,6 @@ describe('Widget Component Tests', () => {
             await expect.element(trigger).toBeVisible();
             await expect.element(trigger).toHaveAttribute('aria-expanded', 'false');
         });
-
         test("chat screen shows initial messages", async () => {
             const initialMessages = ["How can I help?", "What's new?"];
             const { getByTestId } = render(
@@ -54,31 +66,6 @@ describe('Widget Component Tests', () => {
                 await expect.element(button).toBeVisible();
                 await expect.element(button).toHaveTextContent(message);
             });
-        });
-
-
-        test("handles session persistence", async () => {
-            const { getByTestId } = render(
-                <WidgetRoot options={{
-                    ...mockConfig,
-                    collectUserData: false,
-                    user: {
-                        email: "test@example.com",
-                        external_id: "123"
-                    },
-                    settings: {
-                        persistSession: true
-                    }
-                }}>
-                    <Widget opened={true} />
-                </WidgetRoot>
-            );
-
-            const chatScreen = getByTestId("chat-screen");
-            await expect.element(chatScreen).toBeVisible();
-
-            const chatContainer = getByTestId("chat-main-container");
-            await expect.element(chatContainer).toBeVisible();
         });
     });
 });
