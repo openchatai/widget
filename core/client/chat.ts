@@ -22,8 +22,8 @@ import {
   safeStorageOperation,
 } from "../platform";
 import { Logger } from "../platform/logger";
-import { StorageNotAvailableError } from "@core/errors";
-import { isAudioAvailable, safeAudioOperation } from "@core/platform/audio";
+import { StorageNotAvailableError } from "core/errors";
+import { isAudioAvailable, safeAudioOperation } from "core/platform/audio";
 import { createContactHandler } from "./contact";
 
 // Constants

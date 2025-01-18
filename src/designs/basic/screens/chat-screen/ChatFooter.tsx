@@ -1,4 +1,3 @@
-import { Button } from "@ui/button";
 import {
   AlertCircle,
   CheckCheckIcon,
@@ -12,20 +11,20 @@ import {
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Tooltippy } from "@ui/tooltip";
 import { AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "src/utils";
-import { MotionDiv } from "@ui/MotionDiv";
 import {
   FileWithProgress,
   useChat,
   useConfig,
   useLocale,
   useUploadFiles,
-} from "@react/core-integration";
-import { usePubsub } from "@react/core-integration/hooks/usePubsub";
-import { genUuid } from "@core/utils/genUuid";
+} from "react-web/core-integration";
+import { usePubsub } from "react-web/core-integration/hooks/usePubsub";
+import { Tooltippy } from "src/components/lib/tooltip";
+import { MotionDiv } from "src/components/lib/MotionDiv";
+import { Button } from "src/components/lib/button";
 
 function FileDisplay({
   file: { status, file, error },

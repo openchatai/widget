@@ -1,6 +1,6 @@
 import React from "react";
-import { Input } from "@ui/input";
-import { Button } from "@ui/button";
+import { Input } from "src/components/lib/input";
+import { Button } from "src/components/lib/button";
 import { SendHorizontal } from "lucide-react";
 import { z } from "zod";
 import useAsyncFn from "react-use/lib/useAsyncFn";
@@ -14,8 +14,8 @@ import {
   useContact,
   useLocale,
   usePreludeData,
-} from "@react/core-integration";
-import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
+} from "react-web/core-integration";
+import { useWidgetContentHeight } from "react-web/hooks/useWidgetContentHeight";
 
 const schema = z.object({
   name: z.string().min(2),

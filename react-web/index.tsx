@@ -16,5 +16,5 @@ export {
 } from "./core-integration/hooks";
 
 // Types exports
-export type { CoreOptions } from "@core/types";
+export type { CoreOptions } from "core/types";
 export type { WidgetOptions } from "./types/options";

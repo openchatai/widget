@@ -6,9 +6,9 @@ import {
   Platform,
   createLogger,
   isStorageAvailable,
-} from "@core/index";
-import { WidgetComponentType } from "@react/types";
-import { createSafeContext } from "@react/utils/create-safe-context";
+} from "core";
+import { WidgetComponentType } from "react-web/types";
+import { createSafeContext } from "react-web/utils/create-safe-context";
 import React, { useMemo, useEffect, useState } from "react";
 import { ComponentRegistry } from "./components";
 import { TranslationKeysType } from "./locales/en.locale";

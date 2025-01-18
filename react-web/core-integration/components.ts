@@ -1,5 +1,4 @@
-import { WidgetComponentKey, WidgetComponentType } from "@react/types";
-
+import { WidgetComponentKey, WidgetComponentType } from "react-web/types";
 export class ComponentRegistry {
   components: WidgetComponentType[] = [
     {

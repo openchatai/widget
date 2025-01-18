@@ -1,6 +1,6 @@
 import { SendChatDto, WidgetVoteDto } from "../types/schemas-v2";
 import { NormalizedConfig } from "./config";
-import { basicClient, Dto, Endpoint } from "@core/sdk";
+import { basicClient, Dto, Endpoint } from "core/sdk";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 
 export interface ApiCallerOptions {

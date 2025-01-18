@@ -1,9 +1,9 @@
-import { MotionDiv } from "@ui/MotionDiv";
+import { MotionDiv } from "src/components/lib/MotionDiv";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { ChatScreen } from "./chat-screen/ChatScreen";
 import { WelcomeScreen } from "./welcome-screen/WelcomeScreen";
-import { useContact } from "@react/core-integration";
+import { useContact } from "react-web/core-integration";
 
 export function RootScreen() {
   const { contactManager } = useContact();

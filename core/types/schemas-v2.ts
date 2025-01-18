@@ -1,4 +1,4 @@
-import { Dto } from "@core/sdk";
+import { Dto } from "core/sdk";
 
 export type WidgetVoteResponseDto = Dto["WidgetVoteResponseDto"];
 export type HandleContactMessageOutputSchema =

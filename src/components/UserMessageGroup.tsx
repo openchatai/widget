@@ -1,10 +1,10 @@
-import { UserMessageType } from "@core/types";
+import { UserMessageType } from "core/types";
 import { formatDistance } from "date-fns";
 import React, { useMemo } from "react";
 import { cn } from "src/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./lib/avatar";
 import { RenderAttachment } from "./RenderFile";
-import { useConfig } from "@react/core-integration";
+import { useConfig } from "react-web/core-integration";
 
 function UserMessage({
   message,

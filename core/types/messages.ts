@@ -1,7 +1,7 @@
 import {
   DefaultTextComponentBaseProps,
   WidgetLiteralComponentKey,
-} from "@react/types";
+} from "react-web/types";
 import { ChatAttachmentType, WidgetHistoryDto } from "./schemas-v2";
 import { SafeExtract, StringOrLiteral } from "./helpers";
 

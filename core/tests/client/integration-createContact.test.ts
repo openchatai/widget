@@ -1,6 +1,6 @@
 import { describe, it } from "vitest";
 import { initilize } from "../test-utils";
-import { createConfig } from "@core/client";
+import { createConfig } from "core/client";
 
 describe("create contact", () => {
   const platform = {

@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "src/utils";
-import { AgentType } from "@core/types/messages";
+import { AgentType } from "core/types/messages";
 
 export function BotOrAgentMessageWrapper({
   children,

@@ -3,7 +3,7 @@ import { ApiCaller } from "./api";
 import { Platform } from "../platform";
 import { LoadingState, ErrorState } from "../types/helpers";
 import { ConfigInstance } from "./config";
-import { Dto } from "@core/sdk";
+import { Dto } from "core/sdk";
 
 type ContactState = {
   contact: { token: string } | null;

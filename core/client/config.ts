@@ -1,4 +1,4 @@
-import { isStorageAvailable, Platform } from "@core/platform";
+import { isStorageAvailable, Platform } from "core/platform";
 import { CoreOptions, createPubSub, PubSub } from "../types";
 
 const DEFAULT_SOUND_EFFECTS = {

@@ -1,5 +1,5 @@
-import { useChat, useLocale, usePreludeData } from "@react/core-integration";
-import { Button } from "@ui/button";
+import { useChat, useLocale, usePreludeData } from "react-web/core-integration";
+import { Button } from "src/components/lib/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,10 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@ui/dropdown-menu";
-import { MotionDiv } from "@ui/MotionDiv";
-import { Skeleton } from "@ui/skeleton";
-import { Switch } from "@ui/switch";
+} from "src/components/lib/dropdown-menu";
+import { MotionDiv } from "src/components/lib/MotionDiv";
+import { Skeleton } from "src/components/lib/skeleton";
+import { Switch } from "src/components/lib/switch";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   EllipsisVerticalIcon,

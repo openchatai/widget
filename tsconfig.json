@@ -23,17 +23,6 @@
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@react/*": [
-        "./react-web/*"
-      ],
-      "@ui/*": [
-        "./src/components/*"
-      ],
-      "@core/*": [
-        "./core/*"
-      ]
-    }
   },
   "include": [
     "src",

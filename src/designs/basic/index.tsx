@@ -1,10 +1,5 @@
-import { TooltipProvider } from "@ui/tooltip";
+import { TooltipProvider } from "src/components/lib/tooltip";
 import React, { ComponentPropsWithoutRef, ReactNode } from "react";
-import {
-  BotLoadingComponent,
-  BotOrAgentTextResponse,
-  FallbackComponent,
-} from "src/@components";
 import { cn } from "src/utils";
 import { cssVars, DEFAULT_STYLES } from "../constants";
 import { RootScreen } from "./screens/root-screen";
@@ -15,8 +10,11 @@ import { useState } from "react";
 import "../../index.css";
 import styles from "../../index.css?inline";
 import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
-import { ChatProvider, useChat, useConfig } from "@react/core-integration";
-import { WidgetOptions } from "@react/types";
+import { ChatProvider, useChat, useConfig } from "react-web/core-integration";
+import { WidgetOptions } from "react-web/types";
+import { BotLoadingComponent } from "src/components/Loading.component";
+import { FallbackComponent } from "src/components/Fallback.component";
+import { BotOrAgentTextResponse } from "src/components/Text.component";
 
 const initialContent = `<!DOCTYPE html>
 <html>

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button } from "src/components/button";
+import { Button } from "./lib/button";
 import { ThumbsDown, ThumbsUp, AlertCircle } from "lucide-react";
 import { cn } from "src/utils";
 import { motion, AnimatePresence } from "framer-motion";
-import { useVote } from "@react/core-integration/hooks/useVote";
+import { useVote } from "react-web/core-integration/hooks/useVote";
 
 interface VoteButtonsProps {
   messageId: string;

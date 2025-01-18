@@ -2,7 +2,7 @@ import React from "react";
 import { expect, test, describe } from "vitest";
 import { render } from "vitest-browser-react";
 import { Widget, WidgetRoot } from "..";
-import type { WidgetOptions } from "@react/types";
+import type { WidgetOptions } from "react-web/types";
 import { userEvent } from "@vitest/browser/context";
 
 const mockConfig: WidgetOptions = {

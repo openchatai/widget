@@ -3,7 +3,7 @@ import {
   BotMessageType,
   MessageType,
   UserMessageType,
-} from "@core/types";
+} from "core/types";
 
 export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
   const result: MessageType[][] = [];

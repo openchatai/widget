@@ -1,7 +1,7 @@
-import { ApiCaller, createChat, createConfig } from "@core/client";
-import { ConfigInstance } from "@core/client/config";
-import { Platform } from "@core/platform";
-import { User } from "@core/types";
+import { ApiCaller, createChat, createConfig } from "core/client";
+import { ConfigInstance } from "core/client/config";
+import { Platform } from "core/platform";
+import { User } from "core/types";
 
 export function getTestUser(): User {
   return {

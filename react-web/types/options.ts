@@ -1,5 +1,5 @@
-import { CoreOptions } from "@core/types";
-import { LangType } from "@react/core-integration/locales";
+import { CoreOptions } from "core/types";
+import { LangType } from "react-web/core-integration/locales";
 
 export type UserObject = {
   external_id?: string;

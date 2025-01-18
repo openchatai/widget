@@ -1,4 +1,4 @@
-import { ComponentProps } from "@react/types";
+import { ComponentProps } from "react-web/types";
 import React from "react";
 
 type Props = ComponentProps<unknown>;

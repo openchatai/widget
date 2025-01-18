@@ -1,5 +1,5 @@
-import { Button } from "@ui/button";
-import { Keyboard } from "@ui/keyboard";
+import { Button } from "src/components/lib/button";
+import { Keyboard } from "src/components/keyboard";
 import React from "react";
 import {
   DEFAULT_STYLES,
@@ -9,9 +9,8 @@ import { cn } from "src/utils";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useChatState, usePreludeData } from "@react/core-integration";
-import { useWidgetContentHeight } from "@react/hooks/useWidgetContentHeight";
-import { genUuid } from "@core/utils/genUuid";
+import { useChatState, usePreludeData } from "react-web/core-integration";
+import { useWidgetContentHeight } from "react-web/hooks/useWidgetContentHeight";
 
 export function ChatScreen() {
   const { chatState, chat } = useChatState();

@@ -1,4 +1,4 @@
-import { PubSub } from "@core/types";
+import { PubSub } from "core/types";
 import { useSyncExternalStore } from "react";
 
 export function usePubsub<T>(p: PubSub<T>) {

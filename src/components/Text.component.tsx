@@ -2,8 +2,8 @@ import React from "react";
 import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
 import rehypeRaw from "rehype-raw";
-import { RenderAttachment } from "@ui/RenderFile";
-import { DefaultTextComponentProps } from "@react/types";
+import { RenderAttachment } from "./RenderFile";
+import { DefaultTextComponentProps } from "react-web/types";
 
 export function BotOrAgentTextResponse({
   data,

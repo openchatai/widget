@@ -1,15 +1,15 @@
-import { UserMessageGroup } from "@ui/UserMessageGroup";
+import { UserMessageGroup } from "src/components/UserMessageGroup";
 import React, { ComponentType, useEffect, useMemo, useRef } from "react";
-import { BotOrAgentMessage } from "src/@components/BotOrAgentMessage";
-import { BotOrAgentMessageGroup } from "src/@components/BotOrAgentMessageGroup";
-import { BotOrAgentMessageWrapper } from "src/@components/BotOrAgentMessageWrapper";
+import { BotOrAgentMessage } from "src/components/BotOrAgentMessage";
+import { BotOrAgentMessageGroup } from "src/components/BotOrAgentMessageGroup";
+import { BotOrAgentMessageWrapper } from "src/components/BotOrAgentMessageWrapper";
 import {
   groupMessagesByType,
   isAgentMessageGroup,
   isBotMessageGroup,
   isUserMessageGroup,
 } from "../../utils/group-messages-by-type";
-import { useChat, useChatState, useConfig } from "@react/core-integration";
+import { useChat, useChatState, useConfig } from "react-web/core-integration";
 
 export function ChatMain() {
   const { chatState, chat } = useChatState();
