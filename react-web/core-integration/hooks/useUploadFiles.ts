@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 import { v4 } from "uuid";
 
 const uploadAbortControllers: Map<string, AbortController> = new Map();
@@ -15,7 +15,7 @@ interface FileWithProgress {
 
 function useUploadFiles() {
   const [files, setFiles] = useState<FileWithProgress[]>([]);
-  const { api } = useChat();
+  const { widgetCtx: { api } } = useWidget();
   function appendFiles(files: File[]) {
     const newFiles = files.map((file) => ({
       file,

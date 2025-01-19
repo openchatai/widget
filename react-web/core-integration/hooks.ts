@@ -1,6 +1,6 @@
-export { useChatState } from "./hooks/useChatMessages";
+export { useMessages } from "./hooks/useMessages";
 export { useSession } from "./hooks/useSession";
-export { useChat } from "./ChatProvider";
+export { useWidget } from "./WidgetProvider";
 export { useConfig } from "./hooks/useConfig";
 export { usePreludeData } from "./hooks/usePreludeData";
 export { useLocale } from "./hooks/useLocale";

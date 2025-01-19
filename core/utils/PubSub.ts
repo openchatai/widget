@@ -104,7 +104,7 @@ export class PubSub<S> {
    * Set the state and notify subscribers if the state changes
    * @param newState The new state to set
    */
-  setState = (newState: S): void => {
+  set = (newState: S): void => {
     this.emitLifecycle(LifecycleEvent.BEFORE_UPDATE, {
       previousState: this.#state,
       nextState: newState,
@@ -121,10 +121,10 @@ export class PubSub<S> {
   };
 
   // TODO make this provide prev state
-  setStatePartial = (_s: Partial<S>): void => {
+  setPartial = (_s: Partial<S>): void => {
     if (_s === undefined || _s === null) return;
     const newState = { ...this.#state, ..._s };
-    this.setState(newState);
+    this.set(newState);
   };
 
   /**
@@ -137,7 +137,7 @@ export class PubSub<S> {
   };
 
   reset = (): void => {
-    this.setState(this.initialState);
+    this.set(this.initialState);
   };
 
   lastUpdated = (): number | null => {

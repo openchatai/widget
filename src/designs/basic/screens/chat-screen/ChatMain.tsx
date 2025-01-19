@@ -9,15 +9,19 @@ import {
   isBotMessageGroup,
   isUserMessageGroup,
 } from "../../utils/group-messages-by-type";
-import { useChat, useChatState, useConfig } from "react-web/core-integration";
+import { useWidget, useMessages, useConfig } from "react-web/core-integration";
+import { useIsAwaitingBotReply } from "react-web/core-integration/hooks/useIsAwaitingBotReply";
 
 export function ChatMain() {
-  const { chatState, chat } = useChatState();
-  const { componentStore } = useChat();
+  const {
+    messages: { messages },
+  } = useMessages();
+  const { isAwaitingBotReply } = useIsAwaitingBotReply();
+  const { componentStore } = useWidget();
   const config = useConfig();
   const groupedMessages = useMemo(
-    () => groupMessagesByType(chatState.messages),
-    [chatState.messages.length],
+    () => groupMessagesByType(messages),
+    [messages.length],
   );
 
   const LoadingComponent = componentStore.getComponent(
@@ -37,9 +41,9 @@ export function ChatMain() {
 
   useEffect(() => {
     handleNewMessage();
-  }, [chatState.messages]);
+  }, [messages]);
 
-  const noMessages = chatState.messages.length === 0;
+  const noMessages = messages.length === 0;
 
   return (
     <div
@@ -95,10 +99,7 @@ export function ChatMain() {
 
         return null;
       })}
-      {chatState.loading.isLoading &&
-        chatState.loading.reason === "sending_message_to_bot" && (
-          <LoadingComponent />
-        )}
+      {isAwaitingBotReply && <LoadingComponent />}
     </div>
   );
 }

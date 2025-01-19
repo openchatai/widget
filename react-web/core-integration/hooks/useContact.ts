@@ -1,12 +1,12 @@
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 import { usePubsub } from "./usePubsub";
 
 export function useContact() {
-  const { chat } = useChat();
-  const state = usePubsub(chat.contactCtx.state);
+  const { widgetCtx } = useWidget();
+  const state = usePubsub(widgetCtx.contactCtx.state);
 
   return {
     state,
-    contactCtx: chat.contactCtx,
+    contactCtx: widgetCtx.contactCtx,
   };
 }

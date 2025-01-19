@@ -1,12 +1,10 @@
 import useSWR from "swr";
-import { useConfig } from "./useConfig";
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 
 function usePreludeData() {
-  const { api } = useChat();
-  const config = useConfig();
+  const { widgetCtx } = useWidget();
 
-  return useSWR([config.apiUrl], api.widgetPrelude);
+  return useSWR([widgetCtx.config.token], widgetCtx.api.widgetPrelude);
 }
 
 export { usePreludeData };

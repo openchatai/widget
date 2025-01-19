@@ -38,7 +38,7 @@ export function WelcomeScreen() {
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
       if (result.success) {
-        await contactCtx.createUnauthenticatedContact({
+        await contactCtx.createUnverifiedContact({
           email: result.data.email,
           name: result.data.name,
         });

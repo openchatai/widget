@@ -1,5 +1,5 @@
 import useAsyncFn from "react-use/lib/useAsyncFn";
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 
 /**
  * @param id
@@ -7,7 +7,7 @@ import { useChat } from "../ChatProvider";
  * @returns
  */
 export function useVote(id: string, sessionId: string, onSuccess?: () => void) {
-  const { api } = useChat();
+  const { widgetCtx: { api } } = useWidget();
   return useAsyncFn(
     async (action: "up" | "down") => {
       if (action === "up") {
@@ -34,7 +34,7 @@ export function useUpvote(
   sessionId: string,
   onSuccess?: () => void,
 ) {
-  const { api } = useChat();
+  const { widgetCtx: { api } } = useWidget();
   return useAsyncFn(
     async () =>
       api
@@ -54,7 +54,7 @@ export function useDownvote(
   sessionId: string,
   onSuccess?: () => void,
 ) {
-  const { api } = useChat();
+  const { widgetCtx: { api } } = useWidget();
   return useAsyncFn(
     async () =>
       api

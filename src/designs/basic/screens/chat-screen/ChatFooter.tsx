@@ -16,17 +16,16 @@ import toast from "react-hot-toast";
 import { cn } from "src/utils";
 import {
   FileWithProgress,
-  useChat,
   useSession,
-  useConfig,
   useLocale,
   useUploadFiles,
-  useChatState,
 } from "react-web/core-integration";
-import { usePubsub } from "react-web/core-integration/hooks/usePubsub";
 import { Tooltippy } from "src/components/lib/tooltip";
 import { MotionDiv } from "src/components/lib/MotionDiv";
 import { Button } from "src/components/lib/button";
+import { useMessages } from "react-web/core-integration/hooks/useMessages";
+import { useWidget } from "react-web";
+import { useIsAwaitingBotReply } from "react-web/core-integration/hooks/useIsAwaitingBotReply";
 
 function FileDisplay({
   file: { status, file, error },
@@ -126,11 +125,8 @@ const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
 function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const {
-    chat: { sendMessage },
-  } = useChat();
+  const { messageCtx } = useMessages();
   const { session } = useSession();
-  const { chatState } = useChatState();
   const locale = useLocale();
 
   const [inputText, setInputText] = useState("");
@@ -144,13 +140,9 @@ function ChatInput() {
     successFiles,
   } = useUploadFiles();
 
-  const shouldAcceptAttachments =
-    session && (session?.isHandedOff || session.assignee.kind === "human");
+  const shouldAcceptAttachments = !!session.session?.isHandedOff;
 
-  const isSendingMessage =
-    chatState.loading.isLoading &&
-    (chatState.loading.reason === "sending_message_to_bot" ||
-      chatState.loading.reason === "sending_message_to_agent");
+  const { isAwaitingBotReply } = useIsAwaitingBotReply();
 
   const handleFileDrop = (acceptedFiles: File[]) => {
     if (!shouldAcceptAttachments) {
@@ -160,7 +152,7 @@ function ChatInput() {
   };
 
   const handleSubmit = async () => {
-    if (isSendingMessage) return;
+    if (isAwaitingBotReply) return;
 
     if (isUploading) {
       // TODO use something other than toast
@@ -168,17 +160,14 @@ function ChatInput() {
       toast.error(message);
       console.info(message);
     }
-    if (!inputText.trim()) return;
+    const trimmed = inputText.trim();
+    if (!trimmed) return;
 
     setInputText("");
     emptyTheFiles();
 
-    await sendMessage({
-      content: inputText.trim(),
-      // user: {
-      //   email: contact?.email ?? undefined,
-      //   name: contact?.name ?? undefined,
-      // },
+    await messageCtx.sendMessage({
+      content: trimmed,
       attachments: successFiles.map((f) => ({
         url: f.fileUrl!,
         type: f.file.type,
@@ -305,11 +294,11 @@ function ChatInput() {
             <Button
               size="fit"
               onClick={handleSubmit}
-              disabled={isSendingMessage || isUploading}
+              disabled={isAwaitingBotReply || isUploading}
               data-test="send-message-button"
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
-              {isSendingMessage ? (
+              {isAwaitingBotReply ? (
                 <CircleDashed
                   className="size-4 animate-spin animate-iteration-infinite"
                   data-test="sending-message-indicator"
@@ -326,7 +315,7 @@ function ChatInput() {
 }
 
 function SessionClosedSection() {
-  const { chat } = useChat();
+  const { widgetCtx } = useWidget();
   const locale = useLocale();
 
   return (
@@ -347,7 +336,7 @@ function SessionClosedSection() {
 
         <div>
           <Button
-            onClick={chat.sessionCtx.clear}
+            onClick={widgetCtx.resetChat}
             className="rounded-2xl w-full"
             data-test="create-new-ticket-button"
           >
@@ -365,7 +354,7 @@ export function ChatFooter() {
   return (
     <div>
       <AnimatePresence mode="wait">
-        {session && !session.isOpened ? (
+        {!session.session?.isOpened ? (
           <MotionDiv
             key="session-closed"
             className="overflow-hidden"

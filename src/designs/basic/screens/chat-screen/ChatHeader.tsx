@@ -1,4 +1,3 @@
-import { useChat, useLocale, usePreludeData } from "react-web/core-integration";
 import { Button } from "src/components/lib/button";
 import {
   DropdownMenu,
@@ -21,27 +20,31 @@ import {
   VolumeOffIcon,
 } from "lucide-react";
 import React, { useState } from "react";
+import { useLocale, usePreludeData, useWidget } from "react-web";
 
 function OptionsMenu() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
 
-  const { widgetSettings, setWidgetSettings } = useChat();
-  const { chat } = useChat();
+  const { widgetCtx } = useWidget();
 
-  const togglePersistSession = () => {
-    setWidgetSettings({
-      ...widgetSettings,
-      persistSession: !widgetSettings.persistSession,
-    });
-  };
+  // const { widgetSettings, setWidgetSettings } = useChat();
+  // const { chat } = useChat();
 
-  const toggleSoundEffects = () => {
-    setWidgetSettings({
-      ...widgetSettings,
-      playSoundEffects: !widgetSettings.playSoundEffects,
-    });
-  };
+  // TODO enable these
+  // const togglePersistSession = () => {
+  //   setWidgetSettings({
+  //     ...widgetSettings,
+  //     persistSession: !widgetSettings.persistSession,
+  //   });
+  // };
+
+  // const toggleSoundEffects = () => {
+  //   setWidgetSettings({
+  //     ...widgetSettings,
+  //     playSoundEffects: !widgetSettings.playSoundEffects,
+  //   });
+  // };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -52,7 +55,7 @@ function OptionsMenu() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="min-w-56">
-        <DropdownMenuGroup>
+        {/* <DropdownMenuGroup>
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
@@ -106,14 +109,14 @@ function OptionsMenu() {
               onCheckedChange={toggleSoundEffects}
             />
           </DropdownMenuItem>
-        </DropdownMenuGroup>
+        </DropdownMenuGroup> */}
 
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
           <DropdownMenuItem
             onSelect={() => {
-              chat.sessionCtx.clear();
+              widgetCtx.resetChat();
               setOpen(false);
             }}
           >

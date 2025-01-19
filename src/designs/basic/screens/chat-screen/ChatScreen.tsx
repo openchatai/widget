@@ -9,18 +9,18 @@ import { cn } from "src/utils";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useChatState, usePreludeData } from "react-web/core-integration";
+import { useMessages, usePreludeData } from "react-web/core-integration";
 import { useWidgetContentHeight } from "react-web/hooks/useWidgetContentHeight";
 
 export function ChatScreen() {
-  const { chatState, chat } = useChatState();
+  const { messages, messageCtx } = useMessages();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.data?.initialQuestions;
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });
 
-  const noMessages = chatState.messages.length === 0;
+  const noMessages = messages.messages.length === 0;
 
   return (
     <div
@@ -46,12 +46,14 @@ export function ChatScreen() {
         >
           <ChatMain />
           <footer data-test="chat-footer">
-            {chatState.keyboard && (
+            {messages.suggestedReplies && (
               <Keyboard
                 data-test="chat-keyboard"
-                options={chatState.keyboard.options}
+                options={messages.suggestedReplies}
                 onKeyboardClick={(option) => {
-                  chat.sendMessage({ content: option });
+                  const trimmed = option.trim();
+                  if (!trimmed) return;
+                  messageCtx.sendMessage({ content: trimmed });
                 }}
               />
             )}
@@ -69,9 +71,7 @@ export function ChatScreen() {
                     size="sm"
                     data-test={`initial-question-${index}`}
                     onClick={() => {
-                      chat.sendMessage({
-                        content: iq,
-                      });
+                      messageCtx.sendMessage({ content: iq });
                     }}
                   >
                     {iq}

@@ -1,6 +1,6 @@
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 
 export function useLocale() {
-  const { locale } = useChat();
+  const { locale } = useWidget();
   return locale;
 }

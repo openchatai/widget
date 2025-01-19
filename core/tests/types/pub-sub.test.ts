@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { PubSub } from "../../PubSub";
+import { PubSub } from "../../utils/PubSub";
 
 describe("PubSub", () => {
   describe("State Management", () => {
@@ -12,13 +12,13 @@ describe("PubSub", () => {
     it("should update state with setState", () => {
       const pubSub = new PubSub({ count: 0 });
       const newState = { count: 1 };
-      pubSub.setState(newState);
+      pubSub.set(newState);
       expect(pubSub.getState()).toEqual(newState);
     });
 
     it("should update partial state with setStatePartial", () => {
       const pubSub = new PubSub({ count: 0, text: "hello" });
-      pubSub.setStatePartial({ count: 1 });
+      pubSub.setPartial({ count: 1 });
       expect(pubSub.getState()).toEqual({ count: 1, text: "hello" });
     });
 
@@ -27,7 +27,7 @@ describe("PubSub", () => {
         user: { name: "John", age: 30 },
         settings: { theme: "dark" },
       });
-      pubSub.setStatePartial({
+      pubSub.setPartial({
         user: { name: "Jane", age: 30 },
       });
       expect(pubSub.getState()).toEqual({
@@ -43,7 +43,7 @@ describe("PubSub", () => {
       const subscriber = vi.fn();
       pubSub.subscribe(subscriber);
 
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
       expect(subscriber).toHaveBeenCalledWith({ count: 1 });
     });
 
@@ -52,7 +52,7 @@ describe("PubSub", () => {
       const subscriber = vi.fn();
       pubSub.subscribe(subscriber);
 
-      pubSub.setStatePartial({ count: 1 });
+      pubSub.setPartial({ count: 1 });
       expect(subscriber).toHaveBeenCalledWith({ count: 1, text: "hello" });
     });
 
@@ -64,7 +64,7 @@ describe("PubSub", () => {
       pubSub.subscribe(subscriber1);
       pubSub.subscribe(subscriber2);
 
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
       expect(subscriber1).toHaveBeenCalledWith({ count: 1 });
       expect(subscriber2).toHaveBeenCalledWith({ count: 1 });
     });
@@ -75,7 +75,7 @@ describe("PubSub", () => {
       const unsubscribe = pubSub.subscribe(subscriber);
 
       unsubscribe();
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
       expect(subscriber).not.toHaveBeenCalled();
     });
 
@@ -90,7 +90,7 @@ describe("PubSub", () => {
       const unsubscribe3 = pubSub.subscribe(subscriber3);
 
       unsubscribe2();
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
 
       expect(subscriber1).toHaveBeenCalledWith({ count: 1 });
       expect(subscriber2).not.toHaveBeenCalled();
@@ -108,7 +108,7 @@ describe("PubSub", () => {
       pubSub.subscribe(subscriber2);
 
       pubSub.clear();
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
 
       expect(subscriber1).not.toHaveBeenCalled();
       expect(subscriber2).not.toHaveBeenCalled();
@@ -116,7 +116,7 @@ describe("PubSub", () => {
 
     it("should maintain state after clearing subscribers", () => {
       const pubSub = new PubSub({ count: 0 });
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
       pubSub.clear();
       expect(pubSub.getState()).toEqual({ count: 1 });
     });
@@ -127,7 +127,7 @@ describe("PubSub", () => {
 
       pubSub.clear();
       pubSub.subscribe(subscriber);
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
 
       expect(subscriber).toHaveBeenCalledWith({ count: 1 });
     });
@@ -136,13 +136,13 @@ describe("PubSub", () => {
   describe("Edge Cases", () => {
     it("should handle undefined state updates", () => {
       const pubSub = new PubSub({ count: 0 });
-      pubSub.setStatePartial(undefined as any);
+      pubSub.setPartial(undefined as any);
       expect(pubSub.getState()).toEqual({ count: 0 });
     });
 
     it("should handle null state updates", () => {
       const pubSub = new PubSub({ count: 0 });
-      pubSub.setStatePartial(null as any);
+      pubSub.setPartial(null as any);
       expect(pubSub.getState()).toEqual({ count: 0 });
     });
 
@@ -157,7 +157,7 @@ describe("PubSub", () => {
       pubSub.subscribe(normalSubscriber);
 
       // This should not throw
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
       expect(normalSubscriber).toHaveBeenCalledWith({ count: 1 });
     });
 
@@ -168,7 +168,7 @@ describe("PubSub", () => {
 
       unsubscribe();
       unsubscribe(); // Should not throw or cause issues
-      pubSub.setState({ count: 1 });
+      pubSub.set({ count: 1 });
       expect(subscriber).not.toHaveBeenCalled();
     });
   });

@@ -1,13 +1,12 @@
-import { PubSub } from "../PubSub";
+import { PubSub } from "../utils/PubSub";
 import { ApiCaller } from "../api";
-import { LoadingState, ErrorState } from "../types/helpers";
 import { Dto } from "core/sdk";
 import { WidgetConfig } from "core/types/WidgetConfig";
 
 type ContactState = {
   contact: { token: string } | null;
-  loading: LoadingState;
-  error: ErrorState;
+  isCreatingUnverifiedContact: boolean;
+  isErrorCreatingUnverifiedContact: boolean;
 };
 
 export type CreateContactHandlerOptions = {
@@ -26,8 +25,8 @@ export class ContactCtx {
 
     this.state = new PubSub<ContactState>({
       contact: config.contactToken ? { token: config.contactToken } : null,
-      loading: { isLoading: false, reason: null },
-      error: { hasError: false },
+      isCreatingUnverifiedContact: false,
+      isErrorCreatingUnverifiedContact: false,
     });
   }
 
@@ -41,34 +40,24 @@ export class ContactCtx {
     }
   };
 
-  createUnauthenticatedContact = async (
+  createUnverifiedContact = async (
     payload: Dto["CreateContactDto"],
-  ): Promise<Dto["WidgetContactTokenResponseDto"] | null> => {
-    this.state.setStatePartial({
-      loading: { isLoading: true, reason: "creating_unauthenticated_contact" },
-      error: { hasError: false },
-    });
-
-    const { data, error } = await this.api.createContact(payload);
-    if (data?.token) {
-      this.state.setStatePartial({
-        contact: { token: data.token },
+  ): Promise<void> => {
+    try {
+      this.state.setPartial({
+        isCreatingUnverifiedContact: true,
+        isErrorCreatingUnverifiedContact: false,
       });
-      this.api.setAuthToken(data.token);
-      return data;
-    }
 
-    if (error) {
-      this.state.setStatePartial({
-        loading: { isLoading: false, reason: null },
-        error: {
-          hasError: true,
-          message: error?.message,
-          code: "CONTACT_CREATION_FAILED",
-        },
-      });
+      const { data } = await this.api.createUnverifiedContact(payload);
+      if (data?.token) {
+        this.state.setPartial({ contact: { token: data.token } });
+        this.api.setAuthToken(data.token);
+      } else {
+        this.state.setPartial({ isErrorCreatingUnverifiedContact: true });
+      }
+    } finally {
+      this.state.setPartial({ isCreatingUnverifiedContact: false });
     }
-
-    return null;
   };
 }

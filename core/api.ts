@@ -3,26 +3,28 @@ import { Dto, Endpoint, basicClient } from "./sdk";
 import { WidgetConfig } from "./types/WidgetConfig";
 import { SendMessageDto, VoteInputDto } from "./types/schemas";
 
-export interface ApiCallerOptions {
-  config: WidgetConfig;
-}
-
 export class ApiCaller {
   private client: ReturnType<typeof basicClient>;
   private uploadFileClient: AxiosInstance;
+  private config: WidgetConfig;
 
-  constructor(private readonly options: ApiCallerOptions) {
+  constructor({
+    config,
+  }: {
+    config: WidgetConfig;
+  }) {
+    this.config = config;
     const { baseUrl, headers } = this.constructClientOptions(
-      options.config.contactToken,
+      config.contactToken,
     );
     this.client = this.createOpenAPIClient({ baseUrl, headers });
     this.uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   }
 
   private constructClientOptions = (token: string | null | undefined) => {
-    const baseUrl = this.options.config.apiUrl || "https://api.open.cx";
+    const baseUrl = this.config.apiUrl || "https://api.open.cx";
     const headers = {
-      "X-Bot-Token": this.options.config.token,
+      "X-Bot-Token": this.config.token,
       "Content-Type": "application/json",
       Accept: "application/json",
       Authorization: token ? `Bearer ${token}` : undefined,
@@ -65,7 +67,7 @@ export class ApiCaller {
 
   widgetPrelude = async () => {
     return await this.client.GET("/backend/widget/v2/prelude", {
-      params: { header: { "X-Bot-Token": this.options.config.token } },
+      params: { header: { "X-Bot-Token": this.config.token } },
     });
   };
 
@@ -87,11 +89,11 @@ export class ApiCaller {
     );
   };
 
-  createContact = async (body: Dto["CreateContactDto"]) => {
+  createUnverifiedContact = async (body: Dto["CreateContactDto"]) => {
     return await this.client.POST(
       "/backend/widget/v2/contact/create-unverified",
       {
-        params: { header: { "x-bot-token": this.options.config.token } },
+        params: { header: { "x-bot-token": this.config.token } },
         body,
       },
     );

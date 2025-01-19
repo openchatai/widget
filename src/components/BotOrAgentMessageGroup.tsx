@@ -27,7 +27,7 @@ export function BotOrAgentMessageGroup({
           Wrapper={BotOrAgentMessageWrapper}
           wrapperProps={{
             messageId: message.id,
-            sessionId: session?.id,
+            sessionId: session.session?.id,
           }}
         />
       ))}

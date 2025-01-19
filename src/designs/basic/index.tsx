@@ -10,7 +10,11 @@ import { useState } from "react";
 import "../../index.css";
 import styles from "../../index.css?inline";
 import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
-import { ChatProvider, useChat, useConfig } from "react-web/core-integration";
+import {
+  WidgetProvider,
+  useWidget,
+  useConfig,
+} from "react-web/core-integration";
 import { WidgetConfig } from "core";
 import { BotLoadingComponent } from "src/components/Loading.component";
 import { FallbackComponent } from "src/components/Fallback.component";
@@ -39,7 +43,7 @@ function Widget({
   opened = false,
   ...props
 }: ComponentPropsWithoutRef<"div"> & { opened?: boolean }) {
-  const chat = useChat();
+  const chat = useWidget();
   const { theme } = useConfig();
   const [isOpen, setIsOpened] = useState(opened);
 
@@ -141,7 +145,7 @@ function WidgetRoot({
   children,
 }: { options: WidgetConfig; children: ReactNode }) {
   return (
-    <ChatProvider
+    <WidgetProvider
       components={[
         {
           key: "loading",
@@ -163,7 +167,7 @@ function WidgetRoot({
       options={options}
     >
       {children}
-    </ChatProvider>
+    </WidgetProvider>
   );
 }
 

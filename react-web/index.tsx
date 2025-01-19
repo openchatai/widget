@@ -1,10 +1,13 @@
 import "./../src/index.css";
 
-export { ChatProvider, useChat } from "./core-integration/ChatProvider";
+export {
+  WidgetProvider,
+  useWidget,
+} from "./core-integration/WidgetProvider";
 
 export {
-  useChatState,
-  useSession as useChatSession,
+  useMessages,
+  useSession,
   useConfig,
   usePreludeData,
   useLocale,

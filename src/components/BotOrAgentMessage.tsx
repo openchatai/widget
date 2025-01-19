@@ -1,5 +1,5 @@
 import type { AgentMessageType, BotMessageType } from "core/types";
-import { useChat } from "react-web";
+import { useWidget } from "react-web";
 import React, { type ComponentType } from "react";
 
 interface BotMessageProps<W extends React.ElementType> {
@@ -13,7 +13,7 @@ export function BotOrAgentMessage<W extends React.ElementType>({
   Wrapper,
   wrapperProps,
 }: BotMessageProps<W>) {
-  const { componentStore } = useChat();
+  const { componentStore } = useWidget();
   const Component = componentStore.getComponent(
     message.component,
     false,

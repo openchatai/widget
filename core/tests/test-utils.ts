@@ -1,5 +1,5 @@
 import { ApiCaller } from "core/api";
-import { createChat } from "core/context/chat";
+import { WidgetCtx } from "core/context/widget";
 import { WidgetConfig } from "core/types";
 
 export function getTestUser() {
@@ -27,7 +27,7 @@ export function initilize(_config?: WidgetConfig) {
     config: config,
   });
 
-  const chat = createChat({
+  const chat = WidgetCtx({
     api: apis,
     config: config,
   });

@@ -1,9 +1,9 @@
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 import { usePubsub } from "./usePubsub";
 
 export function useSession() {
-  const { chat } = useChat();
-  const session = usePubsub(chat.sessionCtx.sessionState);
+  const { widgetCtx } = useWidget();
+  const session = usePubsub(widgetCtx.sessionCtx.state);
 
   return { session };
 }

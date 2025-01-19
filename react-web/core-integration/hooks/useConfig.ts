@@ -1,6 +1,6 @@
-import { useChat } from "../ChatProvider";
+import { useWidget } from "../WidgetProvider";
 
 export function useConfig() {
-  const { config } = useChat();
-  return config;
+  const { widgetCtx } = useWidget();
+  return widgetCtx.config;
 }

@@ -8,6 +8,7 @@ import { useContact } from "react-web/core-integration";
 export function RootScreen() {
   const { contactCtx } = useContact();
   const shouldCollectData = contactCtx.shouldCollectData();
+
   return (
     <div className="bg-background size-full" data-test="root-screen">
       <AnimatePresence mode="wait">
