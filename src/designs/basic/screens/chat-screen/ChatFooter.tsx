@@ -354,7 +354,7 @@ export function ChatFooter() {
   return (
     <div>
       <AnimatePresence mode="wait">
-        {!session.session?.isOpened ? (
+        {session.session && !session.session?.isOpened ? (
           <MotionDiv
             key="session-closed"
             className="overflow-hidden"
