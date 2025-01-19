@@ -17,9 +17,11 @@ import { cn } from "src/utils";
 import {
   FileWithProgress,
   useChat,
+  useSession,
   useConfig,
   useLocale,
   useUploadFiles,
+  useChatState,
 } from "react-web/core-integration";
 import { usePubsub } from "react-web/core-integration/hooks/usePubsub";
 import { Tooltippy } from "src/components/lib/tooltip";
@@ -124,9 +126,11 @@ const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
 function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { chat } = useChat();
-  const session = usePubsub(chat.sessionState);
-  const chatState = usePubsub(chat.chatState);
+  const {
+    chat: { sendMessage },
+  } = useChat();
+  const { session } = useSession();
+  const { chatState } = useChatState();
   const locale = useLocale();
 
   const [inputText, setInputText] = useState("");
@@ -169,7 +173,7 @@ function ChatInput() {
     setInputText("");
     emptyTheFiles();
 
-    await chat.sendMessage({
+    await sendMessage({
       content: inputText.trim(),
       // user: {
       //   email: contact?.email ?? undefined,
@@ -343,7 +347,7 @@ function SessionClosedSection() {
 
         <div>
           <Button
-            onClick={chat.recreateSession}
+            onClick={chat.sessionCtx.clear}
             className="rounded-2xl w-full"
             data-test="create-new-ticket-button"
           >
@@ -356,8 +360,7 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
-  const { chat } = useChat();
-  const session = usePubsub(chat.sessionState);
+  const { session } = useSession();
 
   return (
     <div>

@@ -113,7 +113,7 @@ function OptionsMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onSelect={() => {
-              chat.clearSession();
+              chat.sessionCtx.clear();
               setOpen(false);
             }}
           >

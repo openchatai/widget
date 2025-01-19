@@ -3,10 +3,10 @@ import { usePubsub } from "./usePubsub";
 
 export function useContact() {
   const { chat } = useChat();
-  const contactState = usePubsub(chat.contactState);
+  const state = usePubsub(chat.contactCtx.state);
 
   return {
-    contactState,
-    contactManager: chat.contactManager,
+    state,
+    contactCtx: chat.contactCtx,
   };
 }

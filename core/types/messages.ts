@@ -1,4 +1,4 @@
-import { ChatAttachmentType, WidgetHistoryDto } from "./schemas";
+import { MessageAttachmentType, MessageDto } from "./schemas";
 import { SafeExtract, StringOrLiteral } from "./helpers";
 import { AgentOrBotType } from "./agent-or-bot";
 import {
@@ -11,7 +11,7 @@ export type UserMessageType = {
   type: "FROM_USER";
   content: string;
   deliveredAt: string | null;
-  attachments?: ChatAttachmentType[] | null;
+  attachments?: MessageAttachmentType[] | null;
   timestamp: string;
   user?: {
     name?: string;
@@ -33,9 +33,9 @@ export type BotMessageType<TData = DefaultTextComponentBaseProps | unknown> = {
   >;
   data: TData;
   timestamp: string;
-  original?: WidgetHistoryDto;
+  original?: MessageDto;
   agent?: AgentOrBotType;
-  attachments?: ChatAttachmentType[];
+  attachments?: MessageAttachmentType[];
 };
 
 export type AgentMessageType = {
@@ -44,9 +44,10 @@ export type AgentMessageType = {
   component: SafeExtract<WidgetLiteralComponentKey, "agent_message">;
   data: DefaultTextComponentBaseProps;
   timestamp?: string;
-  original?: WidgetHistoryDto;
+  original?: MessageDto;
   agent?: AgentOrBotType;
-  attachments?: ChatAttachmentType[];
+  attachments?: MessageAttachmentType[];
 };
 
+/** Find a better name for this thing */
 export type MessageType = UserMessageType | BotMessageType | AgentMessageType;

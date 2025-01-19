@@ -4,7 +4,7 @@ export { ChatProvider, useChat } from "./core-integration/ChatProvider";
 
 export {
   useChatState,
-  useChatSession,
+  useSession as useChatSession,
   useConfig,
   usePreludeData,
   useLocale,

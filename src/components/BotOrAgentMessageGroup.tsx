@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "src/utils";
 import { BotOrAgentMessage } from "./BotOrAgentMessage";
 import { BotOrAgentMessageWrapper } from "./BotOrAgentMessageWrapper";
-import { useChatSession } from "react-web/core-integration";
+import { useSession } from "react-web/core-integration";
 
 export function BotOrAgentMessageGroup({
   messages,
@@ -13,7 +13,7 @@ export function BotOrAgentMessageGroup({
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentOrBotType | undefined;
 }) {
-  const { chatSession } = useChatSession();
+  const { session } = useSession();
 
   return (
     <div className={cn("flex flex-col items-start gap-2", "pr-8")}>
@@ -27,7 +27,7 @@ export function BotOrAgentMessageGroup({
           Wrapper={BotOrAgentMessageWrapper}
           wrapperProps={{
             messageId: message.id,
-            sessionId: chatSession?.id,
+            sessionId: session?.id,
           }}
         />
       ))}

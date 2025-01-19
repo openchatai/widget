@@ -1,15 +1,14 @@
 import { Dto } from "core/sdk";
 
-export type WidgetVoteResponseDto = Dto["WidgetVoteResponseDto"];
-export type HandleContactMessageOutputSchema =
-  Dto["HandleContactMessageOutputDto"];
-export type SendChatDto = Dto["HttpChatInputDto"];
-export type WidgetSessionDto = Dto["WidgetSessionDto"];
-export type WidgetHistoryDto = Dto["WidgetHistoryDto"];
-export type WidgetPreludeDto = Dto["WidgetPreludeDto"];
-export type WidgetVoteDto = Dto["WidgetVoteDto"];
-export type ChatAttachmentType = NonNullable<
+export type VoteInputDto = Dto["WidgetVoteDto"];
+export type VoteOutputDto = Dto["WidgetVoteResponseDto"];
+
+export type SendMessageDto = Dto["HttpChatInputDto"];
+export type SendMessageOutputDto = Dto["HandleContactMessageOutputDto"];
+
+export type SessionDto = Dto["WidgetSessionDto"];
+export type MessageDto = Dto["WidgetHistoryDto"];
+export type PreludeDto = Dto["WidgetPreludeDto"];
+export type MessageAttachmentType = NonNullable<
   Dto["WidgetHistoryDto"]["attachments"]
 >[number];
-
-export type MessageTypeU = Dto["WidgetHistoryDto"]["type"];

@@ -1,8 +1,8 @@
-import { ChatAttachmentType } from "core/types";
+import { MessageAttachmentType } from "core/types";
 import React from "react";
 
 type Props = {
-  attachment: ChatAttachmentType;
+  attachment: MessageAttachmentType;
 };
 
 export function RenderAttachment({ attachment }: Props) {

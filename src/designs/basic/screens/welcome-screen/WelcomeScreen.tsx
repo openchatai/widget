@@ -23,7 +23,7 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
-  const { contactManager } = useContact();
+  const { contactCtx } = useContact();
   const config = useConfig();
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
@@ -38,7 +38,7 @@ export function WelcomeScreen() {
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
       if (result.success) {
-        await contactManager.createUnauthenticatedContact({
+        await contactCtx.createUnauthenticatedContact({
           email: result.data.email,
           name: result.data.name,
         });

@@ -144,7 +144,3 @@ export class PubSub<S> {
     return this.#lastUpdated;
   };
 }
-
-export function createPubSub<S>(state: S): PubSub<S> {
-  return new PubSub<S>(state);
-}

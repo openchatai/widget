@@ -1,5 +1,5 @@
 import { ApiCaller } from "core/api";
-import { createChat } from "core/chat";
+import { createChat } from "core/context/chat";
 import { WidgetConfig } from "core/types";
 
 export function getTestUser() {

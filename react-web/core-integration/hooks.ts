@@ -1,5 +1,5 @@
 export { useChatState } from "./hooks/useChatMessages";
-export { useChatSession } from "./hooks/useChatSession";
+export { useSession } from "./hooks/useSession";
 export { useChat } from "./ChatProvider";
 export { useConfig } from "./hooks/useConfig";
 export { usePreludeData } from "./hooks/usePreludeData";

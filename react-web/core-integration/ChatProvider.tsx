@@ -42,12 +42,6 @@ function useInitializeChat({ widgetConfig }: InitializeChatOptions) {
     });
   }, [config, api]);
 
-  useEffect(() => {
-    return () => {
-      chat.cleanup();
-    };
-  }, [chat]);
-
   return {
     config,
     chat,
