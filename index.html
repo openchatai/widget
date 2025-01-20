@@ -31,23 +31,22 @@
       const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
       
       window.addEventListener('DOMContentLoaded', async () => {
-        const res = await fetch('http://localhost:8080/widget/authenticate-user', {
-          method: 'POST',
-          body: JSON.stringify({
-            email: 'ali@open.cx',
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiToken}`
-          }
-        })
-        const data = await res.json()
-        const contactToken = data.token
+        // const res = await fetch('http://localhost:8080/widget/authenticate-user', {
+        //   method: 'POST',
+        //   body: JSON.stringify({
+        //     email: 'ali@open.cx',
+        //   }),
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     Authorization: `Bearer ${apiToken}`
+        //   }
+        // })
+        // const data = await res.json()
+        // const contactToken = data.token
 
         initOpenScript({
           token: token,
           apiUrl,
-          language: 'en',
           initialMessages: [
             'How can we help you?',
           ],
@@ -55,9 +54,12 @@
             persistSession: true,
             playSoundEffects: true
           },
-          contactToken,
-          collectUserData: true,
-          debug: false,
+          // contactToken,
+          // collectUserData: true,
+          user: {
+            name: "arkhameedis",
+            email: "arkhameedis@open.cx"
+          }
         });
       });
     </script>

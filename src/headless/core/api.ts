@@ -89,7 +89,7 @@ export class ApiCaller {
     );
   };
 
-  createUnverifiedContact = async (body: Dto["CreateContactDto"]) => {
+  createUnverifiedContact = async (body: Dto["CreateUnverifiedContactDto"]) => {
     return await this.client.POST(
       "/backend/widget/v2/contact/create-unverified",
       {

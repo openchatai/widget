@@ -128,7 +128,7 @@ export interface paths {
     get?: never;
     put?: never;
     /** Create an unverified contact for the widget */
-    post: operations["createContact"];
+    post: operations["createUnverifiedContact"];
     delete?: never;
     options?: never;
     head?: never;
@@ -139,9 +139,9 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    CreateContactDto: {
-      email: string;
-      name: string;
+    CreateUnverifiedContactDto: {
+      email?: string;
+      name?: string;
     };
     FileUploadDto: {
       /** Format: binary */
@@ -578,7 +578,7 @@ export interface operations {
       };
     };
   };
-  createContact: {
+  createUnverifiedContact: {
     parameters: {
       query?: never;
       header: {
@@ -589,7 +589,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateContactDto"];
+        "application/json": components["schemas"]["CreateUnverifiedContactDto"];
       };
     };
     responses: {

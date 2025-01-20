@@ -28,6 +28,10 @@ export class ContactCtx {
       isCreatingUnverifiedContact: false,
       isErrorCreatingUnverifiedContact: false,
     });
+
+    if (!config.contactToken && !config.collectUserData) {
+      this.autoCreateUnverifiedUser();
+    }
   }
 
   shouldCollectData = (): boolean => {
@@ -40,8 +44,15 @@ export class ContactCtx {
     }
   };
 
+  autoCreateUnverifiedUser = async () => {
+    await this.createUnverifiedContact({
+      name: this.config.user?.name || "Anonymous",
+      email: this.config.user?.email,
+    });
+  };
+
   createUnverifiedContact = async (
-    payload: Dto["CreateContactDto"],
+    payload: Dto["CreateUnverifiedContactDto"],
   ): Promise<void> => {
     try {
       this.state.setPartial({
