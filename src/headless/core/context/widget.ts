@@ -17,12 +17,12 @@ export class WidgetCtx {
 
     this.contactCtx = new ContactCtx({
       api: this.api,
-      config: config,
+      config: this.config,
     });
 
     this.sessionCtx = new SessionCtx(this.api);
     this.messageCtx = new MessageCtx({
-      config: config,
+      config: this.config,
       api: this.api,
       sessionCtx: this.sessionCtx,
     });

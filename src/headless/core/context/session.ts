@@ -22,15 +22,16 @@ export class SessionCtx {
 
   /** Clears the session and stops polling */
   reset = async () => {
-    this.poller.reset();
     this.state.reset();
+    // The poller should automatically reset, since we're subscribed to the session state, and whenever it's null, the poller resets... but just in case, let's reset it here as well
+    this.poller.reset();
   };
 
   registerPolling = () => {
     this.state.subscribe(({ session }) => {
       if (session?.id) {
-        this.poller.startPolling(async () => {
-          const { data } = await this.fetch(session.id);
+        this.poller.startPolling(async (abortSignal) => {
+          const { data } = await this.fetch(session.id, abortSignal);
           data && this.state.setPartial({ session: data });
         }, 1000);
       } else {
@@ -61,7 +62,7 @@ export class SessionCtx {
    * @param id - The ID of the session to fetch
    * @returns The session
    */
-  fetch = async (id: string) => {
-    return this.api.getSession(id);
+  fetch = async (sessionId: string, abortSignal: AbortSignal) => {
+    return this.api.getSession({ sessionId, abortSignal });
   };
 }

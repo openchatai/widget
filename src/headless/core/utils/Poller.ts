@@ -10,34 +10,48 @@ export class Poller {
     isPolling: false,
     isError: false,
   });
+  private abortController = new AbortController();
 
   reset = () => {
+    this.abortController.abort("Resetting poller");
     this.stopPolling?.();
     this.stopPolling = null;
   };
 
   stopPolling: (() => void) | null = null;
 
-  startPolling = (cb: () => Promise<void>, interval: number) => {
+  startPolling = (
+    cb: (abortSignal: AbortSignal) => Promise<void>,
+    interval: number,
+  ) => {
     if (this.stopPolling) return;
 
     const timeouts: NodeJS.Timeout[] = [];
 
     const poll = async () => {
+      this.abortController = new AbortController();
       this.state.setPartial({ isPolling: true });
 
       try {
-        await cb();
+        await cb(this.abortController.signal);
       } catch (error) {
-        console.error("Failed to poll:", error);
-        this.state.setPartial({
-          isError: true,
-        });
+        if (this.abortController.signal.aborted) {
+          // If aborted, just return and do not schedule the nest poll
+          return;
+        } else {
+          console.error("Failed to poll:", error);
+          this.state.setPartial({ isError: true });
+        }  
       } finally {
         this.state.setPartial({ isPolling: false });
       }
 
-      timeouts.push(setTimeout(poll, interval));
+      // Another check to stop scheduling polls in case someone removes the early return in the catch above
+      if (this.abortController.signal.aborted) {
+        console.log("Poller aborted, not scheduling anymore");
+      } else {
+        timeouts.push(setTimeout(poll, interval));
+      }
     };
 
     poll();

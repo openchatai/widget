@@ -34,6 +34,8 @@ export class MessageCtx {
     suggestedReplies: null,
   });
 
+  private sendMessageAbortController = new AbortController();
+
   constructor({
     config,
     api,
@@ -47,15 +49,17 @@ export class MessageCtx {
   }
 
   reset = () => {
-    this.poller.reset();
+    this.sendMessageAbortController.abort("Resetting chat");
     this.state.reset();
+    // The poller should automatically reset, since we're subscribed to the session state, and whenever it's null, the poller resets... but just in case, let's reset it here as well
+    this.poller.reset();
   };
 
   registerPolling = () => {
     this.sessionCtx.state.subscribe(({ session }) => {
       if (session?.id) {
-        this.poller.startPolling(async () => {
-          await this.fetchAndSetHistory(session.id);
+        this.poller.startPolling(async (abortSignal) => {
+          await this.fetchAndSetHistory(session.id, abortSignal);
         }, 1000);
       } else {
         this.poller.reset();
@@ -68,8 +72,8 @@ export class MessageCtx {
       SafeOmit<SendMessageDto, "bot_token" | "uuid">,
       "session_id" | "user"
     >,
-    abort?: AbortSignal,
   ): Promise<void> => {
+    this.sendMessageAbortController = new AbortController();
     /* ------------------------------------------------------ */
     /*        Prevent sending while waiting for AI res        */
     /* ------------------------------------------------------ */
@@ -118,7 +122,7 @@ export class MessageCtx {
       /* ------------------------------------------------------ */
       /*             Send and wait for bot response             */
       /* ------------------------------------------------------ */
-      const { data } = await this.api.handleMessage(
+      const { data } = await this.api.sendMessage(
         {
           uuid: userMessage.id,
           bot_token: this.config.token,
@@ -128,7 +132,7 @@ export class MessageCtx {
           user: this.config.user,
           ...input,
         },
-        abort,
+        this.sendMessageAbortController.signal,
       );
 
       if (data?.success) {
@@ -161,19 +165,25 @@ export class MessageCtx {
         });
       }
     } catch (error) {
-      console.error("Failed to send message:", error);
+      if (!this.sendMessageAbortController.signal.aborted) {
+        console.error("Failed to send message:", error);
+      }
     } finally {
       this.state.setPartial({ isSendingMessage: false });
     }
   };
 
-  fetchAndSetHistory = async (sessionId: string): Promise<void> => {
+  fetchAndSetHistory = async (
+    sessionId: string,
+    abortSignal: AbortSignal,
+  ): Promise<void> => {
     const lastMessageTimestamp = this.state.get().messages.at(-1)?.timestamp;
 
-    const { data: response } = await this.api.getSessionHistory(
+    const { data: response } = await this.api.getSessionHistory({
       sessionId,
       lastMessageTimestamp,
-    );
+      abortSignal,
+    });
 
     if (response && response.length > 0) {
       // Get a fresh reference to current messages after the poll is done

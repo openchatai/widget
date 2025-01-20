@@ -71,21 +71,26 @@ export class ApiCaller {
     });
   };
 
-  handleMessage = async (body: SendMessageDto, abortSignal?: AbortSignal) => {
+  sendMessage = async (body: SendMessageDto, abortSignal?: AbortSignal) => {
     return await this.client.POST("/backend/widget/v2/chat/send", {
       body,
       signal: abortSignal,
     });
   };
 
-  getSessionHistory = async (
-    sessionId: string,
-    lastMessageTimestamp?: string,
-  ) => {
+  getSessionHistory = async ({
+    sessionId,
+    lastMessageTimestamp,
+    abortSignal,
+  }: {
+    sessionId: string;
+    lastMessageTimestamp?: string;
+    abortSignal: AbortSignal;
+  }) => {
     const query = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
     return await this.client.GET(
       "/backend/widget/v2/session/history/{sessionId}",
-      { params: { path: { sessionId }, query } },
+      { params: { path: { sessionId }, query }, signal: abortSignal },
     );
   };
 
@@ -103,9 +108,13 @@ export class ApiCaller {
     return await this.client.POST("/backend/widget/v2/create-session");
   };
 
-  getSession = async (sessionId: string) => {
+  getSession = async ({
+    sessionId,
+    abortSignal,
+  }: { sessionId: string; abortSignal: AbortSignal }) => {
     return await this.client.GET("/backend/widget/v2/session/{sessionId}", {
       params: { path: { sessionId } },
+      signal: abortSignal,
     });
   };
 
