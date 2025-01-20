@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.0
+
+### Major Changes
+
+- Improve data layer architecture
+
 ## 2.6.3
 
 ### Patch Changes
