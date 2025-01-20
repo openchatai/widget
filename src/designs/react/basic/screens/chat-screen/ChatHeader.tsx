@@ -112,7 +112,7 @@ function OptionsMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup> */}
 
-        <DropdownMenuSeparator />
+        {/* <DropdownMenuSeparator /> */}
 
         <DropdownMenuGroup>
           <DropdownMenuItem
