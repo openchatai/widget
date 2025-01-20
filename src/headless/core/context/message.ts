@@ -168,8 +168,7 @@ export class MessageCtx {
   };
 
   fetchAndSetHistory = async (sessionId: string): Promise<void> => {
-    const prevMessages = this.state.get().messages;
-    const lastMessageTimestamp = prevMessages.at(-1)?.timestamp;
+    const lastMessageTimestamp = this.state.get().messages.at(-1)?.timestamp;
 
     const { data: response } = await this.api.getSessionHistory(
       sessionId,
@@ -177,6 +176,8 @@ export class MessageCtx {
     );
 
     if (response && response.length > 0) {
+      // Get a fresh reference to current messages after the poll is done
+      const prevMessages = this.state.get().messages;
       const newMessages = response
         .map(MessageCtx.mapHistoryToMessage)
         .filter(
@@ -184,7 +185,7 @@ export class MessageCtx {
             !prevMessages.some((existingMsg) => existingMsg.id === newMsg.id),
         );
       this.state.setPartial({
-        messages: [...this.state.get().messages, ...newMessages],
+        messages: [...prevMessages, ...newMessages],
       });
 
       // if (newMessages.length > 0) {
