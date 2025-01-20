@@ -26,11 +26,9 @@
   },
   "include": [
     "src",
-    "react-web",
-    "core",
-    "react-bindings",
     "vitest",
-    "package.json"
+    "package.json", 
+    "vite-env.d.ts"
   ],
   "exclude": [
     "node_modules",

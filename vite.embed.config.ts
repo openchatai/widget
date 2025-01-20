@@ -9,7 +9,7 @@ export default defineConfig({
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {
-      input: "src/index.tsx",
+      input: "src/designs/react/index.tsx",
       output: {
         format: "iife", // Immediately-Invoked Function Expression
         dir: "dist-embed",
