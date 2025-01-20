@@ -61,11 +61,11 @@ export function UserMessageGroup({
         "pl-8",
       )}
     >
-      <Avatar>
+      <Avatar className="bg-primary text-primary-foreground">
         <AvatarImage src={user?.avatarUrl} alt={user?.name || "User avatar"} />
-        <AvatarFallback>
-          {user?.name?.slice(0, 2)?.toUpperCase()}
-        </AvatarFallback>
+        {/* <AvatarFallback>
+          {user?.name?.slice(0, 1)?.toUpperCase()}
+        </AvatarFallback> */}
       </Avatar>
 
       {messages.map((message) => (
