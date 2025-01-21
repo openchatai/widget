@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.2
+
+### Patch Changes
+
+- fix exposing types
+
 ## 3.0.1
 
 ### Patch Changes
