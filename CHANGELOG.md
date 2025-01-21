@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.1
+
+### Patch Changes
+
+- use relative paths
+
 ## 3.0.0
 
 ### Major Changes
