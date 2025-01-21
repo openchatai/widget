@@ -5,11 +5,13 @@ import dts from "vite-plugin-dts";
 import { externalizeDeps } from "vite-plugin-externalize-deps";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { version } from "./package.json";
+
 export default defineConfig({
   plugins: [
     tsconfigPaths(),
     dts({
-      insertTypesEntry: true,
+      include: ["src"],
+      outDir: "dist/types",
     }),
     externalizeDeps({
       except: ["rehype-raw"],
@@ -26,7 +28,7 @@ export default defineConfig({
       formats: ["cjs", "es"],
       entry: {
         basic: resolve(__dirname, "src/designs/react/basic/index.tsx"),
-        react: resolve(__dirname, "src/headless/react/index.tsx"),
+        react: resolve(__dirname, "src/headless/react/index.ts"),
         index: resolve(__dirname, "src/headless/core/index.ts"),
       },
     },

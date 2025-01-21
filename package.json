@@ -93,28 +93,23 @@
     "name": "openchatai",
     "url": "https://github.com/openchatai"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/types/src/headless/core/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./basic": {
-      "types": "./dist/basic.d.ts",
-      "import": "./dist/basic.js",
-      "require": "./dist/basic.cjs"
-    },
     "./react": {
-      "types": "./dist/react.d.ts",
+      "types": "./dist/types/src/headless/react/index.d.ts",
       "import": "./dist/react.js",
       "require": "./dist/react.cjs"
     },
-    "./package.json": "./package.json",
-    "./dist/*.css": "./dist/*.css"
+    "./basic": {
+      "types": "./dist/types/src/designs/react/basic/index.d.ts",
+      "import": "./dist/basic.js",
+      "require": "./dist/basic.cjs"
+    }
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",

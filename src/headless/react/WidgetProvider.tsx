@@ -3,6 +3,7 @@ import { ComponentRegistry } from "./ComponentRegistry";
 import type { WidgetComponentType } from "./types/components";
 import { createSafeContext } from "./utils/create-safe-context";
 import { type WidgetConfig, WidgetCtx } from "../core";
+import { version } from "../../../package.json"
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
@@ -41,7 +42,7 @@ function WidgetProvider({
         widgetCtx,
         components,
         componentStore,
-        version: import.meta.env.__VERSION__,
+        version,
       }}
     >
       {children}
