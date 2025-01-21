@@ -1,8 +1,8 @@
-import { WidgetConfig, WidgetCtx } from "src/headless/core";
 import React, { useMemo } from "react";
 import { ComponentRegistry } from "./ComponentRegistry";
-import { WidgetComponentType } from "./types/components";
+import type { WidgetComponentType } from "./types/components";
 import { createSafeContext } from "./utils/create-safe-context";
+import { type WidgetConfig, WidgetCtx } from "../core";
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;

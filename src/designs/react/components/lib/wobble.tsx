@@ -1,6 +1,11 @@
-import React, { cloneElement, forwardRef, ReactElement, useState } from "react";
+import React, {
+  cloneElement,
+  forwardRef,
+  type ReactElement,
+  useState,
+} from "react";
 import { memo } from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
+import { cn } from "./utils/cn";
 /**
  * The maximum number of pixels the element can move in the x and y directions
  *

@@ -1,16 +1,16 @@
-import { Button } from "src/designs/react/components/lib/button";
-import { Keyboard } from "src/designs/react/components/keyboard";
 import React from "react";
-import {
-  DEFAULT_STYLES,
-  WIDGET_CONTENT_MAX_HEIGHT_PX,
-} from "src/designs/react/constants";
-import { cn } from "src/designs/react/components/lib/utils/cn";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useMessages, usePreludeData } from "src/headless/react";
-import { useWidgetContentHeight } from "src/designs/react/hooks/useWidgetContentHeight";
+import { useMessages, usePreludeData } from "../../../../../headless/react";
+import { useWidgetContentHeight } from "../../../hooks/useWidgetContentHeight";
+import {
+  DEFAULT_STYLES,
+  WIDGET_CONTENT_MAX_HEIGHT_PX,
+} from "../../../constants";
+import { cn } from "../../../components/lib/utils/cn";
+import { SuggestedReplies } from "../../../components/SuggestedReplies";
+import { Button } from "../../../components/lib/button";
 
 export function ChatScreen() {
   const { messages, messageCtx } = useMessages();
@@ -47,7 +47,7 @@ export function ChatScreen() {
           <ChatMain />
           <footer data-test="chat-footer">
             {messages.suggestedReplies && (
-              <Keyboard
+              <SuggestedReplies
                 data-test="chat-keyboard"
                 options={messages.suggestedReplies}
                 onKeyboardClick={(option) => {

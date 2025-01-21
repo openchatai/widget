@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
+import { cn } from "./lib/utils/cn";
 
 export function OpenLogoSvg({ className }: { className?: string }) {
   return (

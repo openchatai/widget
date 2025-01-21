@@ -5,7 +5,7 @@ type Props = {
   onKeyboardClick: (option: string) => void;
 };
 
-function Keyboard({ options, onKeyboardClick }: Props) {
+export function SuggestedReplies({ options, onKeyboardClick }: Props) {
   return (
     <div className="flex items-center gap-2 p-2 flex-wrap">
       {options.map((option, index) => (
@@ -21,4 +21,3 @@ function Keyboard({ options, onKeyboardClick }: Props) {
     </div>
   );
 }
-export { Keyboard };

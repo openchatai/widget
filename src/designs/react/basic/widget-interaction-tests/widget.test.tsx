@@ -3,7 +3,7 @@ import { expect, test, describe } from "vitest";
 import { render } from "vitest-browser-react";
 import { Widget, WidgetRoot } from "..";
 import { userEvent } from "@vitest/browser/context";
-import { WidgetConfig } from "src/headless/core";
+import type { WidgetConfig } from "../../../../headless/core";
 
 const mockConfig: WidgetConfig = {
   token: "test",

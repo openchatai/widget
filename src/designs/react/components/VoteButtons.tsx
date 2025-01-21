@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "./lib/button";
 import { ThumbsDown, ThumbsUp, AlertCircle } from "lucide-react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
 import { motion, AnimatePresence } from "framer-motion";
-import { useVote } from "src/headless/react";
+import { useVote } from "../../../headless/react";
+import { cn } from "./lib/utils/cn";
+
 
 interface VoteButtonsProps {
   messageId: string;

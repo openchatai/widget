@@ -1,5 +1,5 @@
 import * as React from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
+import { cn } from "./utils/cn";
 import { Wobble } from "./wobble";
 
 export interface InputProps

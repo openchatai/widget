@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
-import { cn } from "src/designs/react/components/lib/utils/cn";
+import { cn } from "./utils/cn";
 import { Wobble } from "./wobble";
 
 const Switch = React.forwardRef<

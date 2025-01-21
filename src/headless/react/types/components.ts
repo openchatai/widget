@@ -1,6 +1,5 @@
 import React from "react";
-import type { BotMessageType } from "src/headless/core/types/messages";
-import { StringOrLiteral } from "src/headless/core";
+import type { BotMessageType, StringOrLiteral } from "../../core";
 
 export type WidgetComponentProps<TData> = BotMessageType<TData>;
 export type WidgetLiteralComponentKey =

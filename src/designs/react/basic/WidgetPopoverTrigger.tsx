@@ -1,13 +1,13 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import { useConfig } from "src/headless/react";
-import { Wobble } from "src/designs/react/components/lib/wobble";
 import { AnimatePresence } from "framer-motion";
 import { XIcon } from "lucide-react";
 import React from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
 import { cssVars } from "../constants";
-import { OpenLogoSvg } from "src/designs/react/components/OpenLogoSvg";
-import { MotionDiv } from "src/designs/react/components/lib/MotionDiv";
+import { useConfig } from "../../../headless/react";
+import { cn } from "../components/lib/utils/cn";
+import { Wobble } from "../components/lib/wobble";
+import { MotionDiv } from "../components/lib/MotionDiv";
+import { OpenLogoSvg } from "../components/OpenLogoSvg";
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
   const { theme } = useConfig();

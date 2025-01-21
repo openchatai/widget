@@ -14,5 +14,3 @@ export { usePubsub } from "./hooks/usePubsub";
 export { useSession } from "./hooks/useSession";
 export { useVote } from "./hooks/useVote";
 export { type FileWithProgress, useUploadFiles } from "./hooks/useUploadFiles";
-
-export type { WidgetConfig } from "src/headless/core";

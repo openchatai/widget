@@ -1,4 +1,4 @@
-import { PubSub } from "src/headless/core/utils/PubSub";
+import { PubSub } from "./PubSub";
 
 export type PollingState = {
   isPolling: boolean;

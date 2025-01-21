@@ -1,14 +1,14 @@
-import {
+import { Avatar, AvatarImage } from "./lib/avatar";
+import React from "react";
+import { BotOrAgentMessage } from "./BotOrAgentMessage";
+import { BotOrAgentMessageWrapper } from "./BotOrAgentMessageWrapper";
+import type {
   AgentMessageType,
   AgentOrBotType,
   BotMessageType,
-} from "src/headless/core";
-import { Avatar, AvatarImage } from "./lib/avatar";
-import React from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
-import { BotOrAgentMessage } from "./BotOrAgentMessage";
-import { BotOrAgentMessageWrapper } from "./BotOrAgentMessageWrapper";
-import { useSession } from "src/headless/react";
+} from "../../../headless/core";
+import { useSession } from "../../../headless/react";
+import { cn } from "./lib/utils/cn";
 
 export function BotOrAgentMessageGroup({
   messages,

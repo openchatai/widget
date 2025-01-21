@@ -1,27 +1,14 @@
-import { Button } from "src/designs/react/components/lib/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "src/designs/react/components/lib/dropdown-menu";
-import { MotionDiv } from "src/designs/react/components/lib/MotionDiv";
-import { Skeleton } from "src/designs/react/components/lib/skeleton";
-import { Switch } from "src/designs/react/components/lib/switch";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   EllipsisVerticalIcon,
-  RotateCcw,
-  SaveIcon,
-  SaveOffIcon,
-  Volume2Icon,
-  VolumeOffIcon,
+  RotateCcw
 } from "lucide-react";
 import React, { useState } from "react";
-import { usePreludeData, useWidget } from "src/headless/react";
-import { useLocale } from "src/designs/react/hooks/useLocale";
+import { useLocale } from "../../../hooks/useLocale";
+import { usePreludeData, useWidget } from "../../../../../headless/react";
+import { Button } from "../../../components/lib/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../../../components/lib/dropdown-menu";
+import { Skeleton } from "../../../components/lib/skeleton";
 
 function OptionsMenu() {
   const locale = useLocale();

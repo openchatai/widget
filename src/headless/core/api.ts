@@ -1,7 +1,7 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { Dto, Endpoint, basicClient } from "./sdk";
-import { WidgetConfig } from "./types/WidgetConfig";
-import { SendMessageDto, VoteInputDto } from "./types/schemas";
+import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
+import { type Dto, type Endpoint, basicClient } from "./sdk";
+import type { WidgetConfig } from "./types/WidgetConfig";
+import type { SendMessageDto, VoteInputDto } from "./types/schemas";
 
 export class ApiCaller {
   private client: ReturnType<typeof basicClient>;

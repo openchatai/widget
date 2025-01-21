@@ -1,9 +1,9 @@
-import { MotionDiv } from "src/designs/react/components/lib/MotionDiv";
 import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { ChatScreen } from "./chat-screen/ChatScreen";
 import { WelcomeScreen } from "./welcome-screen/WelcomeScreen";
-import { useContact } from "src/headless/react";
+import { useContact } from "../../../../headless/react";
+import { MotionDiv } from "../../components/lib/MotionDiv";
 
 export function RootScreen() {
   const { contactCtx } = useContact();

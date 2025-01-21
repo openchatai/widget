@@ -1,6 +1,4 @@
-import { TooltipProvider } from "src/designs/react/components/lib/tooltip";
-import React, { ComponentPropsWithoutRef, ReactNode } from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
+import React, { type ComponentPropsWithoutRef, type ReactNode } from "react";
 import { cssVars, DEFAULT_STYLES } from "../constants";
 import { RootScreen } from "./screens/root-screen";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
@@ -10,11 +8,13 @@ import { useState } from "react";
 import "../../../../index.css";
 import styles from "../../../../index.css?inline";
 import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
-import { WidgetProvider, useWidget, useConfig } from "src/headless/react";
-import { WidgetConfig } from "src/headless/core";
-import { BotLoadingComponent } from "src/designs/react/components/Loading.component";
-import { FallbackComponent } from "src/designs/react/components/Fallback.component";
-import { BotOrAgentTextResponse } from "src/designs/react/components/Text.component";
+import { useConfig, useWidget, WidgetProvider } from "../../../headless/react";
+import { TooltipProvider } from "../components/lib/tooltip";
+import { cn } from "../components/lib/utils/cn";
+import type { WidgetConfig } from "../../../headless/core";
+import { BotLoadingComponent } from "../components/Loading.component";
+import { FallbackComponent } from "../components/Fallback.component";
+import { BotOrAgentTextResponse } from "../components/Text.component";
 
 const initialContent = `<!DOCTYPE html>
 <html>

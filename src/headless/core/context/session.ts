@@ -1,7 +1,7 @@
-import { ApiCaller } from "src/headless/core/api";
-import { SessionDto } from "src/headless/core";
-import { Poller } from "src/headless/core/utils/Poller";
-import { PubSub } from "src/headless/core/utils/PubSub";
+import type { ApiCaller } from "../api";
+import type { SessionDto } from "../types/schemas";
+import { Poller } from "../utils/Poller";
+import { PubSub } from "../utils/PubSub";
 
 export class SessionCtx {
   private api: ApiCaller;

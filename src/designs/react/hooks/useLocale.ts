@@ -1,11 +1,7 @@
 import { useMemo } from "react";
-import { TranslationKeysU } from "src/designs/translation/translation.types";
-import {
-  getTranslation,
-  isSupportedLocale,
-  Locale,
-} from "src/designs/translation";
-import { useWidget } from "src/headless/react";
+import { useWidget } from "../../../headless/react";
+import type { TranslationKeysU } from "../../translation/translation.types";
+import { getTranslation, isSupportedLocale, type Locale } from "../../translation";
 
 export function useLocale() {
   const {

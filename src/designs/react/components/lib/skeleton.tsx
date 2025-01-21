@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
+import { cn } from "./utils/cn";
 
 function Skeleton({
   className,

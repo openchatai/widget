@@ -1,6 +1,6 @@
-import type { AgentMessageType, BotMessageType } from "src/headless/core";
-import { useWidget } from "src/headless/react";
 import React, { type ComponentType } from "react";
+import type { AgentMessageType, BotMessageType } from "../../../headless/core";
+import { useWidget } from "../../../headless/react";
 
 interface BotMessageProps<W extends React.ElementType> {
   message: BotMessageType | AgentMessageType;

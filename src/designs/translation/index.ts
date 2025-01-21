@@ -4,7 +4,7 @@ import { enLocale } from "./en.locale";
 import { frLocale } from "./fr.locale";
 import { nlLocale } from "./nl.locale";
 import { ptLocale } from "./pt.locale";
-import { TranslationKeysU } from "./translation.types";
+import type { TranslationKeysU } from "./translation.types";
 
 const locales = {
   en: enLocale,

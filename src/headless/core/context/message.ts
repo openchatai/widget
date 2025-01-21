@@ -1,22 +1,12 @@
-import {
-  MessageAttachmentType,
-  SendMessageOutputDto,
-  MessageDto,
-  SomeOptional,
-  SafeOmit,
-  SendMessageDto,
-  WidgetConfig,
-} from "src/headless/core";
-import {
-  BotMessageType,
-  MessageType,
-  UserMessageType,
-} from "src/headless/core/types/messages";
-import { genUuid } from "../utils/uuid";
 import { ApiCaller } from "../api";
+import type { WidgetConfig } from "../types/WidgetConfig";
+import type { SafeOmit, SomeOptional } from "../types/helpers";
+import type { BotMessageType, MessageType, UserMessageType } from "../types/messages";
+import type { MessageAttachmentType, MessageDto, SendMessageDto, SendMessageOutputDto } from "../types/schemas";
+import { Poller } from "../utils/Poller";
+import { PubSub } from "../utils/PubSub";
+import { genUuid } from "../utils/uuid";
 import { SessionCtx } from "./session";
-import { Poller } from "src/headless/core/utils/Poller";
-import { PubSub } from "src/headless/core/utils/PubSub";
 
 export class MessageCtx {
   private config: WidgetConfig;

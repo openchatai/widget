@@ -1,4 +1,4 @@
-import { Dto } from "src/headless/core/sdk";
+import type { Dto } from "../sdk";
 
 export type VoteInputDto = Dto["WidgetVoteDto"];
 export type VoteOutputDto = Dto["WidgetVoteResponseDto"];

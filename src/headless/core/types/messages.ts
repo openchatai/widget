@@ -1,11 +1,9 @@
-import { MessageAttachmentType, MessageDto } from "./schemas";
-import { SafeExtract, StringOrLiteral } from "./helpers";
-import { AgentOrBotType } from "./agent-or-bot";
+import type { MessageAttachmentType, MessageDto } from "./schemas";
+import type { SafeExtract, StringOrLiteral } from "./helpers";
+import type { AgentOrBotType } from "./agent-or-bot";
+
 // TODO do not rely on types from the src/headless/react package
-import {
-  DefaultTextComponentBaseProps,
-  WidgetLiteralComponentKey,
-} from "src/headless/react/types/components";
+import type { DefaultTextComponentBaseProps, WidgetLiteralComponentKey } from "../../react/types/components";
 
 export type UserMessageType = {
   id: string;

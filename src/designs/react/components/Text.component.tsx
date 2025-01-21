@@ -3,7 +3,7 @@ import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
 import rehypeRaw from "rehype-raw";
 import { RenderAttachment } from "./RenderFile";
-import { DefaultTextComponentProps } from "src/headless/react/types/components";
+import type { DefaultTextComponentProps } from "../../../headless/react/types/components";
 
 export function BotOrAgentTextResponse({
   data,

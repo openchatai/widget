@@ -1,8 +1,8 @@
 import React from "react";
 import { version } from "../../../package.json";
-import { WidgetConfig } from "src/headless/core";
 import { Widget, WidgetRoot } from "./basic";
 import { render } from "./render";
+import type { WidgetConfig } from "../../headless/core";
 
 const defaultRootId = "opencx-root";
 

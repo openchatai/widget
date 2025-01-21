@@ -1,17 +1,21 @@
 import React from "react";
-import { Input } from "src/designs/react/components/lib/input";
-import { Button } from "src/designs/react/components/lib/button";
 import { SendHorizontal } from "lucide-react";
 import { z } from "zod";
 import useAsyncFn from "react-use/lib/useAsyncFn";
 import {
+  useConfig,
+  useContact,
+  usePreludeData,
+} from "../../../../../headless/react";
+import { useLocale } from "../../../hooks/useLocale";
+import { useWidgetContentHeight } from "../../../hooks/useWidgetContentHeight";
+import {
   DEFAULT_STYLES,
   WIDGET_CONTENT_MIN_HEIGHT_PX,
-} from "src/designs/react/constants";
-import { cn } from "src/designs/react/components/lib/utils/cn";
-import { useConfig, useContact, usePreludeData } from "src/headless/react";
-import { useWidgetContentHeight } from "src/designs/react/hooks/useWidgetContentHeight";
-import { useLocale } from "src/designs/react/hooks/useLocale";
+} from "../../../constants";
+import { cn } from "../../../components/lib/utils/cn";
+import { Input } from "../../../components/lib/input";
+import { Button } from "../../../components/lib/button";
 
 const schema = z.object({
   name: z.string().min(2),

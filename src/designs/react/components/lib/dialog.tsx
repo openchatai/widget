@@ -1,12 +1,12 @@
-import { createSafeContext } from "src/headless/react/utils/create-safe-context";
 import { AnimatePresence, motion } from "framer-motion";
 import React, {
-  ComponentProps,
-  ElementRef,
+  type ComponentProps,
+  type ElementRef,
   useEffect,
   useRef,
   useState,
 } from "react";
+import { createSafeContext } from "../../../../headless/react/utils/create-safe-context";
 
 const [useDialogState, SafeProvider] = createSafeContext<{
   open: boolean;
@@ -179,4 +179,5 @@ const DialogClose = React.forwardRef<
   );
 });
 
-export { DialogContent, DialogTrigger, Dialog, DialogClose };
+export { Dialog, DialogClose, DialogContent, DialogTrigger };
+

@@ -1,20 +1,15 @@
-import { UserMessageGroup } from "src/designs/react/components/UserMessageGroup";
-import React, { ComponentType, useEffect, useMemo, useRef } from "react";
-import { BotOrAgentMessage } from "src/designs/react/components/BotOrAgentMessage";
-import { BotOrAgentMessageGroup } from "src/designs/react/components/BotOrAgentMessageGroup";
-import { BotOrAgentMessageWrapper } from "src/designs/react/components/BotOrAgentMessageWrapper";
+import React, { type ComponentType, useEffect, useMemo, useRef } from "react";
 import {
   groupMessagesByType,
   isAgentMessageGroup,
   isBotMessageGroup,
   isUserMessageGroup,
 } from "../../utils/group-messages-by-type";
-import {
-  useWidget,
-  useMessages,
-  useConfig,
-  useIsAwaitingBotReply,
-} from "src/headless/react";
+import { useConfig, useIsAwaitingBotReply, useMessages, useWidget } from "../../../../../headless/react";
+import { BotOrAgentMessage } from "../../../components/BotOrAgentMessage";
+import { BotOrAgentMessageWrapper } from "../../../components/BotOrAgentMessageWrapper";
+import { UserMessageGroup } from "../../../components/UserMessageGroup";
+import { BotOrAgentMessageGroup } from "../../../components/BotOrAgentMessageGroup";
 
 export function ChatMain() {
   const {
@@ -83,7 +78,7 @@ export function ChatMain() {
           />
         ))}
       {groupedMessages.map((group, index) => {
-        const type = group?.[0].type;
+        const type = group?.[0]?.type;
         if (!type) return null;
 
         if (isUserMessageGroup(group)) {

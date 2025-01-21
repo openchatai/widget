@@ -1,4 +1,4 @@
-import { TranslationInterface } from "./translation.types";
+import type { TranslationInterface } from "./translation.types";
 
 export const frLocale: TranslationInterface = {
   ok: "D'accord",

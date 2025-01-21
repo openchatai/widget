@@ -1,4 +1,4 @@
-import { AgentOrBotType } from "./agent-or-bot";
+import type { AgentOrBotType } from "./agent-or-bot";
 
 export interface WidgetConfig {
   token: string;

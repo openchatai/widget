@@ -1,5 +1,5 @@
-import { MessageAttachmentType } from "src/headless/core";
 import React from "react";
+import type { MessageAttachmentType } from "../../../headless/core";
 
 type Props = {
   attachment: MessageAttachmentType;

@@ -1,6 +1,6 @@
 import React from "react";
-import { motion, Target } from "framer-motion";
-import { ComponentProps, forwardRef } from "react";
+import { motion, type Target } from "framer-motion";
+import { type ComponentProps, forwardRef } from "react";
 
 type MotionProps = ComponentProps<typeof motion.div>;
 type AnimationDirection = "right" | "left" | "up" | "down";

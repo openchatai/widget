@@ -13,19 +13,12 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
-import { MotionDiv } from "src/designs/react/components/lib/MotionDiv";
-import { Button } from "src/designs/react/components/lib/button";
-import { Tooltippy } from "src/designs/react/components/lib/tooltip";
-import { cn } from "src/designs/react/components/lib/utils/cn";
-import { useLocale } from "src/designs/react/hooks/useLocale";
-import {
-  FileWithProgress,
-  useIsAwaitingBotReply,
-  useMessages,
-  useSession,
-  useUploadFiles,
-  useWidget,
-} from "src/headless/react";
+import { useIsAwaitingBotReply, useMessages, useSession, useUploadFiles, useWidget, type FileWithProgress } from "../../../../../headless/react";
+import { Tooltippy } from "../../../components/lib/tooltip";
+import { cn } from "../../../components/lib/utils/cn";
+import { useLocale } from "../../../hooks/useLocale";
+import { MotionDiv } from "../../../components/lib/MotionDiv";
+import { Button } from "../../../components/lib/button";
 
 function FileDisplay({
   file: { status, file, error },

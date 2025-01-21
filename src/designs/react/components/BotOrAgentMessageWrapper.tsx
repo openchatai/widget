@@ -1,6 +1,5 @@
 import React from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
-import { AgentOrBotType } from "src/headless/core/types/agent-or-bot";
+import { cn } from "./lib/utils/cn";
 
 export function BotOrAgentMessageWrapper({
   children,

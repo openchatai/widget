@@ -1,5 +1,5 @@
 import React from "react";
-import { WidgetComponentProps } from "src/headless/react/types/components";
+import type { WidgetComponentProps } from "../../../headless/react/types/components";
 
 type Props = WidgetComponentProps<unknown>;
 

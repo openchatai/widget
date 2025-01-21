@@ -1,4 +1,4 @@
-import { WidgetComponentKey, WidgetComponentType } from "./types/components";
+import type { WidgetComponentKey, WidgetComponentType } from "./types/components";
 
 export class ComponentRegistry {
   components: WidgetComponentType[] = [

@@ -1,10 +1,12 @@
-import { UserMessageType } from "src/headless/core";
+
 import { formatDistance } from "date-fns";
 import React, { useMemo } from "react";
-import { cn } from "src/designs/react/components/lib/utils/cn";
-import { Avatar, AvatarFallback, AvatarImage } from "./lib/avatar";
+import { Avatar, AvatarImage } from "./lib/avatar";
 import { RenderAttachment } from "./RenderFile";
-import { useConfig } from "src/headless/react";
+import type { UserMessageType } from "../../../headless/core";
+import { cn } from "./lib/utils/cn";
+import { useConfig } from "../../../headless/react";
+
 
 function UserMessage({
   message,

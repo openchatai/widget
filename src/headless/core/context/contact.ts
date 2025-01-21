@@ -1,7 +1,7 @@
 import { PubSub } from "../utils/PubSub";
 import { ApiCaller } from "../api";
-import { Dto } from "src/headless/core/sdk";
-import { WidgetConfig } from "src/headless/core/types/WidgetConfig";
+import { type WidgetConfig } from "../types/WidgetConfig";
+import { type Dto } from "../sdk";
 
 type ContactState = {
   contact: { token: string } | null;
@@ -9,17 +9,18 @@ type ContactState = {
   isErrorCreatingUnverifiedContact: boolean;
 };
 
-export type CreateContactHandlerOptions = {
-  api: ApiCaller;
-  config: WidgetConfig;
-};
-
 export class ContactCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
   state: PubSub<ContactState>;
 
-  constructor({ config, api }: CreateContactHandlerOptions) {
+  constructor({
+    config,
+    api,
+  }: {
+    api: ApiCaller;
+    config: WidgetConfig;
+  }) {
     this.config = config;
     this.api = api;
 
