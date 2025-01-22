@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.3
+
+### Patch Changes
+
+- fix: persist api schema types after build
+
 ## 3.0.2
 
 ### Patch Changes
