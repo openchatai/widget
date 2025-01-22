@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.5
+
+### Patch Changes
+
+- republish
+
 ## 3.0.4
 
 ### Patch Changes
