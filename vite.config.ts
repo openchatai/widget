@@ -10,8 +10,8 @@ export default defineConfig({
   plugins: [
     tsconfigPaths(),
     dts({
+      insertTypesEntry: true,
       include: ["src"],
-      outDir: "dist/types",
     }),
     externalizeDeps({
       except: ["rehype-raw"],
