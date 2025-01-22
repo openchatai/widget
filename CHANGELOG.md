@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.6
+
+### Patch Changes
+
+- refactor components types
+
 ## 3.0.5
 
 ### Patch Changes
