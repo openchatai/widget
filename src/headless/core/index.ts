@@ -6,10 +6,12 @@ export type {
   StringOrLiteral,
 } from "./types/helpers";
 export type {
+  WidgetComponentKey,
+  DefaultWidgetTextComponentData,
+  UserMessageType,
   AgentMessageType,
   BotMessageType,
   MessageType,
-  UserMessageType,
 } from "./types/messages";
 export type {
   MessageAttachmentType,

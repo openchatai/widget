@@ -3,14 +3,15 @@ import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "./markdown";
 import rehypeRaw from "rehype-raw";
 import { RenderAttachment } from "./RenderFile";
-import type { DefaultTextComponentProps } from "../../../headless/react/types/components";
+import type { WidgetComponentProps } from "../../../headless/react/types/components";
+import type { DefaultWidgetTextComponentData } from "../../../headless/core";
 
 export function BotOrAgentTextResponse({
   data,
   id,
   type,
   attachments,
-}: DefaultTextComponentProps) {
+}: WidgetComponentProps<DefaultWidgetTextComponentData>) {
   const { message, variant = "default" } = data;
 
   if (variant === "error") {

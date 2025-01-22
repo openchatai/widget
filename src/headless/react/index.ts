@@ -1,9 +1,11 @@
 import "../../../index.css";
 
-export {
-  WidgetProvider,
-  useWidget,
-} from "./WidgetProvider";
+export type {
+  WidgetComponentType,
+  WidgetComponentProps,
+} from "./types/components";
+
+export { WidgetProvider, useWidget } from "./WidgetProvider";
 
 export { useConfig } from "./hooks/useConfig";
 export { useContact } from "./hooks/useContact";

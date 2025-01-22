@@ -2,9 +2,21 @@ import type { MessageAttachmentType, MessageDto } from "./schemas";
 import type { SafeExtract, StringOrLiteral } from "./helpers";
 import type { AgentOrBotType } from "./agent-or-bot";
 
-// TODO do not rely on types from the src/headless/react package
-import type { DefaultTextComponentBaseProps, WidgetLiteralComponentKey } from "../../react/types/components";
+/* ------------------------------------------------------ */
+/*                 Component-related types                */
+/* ------------------------------------------------------ */
+export type WidgetComponentKey = StringOrLiteral<
+  "bot_message" | "agent_message" | "loading" | "fallback"
+>;
 
+export type DefaultWidgetTextComponentData = {
+  message: string;
+  variant?: "default" | "error";
+};
+
+/* ------------------------------------------------------ */
+/*                      Message types                     */
+/* ------------------------------------------------------ */
 export type UserMessageType = {
   id: string;
   type: "FROM_USER";
@@ -21,15 +33,13 @@ export type UserMessageType = {
   };
 };
 
-export type BotMessageType<TData = DefaultTextComponentBaseProps | unknown> = {
+export type BotMessageType<TData = DefaultWidgetTextComponentData | unknown> = {
   id: string;
   type: "FROM_BOT";
   /**
    * The type is a bot_message literal string or other strings that correspond to the UI responses from AI action calls
    */
-  component: StringOrLiteral<
-    SafeExtract<WidgetLiteralComponentKey, "bot_message">
-  >;
+  component: StringOrLiteral<SafeExtract<WidgetComponentKey, "bot_message">>;
   data: TData;
   timestamp: string;
   original?: MessageDto;
@@ -40,13 +50,15 @@ export type BotMessageType<TData = DefaultTextComponentBaseProps | unknown> = {
 export type AgentMessageType = {
   id: string;
   type: "FROM_AGENT";
-  component: SafeExtract<WidgetLiteralComponentKey, "agent_message">;
-  data: DefaultTextComponentBaseProps;
+  component: SafeExtract<WidgetComponentKey, "agent_message">;
+  data: DefaultWidgetTextComponentData;
   timestamp?: string;
   original?: MessageDto;
   agent?: AgentOrBotType;
   attachments?: MessageAttachmentType[];
 };
 
-/** Find a better name for this thing */
+/* ------------------------------------------------------ */
+/*                          Union                         */
+/* ------------------------------------------------------ */
 export type MessageType = UserMessageType | BotMessageType | AgentMessageType;
