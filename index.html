@@ -16,7 +16,7 @@
   </script>
 </head>
 
-<body dir="rtl">
+<body>
   <script type="module">
     const apiUrl = 'http://localhost:8080';
     const token = import.meta.env.VITE_ORG_TOKEN;
@@ -39,25 +39,16 @@
       initOpenScript({
         token: token,
         initialMessages: [
-          'أهلا وسهلا',
+          'Hi there, how can we help you?',
         ],
         settings: {
           persistSession: true,
           playSoundEffects: true
         },
-        user: {
-          email: 'ali@open.cx',
-          name: 'Ali'
-        },
         // contactToken,
-        // collectUserData: true,
-        language: "ar",
-        theme: {
-          primaryColor: "#3d1c57"
-        }
+        collectUserData: true,
       });
     });
   </script>
 </body>
-
 </html>

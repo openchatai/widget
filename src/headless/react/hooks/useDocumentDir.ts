@@ -35,6 +35,8 @@ const useDocumentDir = () => {
         };
     }, [])
 
+    console.log(dir);
+
     return dir;
 }
 
