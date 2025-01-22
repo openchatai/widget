@@ -2,14 +2,14 @@ import { useMessages } from "./useMessages";
 import { useSession } from "./useSession";
 
 export function useIsAwaitingBotReply() {
-  const { session } = useSession();
-  const { messages } = useMessages();
+  const { sessionState } = useSession();
+  const { messagesState } = useMessages();
 
   const isAwaitingBotReply =
-    (!session.session?.isHandedOff ||
-      session.session.assignee.kind === "ai" ||
-      session.isCreatingSession) &&
-    messages.isSendingMessage;
+    (!sessionState.session?.isHandedOff ||
+      sessionState.session.assignee.kind === "ai" ||
+      sessionState.isCreatingSession) &&
+    messagesState.isSendingMessage;
 
   return { isAwaitingBotReply };
 }

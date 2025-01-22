@@ -3,7 +3,7 @@ import { useWidget } from "../WidgetProvider";
 
 export function useMessages() {
   const { widgetCtx } = useWidget();
-  const messages = usePubsub(widgetCtx.messageCtx.state);
+  const messagesState = usePubsub(widgetCtx.messageCtx.state);
 
-  return { messages, messageCtx: widgetCtx.messageCtx };
+  return { messagesState, messageCtx: widgetCtx.messageCtx };
 }

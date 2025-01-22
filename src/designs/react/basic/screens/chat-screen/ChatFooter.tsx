@@ -119,7 +119,7 @@ const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { messageCtx } = useMessages();
-  const { session } = useSession();
+  const { sessionState } = useSession();
   const locale = useLocale();
 
   const [inputText, setInputText] = useState("");
@@ -133,7 +133,7 @@ function ChatInput() {
     successFiles,
   } = useUploadFiles();
 
-  const shouldAcceptAttachments = !!session.session?.isHandedOff;
+  const shouldAcceptAttachments = !!sessionState.session?.isHandedOff;
 
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
 
@@ -342,12 +342,12 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
-  const { session } = useSession();
+  const { sessionState } = useSession();
 
   return (
     <div>
       <AnimatePresence mode="wait">
-        {session.session && !session.session?.isOpened ? (
+        {sessionState.session && !sessionState.session?.isOpened ? (
           <MotionDiv
             key="session-closed"
             className="overflow-hidden"

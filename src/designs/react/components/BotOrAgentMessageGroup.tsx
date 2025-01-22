@@ -17,7 +17,7 @@ export function BotOrAgentMessageGroup({
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentOrBotType | undefined;
 }) {
-  const { session } = useSession();
+  const { sessionState } = useSession();
 
   return (
     <div className={cn("flex flex-col items-start gap-2", "pr-8")}>
@@ -31,7 +31,7 @@ export function BotOrAgentMessageGroup({
           Wrapper={BotOrAgentMessageWrapper}
           wrapperProps={{
             messageId: message.id,
-            sessionId: session.session?.id,
+            sessionId: sessionState.session?.id,
           }}
         />
       ))}

@@ -3,10 +3,10 @@ import { usePubsub } from "./usePubsub";
 
 export function useContact() {
   const { widgetCtx } = useWidget();
-  const state = usePubsub(widgetCtx.contactCtx.state);
+  const contactState = usePubsub(widgetCtx.contactCtx.state);
 
   return {
-    state,
+    contactState,
     contactCtx: widgetCtx.contactCtx,
   };
 }

@@ -13,7 +13,7 @@ import { BotOrAgentMessageGroup } from "../../../components/BotOrAgentMessageGro
 
 export function ChatMain() {
   const {
-    messages: { messages },
+    messagesState: { messages },
   } = useMessages();
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();

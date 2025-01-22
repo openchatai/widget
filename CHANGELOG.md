@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.4
+
+### Patch Changes
+
+- rename states in utility hooks
+
 ## 3.0.3
 
 ### Patch Changes

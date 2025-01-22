@@ -3,7 +3,7 @@ import { usePubsub } from "./usePubsub";
 
 export function useSession() {
   const { widgetCtx } = useWidget();
-  const session = usePubsub(widgetCtx.sessionCtx.state);
+  const sessionState = usePubsub(widgetCtx.sessionCtx.state);
 
-  return { session };
+  return { sessionState, sessionCtx: widgetCtx.sessionCtx };
 }

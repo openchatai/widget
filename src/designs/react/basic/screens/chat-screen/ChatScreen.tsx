@@ -13,14 +13,14 @@ import { SuggestedReplies } from "../../../components/SuggestedReplies";
 import { Button } from "../../../components/lib/button";
 
 export function ChatScreen() {
-  const { messages, messageCtx } = useMessages();
+  const { messagesState, messageCtx } = useMessages();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.data?.initialQuestions;
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });
 
-  const noMessages = messages.messages.length === 0;
+  const noMessages = messagesState.messages.length === 0;
 
   return (
     <div
@@ -46,10 +46,10 @@ export function ChatScreen() {
         >
           <ChatMain />
           <footer data-test="chat-footer">
-            {messages.suggestedReplies && (
+            {messagesState.suggestedReplies && (
               <SuggestedReplies
                 data-test="chat-keyboard"
-                options={messages.suggestedReplies}
+                options={messagesState.suggestedReplies}
                 onKeyboardClick={(option) => {
                   const trimmed = option.trim();
                   if (!trimmed) return;
