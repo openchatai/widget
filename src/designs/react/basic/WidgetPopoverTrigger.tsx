@@ -29,7 +29,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         right: "20px",
         bottom: "20px",
       }}
-      className={cn("size-12 font-inter flex items-center justify-center")}
+      className={"size-12 font-inter flex items-center justify-center"}
     >
       <Wobble>
         <div

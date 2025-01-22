@@ -20,7 +20,7 @@ export function BotOrAgentMessageGroup({
   const { sessionState } = useSession();
 
   return (
-    <div className={cn("flex flex-col items-start gap-2", "pr-8")}>
+    <div className={cn("flex flex-col items-start gap-2")}>
       <Avatar>
         <AvatarImage src={agent?.avatar ?? ""} alt="Agent Icon" />
       </Avatar>

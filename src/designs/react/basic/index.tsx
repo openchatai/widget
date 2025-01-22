@@ -42,7 +42,6 @@ function Widget({
   const chat = useWidget();
   const { theme } = useConfig();
   const [isOpen, setIsOpened] = useState(opened);
-
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
       <style>{styles}</style>
@@ -108,19 +107,21 @@ function Widget({
               <div
                 style={{
                   display: "contents",
-                  ...cssVars(
-                    { primary: theme?.primaryColor },
-                    // { triggerOffset: theme.triggerOffset },
-                  ),
                 }}
                 data-chat-widget
               >
                 <div
+                  style={{
+                    ...cssVars(
+                      { primary: theme?.primaryColor },
+                      // { triggerOffset: theme.triggerOffset },
+                    ),
+                  }}
                   {...props}
                   data-version={chat.version}
                   data-chat-widget
                   className={cn(
-                    "antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground",
+                    "antialiased font-inter bg-primary size-full overflow-hidden isolate relative text-secondary-foreground",
                     className,
                   )}
                 >

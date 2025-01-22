@@ -60,7 +60,6 @@ export function UserMessageGroup({
       className={cn(
         "group",
         "flex flex-col gap-2 justify-end items-end",
-        "pl-8",
       )}
     >
       <Avatar className="bg-primary text-primary-foreground">

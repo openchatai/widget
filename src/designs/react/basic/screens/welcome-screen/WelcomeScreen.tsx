@@ -56,6 +56,7 @@ export function WelcomeScreen() {
       )}
     >
       <div
+        dir="auto"
         className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10"
         data-test="welcome-header"
       >
@@ -74,6 +75,7 @@ export function WelcomeScreen() {
             <h2
               className="font-bold text-xl text-primary-foreground"
               data-test="organization-name"
+              dir="auto"
             >
               {preludeData?.data?.organizationName}
             </h2>
@@ -83,6 +85,7 @@ export function WelcomeScreen() {
           <h1
             className="text-2xl font-bold text-primary-foreground"
             data-test="welcome-title"
+            dir="auto"
           >
             {locale.get("welcome-title")}
           </h1>
@@ -90,6 +93,7 @@ export function WelcomeScreen() {
           <p
             className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed"
             data-test="welcome-description"
+            dir="auto"
           >
             {locale.get("welcome-description")}
           </p>
@@ -99,6 +103,7 @@ export function WelcomeScreen() {
       <div
         className="p-2 bg-background rounded-3xl"
         data-test="welcome-form-container"
+        dir="auto"
       >
         <form
           onSubmit={handleSubmit}
@@ -108,7 +113,6 @@ export function WelcomeScreen() {
           <div className="space-y-2">
             <Input
               required
-              dir="auto"
               autoFocus
               placeholder={locale.get("your-name")}
               name="name"
@@ -117,7 +121,6 @@ export function WelcomeScreen() {
             />
             <Input
               required
-              dir="auto"
               type="email"
               placeholder={locale.get("your-email")}
               name="email"
@@ -130,11 +133,12 @@ export function WelcomeScreen() {
             disabled={handleSubmitState.loading}
             className="w-full rounded-3xl"
             data-test="start-chat-button"
+            dir="auto"
           >
             {handleSubmitState.loading
               ? locale.get("starting-chat")
               : locale.get("start-chat")}
-            <SendHorizontal className="size-4" />
+            <SendHorizontal className="size-4 rtl:-scale-100" />
           </Button>
         </form>
       </div>

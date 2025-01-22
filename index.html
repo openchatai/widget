@@ -1,58 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="src/designs/react/index.tsx"></script>
-    <title>Openchat AI-Copilot</title>
-    <script>
-      document.addEventListener('DOMContentLoaded', () => {
-        document.body.style.height = '100vh';
-        document.body.style.backgroundColor = 'black';
-        document.body.style.margin = '0px';
-        document.body.style.padding = '0px';
-      });
-    </script>
-  </head>
 
-  <body>
-    <script type="module">
-      const apiUrl = 'http://localhost:8080';
-      const token = import.meta.env.VITE_ORG_TOKEN;
-      const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
-      
-      window.addEventListener('DOMContentLoaded', async () => {
-        // const res = await fetch('http://localhost:8080/widget/authenticate-user', {
-        //   method: 'POST',
-        //   body: JSON.stringify({
-        //     email: 'ali@open.cx',
-        //   }),
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //     Authorization: `Bearer ${apiToken}`
-        //   }
-        // })
-        // const data = await res.json()
-        // const contactToken = data.token
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script type="module" src="src/designs/react/index.tsx"></script>
+  <title>Openchat AI-Copilot</title>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.style.height = '100vh';
+      document.body.style.backgroundColor = 'black';
+      document.body.style.margin = '0px';
+      document.body.style.padding = '0px';
+    });
+  </script>
+</head>
 
-        initOpenScript({
-          token: token,
-          apiUrl,
-          initialMessages: [
-            'How can we help you?',
-          ],
-          settings: {
-            persistSession: true,
-            playSoundEffects: true
-          },
-          // contactToken,
-          // collectUserData: true,
-          user: {
-            name: "arkhameedis",
-            email: "arkhameedis@open.cx"
-          }
-        });
+<body dir="rtl">
+  <script type="module">
+    const apiUrl = 'http://localhost:8080';
+    const token = import.meta.env.VITE_ORG_TOKEN;
+    const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      // const res = await fetch('http://localhost:8080/widget/authenticate-user', {
+      //   method: 'POST',
+      //   body: JSON.stringify({
+      //     email: 'ali@open.cx',
+      //   }),
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${apiToken}`
+      //   }
+      // })
+      // const data = await res.json()
+      // const contactToken = data.token
+
+      initOpenScript({
+        token: token,
+        initialMessages: [
+          'أهلا وسهلا',
+        ],
+        settings: {
+          persistSession: true,
+          playSoundEffects: true
+        },
+        user: {
+          email: 'ali@open.cx',
+          name: 'Ali'
+        },
+        // contactToken,
+        // collectUserData: true,
+        language: "ar",
+        theme: {
+          primaryColor: "#3d1c57"
+        }
       });
-    </script>
-  </body>
+    });
+  </script>
+</body>
+
 </html>

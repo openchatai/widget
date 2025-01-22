@@ -34,7 +34,7 @@ export default {
       },
     },
     fontFamily: {
-      inter: ["Inter", "sans-serif"],
+      inter: ["Inter", "Rubik", "serif", "sans-serif"],
     },
   },
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
