@@ -21,7 +21,7 @@
     "type-check": "tsc --noEmit",
     "lint": "biome lint --fix",
     "format": "biome format --fix",
-    "batman": "pnpm build:lib && pnpm build:embed",
+    "batman": "pnpm tsc && pnpm build:lib && pnpm build:embed",
     "prepublishOnly": "pnpm clean && pnpm batman",
     "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
