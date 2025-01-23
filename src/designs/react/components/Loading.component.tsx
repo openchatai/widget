@@ -1,24 +1,22 @@
 import React from "react";
 import { Avatar, AvatarFallback } from "./lib/avatar";
 import { motion, AnimatePresence } from "framer-motion";
+import { MotionDiv } from "./lib/MotionDiv";
 
 export function BotLoadingComponent() {
   return (
     <AnimatePresence>
-      <motion.div
+      <MotionDiv
         data-test="loading-container"
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-row items-end w-full gap-1"
+        className="flex flex-row items-end w-full gap-1 animate-pulse"
       >
         <div className="flex items-center gap-1" data-test="avatar-container">
-          <Avatar className="animate-pulse" data-test="loading-avatar">
+          <Avatar data-test="loading-avatar">
             <AvatarFallback data-test="avatar-fallback" />
           </Avatar>
         </div>
         <div
-          className="flex items-center [&_span]:bg-secondary-foreground [&_span]:size-1 gap-1 p-3 rounded-lg rounded-bl-none bg-secondary"
+          className="flex items-center [&_span]:bg-secondary-foreground [&_span]:size-1 gap-1 p-2 rounded-xl bg-secondary border"
           data-test="loading-dots-container"
         >
           <motion.span
@@ -34,7 +32,7 @@ export function BotLoadingComponent() {
             className="rounded-full animate-bounce"
           />
         </div>
-      </motion.div>
+      </MotionDiv>
     </AnimatePresence>
   );
 }
