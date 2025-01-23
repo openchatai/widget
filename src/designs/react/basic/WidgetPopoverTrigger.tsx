@@ -38,7 +38,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
             "flex items-center justify-center",
             "transition-all",
             // 'bg-gradient-to-t from-primary/50 via-primary to-primary',
-            "[background:radial-gradient(68.75%_68.75%_at_50%_100%,_#717171_0%,_#000000_100%)]",
+            "[background:radial-gradient(50%_50%_at_50%_100%,hsl(var(--opencx-primary-foreground))_-75%,hsl(var(--opencx-primary))_100%)]",
             "text-primary-foreground",
             "shadow-xl",
             "active:scale-90",
