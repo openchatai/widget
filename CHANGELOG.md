@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.9
+
+### Patch Changes
+
+- rtl fixes
+
 ## 3.0.8
 
 ### Patch Changes
