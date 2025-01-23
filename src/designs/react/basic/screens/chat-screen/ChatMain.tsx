@@ -45,13 +45,11 @@ export function ChatMain() {
 
   const noMessages = messages.length === 0;
 
-  const dir = useDocumentDir();
-
   return (
     <div
+      // Do not add `dir` attribute here... contact messages are always on the right, bot and agent are always on the left for all languages
       data-messages
       ref={messagesContainerRef}
-      dir={dir}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
       {noMessages &&
