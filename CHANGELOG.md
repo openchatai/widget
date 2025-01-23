@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.8
+
+### Patch Changes
+
+- fix config.theme.primaryColor
+
 ## 3.0.7
 
 ### Patch Changes
