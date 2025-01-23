@@ -15,6 +15,7 @@ import type { WidgetConfig } from "../../../headless/core";
 import { BotLoadingComponent } from "../components/Loading.component";
 import { FallbackComponent } from "../components/Fallback.component";
 import { BotOrAgentTextResponse } from "../components/Text.component";
+import { useDocumentDir } from "../../../headless/react/hooks/useDocumentDir";
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -40,11 +41,13 @@ function Widget({
   ...props
 }: ComponentPropsWithoutRef<"div"> & { opened?: boolean }) {
   const chat = useWidget();
+  const dir = useDocumentDir();
   const { theme } = useConfig();
   const [isOpen, setIsOpened] = useState(opened);
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
       <style>{styles}</style>
+      <WidgetPopoverTrigger isOpen={isOpen} />
       <PopoverPrimitive.Content
         onInteractOutside={(ev) => ev.preventDefault()}
         side="top"
@@ -58,7 +61,7 @@ function Widget({
         sideOffset={8}
         data-chat-widget
         data-chat-widget-content-root
-        align="end"
+        align={dir === "rtl" ? "start" : "end"}
         asChild
       >
         <motion.div
@@ -132,7 +135,6 @@ function Widget({
           </Iframe>
         </motion.div>
       </PopoverPrimitive.Content>
-      <WidgetPopoverTrigger isOpen={isOpen} />
     </PopoverPrimitive.Root>
   );
 }
