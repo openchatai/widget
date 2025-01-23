@@ -19,6 +19,7 @@ import { cn } from "../../../components/lib/utils/cn";
 import { useLocale } from "../../../hooks/useLocale";
 import { MotionDiv } from "../../../components/lib/MotionDiv";
 import { Button } from "../../../components/lib/button";
+import { useDocumentDir } from "../../../../../headless/react/hooks/useDocumentDir";
 
 function FileDisplay({
   file: { status, file, error },
@@ -121,7 +122,7 @@ function ChatInput() {
   const { messageCtx } = useMessages();
   const { sessionState } = useSession();
   const locale = useLocale();
-
+  const dir = useDocumentDir();
   const [inputText, setInputText] = useState("");
 
   const {
@@ -235,17 +236,15 @@ function ChatInput() {
           onPaste={handlePaste}
           ref={inputRef}
           id="chat-input"
-          dir="auto"
+          dir={dir}
           value={inputText}
           rows={3}
           data-test="chat-message-input"
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
-            "w-full px-3",
-            "resize-none",
-            "bg-transparent outline-none",
-            "text-sm",
+            "w-full resize-none px-3",
+            "text-sm rtl:placeholder:text-right bg-transparent outline-none",
           )}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={async (event) => {
@@ -257,7 +256,8 @@ function ChatInput() {
           placeholder={locale.get("write-a-message")}
         />
         <div
-          className="px-2 flex justify-between"
+          dir={dir}
+          className="px-2 flex justify-between rtl:text-right"
           data-test="chat-input-actions"
         >
           <Tooltippy

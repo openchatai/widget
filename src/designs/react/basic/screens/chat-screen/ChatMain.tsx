@@ -10,6 +10,7 @@ import { BotOrAgentMessage } from "../../../components/BotOrAgentMessage";
 import { BotOrAgentMessageWrapper } from "../../../components/BotOrAgentMessageWrapper";
 import { UserMessageGroup } from "../../../components/UserMessageGroup";
 import { BotOrAgentMessageGroup } from "../../../components/BotOrAgentMessageGroup";
+import { useDocumentDir } from "../../../../../headless/react/hooks/useDocumentDir";
 
 export function ChatMain() {
   const {
@@ -44,10 +45,13 @@ export function ChatMain() {
 
   const noMessages = messages.length === 0;
 
+  const dir = useDocumentDir();
+
   return (
     <div
       data-messages
       ref={messagesContainerRef}
+      dir={dir}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
       {noMessages &&
@@ -64,19 +68,19 @@ export function ChatMain() {
             Wrapper={BotOrAgentMessageWrapper}
           />
         )) ?? (
-          <BotOrAgentMessage
-            key={"default-welcome"}
-            message={{
-              component: "bot_message",
-              data: { message: "Hello, how can I help?" },
-              id: "default-welcome",
-              type: "FROM_BOT",
-              agent: config.bot,
-              timestamp: Date.now().toString(),
-            }}
-            Wrapper={BotOrAgentMessageWrapper}
-          />
-        ))}
+            <BotOrAgentMessage
+              key={"default-welcome"}
+              message={{
+                component: "bot_message",
+                data: { message: "Hello, how can I help?" },
+                id: "default-welcome",
+                type: "FROM_BOT",
+                agent: config.bot,
+                timestamp: Date.now().toString(),
+              }}
+              Wrapper={BotOrAgentMessageWrapper}
+            />
+          ))}
       {groupedMessages.map((group, index) => {
         const type = group?.[0]?.type;
         if (!type) return null;

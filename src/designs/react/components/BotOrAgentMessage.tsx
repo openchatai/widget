@@ -1,6 +1,7 @@
 import React, { type ComponentType } from "react";
 import type { AgentMessageType, BotMessageType } from "../../../headless/core";
 import { useWidget } from "../../../headless/react";
+import { useDocumentDir } from "../../../headless/react/hooks/useDocumentDir";
 
 interface BotMessageProps<W extends React.ElementType> {
   message: BotMessageType | AgentMessageType;
@@ -21,6 +22,7 @@ export function BotOrAgentMessage<W extends React.ElementType>({
     data: BotMessageType["data"] | AgentMessageType["data"];
     id: string;
   }>;
+  const dir = useDocumentDir();
 
   if (!Component) {
     return null;
@@ -28,14 +30,14 @@ export function BotOrAgentMessage<W extends React.ElementType>({
 
   if (!Wrapper) {
     return (
-      <div data-test={`message-${message.id}`}>
+      <div data-test={`message-${message.id}`} dir={dir}>
         <Component {...message} id={message.id} key={message.id} />
       </div>
     );
   }
 
   return (
-    // @ts-ignore
+    // @ts-expect-error
     <Wrapper
       {...wrapperProps}
       key={message.id}

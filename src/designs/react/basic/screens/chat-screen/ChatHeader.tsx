@@ -9,11 +9,11 @@ import { usePreludeData, useWidget } from "../../../../../headless/react";
 import { Button } from "../../../components/lib/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../../../components/lib/dropdown-menu";
 import { Skeleton } from "../../../components/lib/skeleton";
+import { useDocumentDir } from "../../../../../headless/react/hooks/useDocumentDir";
 
 function OptionsMenu() {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
-
   const { widgetCtx } = useWidget();
 
   // const { widgetSettings, setWidgetSettings } = useChat();
@@ -124,10 +124,10 @@ function OptionsMenu() {
 
 export function ChatHeader() {
   const { data, isLoading } = usePreludeData();
-
+  const direction = useDocumentDir()
   return (
     <header className="p-2 border-b bg-background">
-      <div className="flex items-center gap-2">
+      <div dir={direction} className="flex items-center rtl:flex-row-reverse gap-2">
         {/* <SettingsPopover /> */}
         <div className="flex-1 pl-2">
           {isLoading ? (
