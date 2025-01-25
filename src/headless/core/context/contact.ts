@@ -25,12 +25,12 @@ export class ContactCtx {
     this.api = api;
 
     this.state = new PubSub<ContactState>({
-      contact: config.contactToken ? { token: config.contactToken } : null,
+      contact: config.user?.token ? { token: config.user?.token } : null,
       isCreatingUnverifiedContact: false,
       isErrorCreatingUnverifiedContact: false,
     });
 
-    if (!config.contactToken && !config.collectUserData) {
+    if (!config.user?.token && !config.collectUserData) {
       this.autoCreateUnverifiedUser();
     }
   }
@@ -47,8 +47,8 @@ export class ContactCtx {
 
   autoCreateUnverifiedUser = async () => {
     await this.createUnverifiedContact({
-      name: this.config.user?.name || "Anonymous",
-      email: this.config.user?.email,
+      name: this.config.user?.data?.name || "Anonymous",
+      email: this.config.user?.data?.email,
     });
   };
 

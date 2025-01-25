@@ -1,8 +1,17 @@
 import { ApiCaller } from "../api";
 import type { WidgetConfig } from "../types/WidgetConfig";
 import type { SafeOmit, SomeOptional } from "../types/helpers";
-import type { BotMessageType, MessageType, UserMessageType } from "../types/messages";
-import type { MessageAttachmentType, MessageDto, SendMessageDto, SendMessageOutputDto } from "../types/schemas";
+import type {
+  BotMessageType,
+  MessageType,
+  UserMessageType,
+} from "../types/messages";
+import type {
+  MessageAttachmentType,
+  MessageDto,
+  SendMessageDto,
+  SendMessageOutputDto,
+} from "../types/schemas";
 import { Poller } from "../utils/Poller";
 import { PubSub } from "../utils/PubSub";
 import { genUuid } from "../utils/uuid";
@@ -98,7 +107,13 @@ export class MessageCtx {
       /*              Create session if not exists              */
       /* ------------------------------------------------------ */
       if (!this.sessionCtx.state.get().session?.id) {
-        const createdSession = await this.sessionCtx.createSession();
+        const createdSession = await this.sessionCtx.createSession({
+          customData: this.config.user?.externalId
+            ? {
+                external_id: this.config.user?.externalId,
+              }
+            : undefined,
+        });
 
         // TODO: apply some retry logic here
         if (!createdSession) {
@@ -119,7 +134,7 @@ export class MessageCtx {
           headers: this.config.headers,
           query_params: this.config.queryParams,
           session_id: sessionId,
-          user: this.config.user,
+          user: this.config.user?.data,
           ...input,
         },
         this.sendMessageAbortController.signal,

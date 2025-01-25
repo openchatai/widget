@@ -11,7 +11,6 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get the prelude for the widget */
     get: operations["widgetPrelude"];
     put?: never;
     post?: never;
@@ -29,6 +28,22 @@ export interface paths {
       cookie?: never;
     };
     get: operations["getSession"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/backend/widget/v2/sessions": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getSessions"];
     put?: never;
     post?: never;
     delete?: never;
@@ -94,7 +109,6 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Upload file */
     post: operations["uploadFile"];
     delete?: never;
     options?: never;
@@ -127,7 +141,6 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** Create an unverified contact for the widget */
     post: operations["createUnverifiedContact"];
     delete?: never;
     options?: never;
@@ -142,6 +155,11 @@ export interface components {
     CreateUnverifiedContactDto: {
       email?: string;
       name?: string;
+    };
+    CreateWidgetChatSessionDto: {
+      customData?: {
+        [key: string]: string | number | boolean | unknown | unknown;
+      };
     };
     FileUploadDto: {
       /** Format: binary */
@@ -218,6 +236,27 @@ export interface components {
             url: string;
           }[]
         | null;
+    };
+    /** @description Paginated response. */
+    PaginatedWidgetSessionsDto: {
+      items: {
+        /** Format: uuid */
+        id: string;
+        createdAt: string;
+        updatedAt: string;
+        isHandedOff: boolean;
+        isOpened: boolean;
+        assignee: {
+          /** @enum {string} */
+          kind: "human" | "ai" | "none" | "unknown";
+          name: string | null;
+          avatarUrl: string | null;
+        };
+        channel: string;
+        isVerified: boolean;
+      }[];
+      /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
+      next: string | null;
     };
     UploadWidgetFileResponseDto: {
       fileName: string;
@@ -420,6 +459,39 @@ export interface operations {
       };
     };
   };
+  getSessions: {
+    parameters: {
+      query: {
+        /** @description A JSON-stringified Record<string, string>. These filters will be compared against the sessions' custom_data */
+        filters: string;
+        /** @description Pagination cursor to fetch the next set of results */
+        cursor?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PaginatedWidgetSessionsDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorDto"];
+        };
+      };
+    };
+  };
   getSessionHistory: {
     parameters: {
       query?: {
@@ -460,7 +532,11 @@ export interface operations {
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateWidgetChatSessionDto"];
+      };
+    };
     responses: {
       200: {
         headers: {

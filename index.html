@@ -36,6 +36,7 @@
       // const contactToken = data.token
 
       initOpenScript({
+        apiUrl,
         token: token,
         initialMessages: [
           'Hi there, how can we help you?',
@@ -44,15 +45,19 @@
           persistSession: true,
           playSoundEffects: true
         },
-        theme: {
-          primaryColor: "#993366"
-        },
-        // contactToken,
+        // theme: {
+        //   primaryColor: "#639"
+        // },
         // collectUserData: true,
-        // user: {
-        //     name: "arkhameedis",
-        //     email: "arkhameedis@open.cx"
-        // }
+
+        user: {
+          externalId: "xyz",
+          // token: contactToken,
+          // data: {
+          //   name: "arkhameedis",
+          //   email: "arkhameedis@open.cx"
+          // }
+        }
       });
     });
   </script>

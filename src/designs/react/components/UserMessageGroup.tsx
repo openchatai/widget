@@ -63,7 +63,7 @@ export function UserMessageGroup({
       )}
     >
       <Avatar className="bg-primary text-primary-foreground">
-        <AvatarImage src={user?.avatarUrl} alt={user?.name || "User avatar"} />
+        <AvatarImage src={user?.data?.avatarUrl} alt={user?.data?.name || "User avatar"} />
         {/* <AvatarFallback>
           {user?.name?.slice(0, 1)?.toUpperCase()}
         </AvatarFallback> */}

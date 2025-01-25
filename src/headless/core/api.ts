@@ -15,7 +15,7 @@ export class ApiCaller {
   }) {
     this.config = config;
     const { baseUrl, headers } = this.constructClientOptions(
-      config.contactToken,
+      config.user?.token,
     );
     this.client = this.createOpenAPIClient({ baseUrl, headers });
     this.uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
@@ -104,8 +104,10 @@ export class ApiCaller {
     );
   };
 
-  createSession = async () => {
-    return await this.client.POST("/backend/widget/v2/create-session");
+  createSession = async (body: Dto["CreateWidgetChatSessionDto"]) => {
+    return await this.client.POST("/backend/widget/v2/create-session", {
+      body,
+    });
   };
 
   getSession = async ({

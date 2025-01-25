@@ -1,4 +1,5 @@
 import type { ApiCaller } from "../api";
+import type { Dto } from "../sdk";
 import type { SessionDto } from "../types/schemas";
 import { Poller } from "../utils/Poller";
 import { PubSub } from "../utils/PubSub";
@@ -31,7 +32,10 @@ export class SessionCtx {
     this.state.subscribe(({ session }) => {
       if (session?.id) {
         this.poller.startPolling(async (abortSignal) => {
-          const { data } = await this.fetch(session.id, abortSignal);
+          const { data } = await this.api.getSession({
+            sessionId: session.id,
+            abortSignal,
+          });
           data && this.state.setPartial({ session: data });
         }, 1000);
       } else {
@@ -40,14 +44,10 @@ export class SessionCtx {
     });
   };
 
-  /**
-   * Creates a new session
-   * @returns The session
-   */
-  createSession = async () => {
+  createSession = async (body: Dto['CreateWidgetChatSessionDto']) => {
     this.state.setPartial({ session: null, isCreatingSession: true });
 
-    const { data: session, error } = await this.api.createSession();
+    const { data: session, error } = await this.api.createSession(body);
     if (session) {
       this.state.setPartial({ session, isCreatingSession: false });
       return session;
@@ -55,14 +55,5 @@ export class SessionCtx {
 
     console.error("Failed to create session:", error);
     return null;
-  };
-
-  /**
-   * Fetches the session from the API
-   * @param id - The ID of the session to fetch
-   * @returns The session
-   */
-  fetch = async (sessionId: string, abortSignal: AbortSignal) => {
-    return this.api.getSession({ sessionId, abortSignal });
   };
 }
