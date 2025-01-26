@@ -1,4 +1,4 @@
-import { PubSub } from "../utils/PubSub";
+import { PrimitiveState } from "../utils/PrimitiveState";
 import { ApiCaller } from "../api";
 import { type WidgetConfig } from "../types/WidgetConfig";
 import { type Dto } from "../sdk";
@@ -12,7 +12,7 @@ type ContactState = {
 export class ContactCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
-  state: PubSub<ContactState>;
+  state: PrimitiveState<ContactState>;
 
   constructor({
     config,
@@ -24,7 +24,7 @@ export class ContactCtx {
     this.config = config;
     this.api = api;
 
-    this.state = new PubSub<ContactState>({
+    this.state = new PrimitiveState<ContactState>({
       contact: config.user?.token ? { token: config.user?.token } : null,
       isCreatingUnverifiedContact: false,
       isErrorCreatingUnverifiedContact: false,

@@ -17,7 +17,7 @@ type LifecycleListener = (event: {
   data?: any;
 }) => void;
 
-export class PubSub<S> {
+export class PrimitiveState<S> {
   private subscribers = new Set<Subscriber<S>>();
   #state: S;
   private initialState: S;

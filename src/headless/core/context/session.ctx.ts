@@ -3,7 +3,7 @@ import type { Dto } from "../sdk";
 import type { SessionDto } from "../types/schemas";
 import type { WidgetConfig } from "../types/WidgetConfig";
 import { Poller } from "../utils/Poller";
-import { PubSub } from "../utils/PubSub";
+import { PrimitiveState } from "../utils/PrimitiveState";
 import type { ContactCtx } from "./contact.ctx";
 
 type SessionCtxState = {
@@ -28,7 +28,7 @@ export class SessionCtx {
   private contactCtx: ContactCtx;
   private poller = new Poller();
 
-  public state = new PubSub<SessionCtxState>({
+  public state = new PrimitiveState<SessionCtxState>({
     session: null,
     sessions: {
       data: [],

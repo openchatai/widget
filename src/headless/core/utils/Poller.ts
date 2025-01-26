@@ -1,4 +1,4 @@
-import { PubSub } from "./PubSub";
+import { PrimitiveState } from "./PrimitiveState";
 
 export type PollingState = {
   isPolling: boolean;
@@ -6,7 +6,7 @@ export type PollingState = {
 };
 
 export class Poller {
-  state = new PubSub<PollingState>({
+  state = new PrimitiveState<PollingState>({
     isPolling: false,
     isError: false,
   });
@@ -41,7 +41,7 @@ export class Poller {
         } else {
           console.error("Failed to poll:", error);
           this.state.setPartial({ isError: true });
-        }  
+        }
       } finally {
         this.state.setPartial({ isPolling: false });
       }

@@ -13,7 +13,7 @@ import type {
   SendMessageOutputDto,
 } from "../types/schemas";
 import { Poller } from "../utils/Poller";
-import { PubSub } from "../utils/PubSub";
+import { PrimitiveState } from "../utils/PrimitiveState";
 import { genUuid } from "../utils/uuid";
 import { SessionCtx } from "./session.ctx";
 
@@ -23,7 +23,7 @@ export class MessageCtx {
   private sessionCtx: SessionCtx;
   private poller = new Poller();
 
-  public state = new PubSub<{
+  public state = new PrimitiveState<{
     messages: MessageType[];
     isSendingMessage: boolean;
     suggestedReplies: string[] | null;

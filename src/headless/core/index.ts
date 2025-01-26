@@ -30,4 +30,4 @@ export type { ContactCtx } from "./context/contact.ctx";
 export type { SessionCtx } from "./context/session.ctx";
 export type { MessageCtx } from "./context/message.ctx";
 
-export { PubSub } from "./utils/PubSub";
+export { PrimitiveState } from "./utils/PrimitiveState";

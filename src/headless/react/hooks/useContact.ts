@@ -1,9 +1,9 @@
 import { useWidget } from "../WidgetProvider";
-import { usePubsub } from "./usePubsub";
+import { usePrimitiveState } from "./usePrimitiveState";
 
 export function useContact() {
   const { widgetCtx } = useWidget();
-  const contactState = usePubsub(widgetCtx.contactCtx.state);
+  const contactState = usePrimitiveState(widgetCtx.contactCtx.state);
   const { state, ...contactCtx } = widgetCtx.contactCtx;
 
   return {
