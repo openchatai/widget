@@ -2,15 +2,12 @@ import React from "react";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useMessages, usePreludeData } from "../../../../../headless/react";
-import { useWidgetContentHeight } from "../../../hooks/useWidgetContentHeight";
-import {
-  DEFAULT_STYLES,
-  WIDGET_CONTENT_MAX_HEIGHT_PX,
-} from "../../../constants";
-import { cn } from "../../../components/lib/utils/cn";
-import { SuggestedReplies } from "../../../components/SuggestedReplies";
-import { Button } from "../../../components/lib/button";
+import { useMessages, usePreludeData } from "../../../../headless/react";
+import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
+import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
+import { cn } from "../../components/lib/utils/cn";
+import { SuggestedReplies } from "../../components/SuggestedReplies";
+import { Button } from "../../components/lib/button";
 
 export function ChatScreen() {
   const { messagesState, messageCtx } = useMessages();

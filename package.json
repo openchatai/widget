@@ -105,10 +105,10 @@
       "import": "./dist/react.js",
       "require": "./dist/react.cjs"
     },
-    "./basic": {
-      "types": "./dist/basic.d.ts",
-      "import": "./dist/basic.js",
-      "require": "./dist/basic.cjs"
+    "./designs": {
+      "types": "./dist/designs.d.ts",
+      "import": "./dist/designs.js",
+      "require": "./dist/designs.cjs"
     }
   },
   "devDependencies": {

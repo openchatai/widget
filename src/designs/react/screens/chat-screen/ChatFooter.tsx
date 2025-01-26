@@ -13,13 +13,20 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
-import { useIsAwaitingBotReply, useMessages, useSession, useUploadFiles, useWidget, type FileWithProgress } from "../../../../../headless/react";
-import { Tooltippy } from "../../../components/lib/tooltip";
-import { cn } from "../../../components/lib/utils/cn";
-import { useLocale } from "../../../hooks/useLocale";
-import { MotionDiv } from "../../../components/lib/MotionDiv";
-import { Button } from "../../../components/lib/button";
-import { useDocumentDir } from "../../../../../headless/react/hooks/useDocumentDir";
+import {
+  useIsAwaitingBotReply,
+  useMessages,
+  useSession,
+  useUploadFiles,
+  useWidget,
+  type FileWithProgress,
+} from "../../../../headless/react";
+import { Tooltippy } from "../../components/lib/tooltip";
+import { cn } from "../../components/lib/utils/cn";
+import { useLocale } from "../../hooks/useLocale";
+import { MotionDiv } from "../../components/lib/MotionDiv";
+import { Button } from "../../components/lib/button";
+import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
 
 function FileDisplay({
   file: { status, file, error },

@@ -3,7 +3,7 @@ import type {
   BotMessageType,
   MessageType,
   UserMessageType,
-} from "../../../../headless/core";
+} from "../../../headless/core";
 
 export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
   const result: MessageType[][] = [];

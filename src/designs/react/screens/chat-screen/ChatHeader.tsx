@@ -1,15 +1,18 @@
 import { motion } from "framer-motion";
-import {
-  EllipsisVerticalIcon,
-  RotateCcw
-} from "lucide-react";
+import { EllipsisVerticalIcon, RotateCcw } from "lucide-react";
 import React, { useState } from "react";
-import { useLocale } from "../../../hooks/useLocale";
-import { usePreludeData, useWidget } from "../../../../../headless/react";
-import { Button } from "../../../components/lib/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "../../../components/lib/dropdown-menu";
-import { Skeleton } from "../../../components/lib/skeleton";
-import { useDocumentDir } from "../../../../../headless/react/hooks/useDocumentDir";
+import { useLocale } from "../../hooks/useLocale";
+import { usePreludeData, useWidget } from "../../../../headless/react";
+import { Button } from "../../components/lib/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../components/lib/dropdown-menu";
+import { Skeleton } from "../../components/lib/skeleton";
+import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -124,10 +127,13 @@ function OptionsMenu() {
 
 export function ChatHeader() {
   const { data, isLoading } = usePreludeData();
-  const direction = useDocumentDir()
+  const direction = useDocumentDir();
   return (
     <header className="p-2 border-b bg-background">
-      <div dir={direction} className="flex items-center rtl:flex-row-reverse gap-2">
+      <div
+        dir={direction}
+        className="flex items-center rtl:flex-row-reverse gap-2"
+      >
         {/* <SettingsPopover /> */}
         <div className="flex-1 pl-2">
           {isLoading ? (

@@ -27,7 +27,7 @@ export default defineConfig({
       name: "@opencx/widget",
       formats: ["cjs", "es"],
       entry: {
-        basic: resolve(__dirname, "src/designs/react/basic/index.tsx"),
+        designs: resolve(__dirname, "src/designs/react/index.tsx"),
         react: resolve(__dirname, "src/headless/react/index.ts"),
         index: resolve(__dirname, "src/headless/core/index.ts"),
       },

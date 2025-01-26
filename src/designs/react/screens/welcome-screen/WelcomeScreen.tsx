@@ -6,16 +6,13 @@ import {
   useConfig,
   useContact,
   usePreludeData,
-} from "../../../../../headless/react";
-import { useLocale } from "../../../hooks/useLocale";
-import { useWidgetContentHeight } from "../../../hooks/useWidgetContentHeight";
-import {
-  DEFAULT_STYLES,
-  WIDGET_CONTENT_MIN_HEIGHT_PX,
-} from "../../../constants";
-import { cn } from "../../../components/lib/utils/cn";
-import { Input } from "../../../components/lib/input";
-import { Button } from "../../../components/lib/button";
+} from "../../../../headless/react";
+import { useLocale } from "../../hooks/useLocale";
+import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
+import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from "../../constants";
+import { cn } from "../../components/lib/utils/cn";
+import { Input } from "../../components/lib/input";
+import { Button } from "../../components/lib/button";
 
 const schema = z.object({
   name: z.string().min(2),
