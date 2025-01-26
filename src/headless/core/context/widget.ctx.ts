@@ -2,6 +2,7 @@ import { ApiCaller } from "../api";
 import type { WidgetConfig } from "../types/WidgetConfig";
 import { ContactCtx } from "./contact.ctx";
 import { MessageCtx } from "./message.ctx";
+import { RouterCtx } from "./router.ctx";
 import { SessionCtx } from "./session.ctx";
 
 export class WidgetCtx {
@@ -10,6 +11,7 @@ export class WidgetCtx {
   public contactCtx: ContactCtx;
   public sessionCtx: SessionCtx;
   public messageCtx: MessageCtx;
+  public routerCtx: RouterCtx;
 
   constructor({ config }: { config: WidgetConfig }) {
     this.config = config;
@@ -25,10 +27,17 @@ export class WidgetCtx {
       api: this.api,
       contactCtx: this.contactCtx,
     });
+
     this.messageCtx = new MessageCtx({
       config: this.config,
       api: this.api,
       sessionCtx: this.sessionCtx,
+    });
+
+    this.routerCtx = new RouterCtx({
+      contactCtx: this.contactCtx,
+      sessionCtx: this.sessionCtx,
+      resetChat: this.resetChat,
     });
   }
 
