@@ -1,7 +1,7 @@
 import { AnimatePresence } from "framer-motion";
 import React from "react";
-import { ChatScreen } from "./chat-screen/ChatScreen";
-import { WelcomeScreen } from "./welcome-screen/WelcomeScreen";
+import { ChatScreen } from "./chat";
+import { WelcomeScreen } from "./welcome";
 import { useContact } from "../../../headless/react";
 import { MotionDiv } from "../components/lib/MotionDiv";
 

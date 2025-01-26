@@ -25,7 +25,7 @@ export function ChatScreen() {
       data-test="chat-screen"
       className={cn(
         DEFAULT_STYLES.widgetHeight,
-        "w-full flex flex-col overflow-hidden bg-background z-10 origin-bottom absolute bottom-0 inset-x-0",
+        "w-full flex flex-col overflow-hidden bg-background",
       )}
     >
       <div

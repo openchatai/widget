@@ -1,6 +1,6 @@
 import React from "react";
 import { cssVars, DEFAULT_STYLES } from "./constants";
-import { RootScreen } from "./screens/root-screen";
+import { RootScreen } from "./screens";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import Iframe from "@uiw/react-iframe";
 import { motion } from "framer-motion";
