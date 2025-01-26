@@ -45,7 +45,7 @@ export class ContactCtx {
     }
   };
 
-  autoCreateUnverifiedUser = async () => {
+  private autoCreateUnverifiedUser = async () => {
     await this.createUnverifiedContact({
       name: this.config.user?.data?.name || "Anonymous",
       email: this.config.user?.data?.email,

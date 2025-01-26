@@ -54,7 +54,7 @@ export class MessageCtx {
     this.poller.reset();
   };
 
-  registerPolling = () => {
+  private registerPolling = () => {
     this.sessionCtx.sessionState.subscribe(({ session }) => {
       if (session?.id) {
         this.poller.startPolling(async (abortSignal) => {
@@ -172,7 +172,7 @@ export class MessageCtx {
     }
   };
 
-  fetchAndSetHistory = async (
+  private fetchAndSetHistory = async (
     sessionId: string,
     abortSignal: AbortSignal,
   ): Promise<void> => {
@@ -221,7 +221,7 @@ export class MessageCtx {
   };
 
   /** Not the best name but whatever */
-  static mapHistoryToMessage(history: MessageDto): MessageType {
+  private static mapHistoryToMessage(history: MessageDto): MessageType {
     const commonFields = {
       id: history.publicId,
       timestamp: history.sentAt || "",
@@ -264,7 +264,7 @@ export class MessageCtx {
     };
   }
 
-  static toUserMessage(
+  private static toUserMessage(
     content: string,
     attachments?: MessageAttachmentType[],
   ): UserMessageType {
@@ -278,7 +278,7 @@ export class MessageCtx {
     };
   }
 
-  static toBotMessage(response: SendMessageOutputDto): BotMessageType | null {
+  private static toBotMessage(response: SendMessageOutputDto): BotMessageType | null {
     if (response.success && response.autopilotResponse) {
       return {
         type: "FROM_BOT",
@@ -305,7 +305,7 @@ export class MessageCtx {
     return null;
   }
 
-  static toErrorMessage(message: string) {
+  private static toErrorMessage(message: string) {
     return {
       type: "FROM_BOT" as const,
       id: genUuid(),

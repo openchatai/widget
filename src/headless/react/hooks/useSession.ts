@@ -6,12 +6,9 @@ export function useSession() {
   const sessionState = usePrimitiveState(widgetCtx.sessionCtx.sessionState);
   const sessionsState = usePrimitiveState(widgetCtx.sessionCtx.sessionsState);
 
-  // Ignore non-reactive state from ctx
-  const {
-    sessionState: _ignored,
-    sessionsState: _ignoredAsWell,
-    ...sessionCtx
-  } = widgetCtx.sessionCtx;
-
-  return { sessionState, sessionsState, sessionCtx };
+  return {
+    sessionState,
+    sessionsState,
+    loadMoreSessions: widgetCtx.sessionCtx.loadMoreSessions,
+  };
 }

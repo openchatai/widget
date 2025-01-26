@@ -10,7 +10,7 @@ import { SuggestedReplies } from "../../components/SuggestedReplies";
 import { Button } from "../../components/lib/button";
 
 export function ChatScreen() {
-  const { messagesState, messageCtx } = useMessages();
+  const { messagesState, sendMessage } = useMessages();
   const preludeSWR = usePreludeData();
   const initialQuestions = preludeSWR.data?.data?.initialQuestions;
   const { observedElementRef } = useWidgetContentHeight({
@@ -50,7 +50,7 @@ export function ChatScreen() {
                 onKeyboardClick={(option) => {
                   const trimmed = option.trim();
                   if (!trimmed) return;
-                  messageCtx.sendMessage({ content: trimmed });
+                  sendMessage({ content: trimmed });
                 }}
               />
             )}
@@ -68,7 +68,7 @@ export function ChatScreen() {
                     size="sm"
                     data-test={`initial-question-${index}`}
                     onClick={() => {
-                      messageCtx.sendMessage({ content: iq });
+                      sendMessage({ content: iq });
                     }}
                   >
                     {iq}

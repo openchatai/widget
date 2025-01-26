@@ -20,7 +20,7 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
-  const { contactCtx } = useContact();
+  const { createUnverifiedContact } = useContact();
   const config = useConfig();
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
@@ -35,7 +35,7 @@ export function WelcomeScreen() {
       const data = Object.fromEntries(formData.entries());
       const result = schema.safeParse(data);
       if (result.success) {
-        await contactCtx.createUnverifiedContact({
+        await createUnverifiedContact({
           email: result.data.email,
           name: result.data.name,
         });

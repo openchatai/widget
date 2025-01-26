@@ -63,7 +63,7 @@ export class SessionCtx {
     this.poller.reset();
   };
 
-  registerPolling = () => {
+  private registerPolling = () => {
     this.sessionState.subscribe(({ session }) => {
       if (session?.id) {
         this.poller.startPolling(async (abortSignal) => {
@@ -79,7 +79,7 @@ export class SessionCtx {
     });
   };
 
-  registerInitialSessionsFetch = () => {
+  private registerInitialSessionsFetch = () => {
     this.contactCtx.state.subscribe(({ contact }) => {
       if (contact?.token && !this.sessionsState.get().didInitialFetch) {
         this.sessionsState.setPartial({ didInitialFetch: true });

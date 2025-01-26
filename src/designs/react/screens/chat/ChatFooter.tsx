@@ -126,7 +126,7 @@ const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 
 function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
-  const { messageCtx } = useMessages();
+  const { sendMessage } = useMessages();
   const { sessionState } = useSession();
   const locale = useLocale();
   const dir = useDocumentDir();
@@ -167,7 +167,7 @@ function ChatInput() {
     setInputText("");
     emptyTheFiles();
 
-    await messageCtx.sendMessage({
+    await sendMessage({
       content: trimmed,
       attachments: successFiles.map((f) => ({
         url: f.fileUrl!,

@@ -39,7 +39,7 @@ export class RouterCtx {
     this.registerRoutingListener();
   }
 
-  registerRoutingListener = () => {
+  private registerRoutingListener = () => {
     this.contactCtx.state.subscribe(({ contact }) => {
       // Auto navigate to sessions screen after collecting user data
       if (contact?.token && this.state.get().screen === "welcome") {
