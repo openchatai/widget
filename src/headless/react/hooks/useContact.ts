@@ -4,7 +4,11 @@ import { usePrimitiveState } from "./usePrimitiveState";
 export function useContact() {
   const { widgetCtx } = useWidget();
   const contactState = usePrimitiveState(widgetCtx.contactCtx.state);
-  const { state, ...contactCtx } = widgetCtx.contactCtx;
+  const {
+    // Ignore non-reactive state from ctx
+    state,
+    ...contactCtx
+  } = widgetCtx.contactCtx;
 
   return {
     contactState,
