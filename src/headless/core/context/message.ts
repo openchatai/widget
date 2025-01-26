@@ -107,13 +107,7 @@ export class MessageCtx {
       /*              Create session if not exists              */
       /* ------------------------------------------------------ */
       if (!this.sessionCtx.state.get().session?.id) {
-        const createdSession = await this.sessionCtx.createSession({
-          customData: this.config.user?.externalId
-            ? {
-                external_id: this.config.user?.externalId,
-              }
-            : undefined,
-        });
+        const createdSession = await this.sessionCtx.createSession();
 
         // TODO: apply some retry logic here
         if (!createdSession) {

@@ -20,7 +20,11 @@ export class WidgetCtx {
       config: this.config,
     });
 
-    this.sessionCtx = new SessionCtx(this.api);
+    this.sessionCtx = new SessionCtx({
+      config: this.config,
+      api: this.api,
+      contactCtx: this.contactCtx,
+    });
     this.messageCtx = new MessageCtx({
       config: this.config,
       api: this.api,

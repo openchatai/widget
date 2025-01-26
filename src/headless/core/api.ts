@@ -120,6 +120,21 @@ export class ApiCaller {
     });
   };
 
+  getSessions = async ({
+    cursor,
+    filters,
+    abortSignal,
+  }: {
+    cursor: string | undefined;
+    filters: Record<string, string>;
+    abortSignal?: AbortSignal;
+  }) => {
+    return await this.client.GET("/backend/widget/v2/sessions", {
+      params: { query: { cursor, filters: JSON.stringify(filters) } },
+      signal: abortSignal,
+    });
+  };
+
   uploadFile = async (
     file: {
       id: string;

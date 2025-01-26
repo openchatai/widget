@@ -63,8 +63,9 @@ export class ContactCtx {
 
       const { data } = await this.api.createUnverifiedContact(payload);
       if (data?.token) {
-        this.state.setPartial({ contact: { token: data.token } });
         this.api.setAuthToken(data.token);
+        // Set token in state after setting the token in the api handler
+        this.state.setPartial({ contact: { token: data.token } });
       } else {
         this.state.setPartial({ isErrorCreatingUnverifiedContact: true });
       }
