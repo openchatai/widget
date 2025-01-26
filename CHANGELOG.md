@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.11
+
+### Patch Changes
+
+- refactor `basic` dir
+
 ## 3.0.10
 
 ### Patch Changes
