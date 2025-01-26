@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.10
+
+### Patch Changes
+
+- fetch previous sessions
+
 ## 3.0.9
 
 ### Patch Changes
