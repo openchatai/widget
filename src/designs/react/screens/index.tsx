@@ -4,15 +4,17 @@ import { ChatScreen } from "./chat";
 import { WelcomeScreen } from "./welcome";
 import { useContact } from "../../../headless/react";
 import { MotionDiv } from "../components/lib/MotionDiv";
+import { useWidgetRouter } from "../../../headless/react/hooks/useWidgetRouter";
 
 export function RootScreen() {
-  const { contactCtx } = useContact();
-  const shouldCollectData = contactCtx.shouldCollectData();
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
 
   return (
     <div className="bg-background size-full" data-test="root-screen">
       <AnimatePresence mode="wait">
-        {shouldCollectData ? (
+        {screen === "welcome" ? (
           <MotionDiv
             key="welcome-screen"
             fadeIn="right"
