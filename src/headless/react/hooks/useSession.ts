@@ -3,8 +3,15 @@ import { usePrimitiveState } from "./usePrimitiveState";
 
 export function useSession() {
   const { widgetCtx } = useWidget();
-  const sessionState = usePrimitiveState(widgetCtx.sessionCtx.state);
-  const { state, ...sessionCtx } = widgetCtx.sessionCtx;
+  const sessionState = usePrimitiveState(widgetCtx.sessionCtx.sessionState);
+  const sessionsState = usePrimitiveState(widgetCtx.sessionCtx.sessionsState);
 
-  return { sessionState, sessionCtx };
+  // Ignore non-reactive state from ctx
+  const {
+    sessionState: _ignored,
+    sessionsState: _ignoredAsWell,
+    ...sessionCtx
+  } = widgetCtx.sessionCtx;
+
+  return { sessionState, sessionsState, sessionCtx };
 }

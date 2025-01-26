@@ -55,7 +55,7 @@ export class MessageCtx {
   };
 
   registerPolling = () => {
-    this.sessionCtx.state.subscribe(({ session }) => {
+    this.sessionCtx.sessionState.subscribe(({ session }) => {
       if (session?.id) {
         this.poller.startPolling(async (abortSignal) => {
           await this.fetchAndSetHistory(session.id, abortSignal);
@@ -78,7 +78,7 @@ export class MessageCtx {
     /* ------------------------------------------------------ */
     const isSending = this.state.get().isSendingMessage;
     const isAssignedToAI =
-      this.sessionCtx.state.get().session?.assignee.kind === "ai";
+      this.sessionCtx.sessionState.get().session?.assignee.kind === "ai";
     if (isSending && isAssignedToAI) {
       console.warn("Cannot send messages while awaiting AI response");
       return;
@@ -106,7 +106,7 @@ export class MessageCtx {
       /* ------------------------------------------------------ */
       /*              Create session if not exists              */
       /* ------------------------------------------------------ */
-      if (!this.sessionCtx.state.get().session?.id) {
+      if (!this.sessionCtx.sessionState.get().session?.id) {
         const createdSession = await this.sessionCtx.createSession();
 
         // TODO: apply some retry logic here
@@ -115,7 +115,7 @@ export class MessageCtx {
           return;
         }
       }
-      const sessionId = this.sessionCtx.state.get().session?.id;
+      const sessionId = this.sessionCtx.sessionState.get().session?.id;
       if (!sessionId) return;
 
       /* ------------------------------------------------------ */
