@@ -15,7 +15,7 @@ import type {
 import { Poller } from "../utils/Poller";
 import { PubSub } from "../utils/PubSub";
 import { genUuid } from "../utils/uuid";
-import { SessionCtx } from "./session";
+import { SessionCtx } from "./session.ctx";
 
 export class MessageCtx {
   private config: WidgetConfig;

@@ -25,9 +25,9 @@ export type {
 } from "./types/schemas";
 export type { WidgetConfig } from "./types/WidgetConfig";
 
-export { WidgetCtx } from "./context/widget";
-export type { ContactCtx } from "./context/contact";
-export type { SessionCtx } from "./context/session";
-export type { MessageCtx } from "./context/message";
+export { WidgetCtx } from "./context/widget.ctx";
+export type { ContactCtx } from "./context/contact.ctx";
+export type { SessionCtx } from "./context/session.ctx";
+export type { MessageCtx } from "./context/message.ctx";
 
 export { PubSub } from "./utils/PubSub";

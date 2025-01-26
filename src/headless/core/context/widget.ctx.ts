@@ -1,8 +1,8 @@
 import { ApiCaller } from "../api";
 import type { WidgetConfig } from "../types/WidgetConfig";
-import { ContactCtx } from "./contact";
-import { MessageCtx } from "./message";
-import { SessionCtx } from "./session";
+import { ContactCtx } from "./contact.ctx";
+import { MessageCtx } from "./message.ctx";
+import { SessionCtx } from "./session.ctx";
 
 export class WidgetCtx {
   public config: WidgetConfig;

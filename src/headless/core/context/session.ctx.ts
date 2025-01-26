@@ -4,7 +4,7 @@ import type { SessionDto } from "../types/schemas";
 import type { WidgetConfig } from "../types/WidgetConfig";
 import { Poller } from "../utils/Poller";
 import { PubSub } from "../utils/PubSub";
-import type { ContactCtx } from "./contact";
+import type { ContactCtx } from "./contact.ctx";
 
 type SessionCtxState = {
   /** The currently selected session */
