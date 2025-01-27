@@ -254,6 +254,7 @@ export interface components {
         };
         channel: string;
         isVerified: boolean;
+        lastMessage: string | null;
       }[];
       /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
       next: string | null;
@@ -374,6 +375,7 @@ export interface components {
       };
       channel: string;
       isVerified: boolean;
+      lastMessage: string | null;
     };
     WidgetVoteDto: {
       /** @enum {string} */
