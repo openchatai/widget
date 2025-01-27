@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.12
+
+### Patch Changes
+
+- get persisted sessions
+
 ## 3.0.11
 
 ### Patch Changes
