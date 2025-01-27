@@ -49,7 +49,7 @@ export function WelcomeScreen() {
       data-test="welcome-screen"
       className={cn(
         DEFAULT_STYLES.widgetMinHeight,
-        "h-fit bg-primary rounded-3xl flex flex-col",
+        "h-fit bg-primary flex flex-col",
       )}
     >
       <div
@@ -98,7 +98,7 @@ export function WelcomeScreen() {
       </div>
 
       <div
-        className="p-2 bg-background rounded-3xl"
+        className="p-2 bg-background rounded-t-3xl"
         data-test="welcome-form-container"
         dir="auto"
       >
@@ -130,7 +130,7 @@ export function WelcomeScreen() {
             disabled={handleSubmitState.loading}
             className="w-full rounded-3xl"
             data-test="start-chat-button"
-            dir="auto"
+            size="lg"
           >
             {handleSubmitState.loading
               ? locale.get("starting-chat")
