@@ -32,8 +32,7 @@ export function SessionsScreen() {
               key={s.id}
               variant="outline"
               size="free"
-              rounded="2xl"
-              className="p-3 pr-2 flex text-start justify-between w-full whitespace-normal"
+              className="rounded-3xl p-2.5 pr-2 flex text-start justify-between w-full whitespace-normal"
               onClick={() => toChatScreen(s.id)}
             >
               <p className="line-clamp-2 overflow-hidden text-ellipsis">
@@ -44,8 +43,7 @@ export function SessionsScreen() {
           ))}
           <Button
             key="new-session"
-            rounded="2xl"
-            className="mt-auto w-full"
+            className="mt-auto w-full rounded-3xl"
             onClick={() => toChatScreen()}
           >
             New chat
