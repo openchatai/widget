@@ -22,7 +22,8 @@ type SessionsState = {
   /** Indicates if no more pages are left */
   isLastPage: boolean;
   /** Did fetch for the first time */
-  didInitialFetch: boolean;
+  didStartInitialFetch: boolean;
+  isInitialFetchLoading: boolean;
 };
 
 export class SessionCtx {
@@ -39,7 +40,11 @@ export class SessionCtx {
     data: [],
     cursor: undefined,
     isLastPage: false,
-    didInitialFetch: false,
+    didStartInitialFetch: false,
+    /**
+     * Initialize this as `true` so it always starts loading until the first fetch is done
+     */
+    isInitialFetchLoading: true,
   });
 
   constructor({
@@ -80,11 +85,14 @@ export class SessionCtx {
   };
 
   private registerInitialSessionsFetch = () => {
-    this.contactCtx.state.subscribe(({ contact }) => {
-      if (contact?.token && !this.sessionsState.get().didInitialFetch) {
-        this.sessionsState.setPartial({ didInitialFetch: true });
+    this.contactCtx.state.subscribe(async ({ contact }) => {
+      if (contact?.token && !this.sessionsState.get().didStartInitialFetch) {
+        this.sessionsState.setPartial({ didStartInitialFetch: true });
+
         // Call this for the first time to get the first page of sessions
-        this.loadMoreSessions();
+        await this.loadMoreSessions();
+
+        this.sessionsState.setPartial({ isInitialFetchLoading: false });
       }
     });
   };
