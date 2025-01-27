@@ -89,7 +89,7 @@ function WidgetContent() {
               overflow: "hidden",
               /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
               outline: "1px solid",
-              outlineColor: "hsl(240 10% 3.9% / 0.2)",
+              outlineColor: "hsl(0 0% 50% / .5)",
               borderRadius: "32px",
               boxShadow: "0 25px 50px -12px rgb(0 0 0 / 0.25)",
               transitionProperty: "height",
