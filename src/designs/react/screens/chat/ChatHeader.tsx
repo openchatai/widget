@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { EllipsisVerticalIcon, RotateCcw } from "lucide-react";
+import { ChevronLeftIcon, EllipsisVerticalIcon, RotateCcw } from "lucide-react";
 import React, { useState } from "react";
 import { useLocale } from "../../hooks/useLocale";
 import { usePreludeData, useWidget } from "../../../../headless/react";
@@ -13,6 +13,7 @@ import {
 } from "../../components/lib/dropdown-menu";
 import { Skeleton } from "../../components/lib/skeleton";
 import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
+import { useWidgetRouter } from "../../../../headless/react/hooks/useWidgetRouter";
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -126,6 +127,7 @@ function OptionsMenu() {
 }
 
 export function ChatHeader() {
+  const { toSessionsScreen } = useWidgetRouter();
   const { data, isLoading } = usePreludeData();
   const direction = useDocumentDir();
   return (
@@ -134,7 +136,15 @@ export function ChatHeader() {
         dir={direction}
         className="flex items-center rtl:flex-row-reverse gap-2"
       >
-        {/* <SettingsPopover /> */}
+        <Button
+          variant="ghost"
+          size="fit"
+          className="rounded-full"
+          onClick={toSessionsScreen}
+        >
+          {/* TODO handle rtl here */}
+          <ChevronLeftIcon className="size-4" />
+        </Button>
         <div className="flex-1 pl-2">
           {isLoading ? (
             <Skeleton className="h-4 w-2/3" />
