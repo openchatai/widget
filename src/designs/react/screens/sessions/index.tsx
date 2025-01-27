@@ -64,6 +64,7 @@ export function SessionsScreen() {
                     key="new-session"
                     className="mt-auto w-full rounded-3xl sticky bottom-0"
                     onClick={() => toChatScreen()}
+                    // TODO add translation
                   >
                     New chat
                   </Button>
@@ -71,7 +72,10 @@ export function SessionsScreen() {
               ) : (
                 <div className="size-full flex flex-col gap-2 items-center">
                   <div className="flex-1 flex items-center justify-center">
-                    <p className="text-muted-foreground">
+                    <p
+                      className="text-muted-foreground"
+                      // TODO add translation
+                    >
                       No conversations yet
                     </p>
                   </div>
@@ -80,6 +84,7 @@ export function SessionsScreen() {
                     key="new-session"
                     className="w-full rounded-3xl"
                     onClick={() => toChatScreen()}
+                    // TODO add translation
                   >
                     Start your first chat
                   </Button>
