@@ -17,7 +17,7 @@ import {
   useIsAwaitingBotReply,
   useMessages,
   usePreludeData,
-  useSession,
+  useSessions,
   useUploadFiles,
   useWidget,
   type FileWithProgress,
@@ -129,7 +129,7 @@ const INPUT_CONTAINER_B_RADIUS = cn("rounded-3xl");
 function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { sendMessage } = useMessages();
-  const { sessionState } = useSession();
+  const { sessionState } = useSessions();
   const locale = useLocale();
   const dir = useDocumentDir();
   const [inputText, setInputText] = useState("");
@@ -337,10 +337,7 @@ function SessionClosedSection() {
         </div>
 
         <div>
-          <Button
-            onClick={widgetCtx.resetChat}
-            className="rounded-2xl w-full"
-          >
+          <Button onClick={widgetCtx.resetChat} className="rounded-2xl w-full">
             {locale.get("new-conversation")}
           </Button>
         </div>
@@ -350,7 +347,7 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
-  const { sessionState } = useSession();
+  const { sessionState } = useSessions();
   const { messagesState, sendMessage } = useMessages();
 
   const preludeSWR = usePreludeData();

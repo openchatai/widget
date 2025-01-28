@@ -5,7 +5,7 @@ import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useMessages, useSession } from "../../../../headless/react";
+import { useMessages, useSessions } from "../../../../headless/react";
 import { AnimatePresence } from "framer-motion";
 import { MotionDiv } from "../../components/lib/MotionDiv";
 import { Loading } from "../../components/lib/loading";
@@ -16,7 +16,7 @@ export function ChatScreen() {
   } = useMessages();
   const {
     sessionState: { session },
-  } = useSession();
+  } = useSessions();
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });

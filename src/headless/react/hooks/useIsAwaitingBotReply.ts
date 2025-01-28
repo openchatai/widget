@@ -1,8 +1,8 @@
 import { useMessages } from "./useMessages";
-import { useSession } from "./useSession";
+import { useSessions } from "./useSessions";
 
 export function useIsAwaitingBotReply() {
-  const { sessionState } = useSession();
+  const { sessionState } = useSessions();
   const { messagesState } = useMessages();
 
   const isAwaitingBotReply =

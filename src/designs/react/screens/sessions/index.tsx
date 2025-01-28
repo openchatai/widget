@@ -2,7 +2,7 @@ import React from "react";
 import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
 import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
 import { cn } from "../../components/lib/utils/cn";
-import { useSession } from "../../../../headless/react";
+import { useSessions } from "../../../../headless/react";
 import { Button } from "../../components/lib/button";
 import { useWidgetRouter } from "../../../../headless/react/hooks/useWidgetRouter";
 import { Avatar, AvatarImage } from "../../components/lib/avatar";
@@ -15,7 +15,7 @@ export function SessionsScreen() {
   const { toChatScreen } = useWidgetRouter();
   const {
     sessionsState: { data: sessions, isInitialFetchLoading: isLoading },
-  } = useSession();
+  } = useSessions();
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });

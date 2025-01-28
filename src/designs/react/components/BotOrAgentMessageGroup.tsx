@@ -7,7 +7,7 @@ import type {
   AgentOrBotType,
   BotMessageType,
 } from "../../../headless/core";
-import { useSession } from "../../../headless/react";
+import { useSessions } from "../../../headless/react";
 import { cn } from "./lib/utils/cn";
 
 export function BotOrAgentMessageGroup({
@@ -17,7 +17,7 @@ export function BotOrAgentMessageGroup({
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentOrBotType | undefined;
 }) {
-  const { sessionState } = useSession();
+  const { sessionState } = useSessions();
 
   return (
     <div className={cn("flex flex-col items-start gap-2")}>
