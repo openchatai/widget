@@ -15,7 +15,6 @@ import { BotOrAgentMessage } from "../../components/BotOrAgentMessage";
 import { BotOrAgentMessageWrapper } from "../../components/BotOrAgentMessageWrapper";
 import { UserMessageGroup } from "../../components/UserMessageGroup";
 import { BotOrAgentMessageGroup } from "../../components/BotOrAgentMessageGroup";
-import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
 
 export function ChatMain() {
   const {
