@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.14
+
+### Patch Changes
+
+- add loading when fetching messages
+
 ## 3.0.13
 
 ### Patch Changes
