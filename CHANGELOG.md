@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.13
+
+### Patch Changes
+
+- add sessions screen
+
 ## 3.0.12
 
 ### Patch Changes
