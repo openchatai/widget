@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.16
+
+### Patch Changes
+
+- prevent re-renderes from reinitializing the widget context
+
 ## 3.0.15
 
 ### Patch Changes
