@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ChevronLeftIcon, EllipsisVerticalIcon, RotateCcw } from "lucide-react";
+import { ChevronLeftIcon, EllipsisVerticalIcon, MessageCirclePlusIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useLocale } from "../../hooks/useLocale";
 import { usePreludeData, useWidget } from "../../../../headless/react";
@@ -116,9 +116,9 @@ function OptionsMenu() {
               initial={{ opacity: 0, x: -4, rotate: 360 }}
               animate={{ opacity: 1, x: 0, rotate: 0 }}
             >
-              <RotateCcw />
+              <MessageCirclePlusIcon />
             </motion.div>
-            {locale.get("reset-conversation")}
+            {locale.get("new-conversation")}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

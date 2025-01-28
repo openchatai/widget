@@ -41,13 +41,12 @@ export const deLocale: TranslationInterface = {
   "got-any-questions": "Haben Sie Fragen? Chatten Sie mit uns!",
   "typical-response-time":
     "Üblicherweise antworten wir in weniger als 1 Minute",
-  "reset-conversation-confirm":
-    "Möchten Sie die Konversation wirklich zurücksetzen?",
   "close-widget": "Widget schließen",
   "session-closed-lead": "Ihr Problem wurde gelöst!",
   "create-new-ticket": "Neues Ticket erstellen",
   exit: "Beenden",
   "reset-conversation": "Konversation zurücksetzen",
+  "new-conversation": "Neue Konversation",
   "welcome-title": "Willkommen in unserem Support-Chat",
   "welcome-description":
     "Wir sind hier, um zu helfen! Beginnen Sie ein Gespräch und wir werden so schnell wie möglich antworten.",

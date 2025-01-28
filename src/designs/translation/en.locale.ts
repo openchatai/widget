@@ -38,8 +38,6 @@ export const enLocale: TranslationInterface = {
   agent: "Agent",
   user: "User",
   bot: "Bot",
-  "reset-conversation-confirm":
-    "Are you sure you want to reset the conversation?",
   "close-widget": "Close widget",
   "got-any-questions": "Got any questions? Chat with us!",
   "typical-response-time": "Typically respond in less than 1 minute",
@@ -47,6 +45,7 @@ export const enLocale: TranslationInterface = {
   "create-new-ticket": "Create new ticket",
   exit: "Exit",
   "reset-conversation": "Reset conversation",
+  "new-conversation": "New conversation",
   "welcome-title": "Welcome to our support chat",
   "welcome-description":
     "We're here to help! Start a conversation and we'll get back to you as soon as possible.",

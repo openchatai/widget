@@ -38,8 +38,6 @@ export const frLocale: TranslationInterface = {
   agent: "Agent",
   user: "Utilisateur",
   bot: "Bot",
-  "reset-conversation-confirm":
-    "Êtes-vous sûr de vouloir réinitialiser la conversation ?",
   "close-widget": "Fermer le widget",
   "got-any-questions": "Vous avez des questions ? Chattez avec nous !",
   "typical-response-time": "Nous répondons généralement en moins d'une minute",
@@ -47,6 +45,7 @@ export const frLocale: TranslationInterface = {
   "create-new-ticket": "Créer un nouveau ticket",
   exit: "Sortie",
   "reset-conversation": "Réinitialiser la conversation",
+  "new-conversation": "Nouvelle conversation",
   "welcome-title": "Bienvenue dans notre chat de support",
   "welcome-description":
     "Nous sommes là pour vous aider ! Commencez une conversation et nous vous répondrons dès que possible.",

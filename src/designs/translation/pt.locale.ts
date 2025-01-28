@@ -38,8 +38,6 @@ export const ptLocale: TranslationInterface = {
   agent: "Agente",
   user: "Usuário",
   bot: "Bot",
-  "reset-conversation-confirm":
-    "Você tem certeza de que deseja redefinir a conversa?",
   "close-widget": "Fechar widget",
   "got-any-questions": "Tem alguma dúvida? Converse conosco!",
   "typical-response-time": "Geralmente respondemos em menos de 1 minuto",
@@ -47,6 +45,7 @@ export const ptLocale: TranslationInterface = {
   "create-new-ticket": "Criar novo ticket",
   exit: "Sair",
   "reset-conversation": "Redefinir conversa",
+  "new-conversation": "Nova conversa",
   "welcome-title": "Bem-vindo ao nosso chat de suporte",
   "welcome-description":
     "Estamos aqui para ajudar! Inicie uma conversa e responderemos o mais rápido possível.",

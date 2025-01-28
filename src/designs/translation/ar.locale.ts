@@ -38,8 +38,6 @@ export const arLocale: TranslationInterface = {
   agent: "الوكيل",
   user: "المستخدم",
   bot: "البوت",
-  "reset-conversation-confirm":
-    "هل أنت متأكد من أنك تريد إعادة تعيين المحادثة؟",
   "close-widget": "إغلاق الودجة",
   "got-any-questions": "هل لديك أي أسئلة؟ تحدث معنا!",
   "typical-response-time": "عادة ما نرد في أقل من دقيقة واحدة",
@@ -47,6 +45,7 @@ export const arLocale: TranslationInterface = {
   exit: "خروج",
   "create-new-ticket": "إنشاء تذكرة جديدة",
   "reset-conversation": "إعادة تعيين المحادثة",
+  "new-conversation": "محادثة جديدة",
   "welcome-title": "مرحبًا بك في دردشة الدعم الخاصة بنا",
   "welcome-description":
     "نحن هنا للمساعدة! ابدأ محادثة وسنرد عليك في أقرب وقت ممكن.",

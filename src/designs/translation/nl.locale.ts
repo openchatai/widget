@@ -38,7 +38,6 @@ export const nlLocale: TranslationInterface = {
   agent: "Agent",
   user: "Gebruiker",
   bot: "Bot",
-  "reset-conversation-confirm": "Weet u zeker dat u het gesprek wilt resetten?",
   "close-widget": "Widget sluiten",
   "got-any-questions": "Heeft u vragen? Chat met ons!",
   "typical-response-time": "We reageren doorgaans binnen 1 minuut",
@@ -46,6 +45,7 @@ export const nlLocale: TranslationInterface = {
   "create-new-ticket": "Nieuw ticket aanmaken",
   exit: "Afsluiten",
   "reset-conversation": "Gesprek resetten",
+  "new-conversation": "Nieuw gesprek",
   "welcome-title": "Welkom bij onze supportchat",
   "welcome-description":
     "We zijn hier om te helpen! Begin een gesprek en we nemen zo snel mogelijk contact met u op.",
