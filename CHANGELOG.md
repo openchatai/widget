@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.15
+
+### Patch Changes
+
+- export useWidgetRouter
+
 ## 3.0.14
 
 ### Patch Changes
