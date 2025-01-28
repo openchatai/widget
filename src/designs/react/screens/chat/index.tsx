@@ -1,23 +1,25 @@
 import React from "react";
+import { cn } from "../../components/lib/utils/cn";
+import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
+import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
 import { ChatFooter } from "./ChatFooter";
 import { ChatHeader } from "./ChatHeader";
 import { ChatMain } from "./ChatMain";
-import { useMessages, usePreludeData } from "../../../../headless/react";
-import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
-import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
-import { cn } from "../../components/lib/utils/cn";
-import { SuggestedReplies } from "../../components/SuggestedReplies";
-import { Button } from "../../components/lib/button";
+import { useMessages, useSession } from "../../../../headless/react";
+import { AnimatePresence } from "framer-motion";
+import { MotionDiv } from "../../components/lib/MotionDiv";
+import { Loading } from "../../components/lib/loading";
 
 export function ChatScreen() {
-  const { messagesState, sendMessage } = useMessages();
-  const preludeSWR = usePreludeData();
-  const initialQuestions = preludeSWR.data?.data?.initialQuestions;
+  const {
+    messagesState: { isInitialFetchLoading },
+  } = useMessages();
+  const {
+    sessionState: { session },
+  } = useSession();
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });
-
-  const noMessages = messagesState.messages.length === 0;
 
   return (
     <div
@@ -33,49 +35,27 @@ export function ChatScreen() {
         data-test="chat-screen-content"
       >
         <ChatHeader />
-        <div
-          className="flex bg-background shadow-lg flex-col w-full flex-1 overflow-auto"
-          data-test="chat-main-container"
-        >
-          <ChatMain />
-          <footer data-test="chat-footer">
-            {messagesState.suggestedReplies && (
-              <SuggestedReplies
-                data-test="chat-keyboard"
-                options={messagesState.suggestedReplies}
-                onKeyboardClick={(option) => {
-                  const trimmed = option.trim();
-                  if (!trimmed) return;
-                  sendMessage({ content: trimmed });
-                }}
-              />
-            )}
-
-            {noMessages && initialQuestions && (
-              <div
-                className="flex items-center flex-row justify-end gap-2 flex-wrap px-2"
-                data-test="initial-questions-container"
-              >
-                {initialQuestions?.map((iq, index) => (
-                  <Button
-                    key={index}
-                    dir="auto"
-                    variant="outline"
-                    size="sm"
-                    data-test={`initial-question-${index}`}
-                    onClick={() => {
-                      sendMessage({ content: iq });
-                    }}
-                  >
-                    {iq}
-                  </Button>
-                ))}
-              </div>
-            )}
-
-            <ChatFooter />
-          </footer>
-        </div>
+        <AnimatePresence mode="wait">
+          {isInitialFetchLoading ? (
+            <MotionDiv
+              key="loading"
+              className="flex flex-col items-center justify-center w-full flex-1"
+            >
+              <Loading />
+            </MotionDiv>
+          ) : (
+            <MotionDiv
+              // The key is the session id, so that when chat is reset, the animation replays
+              key={session?.id || "chat"}
+              className="flex flex-col w-full flex-1 overflow-auto"
+              // If we don't snap exit, the initial questions will show before the animation starts
+              snapExit
+            >
+              <ChatMain />
+              <ChatFooter />
+            </MotionDiv>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

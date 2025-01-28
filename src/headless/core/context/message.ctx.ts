@@ -27,10 +27,12 @@ export class MessageCtx {
     messages: MessageType[];
     isSendingMessage: boolean;
     suggestedReplies: string[] | null;
+    isInitialFetchLoading: boolean;
   }>({
     messages: [],
     isSendingMessage: false,
     suggestedReplies: null,
+    isInitialFetchLoading: false,
   });
 
   private sendMessageAbortController = new AbortController();
@@ -176,6 +178,17 @@ export class MessageCtx {
     sessionId: string,
     abortSignal: AbortSignal,
   ): Promise<void> => {
+    /**
+     * This is a bit of an implicit contract... there are two cases here
+     * 1. If there are no messages in state, it means the user selected a previous session from the sessions screen and got routed to the chat,
+     *    in this case, we want to show a loading indicator until the initial fetch is done
+     * 2. There is a single message in state, which is the optimistically rendered user message,
+     *    in this case, we don't want to show a loading indicator
+     */
+    if (this.state.get().messages.length === 0) {
+      this.state.setPartial({ isInitialFetchLoading: true });
+    }
+
     const lastMessageTimestamp = this.state.get().messages.at(-1)?.timestamp;
 
     const { data: response } = await this.api.getSessionHistory({
@@ -196,27 +209,10 @@ export class MessageCtx {
       this.state.setPartial({
         messages: [...prevMessages, ...newMessages],
       });
+    }
 
-      // if (newMessages.length > 0) {
-      //   // const playSoundEffects = config?.settings?.playSoundEffects;
-      //   // Play notification sound for new messages if enabled
-      //   // if (
-      //   //   playSoundEffects &&
-      //   //   platform?.audio &&
-      //   //   isAudioAvailable(platform.audio)
-      //   // ) {
-      //   //   const botMessages = newMessages.filter(
-      //   //     (msg) => msg.type === "FROM_BOT",
-      //   //   );
-      //   //   if (botMessages.length > 0) {
-      //   //     await safeAudioOperation(
-      //   //       () => platform.audio!.playNotification(),
-      //   //       "Failed to play notification sound for new messages",
-      //   //     );
-      //   //   }
-      //   // }
-
-      // }
+    if (this.state.get().isInitialFetchLoading) {
+      this.state.setPartial({ isInitialFetchLoading: false });
     }
   };
 
@@ -278,7 +274,9 @@ export class MessageCtx {
     };
   }
 
-  private static toBotMessage(response: SendMessageOutputDto): BotMessageType | null {
+  private static toBotMessage(
+    response: SendMessageOutputDto,
+  ): BotMessageType | null {
     if (response.success && response.autopilotResponse) {
       return {
         type: "FROM_BOT",

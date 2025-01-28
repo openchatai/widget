@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import {
   useIsAwaitingBotReply,
   useMessages,
+  usePreludeData,
   useSession,
   useUploadFiles,
   useWidget,
@@ -27,6 +28,7 @@ import { useLocale } from "../../hooks/useLocale";
 import { MotionDiv } from "../../components/lib/MotionDiv";
 import { Button } from "../../components/lib/button";
 import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
+import { SuggestedReplies } from "../../components/SuggestedReplies";
 
 function FileDisplay({
   file: { status, file, error },
@@ -338,9 +340,8 @@ function SessionClosedSection() {
           <Button
             onClick={widgetCtx.resetChat}
             className="rounded-2xl w-full"
-            data-test="create-new-ticket-button"
           >
-            {locale.get("create-new-ticket")}
+            {locale.get("new-conversation")}
           </Button>
         </div>
       </div>
@@ -350,36 +351,77 @@ function SessionClosedSection() {
 
 export function ChatFooter() {
   const { sessionState } = useSession();
+  const { messagesState, sendMessage } = useMessages();
+
+  const preludeSWR = usePreludeData();
+  const initialQuestions = preludeSWR.data?.data?.initialQuestions;
+  const noMessages = messagesState.messages.length === 0;
 
   return (
-    <div>
-      <AnimatePresence mode="wait">
-        {sessionState.session && !sessionState.session?.isOpened ? (
-          <MotionDiv
-            key="session-closed"
-            className="overflow-hidden"
-            overrides={{
-              initial: { height: 0 },
-              animate: { height: "auto" },
-              exit: { height: 0 },
-            }}
-          >
-            <SessionClosedSection />
-          </MotionDiv>
-        ) : (
-          <MotionDiv
-            key="chat-input"
-            className="overflow-hidden"
-            overrides={{
-              initial: { height: 0 },
-              animate: { height: "auto" },
-              exit: { height: 0 },
-            }}
-          >
-            <ChatInput />
-          </MotionDiv>
-        )}
-      </AnimatePresence>
-    </div>
+    <footer>
+      {messagesState.suggestedReplies && (
+        <SuggestedReplies
+          data-test="chat-keyboard"
+          options={messagesState.suggestedReplies}
+          onKeyboardClick={(option) => {
+            const trimmed = option.trim();
+            if (!trimmed) return;
+            sendMessage({ content: trimmed });
+          }}
+        />
+      )}
+
+      {noMessages && initialQuestions && (
+        <div
+          className="flex items-center flex-row justify-end gap-2 flex-wrap px-2"
+          data-test="initial-questions-container"
+        >
+          {initialQuestions?.map((iq, index) => (
+            <Button
+              key={index}
+              dir="auto"
+              variant="outline"
+              size="sm"
+              data-test={`initial-question-${index}`}
+              onClick={() => {
+                sendMessage({ content: iq });
+              }}
+            >
+              {iq}
+            </Button>
+          ))}
+        </div>
+      )}
+
+      <div>
+        <AnimatePresence mode="wait">
+          {sessionState.session && !sessionState.session?.isOpened ? (
+            <MotionDiv
+              key="session-closed"
+              className="overflow-hidden"
+              overrides={{
+                initial: { height: 0 },
+                animate: { height: "auto" },
+                exit: { height: 0 },
+              }}
+            >
+              <SessionClosedSection />
+            </MotionDiv>
+          ) : (
+            <MotionDiv
+              key="chat-input"
+              className="overflow-hidden"
+              overrides={{
+                initial: { height: 0 },
+                animate: { height: "auto" },
+                exit: { height: 0 },
+              }}
+            >
+              <ChatInput />
+            </MotionDiv>
+          )}
+        </AnimatePresence>
+      </div>
+    </footer>
   );
 }
