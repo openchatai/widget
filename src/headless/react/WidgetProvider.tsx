@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
 import { ComponentRegistry } from "./ComponentRegistry";
 import type { WidgetComponentType } from "./types/components";
 import { createSafeContext } from "./utils/create-safe-context";
 import { type WidgetConfig, WidgetCtx } from "../core";
-import { version } from "../../../package.json"
+import { version } from "../../../package.json";
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
@@ -23,10 +23,7 @@ function WidgetProvider({
   children: React.ReactNode;
   components?: WidgetComponentType[];
 }) {
-  const widgetCtx = useMemo(
-    () => new WidgetCtx({ config: options }),
-    [options],
-  );
+  const widgetCtx = useRef(new WidgetCtx({ config: options })).current;
 
   const componentStore = useMemo(
     () =>
