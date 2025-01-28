@@ -22,12 +22,12 @@ export const cssVars = (
     ? "240 10% 3.9%"
     : "0 0% 100%";
 
-  const primitivePrimary = `${_primary.h} ${_primary.s * 100}% ${_primary.l * 100}%`
+  /**
+   * Spread the primary color without the `hsl()` call so that we can use tailwind opacity classes on it
+   */
+  const primitivePrimary = `${_primary.h} ${_primary.s * 100}% ${_primary.l * 100}%`;
 
   return {
-    /**
-     * Spread the primary color without the `hsl()` call so that we can use tailwind opacity classes on it
-     */
     "--opencx-primary": primitivePrimary,
     "--opencx-primary-foreground": primaryForeground,
 
