@@ -2,9 +2,8 @@ import { AnimatePresence } from "framer-motion";
 import React from "react";
 import { ChatScreen } from "./chat";
 import { WelcomeScreen } from "./welcome";
-import { useContact, usePreludeData } from "../../../headless/react";
+import { usePreludeData, useWidgetRouter } from "../../../headless/react";
 import { MotionDiv } from "../components/lib/MotionDiv";
-import { useWidgetRouter } from "../../../headless/react/hooks/useWidgetRouter";
 import { SessionsScreen } from "./sessions";
 
 export function RootScreen() {

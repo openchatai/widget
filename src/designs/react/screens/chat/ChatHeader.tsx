@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ChevronLeftIcon, EllipsisVerticalIcon, MessageCirclePlusIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useLocale } from "../../hooks/useLocale";
-import { usePreludeData, useWidget } from "../../../../headless/react";
+import { usePreludeData, useWidget, useWidgetRouter } from "../../../../headless/react";
 import { Button } from "../../components/lib/button";
 import {
   DropdownMenu,
@@ -13,7 +13,6 @@ import {
 } from "../../components/lib/dropdown-menu";
 import { Skeleton } from "../../components/lib/skeleton";
 import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
-import { useWidgetRouter } from "../../../../headless/react/hooks/useWidgetRouter";
 
 function OptionsMenu() {
   const locale = useLocale();
