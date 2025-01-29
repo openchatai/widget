@@ -49,14 +49,16 @@ function SessionsList() {
                     <ChevronRightIcon className="size-4 text-muted-foreground shrink-0" />
                   </Button>
                 ))}
-                <Button
-                  size="lg"
-                  key="new-session"
-                  className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background"
-                  onClick={() => toChatScreen()}
-                >
-                  {locale.get("new-conversation")}
-                </Button>
+                <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background">
+                  <Button
+                    size="lg"
+                    key="new-session"
+                    className="w-full rounded-3xl"
+                    onClick={() => toChatScreen()}
+                  >
+                    {locale.get("new-conversation")}
+                  </Button>
+                </div>
               </>
             ) : (
               <div className="flex-1 flex flex-col gap-2 items-center">
