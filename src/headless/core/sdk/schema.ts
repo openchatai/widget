@@ -170,11 +170,6 @@ export interface components {
           /** @enum {boolean} */
           success: true;
           code?: string | "session_assigned_to_human_agent";
-          options?: {
-            /** @enum {string} */
-            type: "options";
-            value: string[];
-          };
           autopilotResponse?: {
             /** @enum {string} */
             type: "text";
@@ -183,6 +178,7 @@ export interface components {
               content: string;
             };
             id?: string;
+            mightSolveUserIssue: boolean;
           };
           uiResponse?: {
             /** @enum {string} */
@@ -194,6 +190,7 @@ export interface components {
               name: string;
               content?: string;
             };
+            mightSolveUserIssue: boolean;
           };
           sessionIsHandedOff?: boolean;
         }
