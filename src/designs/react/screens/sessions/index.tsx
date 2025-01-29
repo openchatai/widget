@@ -52,7 +52,7 @@ function SessionsList() {
                 <Button
                   size="lg"
                   key="new-session"
-                  className="mt-auto w-full rounded-3xl sticky bottom-0"
+                  className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background"
                   onClick={() => toChatScreen()}
                 >
                   {locale.get("new-conversation")}
