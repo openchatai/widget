@@ -17,21 +17,23 @@ import { PrimitiveState } from "../utils/PrimitiveState";
 import { genUuid } from "../utils/uuid";
 import { SessionCtx } from "./session.ctx";
 
+type MessageCtxState = {
+  messages: MessageType[];
+  isSendingMessage: boolean;
+  lastAIResMightSolveUserIssue: boolean;
+  isInitialFetchLoading: boolean;
+};
+
 export class MessageCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
   private sessionCtx: SessionCtx;
   private poller = new Poller();
 
-  public state = new PrimitiveState<{
-    messages: MessageType[];
-    isSendingMessage: boolean;
-    suggestedReplies: string[] | null;
-    isInitialFetchLoading: boolean;
-  }>({
+  public state = new PrimitiveState<MessageCtxState>({
     messages: [],
     isSendingMessage: false,
-    suggestedReplies: null,
+    lastAIResMightSolveUserIssue: false,
     isInitialFetchLoading: false,
   });
 
@@ -87,9 +89,9 @@ export class MessageCtx {
     }
 
     /* ------------------------------------------------------ */
-    /*                 Clear suggested replies                */
+    /*      Clear last AI response might solve user issue     */
     /* ------------------------------------------------------ */
-    this.state.setPartial({ suggestedReplies: null });
+    this.state.setPartial({ lastAIResMightSolveUserIssue: false });
 
     try {
       this.state.setPartial({ isSendingMessage: true });
@@ -146,15 +148,20 @@ export class MessageCtx {
           const shouldAppend = !prevMessages.some(
             (m) => m.id === botMessage.id,
           );
-          if (!shouldAppend) return;
-          this.state.setPartial({ messages: [...prevMessages, botMessage] });
-        } else {
-          /* ------------------------------------------------------ */
-          /*      Check if bot responded with suggested replies     */
-          /* ------------------------------------------------------ */
-          if (data.options?.value && data.options?.value.length > 0) {
-            this.state.setPartial({ suggestedReplies: data.options.value });
+          if (!shouldAppend) {
+            this.state.setPartial({
+              lastAIResMightSolveUserIssue:
+                data.autopilotResponse?.mightSolveUserIssue ||
+                data.uiResponse?.mightSolveUserIssue,
+            });
+            return;
           }
+          this.state.setPartial({
+            messages: [...prevMessages, botMessage],
+            lastAIResMightSolveUserIssue:
+              data.autopilotResponse?.mightSolveUserIssue ||
+              data.uiResponse?.mightSolveUserIssue,
+          });
         }
       } else {
         const errorMessage = MessageCtx.toErrorMessage(
@@ -277,6 +284,8 @@ export class MessageCtx {
   private static toBotMessage(
     response: SendMessageOutputDto,
   ): BotMessageType | null {
+    // TODO: sometimes the bot replies with both an autopilotResponse and a uiResponse... handle this case
+
     if (response.success && response.autopilotResponse) {
       return {
         type: "FROM_BOT",

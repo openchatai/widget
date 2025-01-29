@@ -356,40 +356,6 @@ export function ChatFooter() {
 
   return (
     <footer>
-      {messagesState.suggestedReplies && (
-        <SuggestedReplies
-          data-test="chat-keyboard"
-          options={messagesState.suggestedReplies}
-          onKeyboardClick={(option) => {
-            const trimmed = option.trim();
-            if (!trimmed) return;
-            sendMessage({ content: trimmed });
-          }}
-        />
-      )}
-
-      {noMessages && initialQuestions && (
-        <div
-          className="flex items-center flex-row justify-end gap-2 flex-wrap px-2"
-          data-test="initial-questions-container"
-        >
-          {initialQuestions?.map((iq, index) => (
-            <Button
-              key={index}
-              dir="auto"
-              variant="outline"
-              size="sm"
-              data-test={`initial-question-${index}`}
-              onClick={() => {
-                sendMessage({ content: iq });
-              }}
-            >
-              {iq}
-            </Button>
-          ))}
-        </div>
-      )}
-
       <div>
         <AnimatePresence mode="wait">
           {sessionState.session && !sessionState.session?.isOpened ? (
@@ -414,6 +380,32 @@ export function ChatFooter() {
                 exit: { height: 0 },
               }}
             >
+              {messagesState.lastAIResMightSolveUserIssue && (
+                <SuggestedReplies />
+              )}
+
+              {noMessages && initialQuestions && (
+                <div
+                  className="flex items-center flex-row justify-end gap-2 flex-wrap px-2"
+                  data-test="initial-questions-container"
+                >
+                  {initialQuestions?.map((iq, index) => (
+                    <Button
+                      key={index}
+                      dir="auto"
+                      variant="outline"
+                      size="sm"
+                      data-test={`initial-question-${index}`}
+                      onClick={() => {
+                        sendMessage({ content: iq });
+                      }}
+                    >
+                      {iq}
+                    </Button>
+                  ))}
+                </div>
+              )}
+
               <ChatInput />
             </MotionDiv>
           )}

@@ -43,6 +43,7 @@ export interface WidgetConfig {
     // triggerOffset?: string;
   };
   settings?: {
+    // TODO remove persistSession option
     persistSession?: boolean;
     playSoundEffects?: boolean;
   };

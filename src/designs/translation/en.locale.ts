@@ -54,4 +54,6 @@ export const enLocale: TranslationInterface = {
   "start-chat": "Talk to support",
   "starting-chat": "Connecting...",
   "hello-greeting": "Hi there!",
+  "i-need-more-help": "I need more help",
+  "this-was-helpful": "This was helpful",
 };

@@ -1,3 +1,4 @@
+// TODO clean unused translations
 export type TranslationKeysU =
   | "ok"
   | "yes"
@@ -50,7 +51,9 @@ export type TranslationKeysU =
   | "your-email"
   | "start-chat"
   | "starting-chat"
-  | "hello-greeting";
+  | "hello-greeting"
+  | "i-need-more-help"
+  | "this-was-helpful";
 
 export type TranslationInterface = {
   [K in TranslationKeysU]: string;

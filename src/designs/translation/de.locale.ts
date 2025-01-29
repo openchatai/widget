@@ -49,10 +49,12 @@ export const deLocale: TranslationInterface = {
   "new-conversation": "Neue Konversation",
   "welcome-title": "Willkommen in unserem Support-Chat",
   "welcome-description":
-    "Wir sind hier, um zu helfen! Beginnen Sie ein Gespräch und wir werden so schnell wie möglich antworten.",
+    "Wir sind hier, um zu helfen! Beginnen Sie ein Gesprách und wir werden so schnell wie mogelijk antworten.",
   "your-name": "Ihr Name",
   "your-email": "Ihre E-Mail-Adresse",
   "start-chat": "Mit dem Support sprechen",
   "starting-chat": "Verbindung wird hergestellt...",
   "hello-greeting": "Hallo! Wie können wir Ihnen heute helfen?",
+  "i-need-more-help": "Ich brauche weitere Hilfe",
+  "this-was-helpful": "Dies war hilfreich",
 };
