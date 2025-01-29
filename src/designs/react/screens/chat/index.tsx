@@ -3,7 +3,7 @@ import { cn } from "../../components/lib/utils/cn";
 import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
 import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
 import { ChatFooter } from "./ChatFooter";
-import { ChatHeader } from "./ChatHeader";
+import { WidgetHeader } from "../../components/WidgetHeader";
 import { ChatMain } from "./ChatMain";
 import { useMessages, useSessions } from "../../../../headless/react";
 import { AnimatePresence } from "framer-motion";
@@ -31,10 +31,10 @@ export function ChatScreen() {
       )}
     >
       <div
-        className="w-full h-full justify-between flex flex-col relative"
+        className="size-full justify-between flex flex-col"
         data-test="chat-screen-content"
       >
-        <ChatHeader />
+        <WidgetHeader />
         <AnimatePresence mode="wait">
           {isInitialFetchLoading ? (
             <MotionDiv
