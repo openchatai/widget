@@ -85,14 +85,25 @@ export class SessionCtx {
   };
 
   private registerInitialSessionsFetch = () => {
-    this.contactCtx.state.subscribe(async ({ contact }) => {
+    const initialFetch = async () => {
+      this.sessionsState.setPartial({ didStartInitialFetch: true });
+      // Call this for the first time to get the first page of sessions
+      await this.loadMoreSessions();
+      this.sessionsState.setPartial({ isInitialFetchLoading: false });
+    };
+
+    // If the widget config was initially provided with a contact token, no state change would be triggered, so we just fetch
+    if (
+      this.contactCtx.state.get().contact?.token &&
+      !this.sessionsState.get().didStartInitialFetch
+    ) {
+      initialFetch();
+    }
+
+    // In other cases where auto authenticate is fired, the token would be eventually set in state, so we wait for it
+    this.contactCtx.state.subscribe(({ contact }) => {
       if (contact?.token && !this.sessionsState.get().didStartInitialFetch) {
-        this.sessionsState.setPartial({ didStartInitialFetch: true });
-
-        // Call this for the first time to get the first page of sessions
-        await this.loadMoreSessions();
-
-        this.sessionsState.setPartial({ isInitialFetchLoading: false });
+        initialFetch();
       }
     });
   };
