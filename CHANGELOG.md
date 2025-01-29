@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.17
+
+### Patch Changes
+
+- fix initial sessions fetch when user.token is initially provided
+
 ## 3.0.16
 
 ### Patch Changes
