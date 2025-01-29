@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.18
+
+### Patch Changes
+
+- fix ai res might solve user issue
+
 ## 3.0.17
 
 ### Patch Changes
