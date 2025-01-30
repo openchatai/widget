@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.20
+
+### Patch Changes
+
+- fix custom components
+
 ## 3.0.19
 
 ### Patch Changes
