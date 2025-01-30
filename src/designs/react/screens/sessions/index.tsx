@@ -2,7 +2,11 @@ import React from "react";
 import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
 import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
 import { cn } from "../../components/lib/utils/cn";
-import { useSessions, useWidgetRouter } from "../../../../headless/react";
+import {
+  useConfig,
+  useSessions,
+  useWidgetRouter,
+} from "../../../../headless/react";
 import { Button } from "../../components/lib/button";
 import { ChevronRightIcon } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
@@ -12,29 +16,49 @@ import { WidgetHeader } from "../../components/WidgetHeader";
 import { useLocale } from "../../hooks/useLocale";
 import type { SessionDto } from "../../../../headless/core";
 import { Skeleton } from "../../components/lib/skeleton";
+import { Avatar, AvatarImage } from "../../components/lib/avatar";
 
 function SessionCard({ session }: { session: SessionDto }) {
+  const { bot } = useConfig();
   const { toChatScreen } = useWidgetRouter();
+
+  const assigneeName =
+    session.assignee.kind === "human"
+      ? session.assignee.name || "Support Agent"
+      : bot?.name || "AI Support Agent";
+  const assigneeAvatarUrl =
+    session.assignee.kind === "human"
+      ? session.assignee.avatarUrl
+      : bot?.avatar;
+
   return (
     <Button
       variant="outline"
       size="lg"
-      className="rounded-3xl p-2.5 pr-2 flex text-start justify-between w-full whitespace-normal"
+      className="border-muted rounded-full p-2 flex text-start justify-between w-full whitespace-normal"
       onClick={() => toChatScreen(session.id)}
     >
-      <AnimatePresence mode="wait">
-        {session.lastMessage ? (
-          <MotionDiv key="content">
-            <p className="line-clamp-2 overflow-hidden text-ellipsis">
-              {session.lastMessage}
-            </p>
-          </MotionDiv>
-        ) : (
-          <MotionDiv key="skeleton" className="w-1/2" snapExit>
-            <Skeleton className="h-4 w-full" />
-          </MotionDiv>
-        )}
-      </AnimatePresence>
+      <div className="flex-1 flex gap-2 items-center">
+        <Avatar className="size-10">
+          <AvatarImage src={assigneeAvatarUrl ?? ""} alt="Agent Icon" />
+        </Avatar>
+        <div>
+          <p>{assigneeName}</p>
+          <AnimatePresence mode="wait">
+            {session.lastMessage ? (
+              <MotionDiv key={session.lastMessage || "content"}>
+                <p className="line-clamp-1 overflow-hidden text-ellipsis text-xs text-muted-foreground">
+                  {session.lastMessage}
+                </p>
+              </MotionDiv>
+            ) : (
+              <MotionDiv key="skeleton" className="w-1/2" snapExit>
+                <Skeleton className="h-4 w-full" />
+              </MotionDiv>
+            )}
+          </AnimatePresence>
+        </div>
+      </div>
       <ChevronRightIcon className="size-4 text-muted-foreground shrink-0" />
     </Button>
   );
