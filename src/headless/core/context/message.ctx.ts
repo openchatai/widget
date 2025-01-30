@@ -164,7 +164,7 @@ export class MessageCtx {
           });
         }
       } else {
-        const errorMessage = MessageCtx.toErrorMessage(
+        const errorMessage = MessageCtx.toBotErrorMessage(
           data?.error?.message || "Unknown error occurred",
         );
         const currentMessages = this.state.get().messages;
@@ -251,6 +251,7 @@ export class MessageCtx {
       };
     }
 
+    const action = history.actionCalls?.at(-1);
     return {
       ...commonFields,
       type: "FROM_BOT",
@@ -262,7 +263,10 @@ export class MessageCtx {
         avatar: history.sender.avatar || null,
       },
       data: {
-        message: history.content.text,
+        message: history.content.text || "",
+        action: action
+          ? { name: action.actionName, data: action.result }
+          : undefined,
       },
     };
   }
@@ -294,25 +298,20 @@ export class MessageCtx {
         component: "bot_message",
         data: {
           message: response.autopilotResponse.value.content,
+          action: response.uiResponse?.value.name
+            ? {
+                name: response.uiResponse.value.name,
+                data: response.uiResponse.value.request_response,
+              }
+            : undefined,
         },
-      };
-    }
-
-    if (response.success && response.uiResponse) {
-      const uiVal = response.uiResponse.value;
-      return {
-        type: "FROM_BOT",
-        id: genUuid(),
-        timestamp: new Date().toISOString(),
-        component: uiVal.name,
-        data: uiVal.request_response,
       };
     }
 
     return null;
   }
 
-  private static toErrorMessage(message: string): BotMessageType {
+  private static toBotErrorMessage(message: string): BotMessageType {
     return {
       type: "FROM_BOT",
       id: genUuid(),
@@ -321,6 +320,7 @@ export class MessageCtx {
       data: {
         message,
         variant: "error",
+        action: undefined,
       },
     };
   }

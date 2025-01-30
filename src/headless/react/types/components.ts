@@ -5,7 +5,7 @@ import type {
   WidgetComponentKey,
 } from "../../core";
 
-export type WidgetComponentProps<TData> = BotMessageType<TData> | AgentMessageType;
+export type WidgetComponentProps<TData = unknown> = BotMessageType<TData> | AgentMessageType;
 
 export type WidgetComponentType = {
   key: WidgetComponentKey;

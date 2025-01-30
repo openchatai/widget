@@ -13,7 +13,7 @@ import { cn } from "./components/lib/utils/cn";
 import type { WidgetConfig } from "../../headless/core";
 import { BotLoadingComponent } from "./components/Loading.component";
 import { FallbackComponent } from "./components/Fallback.component";
-import { BotOrAgentTextResponse } from "./components/Text.component";
+import { BotOrAgentTextResponse } from "./components/BotOrAgentTextResponse";
 import { useDocumentDir } from "../../headless/react/hooks/useDocumentDir";
 
 const initialContent = `<!DOCTYPE html>

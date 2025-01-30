@@ -7,7 +7,6 @@ export type {
 } from "./types/helpers";
 export type {
   WidgetComponentKey,
-  DefaultWidgetTextComponentData,
   UserMessageType,
   AgentMessageType,
   BotMessageType,

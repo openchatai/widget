@@ -4,10 +4,6 @@ import type { WidgetComponentType } from "./types/components";
 export class ComponentRegistry {
   components: WidgetComponentType[] = [
     {
-      key: "fallback",
-      component: (data) => "fallback",
-    },
-    {
       key: "loading",
       component: (data) => "loading",
     },
@@ -46,15 +42,7 @@ export class ComponentRegistry {
     return null;
   }
 
-  private getOrFallback(key?: string) {
-    return key ? this.get(key) || this.get("fallback")! : this.get("fallback")!;
-  }
-
-  public getComponent(key: string, getFallback?: boolean) {
-    if (getFallback) {
-      return this.getOrFallback(key).component;
-    }
-
+  public getComponent(key: string) {
     return this.get(key)?.component;
   }
 }

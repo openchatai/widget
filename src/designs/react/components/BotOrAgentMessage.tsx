@@ -1,24 +1,28 @@
 import React, { type ComponentType } from "react";
 import type { AgentMessageType, BotMessageType } from "../../../headless/core";
 import { useWidget } from "../../../headless/react";
-import { useDocumentDir } from "../../../headless/react/hooks/useDocumentDir";
+import { BotOrAgentTextResponse } from "./BotOrAgentTextResponse";
 
-interface BotMessageProps {
+interface Props {
   message: BotMessageType | AgentMessageType;
 }
 
-export function BotOrAgentMessage({ message }: BotMessageProps) {
+export function BotOrAgentMessage({ message }: Props) {
   const { componentStore } = useWidget();
-  const Component = componentStore.getComponent(
-    message.component,
-    false,
-  ) as ComponentType<{
-    data: BotMessageType["data"] | AgentMessageType["data"];
-    id: string;
-  }>;
+
+  // Try to use custom components first
+  if (message.data.action) {
+    const Component = componentStore.getComponent(message.data.action.name);
+    if (Component) {
+      return <Component {...message} id={message.id} />;
+    }
+  }
+
+  const Component = componentStore.getComponent(message.component);
 
   if (!Component) {
-    return null;
+    // Fallback... just in case
+    return <BotOrAgentTextResponse {...message} />;
   }
 
   return <Component {...message} id={message.id} />;

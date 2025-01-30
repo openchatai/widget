@@ -6,13 +6,8 @@ import type { AgentOrBotType } from "./agent-or-bot";
 /*                 Component-related types                */
 /* ------------------------------------------------------ */
 export type WidgetComponentKey = StringOrLiteral<
-  "bot_message" | "agent_message" | "loading" | "fallback"
+  "bot_message" | "agent_message" | "loading"
 >;
-
-export type DefaultWidgetTextComponentData = {
-  message: string;
-  variant?: "default" | "error";
-};
 
 /* ------------------------------------------------------ */
 /*                      Message types                     */
@@ -33,14 +28,21 @@ export type UserMessageType = {
   };
 };
 
-export type BotMessageType<TData = DefaultWidgetTextComponentData | unknown> = {
+export type BotMessageType<TActionData = unknown> = {
   id: string;
   type: "FROM_BOT";
   /**
    * The type is a bot_message literal string or other strings that correspond to the UI responses from AI action calls
    */
   component: StringOrLiteral<SafeExtract<WidgetComponentKey, "bot_message">>;
-  data: TData;
+  data: {
+    message: string;
+    variant?: "default" | "error";
+    action?: {
+      name: string;
+      data: TActionData;
+    } | null;
+  };
   timestamp: string;
   original?: MessageDto;
   agent?: AgentOrBotType;
@@ -51,7 +53,11 @@ export type AgentMessageType = {
   id: string;
   type: "FROM_AGENT";
   component: SafeExtract<WidgetComponentKey, "agent_message">;
-  data: DefaultWidgetTextComponentData;
+  data: {
+    message: string;
+    variant?: "default" | "error";
+    action?: undefined;
+  };
   timestamp?: string;
   original?: MessageDto;
   agent?: AgentOrBotType;
