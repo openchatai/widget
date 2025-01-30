@@ -294,12 +294,8 @@ export interface components {
       actionCalls?:
         | {
             actionName: string;
-            args: {
-              [key: string]: unknown;
-            };
-            result?: {
-              [key: string]: unknown;
-            } | null;
+            args?: unknown;
+            result?: unknown;
           }[]
         | null;
       attachments?:
