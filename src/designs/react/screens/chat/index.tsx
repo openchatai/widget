@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { cn } from "../../components/lib/utils/cn";
 import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
 import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
@@ -20,6 +20,9 @@ export function ChatScreen() {
   const { observedElementRef } = useWidgetContentHeight({
     fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });
+
+  // The key is the session id, so that when chat is reset, the animation replays
+  const chatContentKeyRef = useRef(session?.id || "chat").current;
 
   return (
     <div
@@ -45,8 +48,7 @@ export function ChatScreen() {
             </MotionDiv>
           ) : (
             <MotionDiv
-              // The key is the session id, so that when chat is reset, the animation replays
-              key={session?.id || "chat"}
+              key={chatContentKeyRef}
               className="flex flex-col w-full flex-1 overflow-auto"
               // If we don't snap exit, the initial questions will show before the animation starts
               snapExit
