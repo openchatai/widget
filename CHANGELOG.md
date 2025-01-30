@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.19
+
+### Patch Changes
+
+- refresh sessions every 10 seconds
+
 ## 3.0.18
 
 ### Patch Changes
