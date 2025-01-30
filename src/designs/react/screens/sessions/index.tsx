@@ -64,9 +64,13 @@ function SessionsList() {
           >
             {sessions.length ? (
               <>
-                {sessions.map((s) => (
-                  <SessionCard key={s.id} session={s} />
-                ))}
+                <AnimatePresence>
+                  {sessions.map((s, i) => (
+                    <MotionDiv key={`${s.id}-${i}`} snapExit>
+                      <SessionCard session={s} />
+                    </MotionDiv>
+                  ))}
+                </AnimatePresence>
                 <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background">
                   <Button
                     size="lg"
