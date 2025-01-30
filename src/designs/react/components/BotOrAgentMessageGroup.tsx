@@ -25,15 +25,13 @@ export function BotOrAgentMessageGroup({
         <AvatarImage src={agent?.avatar ?? ""} alt="Agent Icon" />
       </Avatar>
       {messages.map((message) => (
-        <BotOrAgentMessage
+        <BotOrAgentMessageWrapper
           key={message.id}
-          message={message}
-          Wrapper={BotOrAgentMessageWrapper}
-          wrapperProps={{
-            messageId: message.id,
-            sessionId: sessionState.session?.id,
-          }}
-        />
+          messageId={message.id}
+          sessionId={sessionState.session?.id}
+        >
+          <BotOrAgentMessage message={message} />
+        </BotOrAgentMessageWrapper>
       ))}
     </div>
   );

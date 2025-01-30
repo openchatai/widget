@@ -58,30 +58,31 @@ export function ChatMain() {
     >
       {noMessages &&
         (config.initialMessages?.map((message, index) => (
-          <BotOrAgentMessage
-            key={index}
-            message={{
-              component: "bot_message",
-              data: { message },
-              id: `initial-${index}`,
-              type: "FROM_BOT",
-              timestamp: Date.now().toString(),
-            }}
-            Wrapper={BotOrAgentMessageWrapper}
-          />
+          <BotOrAgentMessageWrapper key={`${message}-${index}`}>
+            <BotOrAgentMessage
+              key={index}
+              message={{
+                component: "bot_message",
+                data: { message },
+                id: `initial-${index}`,
+                type: "FROM_BOT",
+                timestamp: Date.now().toString(),
+              }}
+            />
+          </BotOrAgentMessageWrapper>
         )) ?? (
-          <BotOrAgentMessage
-            key={"default-welcome"}
-            message={{
-              component: "bot_message",
-              data: { message: "Hello, how can I help?" },
-              id: "default-welcome",
-              type: "FROM_BOT",
-              agent: config.bot,
-              timestamp: Date.now().toString(),
-            }}
-            Wrapper={BotOrAgentMessageWrapper}
-          />
+          <BotOrAgentMessageWrapper>
+            <BotOrAgentMessage
+              message={{
+                component: "bot_message",
+                data: { message: "Hello, how can I help?" },
+                id: "default-welcome",
+                type: "FROM_BOT",
+                agent: config.bot,
+                timestamp: Date.now().toString(),
+              }}
+            />
+          </BotOrAgentMessageWrapper>
         ))}
       {groupedMessages.map((group, index) => {
         const type = group?.[0]?.type;
