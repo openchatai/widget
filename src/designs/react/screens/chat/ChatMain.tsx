@@ -61,26 +61,23 @@ export function ChatMain() {
           <BotOrAgentMessageWrapper key={`${message}-${index}`}>
             <BotOrAgentMessage
               key={index}
-              message={{
-                component: "bot_message",
-                data: { message },
-                id: `initial-${index}`,
-                type: "FROM_BOT",
-                timestamp: Date.now().toString(),
-              }}
+              component="bot_message"
+              data={{ message }}
+              id={`initial-${index}`}
+              type="FROM_BOT"
+              agent={config.bot}
+              timestamp={Date.now().toString()}
             />
           </BotOrAgentMessageWrapper>
         )) ?? (
           <BotOrAgentMessageWrapper>
             <BotOrAgentMessage
-              message={{
-                component: "bot_message",
-                data: { message: "Hello, how can I help?" },
-                id: "default-welcome",
-                type: "FROM_BOT",
-                agent: config.bot,
-                timestamp: Date.now().toString(),
-              }}
+              component="bot_message"
+              data={{ message: "Hello, how can I help?" }}
+              id="default-welcome"
+              type="FROM_BOT"
+              agent={config.bot}
+              timestamp={Date.now().toString()}
             />
           </BotOrAgentMessageWrapper>
         ))}

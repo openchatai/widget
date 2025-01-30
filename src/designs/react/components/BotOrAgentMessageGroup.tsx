@@ -30,7 +30,7 @@ export function BotOrAgentMessageGroup({
           messageId={message.id}
           sessionId={sessionState.session?.id}
         >
-          <BotOrAgentMessage message={message} />
+          <BotOrAgentMessage {...message} />
         </BotOrAgentMessageWrapper>
       ))}
     </div>
