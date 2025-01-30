@@ -301,7 +301,7 @@ export class MessageCtx {
     if (response.success && response.uiResponse) {
       const uiVal = response.uiResponse.value;
       return {
-        type: "FROM_BOT" as const,
+        type: "FROM_BOT",
         id: genUuid(),
         timestamp: new Date().toISOString(),
         component: uiVal.name,
@@ -312,9 +312,9 @@ export class MessageCtx {
     return null;
   }
 
-  private static toErrorMessage(message: string) {
+  private static toErrorMessage(message: string): BotMessageType {
     return {
-      type: "FROM_BOT" as const,
+      type: "FROM_BOT",
       id: genUuid(),
       timestamp: new Date().toISOString(),
       component: "TEXT",
