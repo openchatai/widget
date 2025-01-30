@@ -1,5 +1,4 @@
 import type { ApiCaller } from "../api";
-import type { Dto } from "../sdk";
 import type { SessionDto } from "../types/schemas";
 import type { WidgetConfig } from "../types/WidgetConfig";
 import { Poller } from "../utils/Poller";
@@ -30,7 +29,8 @@ export class SessionCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
   private contactCtx: ContactCtx;
-  private poller = new Poller();
+  private activeSessionPoller = new Poller();
+  private sessionsRefresher = new Poller();
 
   public sessionState = new PrimitiveState<SessionState>({
     session: null,
@@ -56,7 +56,7 @@ export class SessionCtx {
     this.api = api;
     this.contactCtx = contactCtx;
 
-    this.registerPolling();
+    this.registerActiveSessionPolling();
     this.registerInitialSessionsFetch();
   }
 
@@ -65,13 +65,13 @@ export class SessionCtx {
     // Reset the session only, leave sessions as-is
     this.sessionState.reset();
     // The poller should automatically reset, since we're subscribed to the session state, and whenever it's null, the poller resets... but just in case, let's reset it here as well
-    this.poller.reset();
+    this.activeSessionPoller.reset();
   };
 
-  private registerPolling = () => {
+  private registerActiveSessionPolling = () => {
     this.sessionState.subscribe(({ session }) => {
       if (session?.id) {
-        this.poller.startPolling(async (abortSignal) => {
+        this.activeSessionPoller.startPolling(async (abortSignal) => {
           const { data } = await this.api.getSession({
             sessionId: session.id,
             abortSignal,
@@ -79,7 +79,7 @@ export class SessionCtx {
           data && this.sessionState.setPartial({ session: data });
         }, 1000);
       } else {
-        this.poller.reset();
+        this.activeSessionPoller.reset();
       }
     });
   };
@@ -98,14 +98,28 @@ export class SessionCtx {
       !this.sessionsState.get().didStartInitialFetch
     ) {
       initialFetch();
+      this.registerSessionsRefresher();
     }
 
     // In other cases where auto authenticate is fired, the token would be eventually set in state, so we wait for it
     this.contactCtx.state.subscribe(({ contact }) => {
       if (contact?.token && !this.sessionsState.get().didStartInitialFetch) {
         initialFetch();
+        this.registerSessionsRefresher();
       }
     });
+  };
+
+  private registerSessionsRefresher = () => {
+    this.sessionsRefresher.startPolling(async () => {
+      // Get the first page only (pass no `cursor`)
+      const { data } = await this.getSessions({ cursor: undefined });
+      if (!data) return;
+      const sessions = [...data.items, ...this.sessionsState.get().data].filter(
+        (s, i, self) => i === self.findIndex((_s) => s.id === _s.id),
+      );
+      this.sessionsState.setPartial({ data: sessions });
+    }, 10000);
   };
 
   createSession = async () => {
@@ -127,17 +141,14 @@ export class SessionCtx {
     return null;
   };
 
-  loadMoreSessions = async () => {
+  /**
+   * Let's keep this private for now until we figure out how to do paginated fetching in tandem with the interval refreshing
+   */
+  private loadMoreSessions = async () => {
     if (this.sessionsState.get().isLastPage) return;
-    if (!this.contactCtx.state.get().contact?.token) return;
 
-    const { data } = await this.api.getSessions({
+    const { data } = await this.getSessions({
       cursor: this.sessionsState.get().cursor,
-      filters: this.config.user?.externalId
-        ? {
-            external_id: this.config.user.externalId,
-          }
-        : {},
     });
 
     if (data) {
@@ -153,5 +164,18 @@ export class SessionCtx {
         isLastPage: data.next === null,
       });
     }
+  };
+
+  private getSessions = async ({ cursor }: { cursor: string | undefined }) => {
+    if (!this.contactCtx.state.get().contact?.token) return { data: null };
+
+    return await this.api.getSessions({
+      cursor,
+      filters: this.config.user?.externalId
+        ? {
+            external_id: this.config.user.externalId,
+          }
+        : {},
+    });
   };
 }
