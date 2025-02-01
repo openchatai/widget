@@ -17,6 +17,9 @@ import { useLocale } from "../../hooks/useLocale";
 import type { SessionDto } from "../../../../headless/core";
 import { Skeleton } from "../../components/lib/skeleton";
 import { Avatar, AvatarImage } from "../../components/lib/avatar";
+import { MemoizedReactMarkdown } from "../../components/markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 function SessionCard({ session }: { session: SessionDto }) {
   const { bot } = useConfig();
@@ -46,10 +49,15 @@ function SessionCard({ session }: { session: SessionDto }) {
           <p>{assigneeName}</p>
           <AnimatePresence mode="wait">
             {session.lastMessage ? (
-              <MotionDiv key={session.lastMessage || "content"}>
-                <p className="line-clamp-1 overflow-hidden text-ellipsis text-xs text-muted-foreground">
+              <MotionDiv key={session.lastMessage || "content"} snapExit>
+                <MemoizedReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  // Do not add `prose` styling for last message preview
+                  className="line-clamp-1 overflow-hidden text-ellipsis text-xs text-muted-foreground"
+                >
                   {session.lastMessage}
-                </p>
+                </MemoizedReactMarkdown>
               </MotionDiv>
             ) : (
               <MotionDiv key="skeleton" className="w-1/2" snapExit>
