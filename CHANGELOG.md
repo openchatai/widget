@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.22
+
+### Patch Changes
+
+- include agent object when mapping messages
+
 ## 3.0.21
 
 ### Patch Changes
