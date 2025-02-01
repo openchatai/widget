@@ -16,7 +16,11 @@ import { WidgetHeader } from "../../components/WidgetHeader";
 import { useLocale } from "../../hooks/useLocale";
 import type { SessionDto } from "../../../../headless/core";
 import { Skeleton } from "../../components/lib/skeleton";
-import { Avatar, AvatarImage } from "../../components/lib/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../components/lib/avatar";
 import { MemoizedReactMarkdown } from "../../components/markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -31,8 +35,8 @@ function SessionCard({ session }: { session: SessionDto }) {
       : bot?.name || "AI Support Agent";
   const assigneeAvatarUrl =
     session.assignee.kind === "human"
-      ? session.assignee.avatarUrl
-      : bot?.avatar;
+      ? session.assignee.avatarUrl || ""
+      : bot?.avatar || "";
 
   return (
     <Button
@@ -42,11 +46,19 @@ function SessionCard({ session }: { session: SessionDto }) {
       onClick={() => toChatScreen(session.id)}
     >
       <div className="flex-1 flex gap-2 items-center">
-        <Avatar className="size-10">
-          <AvatarImage src={assigneeAvatarUrl ?? ""} alt="Agent Icon" />
-        </Avatar>
+        <AnimatePresence mode="wait">
+          <MotionDiv snapExit>
+            <Avatar className="size-10">
+              <AvatarImage src={assigneeAvatarUrl} alt="Agent Icon" />
+            </Avatar>
+          </MotionDiv>
+        </AnimatePresence>
         <div>
-          <p>{assigneeName}</p>
+          <AnimatePresence mode="wait">
+            <MotionDiv key={assigneeName} snapExit>
+              {assigneeName}
+            </MotionDiv>
+          </AnimatePresence>
           <AnimatePresence mode="wait">
             {session.lastMessage ? (
               <MotionDiv key={session.lastMessage || "content"} snapExit>
