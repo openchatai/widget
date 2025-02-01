@@ -98,7 +98,7 @@ export class MessageCtx {
       /* ------------------------------------------------------ */
       /*     Optimistically add message to rendered messages    */
       /* ------------------------------------------------------ */
-      const userMessage = MessageCtx.toUserMessage(
+      const userMessage = this.toUserMessage(
         input.content,
         input.attachments || undefined,
       );
@@ -142,7 +142,7 @@ export class MessageCtx {
         /* ------------------------------------------------------ */
         /*      Append bot reply if not fetched from polling      */
         /* ------------------------------------------------------ */
-        const botMessage = MessageCtx.toBotMessage(data);
+        const botMessage = this.toBotMessage(data);
         if (botMessage) {
           const prevMessages = this.state.get().messages;
           const shouldAppend = !prevMessages.some(
@@ -164,7 +164,7 @@ export class MessageCtx {
           });
         }
       } else {
-        const errorMessage = MessageCtx.toBotErrorMessage(
+        const errorMessage = this.toBotErrorMessage(
           data?.error?.message || "Unknown error occurred",
         );
         const currentMessages = this.state.get().messages;
@@ -208,7 +208,7 @@ export class MessageCtx {
       // Get a fresh reference to current messages after the poll is done
       const prevMessages = this.state.get().messages;
       const newMessages = response
-        .map(MessageCtx.mapHistoryToMessage)
+        .map(this.mapHistoryToMessage)
         .filter(
           (newMsg) =>
             !prevMessages.some((existingMsg) => existingMsg.id === newMsg.id),
@@ -224,7 +224,7 @@ export class MessageCtx {
   };
 
   /** Not the best name but whatever */
-  private static mapHistoryToMessage(history: MessageDto): MessageType {
+  private mapHistoryToMessage = (history: MessageDto): MessageType => {
     const commonFields = {
       id: history.publicId,
       timestamp: history.sentAt || "",
@@ -248,6 +248,12 @@ export class MessageCtx {
         data: {
           message: history.content.text || "",
         },
+        agent: {
+          name: history.sender.name || "",
+          avatar: history.sender.avatar || "",
+          id: null,
+          isAi: false,
+        },
       };
     }
 
@@ -258,9 +264,9 @@ export class MessageCtx {
       component: "bot_message",
       agent: {
         id: null,
-        name: history.sender.name || "",
-        isAi: history.sender.kind === "ai",
-        avatar: history.sender.avatar || null,
+        name: this.config.bot?.name || "",
+        isAi: true,
+        avatar: this.config.bot?.avatar || "",
       },
       data: {
         message: history.content.text || "",
@@ -269,12 +275,12 @@ export class MessageCtx {
           : undefined,
       },
     };
-  }
+  };
 
-  private static toUserMessage(
+  private toUserMessage = (
     content: string,
     attachments?: MessageAttachmentType[],
-  ): UserMessageType {
+  ): UserMessageType => {
     return {
       id: genUuid(),
       type: "FROM_USER",
@@ -283,19 +289,25 @@ export class MessageCtx {
       attachments,
       timestamp: new Date().toISOString(),
     };
-  }
+  };
 
-  private static toBotMessage(
+  private toBotMessage = (
     response: SendMessageOutputDto,
-  ): BotMessageType | null {
-    // TODO: sometimes the bot replies with both an autopilotResponse and a uiResponse... handle this case
-
+  ): BotMessageType | null => {
     if (response.success && response.autopilotResponse) {
       return {
         type: "FROM_BOT",
         id: response.autopilotResponse.id || genUuid(),
         timestamp: new Date().toISOString(),
         component: "bot_message",
+        agent: this.config.bot
+          ? {
+              name: this.config.bot.name || "",
+              isAi: true,
+              avatar: this.config.bot.avatar || "",
+              id: null,
+            }
+          : undefined,
         data: {
           message: response.autopilotResponse.value.content,
           action: response.uiResponse?.value.name
@@ -309,9 +321,9 @@ export class MessageCtx {
     }
 
     return null;
-  }
+  };
 
-  private static toBotErrorMessage(message: string): BotMessageType {
+  private toBotErrorMessage = (message: string): BotMessageType => {
     return {
       type: "FROM_BOT",
       id: genUuid(),
@@ -323,5 +335,5 @@ export class MessageCtx {
         action: undefined,
       },
     };
-  }
+  };
 }
