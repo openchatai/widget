@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.21
+
+### Patch Changes
+
+- enhance session card styles
+
 ## 3.0.20
 
 ### Patch Changes
