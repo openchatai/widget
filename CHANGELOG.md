@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.23
+
+### Patch Changes
+
+- fix isAwaitingBotReply (when session is not handed-off but agent took over the chat)
+
 ## 3.0.22
 
 ### Patch Changes
