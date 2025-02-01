@@ -1,12 +1,10 @@
-
 import { formatDistance } from "date-fns";
 import React, { useMemo } from "react";
-import { Avatar, AvatarImage } from "./lib/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "./lib/avatar";
 import { RenderAttachment } from "./RenderFile";
 import type { UserMessageType } from "../../../headless/core";
 import { cn } from "./lib/utils/cn";
 import { useConfig } from "../../../headless/react";
-
 
 function UserMessage({
   message,
@@ -56,17 +54,17 @@ export function UserMessageGroup({
   const { user } = useConfig();
 
   return (
-    <div
-      className={cn(
-        "group",
-        "flex flex-col gap-2 justify-end items-end",
-      )}
-    >
+    <div className={cn("group", "flex flex-col gap-2 justify-end items-end")}>
       <Avatar className="bg-primary text-primary-foreground">
-        <AvatarImage src={user?.data?.avatarUrl} alt={user?.data?.name || "User avatar"} />
-        {/* <AvatarFallback>
-          {user?.name?.slice(0, 1)?.toUpperCase()}
-        </AvatarFallback> */}
+        <AvatarImage
+          src={user?.data?.avatarUrl}
+          alt={user?.data?.name || "User avatar"}
+        />
+        {user?.data?.name && (
+          <AvatarFallback>
+            {user?.data?.name?.slice(0, 1)?.toUpperCase()}
+          </AvatarFallback>
+        )}
       </Avatar>
 
       {messages.map((message) => (

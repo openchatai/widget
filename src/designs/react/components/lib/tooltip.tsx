@@ -36,6 +36,7 @@ function Tooltippy({
   side?: TooltipPrimitive.TooltipContentProps["side"];
   align?: TooltipPrimitive.TooltipContentProps["align"];
 }) {
+  if (!content) return children;
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
