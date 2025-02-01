@@ -5,9 +5,10 @@ export function useIsAwaitingBotReply() {
   const { sessionState } = useSessions();
   const { messagesState } = useMessages();
 
+  console.log({ session: sessionState.session });
+
   const isAwaitingBotReply =
-    (!sessionState.session?.isHandedOff ||
-      sessionState.session.assignee.kind === "ai" ||
+    (sessionState.session?.assignee.kind === "ai" ||
       sessionState.isCreatingSession) &&
     messagesState.isSendingMessage;
 
