@@ -12,12 +12,8 @@ export function BotOrAgentMessageWrapper({
   sessionId?: string;
 }) {
   return (
-    <div
-      className={cn("w-fit space-y-2", className)}
-      data-test={`message-wrapper-${messageId}`}
-    >
+    <div className={cn("w-fit space-y-2", className)}>
       <div
-        data-test="message-content-wrapper"
         className={cn(
           "w-fit p-2 rounded-2xl text-sm",
           "bg-secondary border shadow-sm",

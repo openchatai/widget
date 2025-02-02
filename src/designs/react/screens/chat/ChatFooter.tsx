@@ -93,7 +93,6 @@ function FileDisplay({
       }
     >
       <div
-        data-test="file-display"
         className={cn(
           status === "uploading" && "opacity-50",
           "group",
@@ -101,14 +100,10 @@ function FileDisplay({
           "flex items-center justify-center shrink-0",
         )}
       >
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          data-test="file-status"
-        >
+        <div className="absolute inset-0 flex items-center justify-center">
           {getStatusIcon()}
         </div>
         <button
-          data-test="file-cancel-button"
           className={cn(
             "absolute bg-black/50 inset-0 size-full z-10 opacity-0",
             "flex items-center justify-center",
@@ -213,23 +208,15 @@ function ChatInput() {
   };
 
   return (
-    <div
-      className="p-2 relative space-y-1"
-      {...dropzone__getRootProps()}
-      data-test="chat-input-container"
-    >
+    <div className="p-2 relative space-y-1" {...dropzone__getRootProps()}>
       <input {...dropzone__getInputProps()} />
       <div
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
           "relative space-y-2 border transition-all shadow py-2",
         )}
-        data-test="chat-input-wrapper"
       >
-        <div
-          className="flex items-center gap-1 px-2"
-          data-test="file-attachments-container"
-        >
+        <div className="flex items-center gap-1 px-2">
           <AnimatePresence mode="popLayout">
             {allFiles.map((file) => (
               <MotionDiv key={file.id} snapExit>
@@ -248,7 +235,6 @@ function ChatInput() {
           dir={dir}
           value={inputText}
           rows={3}
-          data-test="chat-message-input"
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
@@ -264,11 +250,7 @@ function ChatInput() {
           }}
           placeholder={locale.get("write-a-message")}
         />
-        <div
-          dir={dir}
-          className="px-2 flex justify-between rtl:text-right"
-          data-test="chat-input-actions"
-        >
+        <div dir={dir} className="px-2 flex justify-between rtl:text-right">
           <Tooltippy
             side="top"
             align="start"
@@ -281,7 +263,6 @@ function ChatInput() {
               }}
               size="fit"
               variant="outline"
-              data-test="attach-file-button"
               className={cn(
                 "disabled:opacity-0",
                 "rounded-full size-8 flex items-center justify-center p-0",
@@ -297,14 +278,10 @@ function ChatInput() {
               size="fit"
               onClick={handleSubmit}
               disabled={isAwaitingBotReply || isUploading}
-              data-test="send-message-button"
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
               {isAwaitingBotReply ? (
-                <CircleDashed
-                  className="size-4 animate-spin animate-iteration-infinite"
-                  data-test="sending-message-indicator"
-                />
+                <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
               ) : (
                 <SendHorizonal className="size-4 rtl:-scale-100" />
               )}
@@ -321,15 +298,9 @@ function SessionClosedSection() {
   const locale = useLocale();
 
   return (
-    <div className="p-2" data-test="session-closed-container">
-      <div
-        className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2"
-        data-test="session-closed-content"
-      >
-        <div
-          className="flex items-center gap-1"
-          data-test="session-closed-header"
-        >
+    <div className="p-2">
+      <div className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2">
+        <div className="flex items-center gap-1">
           <CheckCheckIcon className="size-4 text-emerald-500" />
           <h2 className="text-sm font-medium" dir="auto">
             {locale.get("session-closed-lead")}
@@ -385,17 +356,13 @@ export function ChatFooter() {
               )}
 
               {noMessages && initialQuestions && (
-                <div
-                  className="flex items-center flex-row justify-end gap-2 flex-wrap px-2"
-                  data-test="initial-questions-container"
-                >
+                <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
                   {initialQuestions?.map((iq, index) => (
                     <Button
                       key={index}
                       dir="auto"
                       variant="outline"
                       size="sm"
-                      data-test={`initial-question-${index}`}
                       onClick={() => {
                         sendMessage({ content: iq });
                       }}

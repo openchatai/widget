@@ -14,7 +14,6 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
 
   return (
     <PopoverPrimitive.PopoverTrigger
-      data-testid="widget-popover-trigger"
       data-chat-widget
       style={{
         fontSize: "16px",

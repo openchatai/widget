@@ -46,7 +46,6 @@ export function WelcomeScreen() {
   return (
     <div
       ref={observedElementRef}
-      data-test="welcome-screen"
       className={cn(
         DEFAULT_STYLES.widgetMinHeight,
         "h-fit bg-primary flex flex-col",
@@ -55,41 +54,30 @@ export function WelcomeScreen() {
       <div
         dir="auto"
         className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10"
-        data-test="welcome-header"
       >
-        <div
-          className="flex items-center justify-between w-full mb-2"
-          data-test="welcome-logo-container"
-        >
+        <div className="flex items-center justify-between w-full mb-2">
           {config.assets?.organizationLogo ? (
             <img
               src={config.assets?.organizationLogo}
               alt="Company Logo"
               className="h-8 w-auto object-contain"
-              data-test="organization-logo"
             />
           ) : (
             <h2
               className="font-bold text-xl text-primary-foreground"
-              data-test="organization-name"
               dir="auto"
             >
               {preludeData?.data?.organizationName}
             </h2>
           )}
         </div>
-        <div className="space-y-2" data-test="welcome-content">
-          <h1
-            className="text-2xl font-bold text-primary-foreground"
-            data-test="welcome-title"
-            dir="auto"
-          >
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold text-primary-foreground" dir="auto">
             {locale.get("welcome-title")}
           </h1>
 
           <p
             className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed"
-            data-test="welcome-description"
             dir="auto"
           >
             {locale.get("welcome-description")}
@@ -97,16 +85,8 @@ export function WelcomeScreen() {
         </div>
       </div>
 
-      <div
-        className="p-2 bg-background rounded-t-3xl"
-        data-test="welcome-form-container"
-        dir="auto"
-      >
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-2"
-          data-test="welcome-form"
-        >
+      <div className="p-2 bg-background rounded-t-3xl" dir="auto">
+        <form onSubmit={handleSubmit} className="space-y-2">
           <div className="space-y-2">
             <Input
               required
@@ -114,7 +94,6 @@ export function WelcomeScreen() {
               placeholder={locale.get("your-name")}
               name="name"
               className="rounded-3xl pl-3"
-              data-test="name-input"
             />
             <Input
               required
@@ -122,14 +101,12 @@ export function WelcomeScreen() {
               placeholder={locale.get("your-email")}
               name="email"
               className="rounded-3xl pl-3"
-              data-test="email-input"
             />
           </div>
 
           <Button
             disabled={handleSubmitState.loading}
             className="w-full rounded-3xl"
-            data-test="start-chat-button"
             size="lg"
           >
             {handleSubmitState.loading

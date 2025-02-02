@@ -15,7 +15,7 @@ export function RootScreen() {
   } = useWidgetRouter();
 
   return (
-    <div className="bg-background size-full" data-test="root-screen">
+    <div className="bg-background size-full">
       <AnimatePresence mode="wait">
         {(() => {
           switch (screen) {

@@ -8,15 +8,8 @@ type Props = WidgetComponentProps<unknown>;
  */
 export function FallbackComponent(props: Props) {
   return (
-    <div
-      className="w-full max-w-full overflow-auto shrink-0"
-      data-test="fallback-container"
-    >
-      <pre
-        dir="auto"
-        className="text-xs leading-tight"
-        data-test="fallback-content"
-      >
+    <div className="w-full max-w-full overflow-auto shrink-0">
+      <pre dir="auto" className="text-xs leading-tight">
         {JSON.stringify(props, null, 1)}
       </pre>
     </div>

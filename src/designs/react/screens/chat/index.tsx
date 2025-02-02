@@ -27,16 +27,12 @@ export function ChatScreen() {
   return (
     <div
       ref={observedElementRef}
-      data-test="chat-screen"
       className={cn(
         DEFAULT_STYLES.widgetHeight,
         "w-full flex flex-col overflow-hidden bg-background",
       )}
     >
-      <div
-        className="size-full justify-between flex flex-col"
-        data-test="chat-screen-content"
-      >
+      <div className="size-full justify-between flex flex-col">
         <WidgetHeader />
         <AnimatePresence mode="wait">
           {isInitialFetchLoading ? (

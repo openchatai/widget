@@ -47,7 +47,6 @@ function WidgetContent() {
         onInteractOutside={(ev) => ev.preventDefault()}
         side="top"
         data-aria-expanded={isOpen}
-        data-testid="widget-popover-content"
         forceMount
         style={{
           zIndex: 1000000,
@@ -80,7 +79,6 @@ function WidgetContent() {
             initialContent={initialContent}
             allowFullScreen
             data-chat-widget
-            data-testid="widget-iframe"
             style={{
               maxHeight: "85dvh",
               width: "350px",
