@@ -1,11 +1,11 @@
 import React from "react";
 import remarkGfm from "remark-gfm";
-import { MemoizedReactMarkdown } from "./markdown";
+import { MemoizedReactMarkdown } from "../markdown";
 import rehypeRaw from "rehype-raw";
-import { RenderAttachment } from "./RenderFile";
-import type { WidgetComponentProps } from "../../../headless/react/types/components";
+import { RenderAttachment } from "../RenderFile";
+import type { WidgetComponentProps } from "../../../../headless/react/types/components";
 
-export function BotOrAgentTextResponse({
+export function BotOrAgentResponse({
   data,
   id,
   type,

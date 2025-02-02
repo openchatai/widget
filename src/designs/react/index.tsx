@@ -11,9 +11,9 @@ import { useConfig, useWidget, WidgetProvider } from "../../headless/react";
 import { TooltipProvider } from "./components/lib/tooltip";
 import { cn } from "./components/lib/utils/cn";
 import type { WidgetConfig } from "../../headless/core";
-import { BotLoadingComponent } from "./components/Loading.component";
-import { FallbackComponent } from "./components/Fallback.component";
-import { BotOrAgentTextResponse } from "./components/BotOrAgentTextResponse";
+import { BotLoadingComponent } from "./components/custom-components/Loading.component";
+import { FallbackComponent } from "./components/custom-components/Fallback.component";
+import { BotOrAgentResponse } from "./components/custom-components/BotOrAgentTextResponse.component";
 import { useDocumentDir } from "../../headless/react/hooks/useDocumentDir";
 
 const initialContent = `<!DOCTYPE html>
@@ -144,11 +144,11 @@ function WidgetWrapper({ options }: { options: WidgetConfig }) {
         },
         {
           key: "bot_message",
-          component: BotOrAgentTextResponse,
+          component: BotOrAgentResponse,
         },
         {
           key: "agent_message",
-          component: BotOrAgentTextResponse,
+          component: BotOrAgentResponse,
         },
         // TODO allow accepting components from the outside to support UI components
       ]}

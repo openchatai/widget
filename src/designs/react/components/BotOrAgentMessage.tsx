@@ -1,6 +1,6 @@
 import React from "react";
 import { useWidget, type WidgetComponentProps } from "../../../headless/react";
-import { BotOrAgentTextResponse } from "./BotOrAgentTextResponse";
+import { BotOrAgentResponse } from "./custom-components/BotOrAgentTextResponse.component";
 
 export function BotOrAgentMessage(props: WidgetComponentProps) {
   const { componentStore } = useWidget();
@@ -17,7 +17,7 @@ export function BotOrAgentMessage(props: WidgetComponentProps) {
 
   if (!Component) {
     // Fallback... just in case
-    return <BotOrAgentTextResponse {...props} />;
+    return <BotOrAgentResponse {...props} />;
   }
 
   return <Component {...props} id={props.id} />;
