@@ -27,12 +27,19 @@ export function ChatMain() {
     [messages.length],
   );
 
+  const initialMessages =
+    !config.initialMessages || config.initialMessages.length === 0
+      ? ["Hello, how can I help you?"]
+      : config.initialMessages;
+
   const LoadingComponent = componentStore.getComponent(
     "loading",
   ) as ComponentType;
 
+  /* ------------------------------------------------------ */
+  /*                      Auto Scroller                     */
+  /* ------------------------------------------------------ */
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-
   function handleNewMessage() {
     setTimeout(() => {
       const container_ = messagesContainerRef.current;
@@ -41,12 +48,9 @@ export function ChatMain() {
       }
     }, 0);
   }
-
   useEffect(() => {
     handleNewMessage();
   }, [messages]);
-
-  const noMessages = messages.length === 0;
 
   return (
     <div
@@ -55,22 +59,13 @@ export function ChatMain() {
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
-      {noMessages &&
-        (config.initialMessages?.map((message, index) => (
+      {messages.length === 0 &&
+        initialMessages.map((message, index) => (
           <BotOrAgentMessage
             key={`${message}-${index}`}
             component="bot_message"
             data={{ message }}
             id={`initial-${index}`}
-            type="FROM_BOT"
-            agent={config.bot}
-            timestamp={Date.now().toString()}
-          />
-        )) ?? (
-          <BotOrAgentMessage
-            component="bot_message"
-            data={{ message: "Hello, how can I help?" }}
-            id="default-welcome"
             type="FROM_BOT"
             agent={config.bot}
             timestamp={Date.now().toString()}
