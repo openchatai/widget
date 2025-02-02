@@ -285,11 +285,17 @@ function ChatInput() {
               disabled={isAwaitingBotReply || isUploading}
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
-              {isAwaitingBotReply ? (
-                <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
-              ) : (
-                <SendHorizonal className="size-4 rtl:-scale-100" />
-              )}
+              <AnimatePresence mode="wait">
+                {isAwaitingBotReply ? (
+                  <MotionDiv key="loading">
+                    <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
+                  </MotionDiv>
+                ) : (
+                  <MotionDiv key="send">
+                    <SendHorizonal className="size-4 rtl:-scale-100" />
+                  </MotionDiv>
+                )}
+              </AnimatePresence>
             </Button>
           </Tooltippy>
         </div>
