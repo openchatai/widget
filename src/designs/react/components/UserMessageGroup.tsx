@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./lib/avatar";
-import { RenderAttachment } from "./RenderFile";
+import { AttachmentPreview } from "./AttachmentPreview";
 import type { UserMessageType } from "../../../headless/core";
 import { cn } from "./lib/utils/cn";
 import { useConfig } from "../../../headless/react";
@@ -11,11 +11,11 @@ function UserMessage({
   message: UserMessageType;
 }) {
   return (
-    <div className="flex flex-col items-end gap-1">
+    <div className="w-full flex flex-col items-end gap-1">
       {message.attachments && message.attachments.length > 0 && (
-        <div className="flex gap-1 flex-wrap justify-end">
+        <div className="w-5/6 flex gap-1 flex-wrap justify-end">
           {message.attachments?.map((attachment) => (
-            <RenderAttachment attachment={attachment} key={attachment.id} />
+            <AttachmentPreview attachment={attachment} key={attachment.id} />
           ))}
         </div>
       )}

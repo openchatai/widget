@@ -2,7 +2,7 @@ import React from "react";
 import remarkGfm from "remark-gfm";
 import { MemoizedReactMarkdown } from "../markdown";
 import rehypeRaw from "rehype-raw";
-import { RenderAttachment } from "../RenderFile";
+import { AttachmentPreview } from "../AttachmentPreview";
 import type { WidgetComponentProps } from "../../../../headless/react/types/components";
 import { cn } from "../lib/utils/cn";
 
@@ -25,11 +25,11 @@ export function BotOrAgentResponse({
   }
 
   return (
-    <div className="flex flex-col items-start gap-1">
-      <div className="gap-1 flex flex-row flex-wrap items-center justify-start">
+    <div className="w-full flex flex-col items-start gap-1">
+      <div className="w-5/6 gap-1 flex flex-row flex-wrap items-center justify-start">
         {attachments?.map((attachment) => {
           return (
-            <RenderAttachment attachment={attachment} key={attachment.id} />
+            <AttachmentPreview attachment={attachment} key={attachment.id} />
           );
         })}
       </div>

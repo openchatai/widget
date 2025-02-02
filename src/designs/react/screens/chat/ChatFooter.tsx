@@ -4,7 +4,9 @@ import {
   CheckCheckIcon,
   CircleDashed,
   FileAudio,
+  FileAudio2Icon,
   FileIcon,
+  FileVideo2Icon,
   Loader2,
   PaperclipIcon,
   SendHorizonal,
@@ -76,7 +78,10 @@ function FileDisplay({
       );
     }
     if (fileType === "audio") {
-      return <FileAudio />;
+      return <FileAudio2Icon />;
+    }
+    if (fileType === "video") {
+      return <FileVideo2Icon />;
     }
     return <FileIcon />;
   };
