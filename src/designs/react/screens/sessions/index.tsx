@@ -16,11 +16,7 @@ import { WidgetHeader } from "../../components/WidgetHeader";
 import { useLocale } from "../../hooks/useLocale";
 import type { SessionDto } from "../../../../headless/core";
 import { Skeleton } from "../../components/lib/skeleton";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../components/lib/avatar";
+import { Avatar, AvatarImage } from "../../components/lib/avatar";
 import { MemoizedReactMarkdown } from "../../components/markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -53,7 +49,7 @@ function SessionCard({ session }: { session: SessionDto }) {
             </Avatar>
           </MotionDiv>
         </AnimatePresence>
-        <div>
+        <div className="flex-1">
           <AnimatePresence mode="wait">
             <MotionDiv key={assigneeName} snapExit>
               {assigneeName}
