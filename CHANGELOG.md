@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.28
+
+### Patch Changes
+
+- add condition to abort sendMessage if session is assigned to ai and the last message is a user message (still awaiting bot response)
+
 ## 3.0.27
 
 ### Patch Changes
