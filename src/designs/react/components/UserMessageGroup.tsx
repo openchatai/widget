@@ -1,5 +1,4 @@
-import { formatDistance } from "date-fns";
-import React, { useMemo } from "react";
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./lib/avatar";
 import { RenderAttachment } from "./RenderFile";
 import type { UserMessageType } from "../../../headless/core";
@@ -11,15 +10,6 @@ function UserMessage({
 }: {
   message: UserMessageType;
 }) {
-  const formattedDt = useMemo(() => {
-    if (message.deliveredAt) {
-      return formatDistance(new Date(message.deliveredAt), new Date(), {
-        addSuffix: true,
-      });
-    }
-    return null;
-  }, [message.deliveredAt]);
-
   return (
     <div className="flex flex-col items-end gap-1">
       {message.attachments && message.attachments.length > 0 && (
@@ -29,20 +19,16 @@ function UserMessage({
           ))}
         </div>
       )}
-      <div
-        className={cn(
-          "w-fit p-2 rounded-2xl text-sm",
-          "bg-primary text-primary-foreground border shadow-sm",
-        )}
-      >
-        {message.content}
-        {/* {formattedDt && (
-            <div className="flex items-center justify-end gap-1 text-[10px] text-muted">
-              <span>{formattedDt}</span>
-              <CheckCheck className="size-3" />
-            </div>
-          )} */}
-      </div>
+      {message.content.length > 0 && (
+        <div
+          className={cn(
+            "w-fit p-2 rounded-2xl text-sm",
+            "bg-primary text-primary-foreground border shadow-sm",
+          )}
+        >
+          {message.content}
+        </div>
+      )}
     </div>
   );
 }

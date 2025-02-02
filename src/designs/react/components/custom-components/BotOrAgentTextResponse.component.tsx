@@ -4,6 +4,7 @@ import { MemoizedReactMarkdown } from "../markdown";
 import rehypeRaw from "rehype-raw";
 import { RenderAttachment } from "../RenderFile";
 import type { WidgetComponentProps } from "../../../../headless/react/types/components";
+import { cn } from "../lib/utils/cn";
 
 export function BotOrAgentResponse({
   data,
@@ -16,42 +17,45 @@ export function BotOrAgentResponse({
   if (variant === "error") {
     return (
       <div>
-        <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
-          <div className="leading-snug font-medium text-sm text-rose-500">
-            {message}
-          </div>
+        <div className="flex flex-row flex-wrap items-center justify-start">
+          <div className="leading-snug text-sm text-destructive">{message}</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div>
-      <div className="gap-0.5 flex flex-row flex-wrap items-center justify-start">
+    <div className="flex flex-col items-start gap-1">
+      <div className="gap-1 flex flex-row flex-wrap items-center justify-start">
         {attachments?.map((attachment) => {
           return (
             <RenderAttachment attachment={attachment} key={attachment.id} />
           );
         })}
       </div>
-      <MemoizedReactMarkdown
-        data-type={type}
-        data-id={id}
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeRaw]}
-        components={{
-          a: ({ children, ...props }) => {
-            return (
-              <a target="_top" {...props}>
-                {children}
-              </a>
-            );
-          },
-        }}
-        className="leading-snug font-medium text-sm prose prose-a:decoration-primary prose-a:underline prose-sm prose-slate"
-      >
-        {message}
-      </MemoizedReactMarkdown>
+      {message.length > 0 && (
+        <MemoizedReactMarkdown
+          data-type={type}
+          data-id={id}
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={{
+            a: ({ children, ...props }) => {
+              return (
+                <a target="_top" {...props}>
+                  {children}
+                </a>
+              );
+            },
+          }}
+          className={cn(
+            "w-fit p-2 rounded-2xl bg-secondary border shadow-sm",
+            "leading-snug text-sm prose prose-sm prose-a:decoration-primary prose-a:underline",
+          )}
+        >
+          {message}
+        </MemoizedReactMarkdown>
+      )}
     </div>
   );
 }

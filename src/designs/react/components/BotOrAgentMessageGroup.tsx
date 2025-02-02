@@ -1,13 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "./lib/avatar";
 import React from "react";
 import { BotOrAgentMessage } from "./BotOrAgentMessage";
-import { BotOrAgentMessageWrapper } from "./BotOrAgentMessageWrapper";
 import type {
   AgentMessageType,
   AgentOrBotType,
   BotMessageType,
 } from "../../../headless/core";
-import { useSessions } from "../../../headless/react";
 import { cn } from "./lib/utils/cn";
 import { Tooltippy } from "./lib/tooltip";
 
@@ -18,8 +16,6 @@ export function BotOrAgentMessageGroup({
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentOrBotType | undefined;
 }) {
-  const { sessionState } = useSessions();
-
   return (
     <div className={cn("flex flex-col items-start gap-2")}>
       <Tooltippy content={agent?.name} side="right" align="end">
@@ -33,13 +29,7 @@ export function BotOrAgentMessageGroup({
         </Avatar>
       </Tooltippy>
       {messages.map((message) => (
-        <BotOrAgentMessageWrapper
-          key={message.id}
-          messageId={message.id}
-          sessionId={sessionState.session?.id}
-        >
-          <BotOrAgentMessage {...message} />
-        </BotOrAgentMessageWrapper>
+        <BotOrAgentMessage key={message.id} {...message} />
       ))}
     </div>
   );
