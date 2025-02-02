@@ -5,17 +5,19 @@ import { WelcomeScreen } from "./welcome";
 import { usePreludeData, useWidgetRouter } from "../../../headless/react";
 import { MotionDiv } from "../components/lib/MotionDiv";
 import { SessionsScreen } from "./sessions";
+import { WidgetPortal } from "../components/lib/widget-portal";
 
 export function RootScreen() {
   // Call the prelude ASAP so it's cached for all screens
-  usePreludeData()
+  usePreludeData();
 
   const {
     routerState: { screen },
   } = useWidgetRouter();
 
   return (
-    <div className="bg-background size-full">
+    <div className="relative bg-background size-full">
+      <WidgetPortal.Container />
       <AnimatePresence mode="wait">
         {(() => {
           switch (screen) {
