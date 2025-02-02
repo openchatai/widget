@@ -22,6 +22,13 @@ function UserMessage({
 
   return (
     <div className="flex flex-col items-end gap-1">
+      {message.attachments && message.attachments.length > 0 && (
+        <div className="flex gap-1 flex-wrap justify-end">
+          {message.attachments?.map((attachment) => (
+            <RenderAttachment attachment={attachment} key={attachment.id} />
+          ))}
+        </div>
+      )}
       <div
         className={cn(
           "w-fit p-2 rounded-2xl text-sm",
@@ -36,14 +43,6 @@ function UserMessage({
             </div>
           )} */}
       </div>
-
-      {message.attachments && message.attachments.length > 0 && (
-        <div className="flex gap-1 flex-wrap justify-end">
-          {message.attachments?.map((attachment) => (
-            <RenderAttachment attachment={attachment} key={attachment.id} />
-          ))}
-        </div>
-      )}
     </div>
   );
 }
