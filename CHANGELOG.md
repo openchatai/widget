@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.30
+
+### Patch Changes
+
+- allow sending attachments even with empty message text content
+
 ## 3.0.29
 
 ### Patch Changes
