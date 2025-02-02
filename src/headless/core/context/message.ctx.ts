@@ -83,7 +83,12 @@ export class MessageCtx {
     const isSending = this.state.get().isSendingMessage;
     const isAssignedToAI =
       this.sessionCtx.sessionState.get().session?.assignee.kind === "ai";
-    if (isSending && isAssignedToAI) {
+    const lastMessage = this.state.get().messages.at(-1);
+    if (
+      (isAssignedToAI && isSending) ||
+      // If last message is from user, then bot response did not arrive yet
+      (isAssignedToAI && lastMessage?.type === "FROM_USER")
+    ) {
       console.warn("Cannot send messages while awaiting AI response");
       return;
     }
