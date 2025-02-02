@@ -154,8 +154,11 @@ function ChatInput() {
     appendFiles(acceptedFiles);
   };
 
+  const cannotSend = !inputText.trim() && successFiles.length === 0;
+
   const handleSubmit = async () => {
     if (isAwaitingBotReply) return;
+    if (cannotSend) return;
 
     if (isUploading) {
       // TODO use something other than toast
@@ -164,12 +167,9 @@ function ChatInput() {
       console.info(message);
     }
     const trimmed = inputText.trim();
-    if (!trimmed) return;
 
-    setInputText("");
-    emptyTheFiles();
-
-    await sendMessage({
+    // Do not await this
+    void sendMessage({
       content: trimmed,
       attachments: successFiles.map((f) => ({
         url: f.fileUrl!,
@@ -179,6 +179,9 @@ function ChatInput() {
         size: f.file.size,
       })),
     });
+
+    setInputText("");
+    emptyTheFiles();
   };
 
   const {
@@ -282,16 +285,16 @@ function ChatInput() {
             <Button
               size="fit"
               onClick={handleSubmit}
-              disabled={isAwaitingBotReply || isUploading}
+              disabled={isAwaitingBotReply || isUploading || cannotSend}
               className="rounded-full size-8 flex items-center justify-center p-0"
             >
               <AnimatePresence mode="wait">
-                {isAwaitingBotReply ? (
-                  <MotionDiv key="loading">
+                {isAwaitingBotReply || isUploading ? (
+                  <MotionDiv key="loading" snapExit>
                     <CircleDashed className="size-4 animate-spin animate-iteration-infinite" />
                   </MotionDiv>
                 ) : (
-                  <MotionDiv key="send">
+                  <MotionDiv key="send" snapExit>
                     <SendHorizonal className="size-4 rtl:-scale-100" />
                   </MotionDiv>
                 )}

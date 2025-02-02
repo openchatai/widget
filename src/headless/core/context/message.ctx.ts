@@ -76,7 +76,16 @@ export class MessageCtx {
       "session_id" | "user"
     >,
   ): Promise<void> => {
-    this.sendMessageAbortController = new AbortController();
+    /* ------------------------------------------------------ */
+    /*         Prevent sending if there is no content         */
+    /* ------------------------------------------------------ */
+    if (
+      !input.content.trim() &&
+      (!input.attachments || input.attachments.length === 0)
+    ) {
+      console.warn("Cannot send an empty message of no content or attachments");
+      return;
+    }
     /* ------------------------------------------------------ */
     /*        Prevent sending while waiting for AI res        */
     /* ------------------------------------------------------ */
@@ -93,6 +102,8 @@ export class MessageCtx {
       return;
     }
 
+    this.sendMessageAbortController = new AbortController();
+
     /* ------------------------------------------------------ */
     /*      Clear last AI response might solve user issue     */
     /* ------------------------------------------------------ */
@@ -104,7 +115,7 @@ export class MessageCtx {
       /*     Optimistically add message to rendered messages    */
       /* ------------------------------------------------------ */
       const userMessage = this.toUserMessage(
-        input.content,
+        input.content.trim(),
         input.attachments || undefined,
       );
       const currentMessages = this.state.get().messages;
