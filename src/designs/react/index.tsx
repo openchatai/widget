@@ -1,5 +1,5 @@
 import React from "react";
-import { cssVars, DEFAULT_STYLES } from "./constants";
+import { cssVars, WIDGET_CONTENT_MIN_HEIGHT_PX, WIDGET_CONTENT_WIDTH_PX } from "./constants";
 import { RootScreen } from "./screens";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import Iframe from "@uiw/react-iframe";
@@ -81,8 +81,8 @@ function WidgetContent() {
             data-chat-widget
             style={{
               maxHeight: "85dvh",
-              width: "350px",
-              minHeight: DEFAULT_STYLES.widgetMinHeight,
+              width: WIDGET_CONTENT_WIDTH_PX,
+              minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
               height: "var(--opencx-widget-height)",
               overflow: "hidden",
               /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */

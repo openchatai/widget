@@ -1,6 +1,8 @@
 import type { CSSProperties } from "react";
 import tc from "tinycolor2";
 
+// TODO add testing to make sure these number literals are the same values used in DEFAULT_STYLES object
+export const WIDGET_CONTENT_WIDTH_PX = 350;
 export const WIDGET_CONTENT_MIN_HEIGHT_PX = 400;
 export const WIDGET_CONTENT_MAX_HEIGHT_PX = 600;
 export const DEFAULT_STYLES = {
