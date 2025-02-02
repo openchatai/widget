@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.26
+
+### Patch Changes
+
+- fix is-awaiting-bot-reply
+
 ## 3.0.25
 
 ### Patch Changes
