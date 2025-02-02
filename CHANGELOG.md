@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.27
+
+### Patch Changes
+
+- enhance attachment preview
+
 ## 3.0.26
 
 ### Patch Changes
