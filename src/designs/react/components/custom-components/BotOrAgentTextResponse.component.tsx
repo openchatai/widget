@@ -25,8 +25,8 @@ export function BotOrAgentResponse({
   }
 
   return (
-    <div className="w-full flex flex-col items-start gap-1">
-      <div className="w-5/6 gap-1 flex flex-row flex-wrap items-center justify-start">
+    <div className="w-5/6 flex flex-col items-start gap-1">
+      <div className="w-full gap-1 flex flex-row flex-wrap items-center justify-start">
         {attachments?.map((attachment) => {
           return (
             <AttachmentPreview attachment={attachment} key={attachment.id} />
@@ -51,6 +51,7 @@ export function BotOrAgentResponse({
           className={cn(
             "w-fit p-2 rounded-2xl bg-secondary border shadow-sm",
             "leading-snug text-sm prose prose-sm prose-a:decoration-primary prose-a:underline",
+            "break-all", // necessary to break very long words
           )}
         >
           {message}

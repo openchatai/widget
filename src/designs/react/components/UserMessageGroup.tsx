@@ -11,9 +11,9 @@ function UserMessage({
   message: UserMessageType;
 }) {
   return (
-    <div className="w-full flex flex-col items-end gap-1">
+    <div className="w-5/6 flex flex-col items-end gap-1">
       {message.attachments && message.attachments.length > 0 && (
-        <div className="w-5/6 flex gap-1 flex-wrap justify-end">
+        <div className="w-full flex gap-1 flex-wrap justify-end">
           {message.attachments?.map((attachment) => (
             <AttachmentPreview attachment={attachment} key={attachment.id} />
           ))}
@@ -24,6 +24,7 @@ function UserMessage({
           className={cn(
             "w-fit p-2 rounded-2xl text-sm",
             "bg-primary text-primary-foreground border shadow-sm",
+            "break-all", // necessary to break very long words
           )}
         >
           {message.content}
