@@ -59,7 +59,7 @@ export function AttachmentPreview({ attachment }: Props) {
               rel="noopener noreferrer"
               className={cn(
                 "text-xs text-blue-500 line-clamp-2 underline hover:text-blue-600",
-                "break-all", // necessary to break very long words
+                "break-words [word-break:break-word]", // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
               )}
             >
               {name}
