@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>opencx | Test</title>
-    <script src="../../dist-embed/script.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>opencx | Test</title>
+
+  <script src="https://unpkg.com/@opencx/widget@latest/dist-embed/script.js">
+  </script>
+  <script>
+    const options = {
+      token: "232d2c4e33db9ff8372c5fef8d649cb0",
+    };
+    window.addEventListener("DOMContentLoaded", () => {
+      initOpenScript(options)
+    });
+  </script>
 </head>
+
 <body>
-    <h2>Test only</h2>
-    <script>
-        window.addEventListener("DOMContentLoaded", () => {
-          initOpenScript({
-            token: "2425341127eef3b9e2c782781cb0bf17",
-            language: "en",
-            initialMessages: ["How can we help you?"],
-            settings: {
-              playSoundEffects: true
-            },
-            collectUserData: true,
-          });
-        });
-      </script>
+  <h2>Test only</h2>
 </body>
+
 </html>

@@ -1,6 +1,7 @@
 import React, { StrictMode, useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Widget } from "./src/designs/react";
+import { HandoffComponent } from "./src/designs/react/components/custom-components/Handoff.component";
 
 const apiUrl = "http://localhost:8080";
 const token = import.meta.env.VITE_ORG_TOKEN;
@@ -35,6 +36,7 @@ function App() {
       style={{ width: "100vw", height: "100vh", backgroundColor: "black" }}
     >
       <Widget
+        components={[{ key: "handoff", component: HandoffComponent }]}
         options={{
           apiUrl,
           token,
