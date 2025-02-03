@@ -6,7 +6,7 @@ import type { AgentOrBotType } from "./agent-or-bot";
 /*                 Component-related types                */
 /* ------------------------------------------------------ */
 export type WidgetComponentKey = StringOrLiteral<
-  "bot_message" | "agent_message" | "loading"
+  "bot_message" | "agent_message" | "loading" | "fallback"
 >;
 
 /* ------------------------------------------------------ */
