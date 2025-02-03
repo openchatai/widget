@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.32
+
+### Patch Changes
+
+- allow adding custom components to default react widget
+
 ## 3.0.31
 
 ### Patch Changes
