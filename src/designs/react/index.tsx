@@ -1,5 +1,9 @@
 import React from "react";
-import { cssVars, WIDGET_CONTENT_MIN_HEIGHT_PX, WIDGET_CONTENT_WIDTH_PX } from "./constants";
+import {
+  cssVars,
+  WIDGET_CONTENT_MIN_HEIGHT_PX,
+  WIDGET_CONTENT_WIDTH_PX,
+} from "./constants";
 import { RootScreen } from "./screens";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import Iframe from "@uiw/react-iframe";
@@ -7,7 +11,12 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import styles from "../../../index.css?inline";
 import { WidgetPopoverTrigger } from "./WidgetPopoverTrigger";
-import { useConfig, useWidget, WidgetProvider } from "../../headless/react";
+import {
+  useConfig,
+  useWidget,
+  WidgetProvider,
+  type WidgetComponentType,
+} from "../../headless/react";
 import { TooltipProvider } from "./components/lib/tooltip";
 import { cn } from "./components/lib/utils/cn";
 import type { WidgetConfig } from "../../headless/core";
@@ -130,28 +139,43 @@ function WidgetContent() {
   );
 }
 
-function WidgetWrapper({ options }: { options: WidgetConfig }) {
+const defaultComponents: WidgetComponentType[] = [
+  {
+    key: "loading",
+    component: BotLoadingComponent,
+  },
+  {
+    key: "fallback",
+    component: FallbackComponent,
+  },
+  {
+    key: "bot_message",
+    component: BotOrAgentResponse,
+  },
+  {
+    key: "agent_message",
+    component: BotOrAgentResponse,
+  },
+];
+
+/**
+ * Gives precedence for custom components over default components
+ */
+function mergeWithDefaultComponents(
+  components: WidgetComponentType[],
+): WidgetComponentType[] {
+  return [...components, ...defaultComponents].filter(
+    (c, i, self) => i === self.findIndex((_c) => c.key === _c.key),
+  );
+}
+
+function WidgetWrapper({
+  options,
+  components = [],
+}: { options: WidgetConfig; components?: WidgetComponentType[] }) {
   return (
     <WidgetProvider
-      components={[
-        {
-          key: "loading",
-          component: BotLoadingComponent,
-        },
-        {
-          key: "fallback",
-          component: FallbackComponent,
-        },
-        {
-          key: "bot_message",
-          component: BotOrAgentResponse,
-        },
-        {
-          key: "agent_message",
-          component: BotOrAgentResponse,
-        },
-        // TODO allow accepting components from the outside to support UI components
-      ]}
+      components={mergeWithDefaultComponents(components)}
       options={options}
     >
       <WidgetContent />
