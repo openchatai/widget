@@ -33,6 +33,7 @@
     ],
   },
   "include": [
+    "index.tsx",
     "src",
     "vite.config.ts",
     "vitest",
