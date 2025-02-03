@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.31
+
+### Patch Changes
+
+- fix text wrapping and overflow and breaking and whatnot
+
 ## 3.0.30
 
 ### Patch Changes
