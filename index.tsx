@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div
-      data-chat-widget
+      data-opencx-widget
       style={{ width: "100vw", height: "100vh", backgroundColor: "black" }}
     >
       <Widget

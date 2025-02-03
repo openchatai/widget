@@ -7,7 +7,7 @@ export default {
     tailwindcss(),
     autoprefixer(),
     prefixer({
-      prefix: `[data-chat-widget]`,
+      prefix: `[data-opencx-widget]`,
       transform: function (prefix, selector, prefixedSelector, filePath) {
         if (selector === ":root") {
           return selector; // Don't prefix :root selector

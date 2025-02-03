@@ -62,8 +62,8 @@ function WidgetContent() {
           fontSize: "16px",
         }}
         sideOffset={8}
-        data-chat-widget
-        data-chat-widget-content-root
+        data-opencx-widget
+        data-opencx-widget-content-root
         align={dir === "rtl" ? "start" : "end"}
         asChild
       >
@@ -87,7 +87,7 @@ function WidgetContent() {
           <Iframe
             initialContent={initialContent}
             allowFullScreen
-            data-chat-widget
+            data-opencx-widget
             style={{
               maxHeight: "85dvh",
               width: WIDGET_CONTENT_WIDTH_PX,
@@ -113,7 +113,7 @@ function WidgetContent() {
                 style={{
                   display: "contents",
                 }}
-                data-chat-widget
+                data-opencx-widget
               >
                 <div
                   style={{
@@ -123,7 +123,7 @@ function WidgetContent() {
                     ),
                   }}
                   data-version={chat.version}
-                  data-chat-widget
+                  data-opencx-widget
                   className={cn(
                     "antialiased font-inter bg-primary size-full overflow-hidden isolate relative text-secondary-foreground",
                   )}

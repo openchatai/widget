@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-const SELECTOR = "[data-chat-widget-content-root]" as const;
+const SELECTOR = "[data-opencx-widget-content-root]" as const;
 
 export function useWidgetContentHeight({
   fallbackHeight: minHeight,
