@@ -22,7 +22,7 @@ export type {
   VoteInputDto,
   VoteOutputDto,
 } from "./types/schemas";
-export type { WidgetConfig } from "./types/WidgetConfig";
+export type { WidgetConfig } from "./types/widget-config";
 
 export { WidgetCtx } from "./context/widget.ctx";
 export type { ContactCtx } from "./context/contact.ctx";

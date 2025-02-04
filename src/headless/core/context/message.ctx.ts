@@ -1,5 +1,5 @@
 import { ApiCaller } from "../api";
-import type { WidgetConfig } from "../types/WidgetConfig";
+import type { WidgetConfig } from "../types/widget-config";
 import type { SafeOmit, SomeOptional } from "../types/helpers";
 import type {
   BotMessageType,

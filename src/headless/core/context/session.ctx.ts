@@ -1,6 +1,6 @@
 import type { ApiCaller } from "../api";
 import type { SessionDto } from "../types/schemas";
-import type { WidgetConfig } from "../types/WidgetConfig";
+import type { WidgetConfig } from "../types/widget-config";
 import { Poller } from "../utils/Poller";
 import { PrimitiveState } from "../utils/PrimitiveState";
 import type { ContactCtx } from "./contact.ctx";

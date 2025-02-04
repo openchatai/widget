@@ -1,6 +1,6 @@
 import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { type Dto, type Endpoint, basicClient } from "./sdk";
-import type { WidgetConfig } from "./types/WidgetConfig";
+import type { WidgetConfig } from "./types/widget-config";
 import type { SendMessageDto, VoteInputDto } from "./types/schemas";
 
 export class ApiCaller {

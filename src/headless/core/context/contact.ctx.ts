@@ -1,6 +1,6 @@
 import { PrimitiveState } from "../utils/PrimitiveState";
 import { ApiCaller } from "../api";
-import { type WidgetConfig } from "../types/WidgetConfig";
+import { type WidgetConfig } from "../types/widget-config";
 import { type Dto } from "../sdk";
 
 type ContactState = {

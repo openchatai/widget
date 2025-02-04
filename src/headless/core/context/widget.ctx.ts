@@ -1,5 +1,5 @@
 import { ApiCaller } from "../api";
-import type { WidgetConfig } from "../types/WidgetConfig";
+import type { WidgetConfig } from "../types/widget-config";
 import { ContactCtx } from "./contact.ctx";
 import { MessageCtx } from "./message.ctx";
 import { RouterCtx } from "./router.ctx";
