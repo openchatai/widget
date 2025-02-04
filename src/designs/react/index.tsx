@@ -19,7 +19,7 @@ import {
 } from "../../headless/react";
 import { TooltipProvider } from "./components/lib/tooltip";
 import { cn } from "./components/lib/utils/cn";
-import type { WidgetConfig } from "../../headless/core";
+import type { ExternalStorage, WidgetConfig } from "../../headless/core";
 import { BotLoadingComponent } from "./components/custom-components/Loading.component";
 import { FallbackComponent } from "./components/custom-components/Fallback.component";
 import { BotOrAgentResponse } from "./components/custom-components/BotOrAgentTextResponse.component";
@@ -158,6 +158,18 @@ const defaultComponents: WidgetComponentType[] = [
   },
 ];
 
+const storage: ExternalStorage = {
+  get: async (key: string) => {
+    return localStorage.getItem(key);
+  },
+  set: async (key: string, value: string) => {
+    localStorage.setItem(key, value);
+  },
+  remove: async (key: string) => {
+    localStorage.removeItem(key);
+  },
+};
+
 function WidgetWrapper({
   options,
   components = [],
@@ -166,6 +178,7 @@ function WidgetWrapper({
     <WidgetProvider
       components={[...defaultComponents, ...components]}
       options={options}
+      storage={storage}
     >
       <WidgetContent />
     </WidgetProvider>

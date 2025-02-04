@@ -2,6 +2,7 @@ import { PrimitiveState } from "../utils/PrimitiveState";
 import { ApiCaller } from "../api";
 import { type WidgetConfig } from "../types/widget-config";
 import { type Dto } from "../sdk";
+import type { StorageCtx } from "./storage.ctx";
 
 type ContactState = {
   contact: { token: string } | null;
@@ -11,17 +12,21 @@ type ContactState = {
 
 export class ContactCtx {
   private config: WidgetConfig;
+  private storageCtx?: StorageCtx;
   private api: ApiCaller;
   state: PrimitiveState<ContactState>;
 
   constructor({
     config,
     api,
+    storageCtx,
   }: {
     api: ApiCaller;
     config: WidgetConfig;
+    storageCtx?: StorageCtx;
   }) {
     this.config = config;
+    this.storageCtx = storageCtx;
     this.api = api;
 
     this.state = new PrimitiveState<ContactState>({
@@ -30,9 +35,7 @@ export class ContactCtx {
       isErrorCreatingUnverifiedContact: false,
     });
 
-    if (!config.user?.token && !config.collectUserData) {
-      this.autoCreateUnverifiedUser();
-    }
+    this.autoCreateUnverifiedUserIfNotExists();
   }
 
   shouldCollectData = (): boolean => {
@@ -44,7 +47,11 @@ export class ContactCtx {
     return false;
   };
 
-  private autoCreateUnverifiedUser = async () => {
+  private autoCreateUnverifiedUserIfNotExists = async () => {
+    if (this.config.user?.token || this.config.collectUserData) {
+      return;
+    }
+
     await this.createUnverifiedContact({
       name: this.config.user?.data?.name || "Anonymous",
       email: this.config.user?.data?.email,
