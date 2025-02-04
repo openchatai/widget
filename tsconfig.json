@@ -28,9 +28,6 @@
 
     // Additional options outside Matt Pocock's template
     "jsx": "react",
-    "types": [
-      "@vitest/browser/providers/playwright"
-    ],
   },
   "include": [
     "index.tsx",

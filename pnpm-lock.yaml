@@ -139,9 +139,6 @@ importers:
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
-      playwright:
-        specifier: ^1.49.1
-        version: 1.49.1
       postcss:
         specifier: ^8.4.41
         version: 8.4.47
@@ -6462,13 +6459,15 @@ snapshots:
       mlly: 1.7.2
       pathe: 1.1.2
 
-  playwright-core@1.49.1: {}
+  playwright-core@1.49.1:
+    optional: true
 
   playwright@1.49.1:
     dependencies:
       playwright-core: 1.49.1
     optionalDependencies:
       fsevents: 2.3.2
+    optional: true
 
   pluralize@8.0.0: {}
 
