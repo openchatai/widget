@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.34
+
+### Patch Changes
+
+- persist non-verified contacts
+
 ## 3.0.33
 
 ### Patch Changes
