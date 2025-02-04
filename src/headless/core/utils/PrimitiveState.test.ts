@@ -1,43 +1,60 @@
-import { describe, it, expect, vi } from "vitest";
+import { suite, it, expect, vi } from "vitest";
 import { PrimitiveState } from "./PrimitiveState";
 
-describe("PrimitiveState", () => {
-  describe("State Management", () => {
+suite(PrimitiveState.name, () => {
+  suite("constructor", () => {
     it("should initialize with initial state", () => {
-      const initialState = { count: 0 };
-      const state = new PrimitiveState(initialState);
-      expect(state.get()).toEqual(initialState);
-    });
-
-    it("should update state with setState", () => {
       const state = new PrimitiveState({ count: 0 });
-      const newState = { count: 1 };
-      state.set(newState);
-      expect(state.get()).toEqual(newState);
+      expect(state.get()).toEqual({ count: 0 });
     });
+  });
 
-    it("should update partial state with setStatePartial", () => {
+  suite(new PrimitiveState("").set.name, () => {
+    it("should update the state", () => {
+      const state = new PrimitiveState({ count: 0 });
+      state.set({ count: 1 });
+      expect(state.get()).toEqual({ count: 1 });
+    });
+  });
+
+  suite(new PrimitiveState("").setPartial.name, () => {
+    it("should update the state", () => {
       const state = new PrimitiveState({ count: 0, text: "hello" });
       state.setPartial({ count: 1 });
       expect(state.get()).toEqual({ count: 1, text: "hello" });
     });
 
-    it("should handle nested state updates with setStatePartial", () => {
-      const state = new PrimitiveState({
-        user: { name: "John", age: 30 },
-        settings: { theme: "dark" },
-      });
-      state.setPartial({
-        user: { name: "Jane", age: 30 },
-      });
-      expect(state.get()).toEqual({
-        user: { name: "Jane", age: 30 },
-        settings: { theme: "dark" },
-      });
+    it("should ignore `undefined` state updates", () => {
+      const state = new PrimitiveState({ count: 0 });
+      state.setPartial(undefined as any);
+      expect(state.get()).toEqual({ count: 0 });
+    });
+
+    it("should ignore `null` state updates", () => {
+      const state = new PrimitiveState({ count: 0 });
+      state.setPartial(null as any);
+      expect(state.get()).toEqual({ count: 0 });
     });
   });
 
-  describe("Subscriptions", () => {
+  suite(new PrimitiveState("").get.name, () => {
+    it("should get the latest state", () => {
+      const state = new PrimitiveState({ count: 0 });
+      state.set({ count: 1 });
+      expect(state.get()).toEqual({ count: 1 });
+    });
+  });
+
+  suite(new PrimitiveState("").reset.name, () => {
+    it("should go back to initial state", () => {
+      const state = new PrimitiveState({ count: 0 });
+      state.set({ count: 1 });
+      state.reset();
+      expect(state.get()).toEqual({ count: 0 });
+    });
+  });
+
+  suite(new PrimitiveState("").subscribe.name, () => {
     it("should notify subscribers when state changes", () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber = vi.fn();
@@ -54,6 +71,39 @@ describe("PrimitiveState", () => {
 
       state.setPartial({ count: 1 });
       expect(subscriber).toHaveBeenCalledWith({ count: 1, text: "hello" });
+    });
+
+    it("should notify subscribers once on every update", () => {
+      const state = new PrimitiveState({ count: 0, text: "hello" });
+      const subscriber = vi.fn();
+      state.subscribe(subscriber);
+
+      state.setPartial({ count: 1 });
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      state.setPartial({ count: 2 });
+      expect(subscriber).toHaveBeenCalledTimes(2);
+    });
+
+    it("should not notify subscribers on redundant set state calls", () => {
+      const state = new PrimitiveState({ count: 0, text: "hello" });
+      const subscriber = vi.fn();
+      state.subscribe(subscriber);
+
+      state.setPartial({ count: 1 });
+      state.setPartial({ count: 1 });
+      state.setPartial({ count: 1 });
+      expect(subscriber).toHaveBeenCalledTimes(1);
+    });
+
+    it("should notify subscribers when state is reset", () => {
+      const state = new PrimitiveState({ count: 0 });
+      const subscriber = vi.fn();
+      state.subscribe(subscriber);
+
+      state.set({ count: 1 });
+      expect(subscriber).toHaveBeenCalledTimes(1);
+      state.reset();
+      expect(subscriber).toHaveBeenCalledTimes(2);
     });
 
     it("should allow multiple subscribers", () => {
@@ -85,9 +135,9 @@ describe("PrimitiveState", () => {
       const subscriber2 = vi.fn();
       const subscriber3 = vi.fn();
 
-      const unsubscribe1 = state.subscribe(subscriber1);
+      const _unsubscribe1 = state.subscribe(subscriber1);
       const unsubscribe2 = state.subscribe(subscriber2);
-      const unsubscribe3 = state.subscribe(subscriber3);
+      const _unsubscribe3 = state.subscribe(subscriber3);
 
       unsubscribe2();
       state.set({ count: 1 });
@@ -95,55 +145,6 @@ describe("PrimitiveState", () => {
       expect(subscriber1).toHaveBeenCalledWith({ count: 1 });
       expect(subscriber2).not.toHaveBeenCalled();
       expect(subscriber3).toHaveBeenCalledWith({ count: 1 });
-    });
-  });
-
-  describe("Clear Functionality", () => {
-    it("should clear all subscribers", () => {
-      const state = new PrimitiveState({ count: 0 });
-      const subscriber1 = vi.fn();
-      const subscriber2 = vi.fn();
-
-      state.subscribe(subscriber1);
-      state.subscribe(subscriber2);
-
-      state.clear();
-      state.set({ count: 1 });
-
-      expect(subscriber1).not.toHaveBeenCalled();
-      expect(subscriber2).not.toHaveBeenCalled();
-    });
-
-    it("should maintain state after clearing subscribers", () => {
-      const state = new PrimitiveState({ count: 0 });
-      state.set({ count: 1 });
-      state.clear();
-      expect(state.get()).toEqual({ count: 1 });
-    });
-
-    it("should allow new subscriptions after clearing", () => {
-      const state = new PrimitiveState({ count: 0 });
-      const subscriber = vi.fn();
-
-      state.clear();
-      state.subscribe(subscriber);
-      state.set({ count: 1 });
-
-      expect(subscriber).toHaveBeenCalledWith({ count: 1 });
-    });
-  });
-
-  describe("Edge Cases", () => {
-    it("should handle undefined state updates", () => {
-      const state = new PrimitiveState({ count: 0 });
-      state.setPartial(undefined as any);
-      expect(state.get()).toEqual({ count: 0 });
-    });
-
-    it("should handle null state updates", () => {
-      const state = new PrimitiveState({ count: 0 });
-      state.setPartial(null as any);
-      expect(state.get()).toEqual({ count: 0 });
     });
 
     it("should handle subscriber errors gracefully", () => {
