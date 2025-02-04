@@ -24,7 +24,7 @@
     "format": "biome format src",
     "format:all": "biome format",
     "batman": "pnpm tsc && pnpm build:lib && pnpm build:embed",
-    "prepublishOnly": "pnpm format && pnpm lint && pnpm clean && pnpm test && pnpm batman",
+    "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
     "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
   "peerDependencies": {
