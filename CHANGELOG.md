@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.33
+
+### Patch Changes
+
+- fix sessions refresh
+
 ## 3.0.32
 
 ### Patch Changes
