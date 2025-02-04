@@ -85,33 +85,28 @@ export class SessionCtx {
   };
 
   private registerInitialSessionsFetch = () => {
-    const initialFetch = async () => {
-      this.sessionsState.setPartial({ didStartInitialFetch: true });
-      // Call this for the first time to get the first page of sessions
-      await this.loadMoreSessions();
-      this.sessionsState.setPartial({ isInitialFetchLoading: false });
-    };
-
-    // If the widget config was initially provided with a contact token, no state change would be triggered, so we just fetch
     if (
+      // If the widget config was initially provided with a contact token, no state change would be triggered, so we just fetch
       this.contactCtx.state.get().contact?.token &&
       !this.sessionsState.get().didStartInitialFetch
     ) {
-      initialFetch();
       this.registerSessionsRefresher();
+    } else {
+      // In other cases where auto authenticate is fired, the token would be eventually set in state, so we wait for it
+      this.contactCtx.state.subscribe(({ contact }) => {
+        if (contact?.token && !this.sessionsState.get().didStartInitialFetch) {
+          this.registerSessionsRefresher();
+        }
+      });
     }
-
-    // In other cases where auto authenticate is fired, the token would be eventually set in state, so we wait for it
-    this.contactCtx.state.subscribe(({ contact }) => {
-      if (contact?.token && !this.sessionsState.get().didStartInitialFetch) {
-        initialFetch();
-        this.registerSessionsRefresher();
-      }
-    });
   };
 
   private registerSessionsRefresher = () => {
     this.sessionsRefresher.startPolling(async () => {
+      if (this.sessionsState.get().didStartInitialFetch === false) {
+        this.sessionsState.setPartial({ didStartInitialFetch: true });
+      }
+
       // Get the first page only (pass no `cursor`)
       const { data } = await this.getSessions({ cursor: undefined });
       if (!data) return;
@@ -119,6 +114,10 @@ export class SessionCtx {
         (s, i, self) => i === self.findIndex((_s) => s.id === _s.id),
       );
       this.sessionsState.setPartial({ data: sessions });
+
+      if (this.sessionsState.get().isInitialFetchLoading === true) {
+        this.sessionsState.setPartial({ isInitialFetchLoading: false });
+      }
     }, 10000);
   };
 
