@@ -55,5 +55,5 @@ export const arLocale: TranslationInterface = {
   "starting-chat": "جاري الاتصال...",
   "hello-greeting": "مرحبًا! كيف يمكننا مساعدتك اليوم؟",
   "i-need-more-help": "أحتاج المزيد من المساعدة",
-  "this-was-helpful": "كان هذا مفيدًا"
+  "this-was-helpful": "كان هذا مفيدًا",
 };

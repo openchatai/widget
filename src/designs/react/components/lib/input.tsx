@@ -4,11 +4,11 @@ import { Wobble } from "./wobble";
 import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
 
 export interface InputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> { }
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
-    const direction = useDocumentDir()
+    const direction = useDocumentDir();
 
     return (
       <Wobble ref={ref}>

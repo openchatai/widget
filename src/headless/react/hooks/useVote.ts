@@ -7,7 +7,9 @@ import { useWidget } from "../WidgetProvider";
  * @returns
  */
 export function useVote(id: string, sessionId: string, onSuccess?: () => void) {
-  const { widgetCtx: { api } } = useWidget();
+  const {
+    widgetCtx: { api },
+  } = useWidget();
   return useAsyncFn(
     async (action: "up" | "down") => {
       if (action === "up") {
@@ -34,7 +36,9 @@ export function useUpvote(
   sessionId: string,
   onSuccess?: () => void,
 ) {
-  const { widgetCtx: { api } } = useWidget();
+  const {
+    widgetCtx: { api },
+  } = useWidget();
   return useAsyncFn(
     async () =>
       api
@@ -54,7 +58,9 @@ export function useDownvote(
   sessionId: string,
   onSuccess?: () => void,
 ) {
-  const { widgetCtx: { api } } = useWidget();
+  const {
+    widgetCtx: { api },
+  } = useWidget();
   return useAsyncFn(
     async () =>
       api

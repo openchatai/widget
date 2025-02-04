@@ -15,7 +15,9 @@ interface FileWithProgress {
 
 function useUploadFiles() {
   const [files, setFiles] = useState<FileWithProgress[]>([]);
-  const { widgetCtx: { api } } = useWidget();
+  const {
+    widgetCtx: { api },
+  } = useWidget();
   function appendFiles(files: File[]) {
     const newFiles = files.map((file) => ({
       file,

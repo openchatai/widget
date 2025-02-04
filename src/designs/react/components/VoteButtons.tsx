@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useVote } from "../../../headless/react";
 import { cn } from "./lib/utils/cn";
 
-
 interface VoteButtonsProps {
   messageId: string;
   sessionId: string;

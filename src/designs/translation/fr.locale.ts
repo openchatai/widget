@@ -55,5 +55,5 @@ export const frLocale: TranslationInterface = {
   "starting-chat": "Connexion...",
   "hello-greeting": "Bonjour ! Comment pouvons-nous vous aider aujourd'hui ?",
   "i-need-more-help": "Je besoin d'aide plus",
-  "this-was-helpful": "C'était utile"
+  "this-was-helpful": "C'était utile",
 };
