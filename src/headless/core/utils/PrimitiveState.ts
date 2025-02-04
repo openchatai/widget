@@ -14,7 +14,6 @@ export class PrimitiveState<S> {
 
   get = (): S => this.state;
 
-  // TODO make this provide prev state
   set = (newState: S): void => {
     if (!isEqual(this.state, newState)) {
       this.state = newState;
@@ -22,14 +21,12 @@ export class PrimitiveState<S> {
     }
   };
 
-  // TODO make this provide prev state
   setPartial = (_s: Partial<S>): void => {
     if (_s === undefined || _s === null) return;
     const newState = { ...this.state, ..._s };
     this.set(newState);
   };
 
-  // TODO write test for this
   reset = (): void => {
     this.set(this.initialState);
   };
