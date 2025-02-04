@@ -37,7 +37,9 @@ export class PrimitiveState<S> {
       try {
         callback(state);
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.MODE !== "test") {
+          console.error(error);
+        }
       }
     });
   };
