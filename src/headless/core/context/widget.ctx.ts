@@ -10,7 +10,7 @@ import { StorageCtx } from "./storage.ctx";
 export class WidgetCtx {
   public config: WidgetConfig;
   public api: ApiCaller;
-  
+
   public contactCtx: ContactCtx;
   public sessionCtx: SessionCtx;
   public messageCtx: MessageCtx;

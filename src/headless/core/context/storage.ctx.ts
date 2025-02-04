@@ -5,7 +5,7 @@ export class StorageCtx {
   private KEYS = {
     contactToken: "opencx__widget__contactToken",
     externalContactId: "opencx__widget__externalContactId",
-  }
+  };
 
   constructor({ storage }: { storage: ExternalStorage }) {
     this.storage = storage;
