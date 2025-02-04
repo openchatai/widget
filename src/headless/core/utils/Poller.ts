@@ -18,7 +18,7 @@ export class Poller {
     this.stopPolling = null;
   };
 
-  stopPolling: (() => void) | null = null;
+  private stopPolling: (() => void) | null = null;
 
   startPolling = (
     cb: (abortSignal: AbortSignal) => Promise<void>,
