@@ -26,13 +26,15 @@ suite(PrimitiveState.name, () => {
 
     it("should ignore `undefined` state updates", () => {
       const state = new PrimitiveState({ count: 0 });
-      state.setPartial(undefined as any);
+      // @ts-expect-error
+      state.setPartial(undefined);
       expect(state.get()).toEqual({ count: 0 });
     });
 
     it("should ignore `null` state updates", () => {
       const state = new PrimitiveState({ count: 0 });
-      state.setPartial(null as any);
+      // @ts-expect-error
+      state.setPartial(null);
       expect(state.get()).toEqual({ count: 0 });
     });
   });

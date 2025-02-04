@@ -40,9 +40,8 @@ export class ContactCtx {
 
     if (!currentState.contact?.token && this.config.collectUserData) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   };
 
   private autoCreateUnverifiedUser = async () => {

@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 const SELECTOR = "[data-opencx-widget-content-root]" as const;
 
 export function useWidgetContentHeight({
-  fallbackHeight: minHeight,
+  fallbackHeight,
 }: {
   /**
    * unrendered elements have an offset height of 0, this is causes a weird animation when opening the widget.
@@ -25,10 +25,10 @@ export function useWidgetContentHeight({
       let animationFrame: number;
       const observer = new ResizeObserver(() => {
         animationFrame = requestAnimationFrame(() => {
-          const height = Math.max(observedElement.offsetHeight, minHeight);
+          const height = Math.max(observedElement.offsetHeight, fallbackHeight);
           contentRoot.style.setProperty(
             "--opencx-widget-height",
-            height.toFixed(1) + "px",
+            `${height.toFixed(1)}px`,
           );
         });
       });
@@ -39,7 +39,7 @@ export function useWidgetContentHeight({
         observer.unobserve(observedElement);
       };
     }
-  }, []);
+  }, [fallbackHeight]);
 
   return { observedElementRef };
 }

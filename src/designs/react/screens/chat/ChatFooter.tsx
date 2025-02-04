@@ -30,6 +30,7 @@ import { MotionDiv } from "../../components/lib/MotionDiv";
 import { Button } from "../../components/lib/button";
 import { useDocumentDir } from "../../../../headless/react/hooks/useDocumentDir";
 import { SuggestedReplies } from "../../components/SuggestedReplies";
+import type { SendMessageDto } from "../../../../headless/core";
 
 function FileDisplay({
   file: { status, file, error },
@@ -108,6 +109,7 @@ function FileDisplay({
           {getStatusIcon()}
         </div>
         <button
+          type="button"
           className={cn(
             "absolute bg-black/50 inset-0 size-full z-10 opacity-0",
             "flex items-center justify-center",
@@ -170,13 +172,19 @@ function ChatInput() {
     // Do not await this
     void sendMessage({
       content: trimmed,
-      attachments: successFiles.map((f) => ({
-        url: f.fileUrl!,
-        type: f.file.type,
-        name: f.file.name,
-        id: f.id,
-        size: f.file.size,
-      })),
+      attachments: successFiles.flatMap((f) =>
+        f.fileUrl
+          ? [
+              {
+                url: f.fileUrl,
+                type: f.file.type,
+                name: f.file.name,
+                id: f.id,
+                size: f.file.size,
+              } satisfies NonNullable<SendMessageDto["attachments"]>[number],
+            ]
+          : [],
+      ),
     });
 
     setInputText("");
@@ -370,9 +378,9 @@ export function ChatFooter() {
 
               {noMessages && initialQuestions && (
                 <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
-                  {initialQuestions?.map((iq, index) => (
+                  {initialQuestions?.map((iq) => (
                     <Button
-                      key={index}
+                      key={iq}
                       dir="auto"
                       variant="outline"
                       size="sm"

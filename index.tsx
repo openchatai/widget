@@ -36,7 +36,10 @@ function App() {
       style={{ width: "100vw", height: "100vh", backgroundColor: "black" }}
     >
       <Widget
-        components={[{ key: "handoff", component: HandoffComponent }]}
+        components={[
+          { key: "handoff", component: HandoffComponent },
+          { key: "loading", component: () => "asdasdasd" },
+        ]}
         options={{
           apiUrl,
           token,
@@ -74,7 +77,11 @@ function App() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(
+const rootElement = document.getElementById("root");
+if (!rootElement) {
+  throw new Error("No root element found");
+}
+createRoot(rootElement).render(
   <StrictMode>
     <App />
   </StrictMode>,

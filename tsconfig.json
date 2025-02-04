@@ -15,6 +15,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
+    "noUnusedParameters": true,
 
     /* AND if you're building for a library: */
     "declaration": true,

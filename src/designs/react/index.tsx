@@ -158,24 +158,13 @@ const defaultComponents: WidgetComponentType[] = [
   },
 ];
 
-/**
- * Gives precedence for custom components over default components
- */
-function mergeWithDefaultComponents(
-  components: WidgetComponentType[],
-): WidgetComponentType[] {
-  return [...components, ...defaultComponents].filter(
-    (c, i, self) => i === self.findIndex((_c) => c.key === _c.key),
-  );
-}
-
 function WidgetWrapper({
   options,
   components = [],
 }: { options: WidgetConfig; components?: WidgetComponentType[] }) {
   return (
     <WidgetProvider
-      components={mergeWithDefaultComponents(components)}
+      components={[...defaultComponents, ...components]}
       options={options}
     >
       <WidgetContent />

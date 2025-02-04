@@ -17,8 +17,8 @@ function initOpenScript(options: WidgetConfig) {
   render(defaultRootId, <Widget options={options} />);
 }
 
-window["initOpenScript"] = initOpenScript;
-window["openCXWidgetVersion"] = version;
+window.initOpenScript = initOpenScript;
+window.openCXWidgetVersion = version;
 
 export function render(rootId: string, component: React.JSX.Element) {
   let rootElement = document.getElementById(rootId);

@@ -26,6 +26,7 @@ export function AttachmentPreview({ attachment }: Props) {
     return (
       <Wobble>
         <div className="w-full shrink-0 overflow-hidden">
+          {/* biome-ignore lint/a11y/useMediaCaption: no track shall be provided */}
           <audio controls className="w-full">
             <source src={url} type={type} />
             Your browser does not support the audio tag.
@@ -39,6 +40,7 @@ export function AttachmentPreview({ attachment }: Props) {
     return (
       <Wobble>
         <div className="w-full border shrink-0 rounded-2xl overflow-hidden">
+          {/* biome-ignore lint/a11y/useMediaCaption: no track shall be provided */}
           <video controls>
             <source src={url} type={type} />
             Your browser does not support the video tag.
@@ -79,7 +81,7 @@ export function AttachmentPreview({ attachment }: Props) {
         <DialogTrigger>
           <div className="size-fit border shrink-0 rounded-2xl overflow-hidden">
             {isImage && (
-              <img loading="lazy" src={url} className="object-cover size-16" />
+              <img src={url} className="object-cover size-16" alt={name} />
             )}
           </div>
         </DialogTrigger>
@@ -94,7 +96,7 @@ export function AttachmentPreview({ attachment }: Props) {
 
         {isImage && (
           <div className="size-fit shrink-0 rounded-2xl overflow-hidden max-h-full">
-            <img loading="lazy" src={url} className="object-cover size-auto" />
+            <img src={url} className="object-cover size-auto" alt={name} />
           </div>
         )}
       </DialogContent>

@@ -22,6 +22,7 @@ export function ChatMain() {
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();
   const config = useConfig();
+  // biome-ignore lint/correctness/useExhaustiveDependencies: dep is `messages.length` not just `messages` in case the equality check is shallow
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
     [messages.length],
@@ -48,6 +49,7 @@ export function ChatMain() {
       }
     }, 0);
   }
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `messages` is an intentional dependency
   useEffect(() => {
     handleNewMessage();
   }, [messages]);
@@ -60,30 +62,31 @@ export function ChatMain() {
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
       {messages.length === 0 &&
-        initialMessages.map((message, index) => (
+        initialMessages.map((message) => (
           <BotOrAgentMessage
-            key={`${message}-${index}`}
+            key={message}
             component="bot_message"
             data={{ message }}
-            id={`initial-${index}`}
+            id={message}
             type="FROM_BOT"
             agent={config.bot}
             timestamp={Date.now().toString()}
           />
         ))}
-      {groupedMessages.map((group, index) => {
+      {groupedMessages.map((group) => {
         const type = group?.[0]?.type;
-        if (!type) return null;
+        const firstIdInGroup = group[0]?.id;
+        if (!type || !firstIdInGroup) return null;
 
         if (isUserMessageGroup(group)) {
-          return <UserMessageGroup key={index} messages={group} />;
+          return <UserMessageGroup key={firstIdInGroup} messages={group} />;
         }
 
         if (isBotMessageGroup(group) || isAgentMessageGroup(group)) {
           const agent = group[0]?.agent;
           return (
             <BotOrAgentMessageGroup
-              key={index}
+              key={firstIdInGroup}
               messages={group}
               agent={agent}
             />

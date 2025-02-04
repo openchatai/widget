@@ -12,15 +12,13 @@ export function useVote(id: string, sessionId: string, onSuccess?: () => void) {
   } = useWidget();
   return useAsyncFn(
     async (action: "up" | "down") => {
-      if (action === "up") {
-        return api
-          .vote({ action: "upvote", messagePublicId: id, sessionId })
-          .then(onSuccess);
-      } else {
-        return api
-          .vote({ action: "downvote", messagePublicId: id, sessionId })
-          .then(onSuccess);
-      }
+      return api
+        .vote({
+          action: action === "up" ? "upvote" : "downvote",
+          messagePublicId: id,
+          sessionId,
+        })
+        .then(onSuccess);
     },
     [api, id, sessionId, onSuccess],
   );

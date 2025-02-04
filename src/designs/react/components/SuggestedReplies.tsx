@@ -19,12 +19,12 @@ export function SuggestedReplies() {
 
   return (
     <div className="flex items-center gap-2 p-2 pb-0 flex-wrap">
-      {options.map((option, index) => (
+      {options.map((option) => (
         <Button
           onClick={() => handleSend(option)}
           className="flex-1 rounded-full"
           size="sm"
-          key={index}
+          key={option}
         >
           {option}
         </Button>

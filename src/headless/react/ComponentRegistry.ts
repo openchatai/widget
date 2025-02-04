@@ -2,12 +2,7 @@ import type { WidgetComponentKey } from "../core";
 import type { WidgetComponentType } from "./types/components";
 
 export class ComponentRegistry {
-  components: WidgetComponentType[] = [
-    {
-      key: "loading",
-      component: (data) => "loading",
-    },
-  ] as const;
+  components: WidgetComponentType[] = [];
 
   constructor(opts: { components?: WidgetComponentType[] }) {
     const { components } = opts;
@@ -18,18 +13,20 @@ export class ComponentRegistry {
 
     if (this.components.length === 0) {
       throw new Error("No components registered");
-    } else if (!this.get("fallback")) {
+    }
+    if (!this.get("fallback")) {
       throw new Error("No fallback component registered");
     }
   }
 
-  register(com: WidgetComponentType) {
+  // TODO test that this registers or replaces the component
+  register(component: WidgetComponentType) {
     // Replace the key if it already exists
-    const index = this.components.findIndex((c) => c.key === com.key);
+    const index = this.components.findIndex((c) => c.key === component.key);
     if (index !== -1) {
-      this.components[index] = com;
+      this.components[index] = component;
     } else {
-      this.components.push(com);
+      this.components.push(component);
     }
     return this;
   }

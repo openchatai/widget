@@ -19,10 +19,12 @@
     "csv": "changeset version",
     "csp": "changeset publish",
     "type-check": "tsc --noEmit",
-    "lint": "biome lint --fix",
-    "format": "biome format --fix",
+    "lint": "biome lint src",
+    "lint:all": "biome lint",
+    "format": "biome format src",
+    "format:all": "biome format",
     "batman": "pnpm tsc && pnpm build:lib && pnpm build:embed",
-    "prepublishOnly": "pnpm clean && pnpm test && pnpm batman",
+    "prepublishOnly": "pnpm format && pnpm lint && pnpm clean && pnpm test && pnpm batman",
     "test:browser": "vitest --workspace=vitest.workspace.ts"
   },
   "peerDependencies": {

@@ -38,10 +38,9 @@ export class Poller {
         if (this.abortController.signal.aborted) {
           // If aborted, just return and do not schedule the nest poll
           return;
-        } else {
-          console.error("Failed to poll:", error);
-          this.state.setPartial({ isError: true });
         }
+        console.error("Failed to poll:", error);
+        this.state.setPartial({ isError: true });
       } finally {
         this.state.setPartial({ isPolling: false });
       }

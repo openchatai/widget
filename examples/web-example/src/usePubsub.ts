@@ -10,7 +10,7 @@ type LifecycleHookOptions = {
   onError?: (data: any) => void;
 };
 
-function usePubsub<S extends any>(
+function usePubsub<S>(
   pubsub: InstanceType<typeof PubSub<S>>,
   lifecycleOptions?: LifecycleHookOptions,
 ) {
