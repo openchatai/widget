@@ -36,10 +36,7 @@ function App() {
       style={{ width: "100vw", height: "100vh", backgroundColor: "black" }}
     >
       <Widget
-        components={[
-          { key: "handoff", component: HandoffComponent },
-          { key: "loading", component: () => "asdasdasd" },
-        ]}
+        components={[{ key: "handoff", component: HandoffComponent }]}
         options={{
           apiUrl,
           token,
