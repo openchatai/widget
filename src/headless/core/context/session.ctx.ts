@@ -140,10 +140,7 @@ export class SessionCtx {
     return null;
   };
 
-  /**
-   * Let's keep this private for now until we figure out how to do paginated fetching in tandem with the interval refreshing
-   */
-  private loadMoreSessions = async () => {
+  loadMoreSessions = async () => {
     if (this.sessionsState.get().isLastPage) return;
 
     const { data } = await this.getSessions({

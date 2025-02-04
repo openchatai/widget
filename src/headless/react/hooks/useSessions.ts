@@ -9,5 +9,6 @@ export function useSessions() {
   return {
     sessionState,
     sessionsState,
+    loadMoreSessions: widgetCtx.sessionCtx.loadMoreSessions,
   };
 }
