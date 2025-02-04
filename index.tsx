@@ -8,28 +8,28 @@ const token = import.meta.env.VITE_ORG_TOKEN;
 const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
 
 function App() {
-  // const [userToken, setUserToken] = useState("");
-  // const didFetchRef = useRef(false);
+  const [userToken, setUserToken] = useState("");
+  const didFetchRef = useRef(false);
 
-  // useEffect(() => {
-  //   if (didFetchRef.current) return;
-  //   didFetchRef.current = true;
-  //   fetch("http://localhost:8080/widget/authenticate-user", {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       email: "ali@open.cx",
-  //     }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${apiToken}`,
-  //     },
-  //   }).then(async (res) => {
-  //     const data = await res.json();
-  //     setUserToken(data.token);
-  //   });
-  // }, []);
+  useEffect(() => {
+    if (didFetchRef.current) return;
+    didFetchRef.current = true;
+    fetch("http://localhost:8080/widget/authenticate-user", {
+      method: "POST",
+      body: JSON.stringify({
+        email: "ali@open.cx",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${apiToken}`,
+      },
+    }).then(async (res) => {
+      const data = await res.json();
+      setUserToken(data.token);
+    });
+  }, []);
 
-  // if (!userToken) return null;
+  if (!userToken) return null;
 
   return (
     <div
@@ -49,18 +49,18 @@ function App() {
           // theme: {
           //   primaryColor: "#639"
           // },
-          // collectUserData: true,
+          collectUserData: true,
           user: {
             // externalId: "xyz",
-            // token: userToken,
+            token: userToken,
             // data: {
             //   name: "arkhameedis",
             //   email: "arkhameedis@open.cx"
             // },
-            data: {
-              name: "ali",
-              email: "ali@open.cx",
-            },
+            // data: {
+            //   name: "ali",
+            //   email: "ali@open.cx",
+            // },
           },
           bot: {
             name: "Oppy",

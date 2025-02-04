@@ -1,6 +1,5 @@
 import type { ApiCaller } from "../api";
 import type { SessionDto } from "../types/schemas";
-import type { WidgetConfig } from "../types/widget-config";
 import { Poller } from "../utils/Poller";
 import { PrimitiveState } from "../utils/PrimitiveState";
 import type { ContactCtx } from "./contact.ctx";
@@ -26,7 +25,6 @@ type SessionsState = {
 };
 
 export class SessionCtx {
-  private config: WidgetConfig;
   private api: ApiCaller;
   private contactCtx: ContactCtx;
   private activeSessionPoller = new Poller();
@@ -47,12 +45,7 @@ export class SessionCtx {
     isInitialFetchLoading: true,
   });
 
-  constructor({
-    config,
-    api,
-    contactCtx,
-  }: { config: WidgetConfig; api: ApiCaller; contactCtx: ContactCtx }) {
-    this.config = config;
+  constructor({ api, contactCtx }: { api: ApiCaller; contactCtx: ContactCtx }) {
     this.api = api;
     this.contactCtx = contactCtx;
 
@@ -124,10 +117,11 @@ export class SessionCtx {
   createSession = async () => {
     this.sessionState.setPartial({ session: null, isCreatingSession: true });
 
+    const externalId = this.contactCtx.state.get().contact?.externalId;
     const { data: session, error } = await this.api.createSession({
-      customData: this.config.user?.externalId
+      customData: externalId
         ? {
-            external_id: this.config.user?.externalId,
+            external_id: externalId,
           }
         : undefined,
     });
@@ -165,11 +159,12 @@ export class SessionCtx {
   private getSessions = async ({ cursor }: { cursor: string | undefined }) => {
     if (!this.contactCtx.state.get().contact?.token) return { data: null };
 
+    const externalId = this.contactCtx.state.get().contact?.externalId;
     return await this.api.getSessions({
       cursor,
-      filters: this.config.user?.externalId
+      filters: externalId
         ? {
-            external_id: this.config.user.externalId,
+            external_id: externalId,
           }
         : {},
     });

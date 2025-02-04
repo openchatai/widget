@@ -3,9 +3,13 @@ import { ApiCaller } from "../api";
 import { type WidgetConfig } from "../types/widget-config";
 import { type Dto } from "../sdk";
 import type { StorageCtx } from "./storage.ctx";
+import { v4 } from "uuid";
 
 type ContactState = {
-  contact: { token: string } | null;
+  contact: {
+    token: string;
+    externalId: string | undefined;
+  } | null;
   isCreatingUnverifiedContact: boolean;
   isErrorCreatingUnverifiedContact: boolean;
 };
@@ -30,7 +34,13 @@ export class ContactCtx {
     this.api = api;
 
     this.state = new PrimitiveState<ContactState>({
-      contact: config.user?.token ? { token: config.user?.token } : null,
+      contact: config.user?.token
+        ? {
+            token: config.user.token,
+            // Set optional externalId from config... not local storage
+            externalId: config.user.externalId,
+          }
+        : null,
       isCreatingUnverifiedContact: false,
       isErrorCreatingUnverifiedContact: false,
     });
@@ -39,19 +49,51 @@ export class ContactCtx {
   }
 
   shouldCollectData = (): boolean => {
-    const currentState = this.state.get();
-
-    if (!currentState.contact?.token && this.config.collectUserData) {
+    if (!this.state.get().contact?.token && this.config.collectUserData) {
       return true;
     }
     return false;
   };
 
   private autoCreateUnverifiedUserIfNotExists = async () => {
-    if (this.config.user?.token || this.config.collectUserData) {
+    /**
+     * If token is passed in config... we consider it as a verified user and do nothing (we don't force generate an externalId)
+     * If a non-verified user take their token and place it in the config... the backend will refuse their requests saying that a non-verified token must have an externalId to create and get sessions
+     */
+    if (this.config.user?.token) return;
+
+    /**
+     * If collectUserData is true... we check if the user entered their credentials before, otherwise, show them the welcome screen so they can enter their credentials
+     */
+    if (this.config.collectUserData && !this.config.user?.data?.email) {
+      const persistedToken = await this.storageCtx?.getContactToken();
+      if (persistedToken) {
+        await this.setUnverifiedContact(persistedToken);
+      }
+      // return early whether there is a persisted token or not
       return;
     }
 
+    /**
+     * If there is no email, then it is an anonymous contact, we check if the contact is persisted or we create a new one
+     */
+    if (!this.config.user?.data?.email) {
+      const persistedToken = await this.storageCtx?.getContactToken();
+      if (persistedToken) {
+        await this.setUnverifiedContact(persistedToken);
+        // return early only if there is a persisted token
+        return;
+      }
+    }
+
+    /**
+     * If we reach here... then it is one of two 
+     * 1. There is an email passed in the config, let's just upsert the unverified contact without checking for persistence; maybe the email in the config did change.
+     * 2. It is an anonymous contact (without an email) using this device for the first time.
+     * 
+     * This is still safe even if the email in the config is tampered with by the contact, because there is a client-side externalId that will be generated for the current device...
+     * So, only sessions created on this device will be accessible.
+     */
     await this.createUnverifiedContact({
       name: this.config.user?.data?.name || "Anonymous",
       email: this.config.user?.data?.email,
@@ -69,14 +111,24 @@ export class ContactCtx {
 
       const { data } = await this.api.createUnverifiedContact(payload);
       if (data?.token) {
-        this.api.setAuthToken(data.token);
-        // Set token in state after setting the token in the api handler
-        this.state.setPartial({ contact: { token: data.token } });
+        await this.setUnverifiedContact(data.token);
       } else {
         this.state.setPartial({ isErrorCreatingUnverifiedContact: true });
       }
     } finally {
       this.state.setPartial({ isCreatingUnverifiedContact: false });
     }
+  };
+
+  setUnverifiedContact = async (token: string) => {
+    const persistedExternalId = await this.storageCtx?.getExternalContactId();
+    /** Give priority to `externalId` from the config */
+    const externalId: string =
+      this.config.user?.externalId || persistedExternalId || v4();
+    this.api.setAuthToken(token);
+    // Set token in state after setting the token in the api handler
+    await this.storageCtx?.setContactToken(token);
+    await this.storageCtx?.setExternalContactId(externalId);
+    this.state.setPartial({ contact: { token, externalId } });
   };
 }
