@@ -3,7 +3,6 @@ import {
   AlertCircle,
   CheckCheckIcon,
   CircleDashed,
-  FileAudio,
   FileAudio2Icon,
   FileIcon,
   FileVideo2Icon,
