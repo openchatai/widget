@@ -48,13 +48,13 @@ function YourComponent() {
 
 The core package exports the widget engine that can be used with any framework:
 
-- Check the [`React` adapter](./src/headless/react) on how to attach the widget engine to a framework.
-- Check the [default `React` widget](./src/designs/react) on how to use the engine; collecting user data, navigating between screens, sending messages, handling loading states, etc.
+- Check the [`React` adapter](https://github.com/openchatai/widget/tree/main/src/headless/react) on how to attach the widget engine to a framework.
+- Check the [default `React` widget](https://github.com/openchatai/widget/tree/main/src/designs/react) on how to use the engine; collecting user data, navigating between screens, sending messages, handling loading states, etc.
 
 ## Widget Options
 
-- [Available options](./src/headless/core/types/widget-config.ts)
-- [Usage example](./index.tsx)
+- [Available options](https://github.com/openchatai/widget/tree/main/src/headless/core/types/widget-config.ts)
+- [Usage example](https://github.com/openchatai/widget/tree/main/index.tsx)
 
 ## Authentication
 
