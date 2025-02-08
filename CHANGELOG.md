@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.36
+
+### Patch Changes
+
+- fix readme links
+
 ## 3.0.35
 
 ### Patch Changes
