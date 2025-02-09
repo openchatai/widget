@@ -1,4 +1,4 @@
-import type { Dto } from "../sdk";
+import type { Dto } from "../api/client";
 
 export type VoteInputDto = Dto["WidgetVoteDto"];
 export type VoteOutputDto = Dto["WidgetVoteResponseDto"];

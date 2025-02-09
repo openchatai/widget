@@ -1,4 +1,4 @@
-import { ApiCaller } from "../api";
+import { ApiCaller } from "../api/api-caller";
 import type { ExternalStorage } from "../types/external-storage";
 import type { WidgetConfig } from "../types/widget-config";
 import { ContactCtx } from "./contact.ctx";

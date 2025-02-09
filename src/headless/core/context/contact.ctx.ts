@@ -1,7 +1,7 @@
 import { PrimitiveState } from "../utils/PrimitiveState";
-import { ApiCaller } from "../api";
+import { ApiCaller } from "../api/api-caller";
 import { type WidgetConfig } from "../types/widget-config";
-import { type Dto } from "../sdk";
+import { type Dto } from "../api/client";
 import type { StorageCtx } from "./storage.ctx";
 import { v4 } from "uuid";
 
@@ -87,10 +87,10 @@ export class ContactCtx {
     }
 
     /**
-     * If we reach here... then it is one of two 
+     * If we reach here... then it is one of two
      * 1. There is an email passed in the config, let's just upsert the unverified contact without checking for persistence; maybe the email in the config did change.
      * 2. It is an anonymous contact (without an email) using this device for the first time.
-     * 
+     *
      * This is still safe even if the email in the config is tampered with by the contact, because there is a client-side externalId that will be generated for the current device...
      * So, only sessions created on this device will be accessible.
      */

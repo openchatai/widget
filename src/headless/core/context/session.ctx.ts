@@ -1,4 +1,4 @@
-import type { ApiCaller } from "../api";
+import type { ApiCaller } from "../api/api-caller";
 import type { SessionDto } from "../types/schemas";
 import { Poller } from "../utils/Poller";
 import { PrimitiveState } from "../utils/PrimitiveState";

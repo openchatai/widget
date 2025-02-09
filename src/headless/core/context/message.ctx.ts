@@ -1,4 +1,4 @@
-import { ApiCaller } from "../api";
+import { ApiCaller } from "../api/api-caller";
 import type { WidgetConfig } from "../types/widget-config";
 import type { SafeOmit, SomeOptional } from "../types/helpers";
 import type {
