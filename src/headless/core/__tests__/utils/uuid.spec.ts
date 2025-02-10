@@ -1,4 +1,4 @@
-import { genUuid } from "./uuid";
+import { genUuid } from "../../utils/uuid";
 import { z } from "zod";
 
 suite(genUuid.name, () => {

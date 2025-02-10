@@ -1,8 +1,9 @@
 import { vi } from "vitest";
 import type { ApiCaller } from "../api/api-caller";
-import { genUuid } from "./uuid";
+import { genUuid } from "../utils/uuid";
 
 export const TestUtils = {
+  sleep: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
   mock: {
     ApiCaller: {
       createSession(target, returnValue) {

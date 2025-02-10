@@ -1,4 +1,4 @@
-import { Poller } from "./Poller";
+import { Poller } from "../../utils/Poller";
 
 suite(Poller.name, () => {
   beforeEach(() => {

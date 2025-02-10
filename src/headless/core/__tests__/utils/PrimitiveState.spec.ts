@@ -1,4 +1,4 @@
-import { PrimitiveState } from "./PrimitiveState";
+import { PrimitiveState } from "../../utils/PrimitiveState";
 
 suite(PrimitiveState.name, () => {
   suite("constructor", () => {
