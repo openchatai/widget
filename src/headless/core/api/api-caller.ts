@@ -22,7 +22,10 @@ export class ApiCaller {
   }
 
   private constructClientOptions = (token: string | null | undefined) => {
-    const baseUrl = this.config.apiUrl || "https://api.open.cx";
+    const baseUrl =
+      import.meta.env.MODE === "test"
+        ? "http://localhost:8080"
+        : this.config.apiUrl || "https://api.open.cx";
     const headers = {
       "X-Bot-Token": this.config.token,
       "Content-Type": "application/json",
