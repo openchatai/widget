@@ -1,4 +1,3 @@
-import { suite, it, expect, vi } from "vitest";
 import { PrimitiveState } from "./PrimitiveState";
 
 suite(PrimitiveState.name, () => {

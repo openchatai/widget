@@ -1,4 +1,3 @@
-import { expect, it, suite, vi, beforeEach, afterEach } from "vitest";
 import { Poller } from "./Poller";
 
 suite(Poller.name, () => {

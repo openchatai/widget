@@ -29,6 +29,7 @@
 
     // Additional options outside Matt Pocock's template
     "jsx": "react",
+    "types": ["vitest/globals"]
   },
   "include": [
     "index.tsx",
