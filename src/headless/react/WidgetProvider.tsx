@@ -31,6 +31,7 @@ function WidgetProvider({
    * This will cause leaks... for polling and whatnot.
    * 
    * Initializing the WidgetCtx outside the useRef will make doubly sure that it only runs once.
+   * Check https://react.dev/reference/react/useRef#avoiding-recreating-the-ref-contents
    */
   const widgetCtx = useRef<WidgetCtx | null>(null);
   if (!widgetCtx.current) {
