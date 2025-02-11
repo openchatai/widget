@@ -101,10 +101,10 @@ export const TestUtils = {
                   },
           });
       },
-      setAuthToken(target, returnValue) {
+      setAuthToken(target, _returnValue) {
         target.prototype.setAuthToken = vi.fn();
       },
-      uploadFile(target, returnValue) {
+      uploadFile(target, _returnValue) {
         target.prototype.uploadFile = vi
           .fn(target.prototype.uploadFile)
           .mockResolvedValue({
