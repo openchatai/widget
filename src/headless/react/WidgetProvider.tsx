@@ -25,7 +25,20 @@ function WidgetProvider({
   components?: WidgetComponentType[];
   storage?: ExternalStorage;
 }) {
-  const widgetCtx = useRef(new WidgetCtx({ config: options, storage })).current;
+  /**
+   * If the WidgetCtx is constructed inside the initializer of the useRef, 
+   * it will run on every render even though it will not replace the initially created WidgetCtx.
+   * This will cause leaks... for polling and whatnot.
+   * 
+   * Initializing the WidgetCtx outside the useRef will make doubly sure that it only runs once.
+   */
+  const widgetCtx = useRef<WidgetCtx | null>(null);
+  if (!widgetCtx.current) {
+    widgetCtx.current = new WidgetCtx({
+      config: options,
+      storage,
+    });
+  }
 
   const componentStore = useMemo(
     () =>
@@ -35,10 +48,12 @@ function WidgetProvider({
     [components],
   );
 
+  if (!widgetCtx.current) return null;
+
   return (
     <SafeProvider
       value={{
-        widgetCtx,
+        widgetCtx: widgetCtx.current,
         components,
         componentStore,
         version,
