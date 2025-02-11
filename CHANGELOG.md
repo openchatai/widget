@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.37
+
+### Patch Changes
+
+- headless(react): fix widget context initialization
+
 ## 3.0.36
 
 ### Patch Changes
