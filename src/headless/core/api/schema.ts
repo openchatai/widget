@@ -280,7 +280,8 @@ export interface components {
         | "email_draft_message"
         | "followup"
         | "ai_assumed_the_session_resolved"
-        | "user_confirmed_the_session_resolved";
+        | "user_confirmed_the_session_resolved"
+        | "system_message";
       content: {
         text?: string | null;
       };
