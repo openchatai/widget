@@ -12,7 +12,7 @@
     "dev": "vite -c vite.config.ts",
     "build:lib": "vite build -c vite.config.ts",
     "build:embed": "vite build -c vite.embed.config.ts",
-    "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/headless/core/sdk/schema.ts && biome format --fix ./src/headless/core/sdk/schema.ts",
+    "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/headless/core/api/schema.ts && biome format --fix ./src/headless/core/api/schema.ts",
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "cs": "changeset",
