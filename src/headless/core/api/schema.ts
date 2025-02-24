@@ -84,6 +84,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/backend/widget/v2/poll/{sessionId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["pollSessionAndHistory"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/backend/widget/v2/create-session": {
     parameters: {
       query?: never;
@@ -172,7 +188,7 @@ export interface components {
       email?: string;
       name?: string;
     };
-    CreateWidgetChatSessionDto: {
+    CreateWidgetSessionDto: {
       customData?: {
         [key: string]: string | number | boolean | unknown | unknown;
       };
@@ -218,7 +234,29 @@ export interface components {
             message?: string;
           };
         };
-    HttpChatInputDto: {
+    /** @description Paginated response. */
+    PaginatedWidgetSessionsDto: {
+      items: {
+        /** Format: uuid */
+        id: string;
+        createdAt: string;
+        updatedAt: string;
+        isHandedOff: boolean;
+        isOpened: boolean;
+        assignee: {
+          /** @enum {string} */
+          kind: "human" | "ai" | "none" | "unknown";
+          name: string | null;
+          avatarUrl: string | null;
+        };
+        channel: string;
+        isVerified: boolean;
+        lastMessage: string | null;
+      }[];
+      /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
+      next: string | null;
+    };
+    SendWidgetMessageDto: {
       /** Format: uuid */
       uuid: string;
       content: string;
@@ -249,28 +287,6 @@ export interface components {
             url: string;
           }[]
         | null;
-    };
-    /** @description Paginated response. */
-    PaginatedWidgetSessionsDto: {
-      items: {
-        /** Format: uuid */
-        id: string;
-        createdAt: string;
-        updatedAt: string;
-        isHandedOff: boolean;
-        isOpened: boolean;
-        assignee: {
-          /** @enum {string} */
-          kind: "human" | "ai" | "none" | "unknown";
-          name: string | null;
-          avatarUrl: string | null;
-        };
-        channel: string;
-        isVerified: boolean;
-        lastMessage: string | null;
-      }[];
-      /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
-      next: string | null;
     };
     UploadWidgetFileResponseDto: {
       fileName: string;
@@ -372,6 +388,71 @@ export interface components {
       };
       officeHoursTimezone: string | null;
       organizationName: string;
+    };
+    WidgetSessionAndHistoryDto: {
+      /** @description WidgetSession */
+      session: {
+        /** Format: uuid */
+        id: string;
+        createdAt: string;
+        updatedAt: string;
+        isHandedOff: boolean;
+        isOpened: boolean;
+        assignee: {
+          /** @enum {string} */
+          kind: "human" | "ai" | "none" | "unknown";
+          name: string | null;
+          avatarUrl: string | null;
+        };
+        channel: string;
+        isVerified: boolean;
+        lastMessage: string | null;
+      };
+      history: {
+        publicId: string;
+        /** @enum {string} */
+        type:
+          | "message"
+          | "handoff"
+          | "handoff_to_zendesk"
+          | "agent_message"
+          | "agent_joined"
+          | "agent_comment"
+          | "agent_took_session_from_ai"
+          | "agent_reopened_session"
+          | "ai_decided_to_resolve_the_issue"
+          | "email_draft_message"
+          | "followup"
+          | "ai_assumed_the_session_resolved"
+          | "user_confirmed_the_session_resolved"
+          | "system_message";
+        content: {
+          text?: string | null;
+        };
+        sender: {
+          /** @enum {string} */
+          kind: "user" | "agent" | "ai" | "none" | "unknown";
+          name?: string | null;
+          avatar?: string | null;
+        };
+        sentAt?: string | null;
+        actionCalls?:
+          | {
+              actionName: string;
+              args?: unknown;
+              result?: unknown;
+            }[]
+          | null;
+        attachments?:
+          | {
+              id: string;
+              name: string;
+              size: number;
+              type: string;
+              url: string;
+            }[]
+          | null;
+      }[];
     };
     /** @description WidgetSession */
     WidgetSessionDto: {
@@ -571,6 +652,39 @@ export interface operations {
       };
     };
   };
+  pollSessionAndHistory: {
+    parameters: {
+      query?: {
+        /** @description The timestamp of the last message received by the widget in order to get any messages after. */
+        lastMessageTimestamp?: string;
+      };
+      header?: never;
+      path: {
+        sessionId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WidgetSessionAndHistoryDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorDto"];
+        };
+      };
+    };
+  };
   createChatSession: {
     parameters: {
       query?: never;
@@ -580,7 +694,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateWidgetChatSessionDto"];
+        "application/json": components["schemas"]["CreateWidgetSessionDto"];
       };
     };
     responses: {
@@ -612,7 +726,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["HttpChatInputDto"];
+        "application/json": components["schemas"]["SendWidgetMessageDto"];
       };
     };
     responses: {
