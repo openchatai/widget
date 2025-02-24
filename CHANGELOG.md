@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.38
+
+### Patch Changes
+
+- externalize polling rates
+
 ## 3.0.37
 
 ### Patch Changes
