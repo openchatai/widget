@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget",
   "private": false,
-  "version": "3.0.38",
+  "version": "3.0.39",
   "type": "module",
   "publishConfig": {
     "access": "public"
@@ -96,7 +96,10 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": ["dist", "dist-embed"],
+  "files": [
+    "dist",
+    "dist-embed"
+  ],
   "sideEffects": false,
   "exports": {
     ".": {

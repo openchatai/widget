@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.39
+
+### Patch Changes
+
+- add repo link
+
 ## 3.0.38
 
 ### Patch Changes
