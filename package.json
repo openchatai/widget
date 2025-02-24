@@ -6,6 +6,17 @@
   "publishConfig": {
     "access": "public"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openchatai/widget"
+  },
+  "bugs": {
+    "url": "https://github.com/openchatai/widget/issues"
+  },
+  "author": {
+    "name": "openchatai",
+    "url": "https://github.com/openchatai"
+  },
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
@@ -85,17 +96,7 @@
       "date-fns": "^4.1.0"
     }
   },
-  "files": [
-    "dist",
-    "dist-embed"
-  ],
-  "bugs": {
-    "url": "https://github.com/openchatai/widget/issues"
-  },
-  "author": {
-    "name": "openchatai",
-    "url": "https://github.com/openchatai"
-  },
+  "files": ["dist", "dist-embed"],
   "sideEffects": false,
   "exports": {
     ".": {
