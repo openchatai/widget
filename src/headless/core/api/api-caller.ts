@@ -68,6 +68,12 @@ export class ApiCaller {
     this.uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   };
 
+  getExternalWidgetConfig = async () => {
+    return await this.client.GET("/backend/widget/v2/config", {
+      params: { header: { "X-Bot-Token": this.config.token } },
+    });
+  }
+
   widgetPrelude = async () => {
     return await this.client.GET("/backend/widget/v2/prelude", {
       params: { header: { "X-Bot-Token": this.config.token } },

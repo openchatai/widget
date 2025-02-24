@@ -5,7 +5,7 @@ import { TestUtils } from "../../test-utils";
 
 suite.concurrent("ContactCtx.shouldCollectData", () => {
   it("Should be always false if not defined in config", async () => {
-    const widgetCtx = new WidgetCtx({ config: { token: "" } });
+    const widgetCtx = await WidgetCtx.initialize({ config: { token: "" } });
     expect(widgetCtx.contactCtx.shouldCollectData()).toBeFalsy();
     // Wait until auto-create finishes
     await TestUtils.sleep(100);
@@ -13,7 +13,7 @@ suite.concurrent("ContactCtx.shouldCollectData", () => {
   });
 
   it("Should be always false if set to false in config", async () => {
-    const widgetCtx = new WidgetCtx({
+    const widgetCtx = await WidgetCtx.initialize({
       config: { token: "", collectUserData: false },
     });
     expect(widgetCtx.contactCtx.shouldCollectData()).toBeFalsy();
@@ -24,7 +24,7 @@ suite.concurrent("ContactCtx.shouldCollectData", () => {
 
   suite("if set to `true` in config", () => {
     it("Should remain `true` if no user is provided", async () => {
-      const widgetCtx = new WidgetCtx({
+      const widgetCtx = await WidgetCtx.initialize({
         config: { token: "", collectUserData: true },
       });
       expect(widgetCtx.contactCtx.shouldCollectData()).toBeTruthy();
@@ -35,7 +35,7 @@ suite.concurrent("ContactCtx.shouldCollectData", () => {
     });
 
     it("Should be initially `false` and remain `false` if user token is provided", async () => {
-      const widgetCtx = new WidgetCtx({
+      const widgetCtx = await WidgetCtx.initialize({
         config: {
           token: "",
           collectUserData: true,
@@ -50,7 +50,7 @@ suite.concurrent("ContactCtx.shouldCollectData", () => {
     });
 
     it("Should become `false` after auto-auth (user data)", async () => {
-      const widgetCtx = new WidgetCtx({
+      const widgetCtx = await WidgetCtx.initialize({
         config: {
           token: "",
           collectUserData: true,
@@ -65,7 +65,7 @@ suite.concurrent("ContactCtx.shouldCollectData", () => {
     });
 
     it("Should become `false` after manual auth (user data)", async () => {
-      const widgetCtx = new WidgetCtx({
+      const widgetCtx = await WidgetCtx.initialize({
         config: {
           token: "",
           collectUserData: true,

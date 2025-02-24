@@ -27,6 +27,8 @@ type SessionsState = {
 export class SessionCtx {
   private api: ApiCaller;
   private contactCtx: ContactCtx;
+  private sessionPollingIntervalSeconds: number;
+  private sessionsPollingIntervalSeconds: number;
   private activeSessionPoller = new Poller();
   private sessionsRefresher = new Poller();
 
@@ -45,9 +47,21 @@ export class SessionCtx {
     isInitialFetchLoading: true,
   });
 
-  constructor({ api, contactCtx }: { api: ApiCaller; contactCtx: ContactCtx }) {
+  constructor({
+    api,
+    contactCtx,
+    sessionPollingIntervalSeconds,
+    sessionsPollingIntervalSeconds,
+  }: {
+    api: ApiCaller;
+    contactCtx: ContactCtx;
+    sessionPollingIntervalSeconds: number;
+    sessionsPollingIntervalSeconds: number;
+  }) {
     this.api = api;
     this.contactCtx = contactCtx;
+    this.sessionPollingIntervalSeconds = sessionPollingIntervalSeconds;
+    this.sessionsPollingIntervalSeconds = sessionsPollingIntervalSeconds;
 
     this.registerActiveSessionPolling();
     this.registerInitialSessionsFetch();
@@ -70,7 +84,7 @@ export class SessionCtx {
             abortSignal,
           });
           data && this.sessionState.setPartial({ session: data });
-        }, 1000);
+        }, this.sessionPollingIntervalSeconds * 1000);
       } else {
         this.activeSessionPoller.reset();
       }
@@ -111,7 +125,7 @@ export class SessionCtx {
       if (this.sessionsState.get().isInitialFetchLoading === true) {
         this.sessionsState.setPartial({ isInitialFetchLoading: false });
       }
-    }, 10000);
+    }, this.sessionsPollingIntervalSeconds * 1000);
   };
 
   createSession = async () => {

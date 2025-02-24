@@ -137,6 +137,18 @@ export const TestUtils = {
             },
           });
       },
+      getExternalWidgetConfig(target, returnValue) {
+        target.prototype.getExternalWidgetConfig = vi
+          .fn(target.prototype.getExternalWidgetConfig)
+          .mockResolvedValue({
+            response: new Response(),
+            data: {
+              sessionsPollingIntervalSeconds: 60,
+              sessionPollingIntervalSeconds: 10,
+              ...returnValue?.data,
+            },
+          });
+      },
     } satisfies {
       [K in keyof ApiCaller]: (
         target: typeof ApiCaller,

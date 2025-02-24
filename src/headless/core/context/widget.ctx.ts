@@ -17,10 +17,21 @@ export class WidgetCtx {
   public routerCtx: RouterCtx;
   public storageCtx?: StorageCtx;
 
-  constructor({
+  private static pollingIntervalsSeconds: {
+    session: number;
+    sessions: number;
+  } | null = null;
+
+  private constructor({
     config,
     storage,
   }: { config: WidgetConfig; storage?: ExternalStorage }) {
+    if (!WidgetCtx.pollingIntervalsSeconds) {
+      throw Error(
+        "Widget polling values are not defined, did you call WidgetCtx.initialize()",
+      );
+    }
+
     this.config = config;
     this.api = new ApiCaller({ config });
     this.storageCtx = storage ? new StorageCtx({ storage }) : undefined;
@@ -34,12 +45,16 @@ export class WidgetCtx {
     this.sessionCtx = new SessionCtx({
       api: this.api,
       contactCtx: this.contactCtx,
+      sessionPollingIntervalSeconds: WidgetCtx.pollingIntervalsSeconds.session,
+      sessionsPollingIntervalSeconds:
+        WidgetCtx.pollingIntervalsSeconds.sessions,
     });
 
     this.messageCtx = new MessageCtx({
       config: this.config,
       api: this.api,
       sessionCtx: this.sessionCtx,
+      sessionPollingIntervalSeconds: WidgetCtx.pollingIntervalsSeconds.session,
     });
 
     this.routerCtx = new RouterCtx({
@@ -48,6 +63,25 @@ export class WidgetCtx {
       resetChat: this.resetChat,
     });
   }
+
+  static initialize = async ({
+    config,
+    storage,
+  }: { config: WidgetConfig; storage?: ExternalStorage }) => {
+    const externalConfig = await new ApiCaller({
+      config,
+    }).getExternalWidgetConfig();
+
+    this.pollingIntervalsSeconds = {
+      session: externalConfig.data?.sessionPollingIntervalSeconds || 10,
+      sessions: externalConfig.data?.sessionsPollingIntervalSeconds || 60,
+    };
+
+    return new WidgetCtx({
+      config,
+      storage,
+    });
+  };
 
   resetChat = () => {
     this.sessionCtx.reset();

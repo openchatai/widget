@@ -6,7 +6,7 @@ import { TestUtils } from "../../../test-utils";
 
 suite("", () => {
   test("", async () => {
-    const widgetCtx = new WidgetCtx({
+    const widgetCtx = await WidgetCtx.initialize({
       config: { token: "", collectUserData: true },
     });
 

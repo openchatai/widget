@@ -22,7 +22,7 @@ export class Poller {
 
   startPolling = (
     cb: (abortSignal: AbortSignal) => Promise<void>,
-    interval: number,
+    intervalMs: number,
   ) => {
     if (this.stopPolling) return;
 
@@ -49,7 +49,7 @@ export class Poller {
       if (this.abortController.signal.aborted) {
         console.log("Poller aborted, not scheduling anymore");
       } else {
-        timeouts.push(setTimeout(poll, interval));
+        timeouts.push(setTimeout(poll, intervalMs));
       }
     };
 

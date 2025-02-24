@@ -7,7 +7,7 @@ import { TestUtils } from "../../../test-utils";
 suite("", () => {
   test("", async () => {
     expect(ApiCaller.prototype.createUnverifiedContact).toBeCalledTimes(0);
-    const widgetCtx = new WidgetCtx({
+    const widgetCtx = await WidgetCtx.initialize({
       config: { token: "", user: { token: "xyz", externalId: "abc" } },
     });
 

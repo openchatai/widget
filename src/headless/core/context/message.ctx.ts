@@ -28,6 +28,7 @@ export class MessageCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
   private sessionCtx: SessionCtx;
+  private sessionPollingIntervalSeconds: number;
   private poller = new Poller();
 
   public state = new PrimitiveState<MessageCtxState>({
@@ -43,10 +44,17 @@ export class MessageCtx {
     config,
     api,
     sessionCtx,
-  }: { config: WidgetConfig; api: ApiCaller; sessionCtx: SessionCtx }) {
+    sessionPollingIntervalSeconds,
+  }: {
+    config: WidgetConfig;
+    api: ApiCaller;
+    sessionCtx: SessionCtx;
+    sessionPollingIntervalSeconds: number;
+  }) {
     this.config = config;
     this.api = api;
     this.sessionCtx = sessionCtx;
+    this.sessionPollingIntervalSeconds = sessionPollingIntervalSeconds;
 
     this.registerPolling();
   }
@@ -63,7 +71,7 @@ export class MessageCtx {
       if (session?.id) {
         this.poller.startPolling(async (abortSignal) => {
           await this.fetchAndSetHistory(session.id, abortSignal);
-        }, 1000);
+        }, this.sessionPollingIntervalSeconds * 1000);
       } else {
         this.poller.reset();
       }

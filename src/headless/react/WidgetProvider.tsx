@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ComponentRegistry } from "./ComponentRegistry";
 import type { WidgetComponentType } from "./types/components";
 import { createSafeContext } from "./utils/create-safe-context";
@@ -15,7 +15,7 @@ interface WidgetProviderValue {
 const [useWidget, SafeProvider] = createSafeContext<WidgetProviderValue>();
 
 function WidgetProvider({
-  options,
+  options: config,
   children,
   components,
   storage,
@@ -25,21 +25,8 @@ function WidgetProvider({
   components?: WidgetComponentType[];
   storage?: ExternalStorage;
 }) {
-  /**
-   * If the WidgetCtx is constructed inside the initializer of the useRef, 
-   * it will run on every render even though it will not replace the initially created WidgetCtx.
-   * This will cause leaks... for polling and whatnot.
-   * 
-   * Initializing the WidgetCtx outside the useRef will make doubly sure that it only runs once.
-   * Check https://react.dev/reference/react/useRef#avoiding-recreating-the-ref-contents
-   */
-  const widgetCtx = useRef<WidgetCtx | null>(null);
-  if (!widgetCtx.current) {
-    widgetCtx.current = new WidgetCtx({
-      config: options,
-      storage,
-    });
-  }
+  const didInitialize = useRef(false);
+  const [widgetCtx, setWidgetCtx] = useState<WidgetCtx | null>(null);
 
   const componentStore = useMemo(
     () =>
@@ -49,12 +36,20 @@ function WidgetProvider({
     [components],
   );
 
-  if (!widgetCtx.current) return null;
+  // biome-ignore lint/correctness/useExhaustiveDependencies: no need for deps, this should only run once
+  useEffect(() => {
+    if (didInitialize.current) return;
+    didInitialize.current = true;
+
+    WidgetCtx.initialize({ config, storage }).then(setWidgetCtx);
+  }, []);
+
+  if (!widgetCtx) return null;
 
   return (
     <SafeProvider
       value={{
-        widgetCtx: widgetCtx.current,
+        widgetCtx,
         components,
         componentStore,
         version,
