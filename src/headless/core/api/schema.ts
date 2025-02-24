@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+  "/backend/widget/v2/config": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations["getWidgetConfig"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/backend/widget/v2/prelude": {
     parameters: {
       query?: never;
@@ -260,6 +276,10 @@ export interface components {
       fileName: string;
       fileUrl: string;
     };
+    WidgetConfigDto: {
+      sessionsPollingIntervalSeconds: number;
+      sessionPollingIntervalSeconds: number;
+    };
     WidgetContactTokenResponseDto: {
       /** @description The JWT token to use for further requests */
       token: string;
@@ -395,6 +415,36 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+  getWidgetConfig: {
+    parameters: {
+      query?: never;
+      header: {
+        "X-Bot-Token": string;
+      };
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["WidgetConfigDto"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ErrorDto"];
+        };
+      };
+    };
+  };
   widgetPrelude: {
     parameters: {
       query?: never;
