@@ -69,7 +69,15 @@ export function ChatMain() {
             data={{ message }}
             id={message}
             type="FROM_BOT"
-            agent={config.bot}
+            agent={
+              config.bot
+                ? {
+                    ...config.bot,
+                    isAi: true,
+                    id: null,
+                  }
+                : undefined
+            }
             timestamp={Date.now().toString()}
           />
         ))}

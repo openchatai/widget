@@ -58,8 +58,6 @@ function App() {
             name: "Oppy",
             avatar:
               "https://framerusercontent.com/images/LKg2ybzxWutds9WSKpqGtaGw.jpg",
-            id: null,
-            isAi: true,
           },
         }}
       />
