@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.40
+
+### Patch Changes
+
+- poll session and history in one hit
+
 ## 3.0.39
 
 ### Patch Changes
