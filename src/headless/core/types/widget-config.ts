@@ -35,9 +35,6 @@ export interface WidgetConfig {
   language?: string;
   user?: UserConfig;
   bot?: AgentOrBotType;
-  soundEffectsUrls?: {
-    messageArrived?: string;
-  };
   theme?: {
     primaryColor?: string;
     // triggerOffset?: string;
