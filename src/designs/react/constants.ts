@@ -17,7 +17,6 @@ interface Colors {
 
 export const cssVars = (
   { primary = "hsl(0, 0%, 0%)" }: Colors,
-  // _: { triggerOffset: string },
 ) => {
   const _primary = tc(primary).toHsl();
   const primaryForeground = tc(primary).isLight()
@@ -51,7 +50,5 @@ export const cssVars = (
     "--opencx-input": "240 5.9% 90%",
     "--opencx-border": "240 5.9% 90%",
     "--opencx-ring": "240 5.9% 10%",
-
-    // "--opencx-trigger-offset": _.triggerOffset,
   } as CSSProperties;
 };

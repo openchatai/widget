@@ -19,12 +19,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         fontSize: "16px",
         position: "fixed",
         zIndex: 10000000,
-        ...cssVars(
-          { primary: theme?.primaryColor },
-          // { triggerOffset: theme.triggerOffset },
-        ),
-        // right: theme.triggerOffset,
-        // bottom: theme.triggerOffset,
+        ...cssVars({ primary: theme?.primaryColor }),
         right: "20px",
         bottom: "20px",
       }}

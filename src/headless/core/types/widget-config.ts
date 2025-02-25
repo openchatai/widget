@@ -37,7 +37,6 @@ export interface WidgetConfig {
   bot?: AgentOrBotType;
   theme?: {
     primaryColor?: string;
-    // triggerOffset?: string;
   };
   assets?: {
     organizationLogo?: string;

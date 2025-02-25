@@ -119,7 +119,6 @@ function WidgetContent() {
                   style={{
                     ...cssVars(
                       { primary: theme?.primaryColor },
-                      // { triggerOffset: theme.triggerOffset },
                     ),
                   }}
                   data-version={chat.version}
