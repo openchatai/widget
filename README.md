@@ -70,3 +70,7 @@ The widget supports a variety of ways to authenticate, or not, your users:
 4. **Secure authentication**: Get a `token` for your user by letting your backend hit a request to `api.open.cx/widget/authenticate-user` ([API reference](https://docs.open.cx/api-reference/widget/authenticate-contact)) and pass the token in `WidgetConfig.user.token`
     - The session will be `verified`, so your human agents can share private data with the user (in case the session was handed-over to humans)
     - `customData` in the authentication request will be saved, since contacts have no way to tamper with them
+
+## Workspace Management
+
+If you support multiple workspaces per user or contact, you can pass the user's workspace id in `WidgetConfig.user.externalId`. This way, sessions will be scoped by that external id.
