@@ -90,13 +90,7 @@ export class SessionCtx {
         this.sessionsState.setPartial({ didStartInitialFetch: true });
       }
 
-      // Get the first page only (pass no `cursor`)
-      const { data } = await this.getSessions({ cursor: undefined });
-      if (!data) return;
-      const sessions = [...data.items, ...this.sessionsState.get().data].filter(
-        (s, i, self) => i === self.findIndex((_s) => s.id === _s.id),
-      );
-      this.sessionsState.setPartial({ data: sessions });
+      await this.refreshSessions();
 
       if (this.sessionsState.get().isInitialFetchLoading === true) {
         this.sessionsState.setPartial({ isInitialFetchLoading: false });
@@ -158,5 +152,15 @@ export class SessionCtx {
           }
         : {},
     });
+  };
+
+  refreshSessions = async () => {
+    // Get the first page only (pass no `cursor`)
+    const { data } = await this.getSessions({ cursor: undefined });
+    if (!data) return;
+    const sessions = [...data.items, ...this.sessionsState.get().data].filter(
+      (s, i, self) => i === self.findIndex((_s) => s.id === _s.id),
+    );
+    this.sessionsState.setPartial({ data: sessions });
   };
 }

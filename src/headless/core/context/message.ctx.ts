@@ -124,8 +124,8 @@ export class MessageCtx {
       }
       const sessionId = this.sessionCtx.sessionState.get().session?.id;
       if (!sessionId) return;
-      // TODO: refresh sessions list instantly
-
+      // Refresh sessions list instantly to get the newly created session in the sessions list
+      void this.sessionCtx.refreshSessions();
       /* ------------------------------------------------------ */
       /*             Send and wait for bot response             */
       /* ------------------------------------------------------ */
