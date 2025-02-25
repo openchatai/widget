@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.42
+
+### Patch Changes
+
+- fix: refresh sessions only on session creation not on every sent message
+
 ## 3.0.41
 
 ### Patch Changes
