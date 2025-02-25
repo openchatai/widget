@@ -72,7 +72,7 @@ export class ApiCaller {
     return await this.client.GET("/backend/widget/v2/config", {
       params: { header: { "X-Bot-Token": this.config.token } },
     });
-  }
+  };
 
   widgetPrelude = async () => {
     return await this.client.GET("/backend/widget/v2/prelude", {
@@ -85,22 +85,6 @@ export class ApiCaller {
       body,
       signal: abortSignal,
     });
-  };
-
-  getSessionHistory = async ({
-    sessionId,
-    lastMessageTimestamp,
-    abortSignal,
-  }: {
-    sessionId: string;
-    lastMessageTimestamp?: string;
-    abortSignal: AbortSignal;
-  }) => {
-    const query = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
-    return await this.client.GET(
-      "/backend/widget/v2/session/history/{sessionId}",
-      { params: { path: { sessionId }, query }, signal: abortSignal },
-    );
   };
 
   createUnverifiedContact = async (body: Dto["CreateUnverifiedContactDto"]) => {
@@ -119,12 +103,18 @@ export class ApiCaller {
     });
   };
 
-  getSession = async ({
+  pollSessionAndHistory = async ({
     sessionId,
+    lastMessageTimestamp,
     abortSignal,
-  }: { sessionId: string; abortSignal: AbortSignal }) => {
-    return await this.client.GET("/backend/widget/v2/session/{sessionId}", {
-      params: { path: { sessionId } },
+  }: {
+    sessionId: string;
+    lastMessageTimestamp?: string;
+    abortSignal: AbortSignal;
+  }) => {
+    const query = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
+    return await this.client.GET("/backend/widget/v2/poll/{sessionId}", {
+      params: { path: { sessionId }, query },
       signal: abortSignal,
     });
   };

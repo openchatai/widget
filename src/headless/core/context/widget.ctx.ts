@@ -1,6 +1,7 @@
 import { ApiCaller } from "../api/api-caller";
 import type { ExternalStorage } from "../types/external-storage";
 import type { WidgetConfig } from "../types/widget-config";
+import { ActiveSessionPollingCtx } from "./active-session-polling.ctx";
 import { ContactCtx } from "./contact.ctx";
 import { MessageCtx } from "./message.ctx";
 import { RouterCtx } from "./router.ctx";
@@ -21,6 +22,7 @@ export class WidgetCtx {
     session: number;
     sessions: number;
   } | null = null;
+  private activeSessionPollingCtx: ActiveSessionPollingCtx;
 
   private constructor({
     config,
@@ -45,7 +47,6 @@ export class WidgetCtx {
     this.sessionCtx = new SessionCtx({
       api: this.api,
       contactCtx: this.contactCtx,
-      sessionPollingIntervalSeconds: WidgetCtx.pollingIntervalsSeconds.session,
       sessionsPollingIntervalSeconds:
         WidgetCtx.pollingIntervalsSeconds.sessions,
     });
@@ -54,6 +55,13 @@ export class WidgetCtx {
       config: this.config,
       api: this.api,
       sessionCtx: this.sessionCtx,
+    });
+
+    this.activeSessionPollingCtx = new ActiveSessionPollingCtx({
+      api: this.api,
+      config: this.config,
+      sessionCtx: this.sessionCtx,
+      messageCtx: this.messageCtx,
       sessionPollingIntervalSeconds: WidgetCtx.pollingIntervalsSeconds.session,
     });
 

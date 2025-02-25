@@ -27,9 +27,7 @@ type SessionsState = {
 export class SessionCtx {
   private api: ApiCaller;
   private contactCtx: ContactCtx;
-  private sessionPollingIntervalSeconds: number;
   private sessionsPollingIntervalSeconds: number;
-  private activeSessionPoller = new Poller();
   private sessionsRefresher = new Poller();
 
   public sessionState = new PrimitiveState<SessionState>({
@@ -50,48 +48,26 @@ export class SessionCtx {
   constructor({
     api,
     contactCtx,
-    sessionPollingIntervalSeconds,
     sessionsPollingIntervalSeconds,
   }: {
     api: ApiCaller;
     contactCtx: ContactCtx;
-    sessionPollingIntervalSeconds: number;
     sessionsPollingIntervalSeconds: number;
   }) {
     this.api = api;
     this.contactCtx = contactCtx;
-    this.sessionPollingIntervalSeconds = sessionPollingIntervalSeconds;
     this.sessionsPollingIntervalSeconds = sessionsPollingIntervalSeconds;
 
-    this.registerActiveSessionPolling();
-    this.registerInitialSessionsFetch();
+    this.registerSessionsRefresherWrapper();
   }
 
   /** Clears the session and stops polling */
   reset = async () => {
     // Reset the session only, leave sessions as-is
     this.sessionState.reset();
-    // The poller should automatically reset, since we're subscribed to the session state, and whenever it's null, the poller resets... but just in case, let's reset it here as well
-    this.activeSessionPoller.reset();
   };
 
-  private registerActiveSessionPolling = () => {
-    this.sessionState.subscribe(({ session }) => {
-      if (session?.id) {
-        this.activeSessionPoller.startPolling(async (abortSignal) => {
-          const { data } = await this.api.getSession({
-            sessionId: session.id,
-            abortSignal,
-          });
-          data && this.sessionState.setPartial({ session: data });
-        }, this.sessionPollingIntervalSeconds * 1000);
-      } else {
-        this.activeSessionPoller.reset();
-      }
-    });
-  };
-
-  private registerInitialSessionsFetch = () => {
+  private registerSessionsRefresherWrapper = () => {
     if (
       // If the widget config was initially provided with a contact token, no state change would be triggered, so we just fetch
       this.contactCtx.state.get().contact?.token &&

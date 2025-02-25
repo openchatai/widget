@@ -36,33 +36,6 @@ export const TestUtils = {
             },
           });
       },
-      getSession(target, returnValue) {
-        target.prototype.getSession = vi
-          .fn(target.prototype.getSession)
-          .mockResolvedValue({
-            response: new Response(),
-            data: {
-              id: genUuid(),
-              assignee: { kind: "ai", name: null, avatarUrl: null },
-              channel: "",
-              createdAt: new Date().toISOString(),
-              isHandedOff: false,
-              isOpened: true,
-              isVerified: false,
-              lastMessage: "",
-              updatedAt: new Date().toISOString(),
-              ...returnValue?.data,
-            },
-          });
-      },
-      getSessionHistory(target, returnValue) {
-        target.prototype.getSessionHistory = vi
-          .fn(target.prototype.getSessionHistory)
-          .mockResolvedValue({
-            response: new Response(),
-            data: [...(returnValue?.data || [])],
-          });
-      },
       getSessions(target, returnValue) {
         target.prototype.getSessions = vi
           .fn(target.prototype.getSessions)
@@ -146,6 +119,28 @@ export const TestUtils = {
               sessionsPollingIntervalSeconds: 60,
               sessionPollingIntervalSeconds: 10,
               ...returnValue?.data,
+            },
+          });
+      },
+      pollSessionAndHistory(target, returnValue) {
+        target.prototype.pollSessionAndHistory = vi
+          .fn(target.prototype.pollSessionAndHistory)
+          .mockResolvedValue({
+            response: new Response(),
+            data: {
+              session: {
+                id: genUuid(),
+                assignee: { kind: "ai", name: null, avatarUrl: null },
+                channel: "",
+                createdAt: new Date().toISOString(),
+                isHandedOff: false,
+                isOpened: true,
+                isVerified: false,
+                lastMessage: "",
+                updatedAt: new Date().toISOString(),
+                ...returnValue?.data?.session,
+              },
+              history: [...(returnValue?.data?.history || [])],
             },
           });
       },

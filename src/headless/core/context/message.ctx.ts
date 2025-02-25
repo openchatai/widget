@@ -28,8 +28,6 @@ export class MessageCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
   private sessionCtx: SessionCtx;
-  private sessionPollingIntervalSeconds: number;
-  private poller = new Poller();
 
   public state = new PrimitiveState<MessageCtxState>({
     messages: [],
@@ -44,38 +42,19 @@ export class MessageCtx {
     config,
     api,
     sessionCtx,
-    sessionPollingIntervalSeconds,
   }: {
     config: WidgetConfig;
     api: ApiCaller;
     sessionCtx: SessionCtx;
-    sessionPollingIntervalSeconds: number;
   }) {
     this.config = config;
     this.api = api;
     this.sessionCtx = sessionCtx;
-    this.sessionPollingIntervalSeconds = sessionPollingIntervalSeconds;
-
-    this.registerPolling();
   }
 
   reset = () => {
     this.sendMessageAbortController.abort("Resetting chat");
     this.state.reset();
-    // The poller should automatically reset, since we're subscribed to the session state, and whenever it's null, the poller resets... but just in case, let's reset it here as well
-    this.poller.reset();
-  };
-
-  private registerPolling = () => {
-    this.sessionCtx.sessionState.subscribe(({ session }) => {
-      if (session?.id) {
-        this.poller.startPolling(async (abortSignal) => {
-          await this.fetchAndSetHistory(session.id, abortSignal);
-        }, this.sessionPollingIntervalSeconds * 1000);
-      } else {
-        this.poller.reset();
-      }
-    });
   };
 
   sendMessage = async (
@@ -145,6 +124,7 @@ export class MessageCtx {
       }
       const sessionId = this.sessionCtx.sessionState.get().session?.id;
       if (!sessionId) return;
+      // TODO: refresh sessions list instantly
 
       /* ------------------------------------------------------ */
       /*             Send and wait for bot response             */
@@ -203,102 +183,6 @@ export class MessageCtx {
     } finally {
       this.state.setPartial({ isSendingMessage: false });
     }
-  };
-
-  private fetchAndSetHistory = async (
-    sessionId: string,
-    abortSignal: AbortSignal,
-  ): Promise<void> => {
-    /**
-     * This is a bit of an implicit contract... there are two cases here
-     * 1. If there are no messages in state, it means the user selected a previous session from the sessions screen and got routed to the chat,
-     *    in this case, we want to show a loading indicator until the initial fetch is done
-     * 2. There is a single message in state, which is the optimistically rendered user message,
-     *    in this case, we don't want to show a loading indicator
-     */
-    if (this.state.get().messages.length === 0) {
-      this.state.setPartial({ isInitialFetchLoading: true });
-    }
-
-    const lastMessageTimestamp = this.state.get().messages.at(-1)?.timestamp;
-
-    const { data: response } = await this.api.getSessionHistory({
-      sessionId,
-      lastMessageTimestamp,
-      abortSignal,
-    });
-
-    if (response && response.length > 0) {
-      // Get a fresh reference to current messages after the poll is done
-      const prevMessages = this.state.get().messages;
-      const newMessages = response
-        .map(this.mapHistoryToMessage)
-        .filter(
-          (newMsg) =>
-            !prevMessages.some((existingMsg) => existingMsg.id === newMsg.id),
-        );
-      this.state.setPartial({
-        messages: [...prevMessages, ...newMessages],
-      });
-    }
-
-    if (this.state.get().isInitialFetchLoading) {
-      this.state.setPartial({ isInitialFetchLoading: false });
-    }
-  };
-
-  /** Not the best name but whatever */
-  private mapHistoryToMessage = (history: MessageDto): MessageType => {
-    const commonFields = {
-      id: history.publicId,
-      timestamp: history.sentAt || "",
-      attachments: history.attachments || undefined,
-    };
-
-    if (history.sender.kind === "user") {
-      return {
-        ...commonFields,
-        type: "FROM_USER",
-        content: history.content.text || "",
-        deliveredAt: history.sentAt || "",
-      };
-    }
-
-    if (history.sender.kind === "agent") {
-      return {
-        ...commonFields,
-        type: "FROM_AGENT",
-        component: "agent_message",
-        data: {
-          message: history.content.text || "",
-        },
-        agent: {
-          name: history.sender.name || "",
-          avatar: history.sender.avatar || "",
-          id: null,
-          isAi: false,
-        },
-      };
-    }
-
-    const action = history.actionCalls?.at(-1);
-    return {
-      ...commonFields,
-      type: "FROM_BOT",
-      component: "bot_message",
-      agent: {
-        id: null,
-        name: this.config.bot?.name || "",
-        isAi: true,
-        avatar: this.config.bot?.avatar || "",
-      },
-      data: {
-        message: history.content.text || "",
-        action: action
-          ? { name: action.actionName, data: action.result }
-          : undefined,
-      },
-    };
   };
 
   private toUserMessage = (
