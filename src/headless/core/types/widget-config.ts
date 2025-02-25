@@ -31,11 +31,39 @@ export interface WidgetConfig {
    */
   token: string;
   /**
-   * An apiUrl to override production backend.
-   * This is for us to test the widget locally, you don't need to play with this option 😊.
-   * @default https://api.open.cx
+   * The language of the widget.
+   * Translations are available in the default non-headless widget.
+   * Check available translations in `src/designs/translation`
+   * @default en
    */
-  apiUrl?: string;
+  language?: string;
+  /**
+   * A name and an avatar for the bot.
+   */
+  bot?: Pick<AgentOrBotType, "name" | "avatar">;
+  theme?: {
+    primaryColor?: string;
+  };
+  assets?: {
+    organizationLogo?: string;
+  };
+  /**
+   * Initial messages that the contact sees in a new chat session.
+   * These messages will disappear once the contact sends their first message.
+   */
+  initialMessages?: string[];
+  /**
+   * If turned on, the widget will have a login-like screen to collect user's name and email.
+   * A non-verified contact will be created based on the provided information.
+   * @default false
+   */
+  collectUserData?: boolean;
+  /**
+   * Verified or non-verified contact data.
+   * To know more, check the README
+   * @default undefined
+   */
+  user?: UserConfig;
   /**
    * Headers to be sent with each send-message request from the widget.
    * These headers will be sent with each AI action (AI tools) that the LLM can call.
@@ -51,42 +79,14 @@ export interface WidgetConfig {
    */
   queryParams?: Record<string, string>;
   /**
-   * If turned on, the widget will have a login-like screen to collect user's name and email.
-   * A non-verified contact will be created based on the provided information.
-   * @default false
-   */
-  collectUserData?: boolean;
-  /**
    * Turn on to see the debug info attached to the AI responses.
    * @default false
    */
   debug?: boolean;
   /**
-   * Initial messages that the contact sees in a new chat session.
-   * These messages will disappear once the contact sends their first message.
+   * An apiUrl to override production backend.
+   * This is for us to test the widget locally, you don't need to play with this option 😊.
+   * @default https://api.open.cx
    */
-  initialMessages?: string[];
-  /**
-   * The language of the widget.
-   * Translations are available in the default non-headless widget.
-   * Check available translations in `src/designs/translation`
-   * @default en
-   */
-  language?: string;
-  /**
-   * Verified or non-verified contact data.
-   * To know more, check the README
-   * @default undefined
-   */
-  user?: UserConfig;
-  /**
-   * A name and an avatar for the bot.
-   */
-  bot?: Pick<AgentOrBotType, "name" | "avatar">;
-  theme?: {
-    primaryColor?: string;
-  };
-  assets?: {
-    organizationLogo?: string;
-  };
+  apiUrl?: string;
 }
