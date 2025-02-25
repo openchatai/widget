@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.41
+
+### Patch Changes
+
+- refresh sessions list on new session creation
+
 ## 3.0.40
 
 ### Patch Changes
