@@ -42,10 +42,6 @@ function App() {
           apiUrl,
           token,
           initialMessages: ["Hi there, how can we help you?"],
-          settings: {
-            persistSession: true,
-            playSoundEffects: true,
-          },
           // theme: {
           //   primaryColor: "#639"
           // },
@@ -53,10 +49,6 @@ function App() {
           user: {
             // externalId: "xyz",
             token: userToken,
-            // data: {
-            //   name: "arkhameedis",
-            //   email: "arkhameedis@open.cx"
-            // },
             // data: {
             //   name: "ali",
             //   email: "ali@open.cx",

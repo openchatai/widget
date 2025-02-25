@@ -42,11 +42,6 @@ export interface WidgetConfig {
     primaryColor?: string;
     // triggerOffset?: string;
   };
-  settings?: {
-    // TODO remove persistSession option
-    persistSession?: boolean;
-    playSoundEffects?: boolean;
-  };
   assets?: {
     organizationLogo?: string;
   };
