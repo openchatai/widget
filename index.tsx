@@ -47,14 +47,14 @@ function App() {
           // },
           // collectUserData: true,
           // extraDataCollectionFields: ["Order number"],
-          // user: {
-          //   // externalId: "xyz",
-          //   // token: userToken,
-          //   // data: {
-          //   //   name: "ali",
-          //   //   email: "ali@open.cx",
-          //   // },
-          // },
+          user: {
+            // externalId: "xyz",
+            // token: userToken,
+            data: {
+              name: "ali",
+              email: "ali@open.cx",
+            },
+          },
           bot: {
             name: "Oppy",
             avatar:
