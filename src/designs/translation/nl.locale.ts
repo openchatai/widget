@@ -56,4 +56,5 @@ export const nlLocale: TranslationInterface = {
   "hello-greeting": "Hallo! Hoe kunnen we u vandaag helpen?",
   "i-need-more-help": "Ik heb nog meer help nodig",
   "this-was-helpful": "Dit was handig",
+  optional: "Optioneel",
 };

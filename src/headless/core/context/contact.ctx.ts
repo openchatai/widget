@@ -10,6 +10,7 @@ type ContactState = {
     token: string;
     externalId: string | undefined;
   } | null;
+  extraCollectedData: Record<string, string> | undefined;
   isCreatingUnverifiedContact: boolean;
   isErrorCreatingUnverifiedContact: boolean;
 };
@@ -41,6 +42,7 @@ export class ContactCtx {
             externalId: config.user.externalId,
           }
         : null,
+      extraCollectedData: undefined,
       isCreatingUnverifiedContact: false,
       isErrorCreatingUnverifiedContact: false,
     });
@@ -66,6 +68,15 @@ export class ContactCtx {
      * If collectUserData is true... we check if the user entered their credentials before, otherwise, show them the welcome screen so they can enter their credentials
      */
     if (this.config.collectUserData && !this.config.user?.data?.email) {
+      /**
+       * If extra data collection fields are passed,
+       * we do not check for a persisted token.
+       * This will force the contact to enter the extra data fields every time they visit the page.
+       */
+      if (this.config.extraDataCollectionFields?.length) {
+        return;
+      }
+
       const persistedToken = await this.storageCtx?.getContactToken();
       if (persistedToken) {
         await this.setUnverifiedContact(persistedToken);
@@ -102,7 +113,10 @@ export class ContactCtx {
 
   createUnverifiedContact = async (
     payload: Dto["CreateUnverifiedContactDto"],
+    extraCollectedData?: Record<string, string>,
   ): Promise<void> => {
+    this.state.setPartial({ extraCollectedData });
+
     try {
       this.state.setPartial({
         isCreatingUnverifiedContact: true,

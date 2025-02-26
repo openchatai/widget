@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { SendHorizontal } from "lucide-react";
 import { z } from "zod";
 import useAsyncFn from "react-use/lib/useAsyncFn";
@@ -28,19 +28,34 @@ export function WelcomeScreen() {
     fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
 
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const extraDataFields = (config.extraDataCollectionFields || []).filter(
+    (f) => f !== "name" && f !== "email" && !!f,
+  );
+
+  const [extraData, setExtraData] = useState<Record<string, string>>({});
+
   const [handleSubmitState, handleSubmit] = useAsyncFn(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      const formData = new FormData(event.currentTarget);
-      const data = Object.fromEntries(formData.entries());
-      const result = schema.safeParse(data);
+
+      const result = schema.safeParse({ name, email });
       if (result.success) {
-        await createUnverifiedContact({
-          email: result.data.email,
-          name: result.data.name,
-        });
+        await createUnverifiedContact(
+          {
+            email: result.data.email,
+            name: result.data.name,
+          },
+          // Only pass extra data if there is any
+          Object.values(extraData).filter(Boolean).length
+            ? extraData
+            : undefined,
+        );
       }
     },
+    [name, email, extraData],
   );
 
   return (
@@ -89,19 +104,33 @@ export function WelcomeScreen() {
         <form onSubmit={handleSubmit} className="space-y-2">
           <div className="space-y-2">
             <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
-              autoFocus
               placeholder={locale.get("your-name")}
               name="name"
               className="rounded-3xl pl-3"
             />
             <Input
               required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder={locale.get("your-email")}
               name="email"
               className="rounded-3xl pl-3"
             />
+            {extraDataFields.map((field) => (
+              <Input
+                key={field}
+                value={extraData[field]}
+                onChange={(e) =>
+                  setExtraData((prev) => ({ ...prev, [field]: e.target.value }))
+                }
+                placeholder={`${field} (${locale.get("optional")})`}
+                className="rounded-3xl pl-3"
+              />
+            ))}
           </div>
 
           <Button

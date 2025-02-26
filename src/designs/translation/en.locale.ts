@@ -56,4 +56,5 @@ export const enLocale: TranslationInterface = {
   "hello-greeting": "Hi there!",
   "i-need-more-help": "I need more help",
   "this-was-helpful": "This was helpful",
+  optional: "Optional",
 };

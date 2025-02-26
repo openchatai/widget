@@ -1,6 +1,5 @@
 import { ApiCaller } from "../api/api-caller";
 import type { WidgetConfig } from "../types/widget-config";
-import type { SafeOmit, SomeOptional } from "../types/helpers";
 import type {
   BotMessageType,
   MessageType,
@@ -8,14 +7,13 @@ import type {
 } from "../types/messages";
 import type {
   MessageAttachmentType,
-  MessageDto,
   SendMessageDto,
   SendMessageOutputDto,
 } from "../types/schemas";
-import { Poller } from "../utils/Poller";
 import { PrimitiveState } from "../utils/PrimitiveState";
 import { genUuid } from "../utils/uuid";
 import { SessionCtx } from "./session.ctx";
+import type { ContactCtx } from "./contact.ctx";
 
 type MessageCtxState = {
   messages: MessageType[];
@@ -27,6 +25,7 @@ type MessageCtxState = {
 export class MessageCtx {
   private config: WidgetConfig;
   private api: ApiCaller;
+  private contactCtx: ContactCtx;
   private sessionCtx: SessionCtx;
 
   public state = new PrimitiveState<MessageCtxState>({
@@ -42,14 +41,17 @@ export class MessageCtx {
     config,
     api,
     sessionCtx,
+    contactCtx,
   }: {
     config: WidgetConfig;
     api: ApiCaller;
     sessionCtx: SessionCtx;
+    contactCtx: ContactCtx;
   }) {
     this.config = config;
     this.api = api;
     this.sessionCtx = sessionCtx;
+    this.contactCtx = contactCtx;
   }
 
   reset = () => {
@@ -58,10 +60,10 @@ export class MessageCtx {
   };
 
   sendMessage = async (
-    input: SomeOptional<
-      SafeOmit<SendMessageDto, "bot_token" | "uuid">,
-      "session_id" | "user"
-    >,
+    input: {
+      content: SendMessageDto['content']
+      attachments?: SendMessageDto['attachments']
+    },
   ): Promise<void> => {
     /* ------------------------------------------------------ */
     /*         Prevent sending if there is no content         */
@@ -138,7 +140,8 @@ export class MessageCtx {
           query_params: this.config.queryParams,
           session_id: sessionId,
           user: this.config.user?.data,
-          ...input,
+          content: userMessage.content,
+          attachments: input.attachments,
         },
         this.sendMessageAbortController.signal,
       );
@@ -190,10 +193,28 @@ export class MessageCtx {
     content: string,
     attachments?: MessageAttachmentType[],
   ): UserMessageType => {
+    const messageContent = (() => {
+      const extraCollectedData = this.contactCtx.state.get().extraCollectedData;
+      // Prepend extra collected data if this is the first message in the session
+      if (
+        this.state.get().messages.length === 0 &&
+        extraCollectedData &&
+        Object.keys(extraCollectedData).length > 0
+      ) {
+        const data = Object.entries(extraCollectedData)
+          .filter(([_, value]) => !!value)
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(" \n");
+        return `${data} \n\n${content}`;
+      }
+
+      return content;
+    })();
+
     return {
       id: genUuid(),
       type: "FROM_USER",
-      content,
+      content: messageContent,
       deliveredAt: new Date().toISOString(),
       attachments,
       timestamp: new Date().toISOString(),

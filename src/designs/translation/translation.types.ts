@@ -53,7 +53,8 @@ export type TranslationKeysU =
   | "starting-chat"
   | "hello-greeting"
   | "i-need-more-help"
-  | "this-was-helpful";
+  | "this-was-helpful"
+  | "optional";
 
 export type TranslationInterface = {
   [K in TranslationKeysU]: string;

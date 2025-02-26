@@ -1,8 +1,6 @@
 export type { AgentOrBotType } from "./types/agent-or-bot";
 export type {
   SafeExtract,
-  SafeOmit,
-  SomeOptional,
   StringOrLiteral,
 } from "./types/helpers";
 export type {

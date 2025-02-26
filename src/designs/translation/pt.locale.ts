@@ -56,4 +56,5 @@ export const ptLocale: TranslationInterface = {
   "hello-greeting": "Olá! Como podemos ajudar você hoje?",
   "i-need-more-help": "preciso de mais ajuda",
   "this-was-helpful": "Isso foi útil",
+  optional: "Opcional",
 };

@@ -59,6 +59,17 @@ export interface WidgetConfig {
    */
   collectUserData?: boolean;
   /**
+   * Extra data collection fields besides `name` and `email`.
+   * For this setting to take effect, `collectUserData` must be set to `true`.
+   * 
+   * Not to be confused with `WidgetConfig.user.data.customData`,
+   * the purpose of `extraDataCollectionFields` is to provide context to the session,
+   * the data collected will be prepended in the first contact message in a session.
+   * 
+   * @default undefined
+   */
+  extraDataCollectionFields?: string[];
+  /**
    * Verified or non-verified contact data.
    * To know more, check the README
    * @default undefined

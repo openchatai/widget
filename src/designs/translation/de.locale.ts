@@ -57,4 +57,5 @@ export const deLocale: TranslationInterface = {
   "hello-greeting": "Hallo! Wie können wir Ihnen heute helfen?",
   "i-need-more-help": "Ich brauche weitere Hilfe",
   "this-was-helpful": "Dies war hilfreich",
+  optional: "Optional",
 };

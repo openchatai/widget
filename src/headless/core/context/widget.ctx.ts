@@ -55,6 +55,7 @@ export class WidgetCtx {
       config: this.config,
       api: this.api,
       sessionCtx: this.sessionCtx,
+      contactCtx: this.contactCtx,
     });
 
     this.activeSessionPollingCtx = new ActiveSessionPollingCtx({
