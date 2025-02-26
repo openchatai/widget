@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.43
+
+### Patch Changes
+
+- add WidgetConfig.extraDataCollectionFields
+
 ## 3.0.42
 
 ### Patch Changes
