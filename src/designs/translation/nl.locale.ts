@@ -54,7 +54,7 @@ export const nlLocale: TranslationInterface = {
   "start-chat": "Praat met ondersteuning",
   "starting-chat": "Verbinding maken...",
   "hello-greeting": "Hallo! Hoe kunnen we u vandaag helpen?",
-  "i-need-more-help": "Ik heb nog meer help nodig",
-  "this-was-helpful": "Dit was handig",
+  "i-need-more-help": "Ik heb nog meer hulp nodig",
+  "this-was-helpful": "Mijn vraag is opgelost",
   optional: "Optioneel",
 };
