@@ -45,8 +45,12 @@ function App() {
           // theme: {
           //   primaryColor: "#639"
           // },
-          // collectUserData: true,
-          // extraDataCollectionFields: ["Order number"],
+          collectUserData: true,
+          extraDataCollectionFields: ["Order number"],
+          // prefillUserData: {
+          //   // name: "ali",
+          //   email: "ali@open.cx",
+          // },
           // user: {
           //   // externalId: "xyz",
           //   // token: userToken,

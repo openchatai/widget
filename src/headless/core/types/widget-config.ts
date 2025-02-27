@@ -59,6 +59,15 @@ export interface WidgetConfig {
    */
   collectUserData?: boolean;
   /**
+   * Provide initial values for the `name` and `email` inputs in the welcome screen.
+   * For this setting to take effect, `collectUserData` must be set to `true`.
+   * @default undefined
+   */
+  prefillUserData?: {
+    name?: string;
+    email?: string;
+  };
+  /**
    * Extra data collection fields besides `name` and `email`.
    * For this setting to take effect, `collectUserData` must be set to `true`.
    *

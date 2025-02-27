@@ -28,8 +28,8 @@ export function WelcomeScreen() {
     fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
 
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState(config.prefillUserData?.name || "");
+  const [email, setEmail] = useState(config.prefillUserData?.email || "");
 
   const extraDataFields = (config.extraDataCollectionFields || []).filter(
     (f) => f !== "name" && f !== "email" && !!f,
