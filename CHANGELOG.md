@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.45
+
+### Patch Changes
+
+- override title and desc in welcome screen
+
 ## 3.0.44
 
 ### Patch Changes
