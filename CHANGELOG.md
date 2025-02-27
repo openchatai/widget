@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.47
+
+### Patch Changes
+
+- prefill user data in welcome screen
+
 ## 3.0.46
 
 ### Patch Changes
