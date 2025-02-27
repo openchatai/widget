@@ -88,14 +88,16 @@ export function WelcomeScreen() {
         </div>
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-primary-foreground" dir="auto">
-            {locale.get("welcome-title")}
+            {config.textContent?.welcomeScreen?.title ||
+              locale.get("welcome-title")}
           </h1>
 
           <p
             className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed"
             dir="auto"
           >
-            {locale.get("welcome-description")}
+            {config.textContent?.welcomeScreen?.description ||
+              locale.get("welcome-description")}
           </p>
         </div>
       </div>

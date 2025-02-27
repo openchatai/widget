@@ -76,6 +76,15 @@ export interface WidgetConfig {
    */
   user?: UserConfig;
   /**
+   * Custom text content to override the defaults in the default widget.
+   */
+  textContent?: {
+    welcomeScreen?: {
+      title?: string;
+      description?: string;
+    }
+  }
+  /**
    * Headers to be sent with each send-message request from the widget.
    * These headers will be sent with each AI action (AI tools) that the LLM can call.
    * This is useful if your AI actions require authentication specific to each contact.
