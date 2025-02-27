@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.46
+
+### Patch Changes
+
+- auto navigate to chat screen if contact has no previous sessions
+
 ## 3.0.45
 
 ### Patch Changes
