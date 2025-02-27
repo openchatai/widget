@@ -1,3 +1,4 @@
+import type { WidgetConfig } from "../types/widget-config";
 import { PrimitiveState } from "../utils/PrimitiveState";
 import type { ContactCtx } from "./contact.ctx";
 import type { SessionCtx } from "./session.ctx";
@@ -16,15 +17,18 @@ type RouterState = {
 export class RouterCtx {
   state: PrimitiveState<RouterState>;
 
+  private config: WidgetConfig;
   private contactCtx: ContactCtx;
   private sessionCtx: SessionCtx;
   private resetChat: WidgetCtx["resetChat"];
 
   constructor({
+    config,
     contactCtx,
     sessionCtx,
     resetChat,
   }: {
+    config: WidgetConfig;
     contactCtx: ContactCtx;
     sessionCtx: SessionCtx;
     resetChat: WidgetCtx["resetChat"];
@@ -32,6 +36,7 @@ export class RouterCtx {
     this.state = new PrimitiveState<RouterState>({
       screen: contactCtx.shouldCollectData() ? "welcome" : "sessions",
     });
+    this.config = config;
     this.contactCtx = contactCtx;
     this.sessionCtx = sessionCtx;
     this.resetChat = resetChat;
@@ -46,6 +51,18 @@ export class RouterCtx {
         this.state.setPartial({ screen: "sessions" });
       }
     });
+
+    this.sessionCtx.sessionsState.subscribe(
+      ({ isInitialFetchLoading, data }) => {
+        if (data.length) return;
+        if (this.config.router?.goToChatIfNoSessions === false) return;
+
+        // Auto navigate to chat screen if contact has no previous sessions
+        if (!isInitialFetchLoading && this.state.get().screen !== "chat") {
+          this.toChatScreen();
+        }
+      },
+    );
   };
 
   toSessionsScreen = () => {

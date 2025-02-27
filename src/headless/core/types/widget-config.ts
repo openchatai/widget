@@ -61,11 +61,11 @@ export interface WidgetConfig {
   /**
    * Extra data collection fields besides `name` and `email`.
    * For this setting to take effect, `collectUserData` must be set to `true`.
-   * 
+   *
    * Not to be confused with `WidgetConfig.user.data.customData`,
    * the purpose of `extraDataCollectionFields` is to provide context to the session,
    * the data collected will be prepended in the first contact message in a session.
-   * 
+   *
    * @default undefined
    */
   extraDataCollectionFields?: string[];
@@ -82,8 +82,18 @@ export interface WidgetConfig {
     welcomeScreen?: {
       title?: string;
       description?: string;
-    }
-  }
+    };
+  };
+  /**
+   * Customize the router behavior.
+   */
+  router?: {
+    /**
+     * If true, the router will navigate to the `chat` screen instead of `sessions` screen if the contact has no previous sessions.
+     * @default true
+     */
+    goToChatIfNoSessions?: boolean;
+  };
   /**
    * Headers to be sent with each send-message request from the widget.
    * These headers will be sent with each AI action (AI tools) that the LLM can call.

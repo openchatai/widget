@@ -45,8 +45,8 @@ function App() {
           // theme: {
           //   primaryColor: "#639"
           // },
-          collectUserData: true,
-          extraDataCollectionFields: ["Order number"],
+          // collectUserData: true,
+          // extraDataCollectionFields: ["Order number"],
           // user: {
           //   // externalId: "xyz",
           //   // token: userToken,

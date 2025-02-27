@@ -67,6 +67,7 @@ export class WidgetCtx {
     });
 
     this.routerCtx = new RouterCtx({
+      config: this.config,
       contactCtx: this.contactCtx,
       sessionCtx: this.sessionCtx,
       resetChat: this.resetChat,
