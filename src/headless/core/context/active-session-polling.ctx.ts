@@ -64,9 +64,10 @@ export class ActiveSessionPollingCtx {
       this.messageCtx.state.setPartial({ isInitialFetchLoading: true });
     }
 
-    const lastMessageTimestamp = this.messageCtx.state
-      .get()
-      .messages.at(-1)?.timestamp;
+    const messages = this.messageCtx.state.get().messages;
+    const lastMessageTimestamp = messages.length > 0 
+      ? messages[messages.length - 1]?.timestamp 
+      : undefined;
 
     const { data } = await this.api.pollSessionAndHistory({
       sessionId,
@@ -130,7 +131,9 @@ export class ActiveSessionPollingCtx {
       };
     }
 
-    const action = history.actionCalls?.at(-1);
+    const action = history.actionCalls && history.actionCalls.length > 0 
+      ? history.actionCalls[history.actionCalls.length - 1] 
+      : undefined;
     return {
       ...commonFields,
       type: "FROM_BOT",

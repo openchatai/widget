@@ -59,12 +59,10 @@ export class MessageCtx {
     this.state.reset();
   };
 
-  sendMessage = async (
-    input: {
-      content: SendMessageDto['content']
-      attachments?: SendMessageDto['attachments']
-    },
-  ): Promise<void> => {
+  sendMessage = async (input: {
+    content: SendMessageDto["content"];
+    attachments?: SendMessageDto["attachments"];
+  }): Promise<void> => {
     /* ------------------------------------------------------ */
     /*         Prevent sending if there is no content         */
     /* ------------------------------------------------------ */
@@ -81,7 +79,9 @@ export class MessageCtx {
     const isSending = this.state.get().isSendingMessage;
     const isAssignedToAI =
       this.sessionCtx.sessionState.get().session?.assignee.kind === "ai";
-    const lastMessage = this.state.get().messages.at(-1);
+    const _messages = this.state.get().messages;
+    const lastMessage =
+      _messages.length > 0 ? _messages[_messages.length - 1] : undefined;
     if (
       (isAssignedToAI && isSending) ||
       // If last message is from user, then bot response did not arrive yet
