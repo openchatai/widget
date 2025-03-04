@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.48
+
+### Patch Changes
+
+- refrain from using Array.prototype.at as it is not supported on old safaris
+
 ## 3.0.47
 
 ### Patch Changes
