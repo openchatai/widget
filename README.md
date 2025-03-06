@@ -60,8 +60,8 @@ The core package exports the widget engine that can be used with any framework:
 
 The widget supports a variety of ways to authenticate, or not, your users:
 
-1. **Completely anonymous**: Leave `WidgetConfig.collectUserInfo` and `WidgetConfig.user` empty or explicitly `undefined`
-2. **Manually collect user info**: Pass `WidgetConfig.collectUserInfo` as `true`
+1. **Completely anonymous**: Leave `WidgetConfig.collectUserData` and `WidgetConfig.user` empty or explicitly `undefined`
+2. **Manually collect user data**: Pass `WidgetConfig.collectUserData` as `true`
     - Users will have to input a `name` and an `email` to enter the chat.
     - A contact will be created with the inputted email. But the session will be considered `unverified`, since the user can input any `email`.
     - The user will be saved in `localStorage` and they won't have to input a `name` and `email` on future visits.
