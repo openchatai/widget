@@ -287,6 +287,9 @@ export interface components {
             url: string;
           }[]
         | null;
+      clientContext?: {
+        [key: string]: unknown;
+      } | null;
     };
     UploadWidgetFileResponseDto: {
       fileName: string;
