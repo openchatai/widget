@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.49
+
+### Patch Changes
+
+- send client context with messages
+
 ## 3.0.48
 
 ### Patch Changes
