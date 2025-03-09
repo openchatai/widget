@@ -118,6 +118,11 @@ export interface WidgetConfig {
    */
   queryParams?: Record<string, string>;
   /**
+   * Dynamic context to be sent with each send-message request from the widget.
+   * Useful if you want to send data regarding the current page the user is viewing.
+   */
+  context?: Record<string, unknown>;
+  /**
    * Turn on to see the debug info attached to the AI responses.
    * @default false
    */

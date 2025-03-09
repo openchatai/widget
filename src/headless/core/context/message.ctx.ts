@@ -142,6 +142,7 @@ export class MessageCtx {
           user: this.config.user?.data,
           content: userMessage.content,
           attachments: input.attachments,
+          clientContext: this.config.context,
         },
         this.sendMessageAbortController.signal,
       );
