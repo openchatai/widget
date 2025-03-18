@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.50
+
+### Patch Changes
+
+- remove axios dependency
+
 ## 3.0.49
 
 ### Patch Changes
