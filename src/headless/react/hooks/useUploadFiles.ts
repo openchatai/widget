@@ -51,16 +51,11 @@ function useUploadFiles() {
         ),
       );
 
-      const response = await api.uploadFile(fileItem, {
-        signal: controller.signal,
-        onUploadProgress: (progressEvent) => {
-          if (!progressEvent.total) return;
-
-          const progress = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total,
-          );
-
-          updateFileById(fileItem.id, { progress });
+      const response = await api.uploadFile({
+        file: fileItem.file,
+        abortSignal: controller.signal,
+        onProgress: (percentage) => {
+          updateFileById(fileItem.id, { progress: percentage });
         },
       });
 

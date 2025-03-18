@@ -1,12 +1,11 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig } from "axios";
 import { type Dto, type Endpoint, basicClient } from "./client";
 import type { WidgetConfig } from "../types/widget-config";
 import type { SendMessageDto, VoteInputDto } from "../types/schemas";
 
 export class ApiCaller {
   private client: ReturnType<typeof basicClient>;
-  private uploadFileClient: AxiosInstance;
   private config: WidgetConfig;
+  private userToken: string | null = null;
 
   constructor({
     config,
@@ -18,7 +17,6 @@ export class ApiCaller {
       config.user?.token,
     );
     this.client = this.createOpenAPIClient({ baseUrl, headers });
-    this.uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   }
 
   private constructClientOptions = (token: string | null | undefined) => {
@@ -51,21 +49,11 @@ export class ApiCaller {
       },
     });
   };
-  private createAxiosUploadClient = ({
-    baseUrl,
-    headers,
-  }: ReturnType<typeof this.constructClientOptions>) => {
-    const uploadPath = "/backend/widget/v2/upload" satisfies Endpoint;
-    return axios.create({
-      baseURL: `${baseUrl}${uploadPath}`,
-      headers,
-    });
-  };
 
   setAuthToken = (token: string) => {
+    this.userToken = token;
     const { baseUrl, headers } = this.constructClientOptions(token);
     this.client = this.createOpenAPIClient({ baseUrl, headers });
-    this.uploadFileClient = this.createAxiosUploadClient({ baseUrl, headers });
   };
 
   getExternalWidgetConfig = async () => {
@@ -134,26 +122,81 @@ export class ApiCaller {
     });
   };
 
-  uploadFile = async (
-    file: {
-      id: string;
-      file: File;
-    },
-    config: Partial<AxiosRequestConfig> = {},
-  ) => {
-    const formData = new FormData();
-    formData.append("file", file.file);
+  /**
+   * openapi-fetch usually works fine for file uploads, but this time around it parses the payload in a weird way and results in 413 errors (payload too large)
+   * Anyway, good old XHR even does it better with progress events
+   */
+  uploadFile = async ({
+    file,
+    abortSignal,
+    onProgress,
+  }: {
+    file: File;
+    abortSignal: AbortSignal;
+    onProgress?: (percentage: number) => void;
+  }): Promise<Dto["UploadWidgetFileResponseDto"]> => {
+    return new Promise((resolve, reject) => {
+      const formData = new FormData();
+      formData.append("file", file);
 
-    // Couldn't get this to work with the openapi client... dunno why...
-    const { data } = await this.uploadFileClient.post<
-      Dto["UploadWidgetFileResponseDto"]
-    >("", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      ...config,
+      const xhr = new XMLHttpRequest();
+
+      // Set up abort functionality
+      if (abortSignal) {
+        abortSignal.addEventListener("abort", () => {
+          xhr.abort();
+          reject(new DOMException("Aborted", "AbortError"));
+        });
+
+        // If already aborted, reject immediately
+        if (abortSignal.aborted) {
+          reject(new DOMException("Aborted", "AbortError"));
+          return;
+        }
+      }
+
+      xhr.upload.addEventListener("progress", (event) => {
+        if (event.lengthComputable && onProgress) {
+          const percentage = Math.round((event.loaded / event.total) * 100);
+          onProgress(percentage);
+        }
+      });
+
+      // Handle completion
+      xhr.addEventListener("load", () => {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            resolve(data);
+          } catch (error) {
+            reject(new Error(`Failed to parse response: ${error}`));
+          }
+        } else {
+          reject(new Error(`Upload failed with status: ${xhr.status}`));
+        }
+      });
+
+      xhr.addEventListener("error", () => {
+        reject(new Error("Network error occurred"));
+      });
+
+      xhr.addEventListener("timeout", () => {
+        reject(new Error("Upload timed out"));
+      });
+
+      const { baseUrl } = this.constructClientOptions(this.userToken);
+
+      const path = "/backend/widget/v2/upload" satisfies Endpoint
+      const uploadUrl = `${baseUrl}${path}`;
+      xhr.open("POST", uploadUrl);
+
+      xhr.setRequestHeader("X-Bot-Token", this.config.token);
+      if (this.userToken) {
+        xhr.setRequestHeader("Authorization", `Bearer ${this.userToken}`);
+      }
+
+      xhr.send(formData);
     });
-    return data;
   };
 
   vote = async (body: VoteInputDto) => {
