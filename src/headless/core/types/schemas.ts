@@ -12,3 +12,7 @@ export type PreludeDto = Dto["WidgetPreludeDto"];
 export type MessageAttachmentType = NonNullable<
   Dto["WidgetHistoryDto"]["attachments"]
 >[number];
+
+export type ActionCallDto = NonNullable<
+  Dto["WidgetHistoryDto"]["actionCalls"]
+>[number];

@@ -1,8 +1,9 @@
 import type { ApiCaller } from "../api/api-caller";
 import type { MessageType } from "../types/messages";
-import type { MessageDto } from "../types/schemas";
+import type { ActionCallDto, MessageDto } from "../types/schemas";
 import type { WidgetConfig } from "../types/widget-config";
 import { Poller } from "../utils/Poller";
+import { runCatching } from "../utils/run-catching";
 import type { MessageCtx } from "./message.ctx";
 import type { SessionCtx } from "./session.ctx";
 
@@ -65,9 +66,10 @@ export class ActiveSessionPollingCtx {
     }
 
     const messages = this.messageCtx.state.get().messages;
-    const lastMessageTimestamp = messages.length > 0 
-      ? messages[messages.length - 1]?.timestamp 
-      : undefined;
+    const lastMessageTimestamp =
+      messages.length > 0
+        ? messages[messages.length - 1]?.timestamp
+        : undefined;
 
     const { data } = await this.api.pollSessionAndHistory({
       sessionId,
@@ -131,9 +133,11 @@ export class ActiveSessionPollingCtx {
       };
     }
 
-    const action = history.actionCalls && history.actionCalls.length > 0 
-      ? history.actionCalls[history.actionCalls.length - 1] 
-      : undefined;
+    const action =
+      history.actionCalls && history.actionCalls.length > 0
+        ? history.actionCalls[history.actionCalls.length - 1]
+        : undefined;
+
     return {
       ...commonFields,
       type: "FROM_BOT",
@@ -147,9 +151,30 @@ export class ActiveSessionPollingCtx {
       data: {
         message: history.content.text || "",
         action: action
-          ? { name: action.actionName, data: action.result }
+          ? {
+              name: action.actionName,
+              data: this.extractActionResult(action),
+            }
           : undefined,
       },
     };
+  };
+
+  extractActionResult = (action: ActionCallDto) => {
+    const result = action.result;
+
+    if (result === null) return result;
+    if (typeof result !== "object") return result;
+
+    if (
+      "responseBodyText" in result &&
+      typeof result.responseBodyText === "string"
+    ) {
+      const responseBodyText = result.responseBodyText;
+      const parsed = runCatching(() => JSON.parse(responseBodyText)).data;
+      if (parsed) return parsed;
+    }
+
+    return action.result;
   };
 }

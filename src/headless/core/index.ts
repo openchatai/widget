@@ -19,6 +19,7 @@ export type {
   SessionDto,
   VoteInputDto,
   VoteOutputDto,
+  ActionCallDto,
 } from "./types/schemas";
 export type { WidgetConfig } from "./types/widget-config";
 export type { ExternalStorage } from "./types/external-storage";
