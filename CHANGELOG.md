@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.52
+
+### Patch Changes
+
+- disable tailwind purge for base utility classes
+
 ## 3.0.51
 
 ### Patch Changes
