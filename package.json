@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget",
   "private": false,
-  "version": "3.0.52",
+  "version": "3.0.53",
   "type": "module",
   "publishConfig": {
     "access": "public"
