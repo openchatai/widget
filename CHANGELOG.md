@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.51
+
+### Patch Changes
+
+- parse action call res
+
 ## 3.0.50
 
 ### Patch Changes
