@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.54
+
+### Patch Changes
+
+- remove classes safelisting
+
 ## 3.0.53
 
 ### Patch Changes
