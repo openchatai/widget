@@ -4,6 +4,10 @@ export default {
     "./src/**/*.{html,js,ts,jsx,tsx}",
     "./react-web/**/*.{html,js,ts,jsx,tsx}",
   ],
+  safelist: {
+    // Disables purge for base utility classes
+    pattern: /.*/,
+  },
   theme: {
     extend: {
       zIndex: {
