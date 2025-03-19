@@ -36,22 +36,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/session/{sessionId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: operations["getSession"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/backend/widget/v2/sessions": {
     parameters: {
       query?: never;
@@ -546,36 +530,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["WidgetPreludeDto"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ErrorDto"];
-        };
-      };
-    };
-  };
-  getSession: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        sessionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["WidgetSessionDto"];
         };
       };
       /** @description Internal Server Error */
