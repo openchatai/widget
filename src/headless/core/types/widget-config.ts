@@ -10,9 +10,8 @@ type UserBaseConfig =
       data?: {
         name?: string;
         email?: string;
-        phone?: string;
-        customData?: Record<string, string>;
         avatarUrl?: string;
+        customData?: Record<string, string>;
       };
     };
 

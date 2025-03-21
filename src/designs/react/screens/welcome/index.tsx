@@ -46,7 +46,7 @@ export function WelcomeScreen() {
         await createUnverifiedContact(
           {
             email: result.data.email,
-            name: result.data.name,
+            non_verified_name: result.data.name,
           },
           // Only pass extra data if there is any
           Object.values(extraData).filter(Boolean).length

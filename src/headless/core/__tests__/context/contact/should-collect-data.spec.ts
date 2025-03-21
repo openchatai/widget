@@ -76,7 +76,7 @@ suite.concurrent("ContactCtx.shouldCollectData", () => {
       // Mimic inputting name and email
       await widgetCtx.contactCtx.createUnverifiedContact({
         email: "test@email.com",
-        name: "some-name",
+        non_verified_name: "some-name",
       });
 
       expect(widgetCtx.contactCtx.shouldCollectData()).toBeFalsy();

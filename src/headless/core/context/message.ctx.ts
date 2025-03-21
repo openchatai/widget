@@ -139,7 +139,6 @@ export class MessageCtx {
           headers: this.config.headers,
           query_params: this.config.queryParams,
           session_id: sessionId,
-          user: this.config.user?.data,
           content: userMessage.content,
           attachments: input.attachments,
           clientContext: this.config.context,

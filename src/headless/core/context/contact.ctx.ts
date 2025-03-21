@@ -106,8 +106,9 @@ export class ContactCtx {
      * So, only sessions created on this device will be accessible.
      */
     await this.createUnverifiedContact({
-      name: this.config.user?.data?.name || "Anonymous",
       email: this.config.user?.data?.email,
+      non_verified_name: this.config.user?.data?.name || "Anonymous",
+      non_verified_custom_data: this.config.user?.data?.customData,
     });
   };
 

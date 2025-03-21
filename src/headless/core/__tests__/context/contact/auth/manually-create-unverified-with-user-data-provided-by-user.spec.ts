@@ -18,7 +18,7 @@ suite("", () => {
 
     // Mimic user inputting a name and email
     await widgetCtx.contactCtx.createUnverifiedContact({
-      name: "some-name",
+      non_verified_name: "some-name",
       email: "test@email.com",
     });
     expect(ApiCaller.prototype.createUnverifiedContact).toBeCalledTimes(1);

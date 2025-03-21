@@ -170,7 +170,10 @@ export interface components {
   schemas: {
     CreateUnverifiedContactDto: {
       email?: string;
-      name?: string;
+      non_verified_name?: string;
+      non_verified_custom_data?: {
+        [key: string]: string;
+      };
     };
     CreateWidgetSessionDto: {
       customData?: {
@@ -251,15 +254,6 @@ export interface components {
       bot_token: string;
       query_params?: {
         [key: string]: string;
-      } | null;
-      user?: {
-        email?: string;
-        name?: string;
-        phone?: string;
-        avatar?: string;
-        customData?: {
-          [key: string]: string;
-        };
       } | null;
       language?: string | null;
       attachments?:
