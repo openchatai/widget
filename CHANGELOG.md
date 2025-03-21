@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.55
+
+### Patch Changes
+
+- send non verified custom data
+
 ## 3.0.54
 
 ### Patch Changes
