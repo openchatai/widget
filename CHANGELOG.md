@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.56
+
+### Patch Changes
+
+- update session in list based on active session polling
+
 ## 3.0.55
 
 ### Patch Changes
