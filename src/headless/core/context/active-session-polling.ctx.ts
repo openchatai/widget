@@ -79,6 +79,7 @@ export class ActiveSessionPollingCtx {
 
     if (data?.session) {
       this.sessionCtx.sessionState.setPartial({ session: data.session });
+      this.sessionCtx.setSessions([data.session]);
     }
 
     if (data?.history && data.history.length > 0) {
