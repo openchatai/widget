@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import toast from "react-hot-toast";
 import {
   useIsAwaitingBotReply,
   useMessages,
@@ -164,7 +163,6 @@ function ChatInput() {
     if (isUploading) {
       // TODO use something other than toast
       const message = "please wait for the file(s) to upload";
-      toast.error(message);
       console.info(message);
     }
     const trimmed = inputText.trim();
@@ -202,7 +200,6 @@ function ChatInput() {
       if (shouldAcceptAttachments) {
         // TODO use something other than toast
         const message = "unsupported file type, or the file is too large";
-        toast.error(message);
         console.error(message);
       }
     },
