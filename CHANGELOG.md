@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.57
+
+### Patch Changes
+
+- make react a peer dep
+
 ## 3.0.56
 
 ### Patch Changes
