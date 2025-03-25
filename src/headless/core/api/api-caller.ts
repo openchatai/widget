@@ -13,6 +13,8 @@ export class ApiCaller {
     config: WidgetConfig;
   }) {
     this.config = config;
+    this.userToken = config.user?.token || null;
+
     const { baseUrl, headers } = this.constructClientOptions(
       config.user?.token,
     );
@@ -186,13 +188,16 @@ export class ApiCaller {
 
       const { baseUrl } = this.constructClientOptions(this.userToken);
 
-      const path = "/backend/widget/v2/upload" satisfies Endpoint
+      const path = "/backend/widget/v2/upload" satisfies Endpoint;
       const uploadUrl = `${baseUrl}${path}`;
       xhr.open("POST", uploadUrl);
 
       xhr.setRequestHeader("X-Bot-Token", this.config.token);
-      if (this.userToken) {
+      const userToken = this.userToken ?? this.config.user?.token;
+      if (userToken) {
         xhr.setRequestHeader("Authorization", `Bearer ${this.userToken}`);
+      } else {
+        console.error("User token not set");
       }
 
       xhr.send(formData);
