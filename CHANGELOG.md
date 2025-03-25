@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.58
+
+### Patch Changes
+
+- api-caller(file-upload): set user token correctly when `WidgetConfig.user.token` is provided
+
 ## 3.0.57
 
 ### Patch Changes
