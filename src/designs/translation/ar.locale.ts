@@ -57,4 +57,5 @@ export const arLocale: TranslationInterface = {
   "i-need-more-help": "أحتاج المزيد من المساعدة",
   "this-was-helpful": "كان هذا مفيدًا",
   optional: "اختياري",
+  "no-conversations-yet": "لا يوجد محادثات",
 };

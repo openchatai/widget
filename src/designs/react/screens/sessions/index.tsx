@@ -125,11 +125,8 @@ function SessionsList() {
             ) : (
               <div className="flex-1 flex flex-col gap-2 items-center">
                 <div className="flex-1 flex items-center justify-center">
-                  <p
-                    className="text-muted-foreground"
-                    // TODO add translation
-                  >
-                    No conversations yet
+                  <p className="text-muted-foreground">
+                    {locale.get("no-conversations-yet")}
                   </p>
                 </div>
                 <Button

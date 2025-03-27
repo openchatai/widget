@@ -57,4 +57,5 @@ export const enLocale: TranslationInterface = {
   "i-need-more-help": "I need more help",
   "this-was-helpful": "This was helpful",
   optional: "Optional",
+  "no-conversations-yet": "No conversations yet",
 };

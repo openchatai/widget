@@ -54,7 +54,8 @@ export type TranslationKeysU =
   | "hello-greeting"
   | "i-need-more-help"
   | "this-was-helpful"
-  | "optional";
+  | "optional"
+  | "no-conversations-yet";
 
 export type TranslationInterface = {
   [K in TranslationKeysU]: string;

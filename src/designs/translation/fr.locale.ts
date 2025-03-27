@@ -57,4 +57,5 @@ export const frLocale: TranslationInterface = {
   "i-need-more-help": "Je besoin d'aide plus",
   "this-was-helpful": "C'était utile",
   optional: "Optionnel",
+  "no-conversations-yet": "Aucune conversation pour le moment",
 };
