@@ -6,6 +6,7 @@ import {
   FileAudio2Icon,
   FileIcon,
   FileVideo2Icon,
+  ImageIcon,
   Loader2,
   PaperclipIcon,
   SendHorizonal,
@@ -143,14 +144,11 @@ function ChatInput() {
     successFiles,
   } = useUploadFiles();
 
-  const shouldAcceptAttachments = !!sessionState.session?.isHandedOff;
+  const isHandedOff = !!sessionState.session?.isHandedOff;
 
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
 
   const handleFileDrop = (acceptedFiles: File[]) => {
-    if (!shouldAcceptAttachments) {
-      return;
-    }
     appendFiles(acceptedFiles);
   };
 
@@ -197,18 +195,23 @@ function ChatInput() {
     onDrop: handleFileDrop,
     noClick: true,
     onDropRejected() {
-      if (shouldAcceptAttachments) {
-        // TODO use something other than toast
-        const message = "unsupported file type, or the file is too large";
-        console.error(message);
-      }
+      // TODO use something other than toast
+      const message = "unsupported file type, or the file is too large";
+      console.error(message);
     },
     maxSize: 5 * 1024 * 1024,
-    accept: {
-      "text/*": [".txt"],
-      "image/*": [".png", ".jpg", ".jpeg", ".gif"],
-      "application/pdf": [".pdf"],
-    },
+    accept: isHandedOff
+      ? {
+          "text/*": [".txt"],
+          "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+          "application/pdf": [".pdf"],
+        }
+      : {
+          "image/png": [".png"],
+          "image/jpeg": [".jpg", ".jpeg"],
+          "image/gif": [".gif"],
+          "image/webp": [".webp"],
+        },
   });
 
   const handlePaste = (event: React.ClipboardEvent<HTMLTextAreaElement>) => {
@@ -269,19 +272,24 @@ function ChatInput() {
             content="attach files, (maximum size 5mb)"
           >
             <Button
-              onClick={() => {
-                if (!shouldAcceptAttachments) return;
-                dropzone__openFileSelect();
-              }}
+              onClick={dropzone__openFileSelect}
               size="fit"
               variant="outline"
               className={cn(
-                "disabled:opacity-0",
-                "rounded-full size-8 flex items-center justify-center p-0",
+                "rounded-full size-8 flex items-center justify-center p-0 overflow-hidden",
               )}
-              disabled={!shouldAcceptAttachments}
             >
-              <PaperclipIcon className="size-4" />
+              <AnimatePresence mode="wait">
+                {isHandedOff ? (
+                  <MotionDiv key="paper-clip">
+                    <PaperclipIcon className="size-4" />
+                  </MotionDiv>
+                ) : (
+                  <MotionDiv key="image-icon">
+                    <ImageIcon className="size-4" />
+                  </MotionDiv>
+                )}
+              </AnimatePresence>
             </Button>
           </Tooltippy>
 
