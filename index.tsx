@@ -3,8 +3,8 @@ import { createRoot } from "react-dom/client";
 import { Widget } from "./src/designs/react";
 import { HandoffComponent } from "./src/designs/react/components/custom-components/Handoff.component";
 
-// const apiUrl = "http://localhost:8080";
-const apiUrl = "https://api.open.cx";
+const apiUrl = "http://localhost:8080";
+// const apiUrl = "https://api.open.cx";
 const token = import.meta.env.VITE_ORG_TOKEN;
 const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
 
