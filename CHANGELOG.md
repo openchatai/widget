@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.59
+
+### Patch Changes
+
+- default widget: allow sending `png`, `jpeg`, `jpg`, `gif`, `webp` when session is not handed off
+
 ## 3.0.58
 
 ### Patch Changes
