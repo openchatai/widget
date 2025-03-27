@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.60
+
+### Patch Changes
+
+- add translation
+
 ## 3.0.59
 
 ### Patch Changes
