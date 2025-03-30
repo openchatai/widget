@@ -7,7 +7,8 @@ import { useConfig } from "../../headless/react";
 import { cn } from "./components/lib/utils/cn";
 import { Wobble } from "./components/lib/wobble";
 import { MotionDiv } from "./components/lib/MotionDiv";
-import { OpenLogoSvg } from "./components/OpenLogoSvg";
+import { ChatBubbleSvg } from "./components/svg/ChatBubbleSvg";
+import { OpenLogoPatternSvg } from "./components/svg/OpenLogoPatternSvg";
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
   const { theme } = useConfig();
@@ -30,13 +31,14 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
           className={cn(
             "relative size-full rounded-full",
             "flex items-center justify-center",
+            "overflow-hidden",
             "transition-all",
             // 'bg-gradient-to-t from-primary/50 via-primary to-primary',
             "[background:radial-gradient(50%_50%_at_50%_100%,hsl(var(--opencx-primary-foreground))_-75%,hsl(var(--opencx-primary))_100%)]",
             "text-primary-foreground",
             "shadow-xl",
             "active:scale-90",
-            "[&_svg]:size-6",
+            // "[&_svg]:size-6",
           )}
         >
           <AnimatePresence mode="wait">
@@ -47,7 +49,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                 fadeIn="up"
                 overrides={{ initial: { rotate: 45 }, animate: { rotate: 0 } }}
               >
-                <XIcon />
+                <XIcon className="size-6" />
               </MotionDiv>
             ) : (
               <MotionDiv
@@ -55,10 +57,11 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                 snapExit
                 overrides={{ initial: { rotate: 45 }, animate: { rotate: 0 } }}
               >
-                <OpenLogoSvg />
+                <ChatBubbleSvg className="size-6 mt-0.5 opacity-95" />
               </MotionDiv>
             )}
           </AnimatePresence>
+          <OpenLogoPatternSvg className="absolute inset-0 opacity-5 size-12" />
         </div>
       </Wobble>
     </PopoverPrimitive.PopoverTrigger>
