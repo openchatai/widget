@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.61
+
+### Patch Changes
+
+- change widget trigger icon to a chat bubble
+
 ## 3.0.60
 
 ### Patch Changes
