@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.62
+
+### Patch Changes
+
+- add `powered by open`
+
 ## 3.0.61
 
 ### Patch Changes
