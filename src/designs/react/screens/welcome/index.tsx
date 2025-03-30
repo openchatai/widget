@@ -13,6 +13,7 @@ import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from "../../constants";
 import { cn } from "../../components/lib/utils/cn";
 import { Input } from "../../components/lib/input";
 import { Button } from "../../components/lib/button";
+import { PoweredByOpen } from "../../components/PoweredByOpen";
 
 const schema = z.object({
   name: z.string().min(2),
@@ -147,6 +148,8 @@ export function WelcomeScreen() {
           </Button>
         </form>
       </div>
+
+      <PoweredByOpen />
     </div>
   );
 }

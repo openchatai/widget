@@ -20,6 +20,7 @@ import { Avatar, AvatarImage } from "../../components/lib/avatar";
 import { MemoizedReactMarkdown } from "../../components/markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import { PoweredByOpen } from "../../components/PoweredByOpen";
 
 function SessionCard({ session }: { session: SessionDto }) {
   const { bot } = useConfig();
@@ -163,6 +164,7 @@ export function SessionsScreen() {
         <WidgetHeader />
         <SessionsList />
       </div>
+      <PoweredByOpen />
     </div>
   );
 }

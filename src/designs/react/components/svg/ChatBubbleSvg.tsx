@@ -17,8 +17,8 @@ export function ChatBubbleSvg({ className }: { className?: string }) {
         fill="currentColor"
       />
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M19.9945 23.8935L26.237 23.8934C26.1982 24.3557 26.1712 25.2778 26.1704 26.2318C26.1688 28.2839 26.1376 28.7041 25.974 28.868C25.583 29.2598 25.2686 29.0967 24.0616 27.8754C23.4162 27.2222 22.1141 25.9522 21.1682 25.0531L19.9945 23.8935Z"
         fill="currentColor"
       />
