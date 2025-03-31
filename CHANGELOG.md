@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.64
+
+### Patch Changes
+
+- fix trigger styles
+
 ## 3.0.63
 
 ### Patch Changes
