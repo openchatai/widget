@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.63
+
+### Patch Changes
+
+- wrap widget trigger in an iframe
+
 ## 3.0.62
 
 ### Patch Changes
