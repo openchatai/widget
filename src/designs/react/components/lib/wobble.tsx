@@ -11,7 +11,7 @@ import { cn } from "./utils/cn";
  *
  * This would make very small elements wobble more visibly, and large elements would wobble more subtly
  */
-const MAX_MOVEMENT_PIXELS = {
+export const WOBBLE_MAX_MOVEMENT_PIXELS = {
   x: 2,
   y: 2,
 };
@@ -65,8 +65,8 @@ const Wobble = memo(
         );
 
         // Scale normalized values to the desired range
-        const x = normalizedX * MAX_MOVEMENT_PIXELS.x;
-        const y = normalizedY * MAX_MOVEMENT_PIXELS.y;
+        const x = normalizedX * WOBBLE_MAX_MOVEMENT_PIXELS.x;
+        const y = normalizedY * WOBBLE_MAX_MOVEMENT_PIXELS.y;
 
         setMovement({ x, y });
         children.props.onMouseMove?.(event);

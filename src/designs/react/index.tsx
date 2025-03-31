@@ -6,7 +6,7 @@ import {
 } from "./constants";
 import { RootScreen } from "./screens";
 import * as PopoverPrimitive from "@radix-ui/react-popover";
-import Iframe from "@uiw/react-iframe";
+import IFrame from "@uiw/react-iframe";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import styles from "../../../index.css?inline";
@@ -84,7 +84,7 @@ function WidgetContent() {
             },
           }}
         >
-          <Iframe
+          <IFrame
             initialContent={initialContent}
             allowFullScreen
             data-opencx-widget
@@ -131,7 +131,7 @@ function WidgetContent() {
                 </div>
               </div>
             </TooltipProvider>
-          </Iframe>
+          </IFrame>
         </motion.div>
       </PopoverPrimitive.Content>
     </PopoverPrimitive.Root>
