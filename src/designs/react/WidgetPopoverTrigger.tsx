@@ -37,8 +37,8 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
     <IFrame
       initialContent={initialContent}
       style={{
-        height: `calc(3rem + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
-        width: `calc(3rem + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,
+        height: `calc(48px + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
+        width: `calc(48px + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,
         fontSize: "16px",
         position: "fixed",
         zIndex: 10000000,
@@ -58,7 +58,9 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         }}
       >
         <PopoverPrimitive.PopoverTrigger
-          className={cn("size-12 font-inter flex items-center justify-center")}
+          className={cn(
+            "size-[48px] font-inter flex items-center justify-center",
+          )}
         >
           <Wobble>
             <div
@@ -83,7 +85,7 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                       animate: { rotate: 0 },
                     }}
                   >
-                    <ChevronDownIcon className="size-6" />
+                    <ChevronDownIcon className="size-[24px]" />
                   </MotionDiv>
                 ) : (
                   <MotionDiv
@@ -94,11 +96,11 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                       animate: { rotate: 0 },
                     }}
                   >
-                    <ChatBubbleSvg className="size-6 mt-0.5 opacity-95" />
+                    <ChatBubbleSvg className="size-[24px] mt-0.5 opacity-95" />
                   </MotionDiv>
                 )}
               </AnimatePresence>
-              <OpenLogoPatternSvg className="absolute inset-0 opacity-5 size-12" />
+              <OpenLogoPatternSvg className="absolute inset-0 opacity-5 size-[48px]" />
             </div>
           </Wobble>
         </PopoverPrimitive.PopoverTrigger>
