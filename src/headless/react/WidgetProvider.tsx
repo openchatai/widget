@@ -42,6 +42,7 @@ function WidgetProvider({
     didInitialize.current = true;
 
     WidgetCtx.initialize({ config, storage }).then(setWidgetCtx);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!widgetCtx) return null;

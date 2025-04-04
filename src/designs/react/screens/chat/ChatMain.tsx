@@ -25,7 +25,7 @@ export function ChatMain() {
 
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
-    [messages.length],
+    [messages],
   );
 
   const initialMessages =
