@@ -22,7 +22,7 @@ export function ChatMain() {
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();
   const config = useConfig();
-  // biome-ignore lint/correctness/useExhaustiveDependencies: dep is `messages.length` not just `messages` in case the equality check is shallow
+
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
     [messages.length],
@@ -49,7 +49,7 @@ export function ChatMain() {
       }
     }, 0);
   }
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `messages` is an intentional dependency
+
   useEffect(() => {
     handleNewMessage();
   }, [messages]);

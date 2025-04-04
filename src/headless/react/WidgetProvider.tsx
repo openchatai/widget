@@ -36,7 +36,6 @@ function WidgetProvider({
     [components],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: no need for deps, this should only run once
   useEffect(() => {
     if (didInitialize.current) return;
     didInitialize.current = true;
