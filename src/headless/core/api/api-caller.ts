@@ -1,17 +1,13 @@
-import { type Dto, type Endpoint, basicClient } from "./client";
-import type { WidgetConfig } from "../types/widget-config";
-import type { SendMessageDto, VoteInputDto } from "../types/schemas";
+import { type Dto, type Endpoint, basicClient } from './client';
+import type { WidgetConfig } from '../types/widget-config';
+import type { SendMessageDto, VoteInputDto } from '../types/schemas';
 
 export class ApiCaller {
   private client: ReturnType<typeof basicClient>;
   private config: WidgetConfig;
   private userToken: string | null = null;
 
-  constructor({
-    config,
-  }: {
-    config: WidgetConfig;
-  }) {
+  constructor({ config }: { config: WidgetConfig }) {
     this.config = config;
     this.userToken = config.user?.token || null;
 
@@ -23,13 +19,13 @@ export class ApiCaller {
 
   private constructClientOptions = (token: string | null | undefined) => {
     const baseUrl =
-      import.meta.env.MODE === "test"
-        ? "http://localhost:8080"
-        : this.config.apiUrl || "https://api.open.cx";
+      import.meta.env.MODE === 'test'
+        ? 'http://localhost:8080'
+        : this.config.apiUrl || 'https://api.open.cx';
     const headers = {
-      "X-Bot-Token": this.config.token,
-      "Content-Type": "application/json",
-      Accept: "application/json",
+      'X-Bot-Token': this.config.token,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
       Authorization: token ? `Bearer ${token}` : undefined,
     };
 
@@ -59,36 +55,36 @@ export class ApiCaller {
   };
 
   getExternalWidgetConfig = async () => {
-    return await this.client.GET("/backend/widget/v2/config", {
-      params: { header: { "X-Bot-Token": this.config.token } },
+    return await this.client.GET('/backend/widget/v2/config', {
+      params: { header: { 'X-Bot-Token': this.config.token } },
     });
   };
 
   widgetPrelude = async () => {
-    return await this.client.GET("/backend/widget/v2/prelude", {
-      params: { header: { "X-Bot-Token": this.config.token } },
+    return await this.client.GET('/backend/widget/v2/prelude', {
+      params: { header: { 'X-Bot-Token': this.config.token } },
     });
   };
 
   sendMessage = async (body: SendMessageDto, abortSignal?: AbortSignal) => {
-    return await this.client.POST("/backend/widget/v2/chat/send", {
+    return await this.client.POST('/backend/widget/v2/chat/send', {
       body,
       signal: abortSignal,
     });
   };
 
-  createUnverifiedContact = async (body: Dto["CreateUnverifiedContactDto"]) => {
+  createUnverifiedContact = async (body: Dto['CreateUnverifiedContactDto']) => {
     return await this.client.POST(
-      "/backend/widget/v2/contact/create-unverified",
+      '/backend/widget/v2/contact/create-unverified',
       {
-        params: { header: { "x-bot-token": this.config.token } },
+        params: { header: { 'x-bot-token': this.config.token } },
         body,
       },
     );
   };
 
-  createSession = async (body: Dto["CreateWidgetSessionDto"]) => {
-    return await this.client.POST("/backend/widget/v2/create-session", {
+  createSession = async (body: Dto['CreateWidgetSessionDto']) => {
+    return await this.client.POST('/backend/widget/v2/create-session', {
       body,
     });
   };
@@ -103,7 +99,7 @@ export class ApiCaller {
     abortSignal: AbortSignal;
   }) => {
     const query = lastMessageTimestamp ? { lastMessageTimestamp } : undefined;
-    return await this.client.GET("/backend/widget/v2/poll/{sessionId}", {
+    return await this.client.GET('/backend/widget/v2/poll/{sessionId}', {
       params: { path: { sessionId }, query },
       signal: abortSignal,
     });
@@ -118,7 +114,7 @@ export class ApiCaller {
     filters: Record<string, string>;
     abortSignal?: AbortSignal;
   }) => {
-    return await this.client.GET("/backend/widget/v2/sessions", {
+    return await this.client.GET('/backend/widget/v2/sessions', {
       params: { query: { cursor, filters: JSON.stringify(filters) } },
       signal: abortSignal,
     });
@@ -136,28 +132,28 @@ export class ApiCaller {
     file: File;
     abortSignal: AbortSignal;
     onProgress?: (percentage: number) => void;
-  }): Promise<Dto["UploadWidgetFileResponseDto"]> => {
+  }): Promise<Dto['UploadWidgetFileResponseDto']> => {
     return new Promise((resolve, reject) => {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append('file', file);
 
       const xhr = new XMLHttpRequest();
 
       // Set up abort functionality
       if (abortSignal) {
-        abortSignal.addEventListener("abort", () => {
+        abortSignal.addEventListener('abort', () => {
           xhr.abort();
-          reject(new DOMException("Aborted", "AbortError"));
+          reject(new DOMException('Aborted', 'AbortError'));
         });
 
         // If already aborted, reject immediately
         if (abortSignal.aborted) {
-          reject(new DOMException("Aborted", "AbortError"));
+          reject(new DOMException('Aborted', 'AbortError'));
           return;
         }
       }
 
-      xhr.upload.addEventListener("progress", (event) => {
+      xhr.upload.addEventListener('progress', (event) => {
         if (event.lengthComputable && onProgress) {
           const percentage = Math.round((event.loaded / event.total) * 100);
           onProgress(percentage);
@@ -165,7 +161,7 @@ export class ApiCaller {
       });
 
       // Handle completion
-      xhr.addEventListener("load", () => {
+      xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
           try {
             const data = JSON.parse(xhr.responseText);
@@ -178,26 +174,26 @@ export class ApiCaller {
         }
       });
 
-      xhr.addEventListener("error", () => {
-        reject(new Error("Network error occurred"));
+      xhr.addEventListener('error', () => {
+        reject(new Error('Network error occurred'));
       });
 
-      xhr.addEventListener("timeout", () => {
-        reject(new Error("Upload timed out"));
+      xhr.addEventListener('timeout', () => {
+        reject(new Error('Upload timed out'));
       });
 
       const { baseUrl } = this.constructClientOptions(this.userToken);
 
-      const path = "/backend/widget/v2/upload" satisfies Endpoint;
+      const path = '/backend/widget/v2/upload' satisfies Endpoint;
       const uploadUrl = `${baseUrl}${path}`;
-      xhr.open("POST", uploadUrl);
+      xhr.open('POST', uploadUrl);
 
-      xhr.setRequestHeader("X-Bot-Token", this.config.token);
+      xhr.setRequestHeader('X-Bot-Token', this.config.token);
       const userToken = this.userToken ?? this.config.user?.token;
       if (userToken) {
-        xhr.setRequestHeader("Authorization", `Bearer ${this.userToken}`);
+        xhr.setRequestHeader('Authorization', `Bearer ${this.userToken}`);
       } else {
-        console.error("User token not set");
+        console.error('User token not set');
       }
 
       xhr.send(formData);
@@ -205,6 +201,6 @@ export class ApiCaller {
   };
 
   vote = async (body: VoteInputDto) => {
-    return await this.client.POST("/backend/widget/v2/chat/vote", { body });
+    return await this.client.POST('/backend/widget/v2/chat/vote', { body });
   };
 }

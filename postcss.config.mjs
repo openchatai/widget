@@ -1,6 +1,6 @@
-import autoprefixer from "autoprefixer";
-import prefixer from "postcss-prefix-selector";
-import tailwindcss from "tailwindcss";
+import autoprefixer from 'autoprefixer';
+import prefixer from 'postcss-prefix-selector';
+import tailwindcss from 'tailwindcss';
 
 export default {
   plugins: [
@@ -9,7 +9,7 @@ export default {
     prefixer({
       prefix: `[data-opencx-widget]`,
       transform: (prefix, selector, prefixedSelector, filePath) => {
-        if (selector === ":root") {
+        if (selector === ':root') {
           return selector; // Don't prefix :root selector
         }
         if (selector.startsWith(prefix)) {

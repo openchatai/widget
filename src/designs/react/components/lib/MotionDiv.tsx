@@ -1,9 +1,9 @@
-import React from "react";
-import { motion, type Target } from "framer-motion";
-import { type ComponentProps, forwardRef } from "react";
+import React from 'react';
+import { motion, type Target } from 'framer-motion';
+import { type ComponentProps, forwardRef } from 'react';
 
 type MotionProps = ComponentProps<typeof motion.div>;
-type AnimationDirection = "right" | "left" | "up" | "down";
+type AnimationDirection = 'right' | 'left' | 'up' | 'down';
 type MotionDivProps = MotionProps & {
   fadeIn?: AnimationDirection;
   distance?: number;
@@ -56,7 +56,7 @@ const treasureMap: Record<
 const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
   (
     {
-      fadeIn = "down",
+      fadeIn = 'down',
       distance = ANIMATION_DISTANCE_PX,
       children,
       snapExit = false,
@@ -72,7 +72,7 @@ const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
     if (
       snapExit &&
       fadeInProps.exit &&
-      typeof fadeInProps.exit === "object" &&
+      typeof fadeInProps.exit === 'object' &&
       !Array.isArray(fadeInProps.exit)
     ) {
       fadeInProps.exit.transition = { duration: 0 };
@@ -85,6 +85,6 @@ const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
     );
   },
 );
-MotionDiv.displayName = "MotionDiv";
+MotionDiv.displayName = 'MotionDiv';
 
 export { MotionDiv };

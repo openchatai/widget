@@ -1,9 +1,9 @@
-import { PrimitiveState } from "../utils/PrimitiveState";
-import { ApiCaller } from "../api/api-caller";
-import { type WidgetConfig } from "../types/widget-config";
-import { type Dto } from "../api/client";
-import type { StorageCtx } from "./storage.ctx";
-import { v4 } from "uuid";
+import { PrimitiveState } from '../utils/PrimitiveState';
+import { ApiCaller } from '../api/api-caller';
+import { type WidgetConfig } from '../types/widget-config';
+import { type Dto } from '../api/client';
+import type { StorageCtx } from './storage.ctx';
+import { v4 } from 'uuid';
 
 type ContactState = {
   contact: {
@@ -107,13 +107,13 @@ export class ContactCtx {
      */
     await this.createUnverifiedContact({
       email: this.config.user?.data?.email,
-      non_verified_name: this.config.user?.data?.name || "Anonymous",
+      non_verified_name: this.config.user?.data?.name || 'Anonymous',
       non_verified_custom_data: this.config.user?.data?.customData,
     });
   };
 
   createUnverifiedContact = async (
-    payload: Dto["CreateUnverifiedContactDto"],
+    payload: Dto['CreateUnverifiedContactDto'],
     extraCollectedData?: Record<string, string>,
   ): Promise<void> => {
     this.state.setPartial({ extraCollectedData });

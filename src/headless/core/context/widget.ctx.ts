@@ -1,12 +1,12 @@
-import { ApiCaller } from "../api/api-caller";
-import type { ExternalStorage } from "../types/external-storage";
-import type { WidgetConfig } from "../types/widget-config";
-import { ActiveSessionPollingCtx } from "./active-session-polling.ctx";
-import { ContactCtx } from "./contact.ctx";
-import { MessageCtx } from "./message.ctx";
-import { RouterCtx } from "./router.ctx";
-import { SessionCtx } from "./session.ctx";
-import { StorageCtx } from "./storage.ctx";
+import { ApiCaller } from '../api/api-caller';
+import type { ExternalStorage } from '../types/external-storage';
+import type { WidgetConfig } from '../types/widget-config';
+import { ActiveSessionPollingCtx } from './active-session-polling.ctx';
+import { ContactCtx } from './contact.ctx';
+import { MessageCtx } from './message.ctx';
+import { RouterCtx } from './router.ctx';
+import { SessionCtx } from './session.ctx';
+import { StorageCtx } from './storage.ctx';
 
 export class WidgetCtx {
   public config: WidgetConfig;
@@ -27,10 +27,13 @@ export class WidgetCtx {
   private constructor({
     config,
     storage,
-  }: { config: WidgetConfig; storage?: ExternalStorage }) {
+  }: {
+    config: WidgetConfig;
+    storage?: ExternalStorage;
+  }) {
     if (!WidgetCtx.pollingIntervalsSeconds) {
       throw Error(
-        "Widget polling values are not defined, did you call WidgetCtx.initialize()",
+        'Widget polling values are not defined, did you call WidgetCtx.initialize()',
       );
     }
 
@@ -77,7 +80,10 @@ export class WidgetCtx {
   static initialize = async ({
     config,
     storage,
-  }: { config: WidgetConfig; storage?: ExternalStorage }) => {
+  }: {
+    config: WidgetConfig;
+    storage?: ExternalStorage;
+  }) => {
     const externalConfig = await new ApiCaller({
       config,
     }).getExternalWidgetConfig();

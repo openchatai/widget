@@ -1,7 +1,7 @@
-import React from "react";
-import { Avatar, AvatarFallback } from "../lib/avatar";
-import { motion, AnimatePresence } from "framer-motion";
-import { MotionDiv } from "../lib/MotionDiv";
+import React from 'react';
+import { Avatar, AvatarFallback } from '../lib/avatar';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MotionDiv } from '../lib/MotionDiv';
 
 export function BotLoadingComponent() {
   return (

@@ -1,4 +1,4 @@
-import { Poller } from "../../utils/Poller";
+import { Poller } from '../../utils/Poller';
 
 suite(Poller.name, () => {
   beforeEach(() => {
@@ -9,7 +9,7 @@ suite(Poller.name, () => {
     vi.useRealTimers();
   });
 
-  it("should fire the callback instantly the first time", async () => {
+  it('should fire the callback instantly the first time', async () => {
     const poller = new Poller();
     const cb = vi.fn();
     poller.startPolling(cb, 1000);
@@ -19,7 +19,7 @@ suite(Poller.name, () => {
     poller.reset();
   });
 
-  it("should poll and respect the interval", async () => {
+  it('should poll and respect the interval', async () => {
     const INTERVAL = 1000;
     const poller = new Poller();
     const cb = vi.fn();
@@ -36,7 +36,7 @@ suite(Poller.name, () => {
     poller.reset();
   });
 
-  it("should stop polling if reset", async () => {
+  it('should stop polling if reset', async () => {
     const INTERVAL = 1000;
     const poller = new Poller();
     const cb = vi.fn();

@@ -1,10 +1,10 @@
-import { arLocale } from "./ar.locale";
-import { deLocale } from "./de.locale";
-import { enLocale } from "./en.locale";
-import { frLocale } from "./fr.locale";
-import { nlLocale } from "./nl.locale";
-import { ptLocale } from "./pt.locale";
-import type { TranslationKeysU } from "./translation.types";
+import { arLocale } from './ar.locale';
+import { deLocale } from './de.locale';
+import { enLocale } from './en.locale';
+import { frLocale } from './fr.locale';
+import { nlLocale } from './nl.locale';
+import { ptLocale } from './pt.locale';
+import type { TranslationKeysU } from './translation.types';
 
 const locales = {
   en: enLocale,
@@ -26,5 +26,5 @@ export const isSupportedLocale = (
 
 export function getTranslation(key: TranslationKeysU, lang: Locale): string {
   const locale = locales[lang];
-  return locale ? locale[key] || "" : "";
+  return locale ? locale[key] || '' : '';
 }

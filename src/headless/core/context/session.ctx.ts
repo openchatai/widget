@@ -1,8 +1,8 @@
-import type { ApiCaller } from "../api/api-caller";
-import type { SessionDto } from "../types/schemas";
-import { Poller } from "../utils/Poller";
-import { PrimitiveState } from "../utils/PrimitiveState";
-import type { ContactCtx } from "./contact.ctx";
+import type { ApiCaller } from '../api/api-caller';
+import type { SessionDto } from '../types/schemas';
+import { Poller } from '../utils/Poller';
+import { PrimitiveState } from '../utils/PrimitiveState';
+import type { ContactCtx } from './contact.ctx';
 
 type SessionState = {
   /**
@@ -114,7 +114,7 @@ export class SessionCtx {
       return session;
     }
 
-    console.error("Failed to create session:", error);
+    console.error('Failed to create session:', error);
     return null;
   };
 
@@ -159,7 +159,7 @@ export class SessionCtx {
       (s, i, self) => i === self.findIndex((_s) => s.id === _s.id),
     );
     this.sessionsState.setPartial({ data: sessions });
-  }
+  };
 
   refreshSessions = async () => {
     // Get the first page only (pass no `cursor`)

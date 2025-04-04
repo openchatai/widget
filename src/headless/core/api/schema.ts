@@ -4,14 +4,14 @@
  */
 
 export interface paths {
-  "/backend/widget/v2/config": {
+  '/backend/widget/v2/config': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: operations["getWidgetConfig"];
+    get: operations['getWidgetConfig'];
     put?: never;
     post?: never;
     delete?: never;
@@ -20,14 +20,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/prelude": {
+  '/backend/widget/v2/prelude': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: operations["widgetPrelude"];
+    get: operations['widgetPrelude'];
     put?: never;
     post?: never;
     delete?: never;
@@ -36,14 +36,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/sessions": {
+  '/backend/widget/v2/sessions': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: operations["getSessions"];
+    get: operations['getSessions'];
     put?: never;
     post?: never;
     delete?: never;
@@ -52,14 +52,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/session/history/{sessionId}": {
+  '/backend/widget/v2/session/history/{sessionId}': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: operations["getSessionHistory"];
+    get: operations['getSessionHistory'];
     put?: never;
     post?: never;
     delete?: never;
@@ -68,14 +68,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/poll/{sessionId}": {
+  '/backend/widget/v2/poll/{sessionId}': {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: operations["pollSessionAndHistory"];
+    get: operations['pollSessionAndHistory'];
     put?: never;
     post?: never;
     delete?: never;
@@ -84,7 +84,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/create-session": {
+  '/backend/widget/v2/create-session': {
     parameters: {
       query?: never;
       header?: never;
@@ -93,14 +93,14 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["createChatSession"];
+    post: operations['createChatSession'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/chat/send": {
+  '/backend/widget/v2/chat/send': {
     parameters: {
       query?: never;
       header?: never;
@@ -109,14 +109,14 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["chatSend"];
+    post: operations['chatSend'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/upload": {
+  '/backend/widget/v2/upload': {
     parameters: {
       query?: never;
       header?: never;
@@ -125,14 +125,14 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["uploadFile"];
+    post: operations['uploadFile'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/chat/vote": {
+  '/backend/widget/v2/chat/vote': {
     parameters: {
       query?: never;
       header?: never;
@@ -141,14 +141,14 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["voteMessage"];
+    post: operations['voteMessage'];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/backend/widget/v2/contact/create-unverified": {
+  '/backend/widget/v2/contact/create-unverified': {
     parameters: {
       query?: never;
       header?: never;
@@ -157,7 +157,7 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    post: operations["createUnverifiedContact"];
+    post: operations['createUnverifiedContact'];
     delete?: never;
     options?: never;
     head?: never;
@@ -188,10 +188,10 @@ export interface components {
       | {
           /** @enum {boolean} */
           success: true;
-          code?: string | "session_assigned_to_human_agent";
+          code?: string | 'session_assigned_to_human_agent';
           autopilotResponse?: {
             /** @enum {string} */
-            type: "text";
+            type: 'text';
             value: {
               error: boolean;
               content: string;
@@ -201,10 +201,10 @@ export interface components {
           };
           uiResponse?: {
             /** @enum {string} */
-            type: "ui";
+            type: 'ui';
             value: {
               /** @enum {string} */
-              type: "ui_component";
+              type: 'ui_component';
               request_response?: unknown;
               name: string;
               content?: string;
@@ -232,7 +232,7 @@ export interface components {
         isOpened: boolean;
         assignee: {
           /** @enum {string} */
-          kind: "human" | "ai" | "none" | "unknown";
+          kind: 'human' | 'ai' | 'none' | 'unknown';
           name: string | null;
           avatarUrl: string | null;
         };
@@ -285,26 +285,26 @@ export interface components {
       publicId: string;
       /** @enum {string} */
       type:
-        | "message"
-        | "handoff"
-        | "handoff_to_zendesk"
-        | "agent_message"
-        | "agent_joined"
-        | "agent_comment"
-        | "agent_took_session_from_ai"
-        | "agent_reopened_session"
-        | "ai_decided_to_resolve_the_issue"
-        | "email_draft_message"
-        | "followup"
-        | "ai_assumed_the_session_resolved"
-        | "user_confirmed_the_session_resolved"
-        | "system_message";
+        | 'message'
+        | 'handoff'
+        | 'handoff_to_zendesk'
+        | 'agent_message'
+        | 'agent_joined'
+        | 'agent_comment'
+        | 'agent_took_session_from_ai'
+        | 'agent_reopened_session'
+        | 'ai_decided_to_resolve_the_issue'
+        | 'email_draft_message'
+        | 'followup'
+        | 'ai_assumed_the_session_resolved'
+        | 'user_confirmed_the_session_resolved'
+        | 'system_message';
       content: {
         text?: string | null;
       };
       sender: {
         /** @enum {string} */
-        kind: "user" | "agent" | "ai" | "none" | "unknown";
+        kind: 'user' | 'agent' | 'ai' | 'none' | 'unknown';
         name?: string | null;
         avatar?: string | null;
       };
@@ -381,7 +381,7 @@ export interface components {
         isOpened: boolean;
         assignee: {
           /** @enum {string} */
-          kind: "human" | "ai" | "none" | "unknown";
+          kind: 'human' | 'ai' | 'none' | 'unknown';
           name: string | null;
           avatarUrl: string | null;
         };
@@ -393,26 +393,26 @@ export interface components {
         publicId: string;
         /** @enum {string} */
         type:
-          | "message"
-          | "handoff"
-          | "handoff_to_zendesk"
-          | "agent_message"
-          | "agent_joined"
-          | "agent_comment"
-          | "agent_took_session_from_ai"
-          | "agent_reopened_session"
-          | "ai_decided_to_resolve_the_issue"
-          | "email_draft_message"
-          | "followup"
-          | "ai_assumed_the_session_resolved"
-          | "user_confirmed_the_session_resolved"
-          | "system_message";
+          | 'message'
+          | 'handoff'
+          | 'handoff_to_zendesk'
+          | 'agent_message'
+          | 'agent_joined'
+          | 'agent_comment'
+          | 'agent_took_session_from_ai'
+          | 'agent_reopened_session'
+          | 'ai_decided_to_resolve_the_issue'
+          | 'email_draft_message'
+          | 'followup'
+          | 'ai_assumed_the_session_resolved'
+          | 'user_confirmed_the_session_resolved'
+          | 'system_message';
         content: {
           text?: string | null;
         };
         sender: {
           /** @enum {string} */
-          kind: "user" | "agent" | "ai" | "none" | "unknown";
+          kind: 'user' | 'agent' | 'ai' | 'none' | 'unknown';
           name?: string | null;
           avatar?: string | null;
         };
@@ -445,7 +445,7 @@ export interface components {
       isOpened: boolean;
       assignee: {
         /** @enum {string} */
-        kind: "human" | "ai" | "none" | "unknown";
+        kind: 'human' | 'ai' | 'none' | 'unknown';
         name: string | null;
         avatarUrl: string | null;
       };
@@ -455,7 +455,7 @@ export interface components {
     };
     WidgetVoteDto: {
       /** @enum {string} */
-      action: "upvote" | "downvote";
+      action: 'upvote' | 'downvote';
       sessionId: string;
       messagePublicId: string;
     };
@@ -481,7 +481,7 @@ export interface operations {
     parameters: {
       query?: never;
       header: {
-        "X-Bot-Token": string;
+        'X-Bot-Token': string;
       };
       path?: never;
       cookie?: never;
@@ -493,7 +493,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetConfigDto"];
+          'application/json': components['schemas']['WidgetConfigDto'];
         };
       };
       /** @description Internal Server Error */
@@ -502,7 +502,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -511,7 +511,7 @@ export interface operations {
     parameters: {
       query?: never;
       header: {
-        "X-Bot-Token": string;
+        'X-Bot-Token': string;
       };
       path?: never;
       cookie?: never;
@@ -523,7 +523,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetPreludeDto"];
+          'application/json': components['schemas']['WidgetPreludeDto'];
         };
       };
       /** @description Internal Server Error */
@@ -532,7 +532,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -556,7 +556,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["PaginatedWidgetSessionsDto"];
+          'application/json': components['schemas']['PaginatedWidgetSessionsDto'];
         };
       };
       /** @description Internal Server Error */
@@ -565,7 +565,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -589,7 +589,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetHistoryDto"][];
+          'application/json': components['schemas']['WidgetHistoryDto'][];
         };
       };
       /** @description Internal Server Error */
@@ -598,7 +598,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -622,7 +622,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetSessionAndHistoryDto"];
+          'application/json': components['schemas']['WidgetSessionAndHistoryDto'];
         };
       };
       /** @description Internal Server Error */
@@ -631,7 +631,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -645,7 +645,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateWidgetSessionDto"];
+        'application/json': components['schemas']['CreateWidgetSessionDto'];
       };
     };
     responses: {
@@ -654,7 +654,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetSessionDto"];
+          'application/json': components['schemas']['WidgetSessionDto'];
         };
       };
       /** @description Internal Server Error */
@@ -663,7 +663,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -677,7 +677,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["SendWidgetMessageDto"];
+        'application/json': components['schemas']['SendWidgetMessageDto'];
       };
     };
     responses: {
@@ -686,7 +686,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["HandleContactMessageOutputDto"];
+          'application/json': components['schemas']['HandleContactMessageOutputDto'];
         };
       };
       /** @description Internal Server Error */
@@ -695,7 +695,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -710,7 +710,7 @@ export interface operations {
     /** @description The file to upload */
     requestBody: {
       content: {
-        "multipart/form-data": components["schemas"]["FileUploadDto"];
+        'multipart/form-data': components['schemas']['FileUploadDto'];
       };
     };
     responses: {
@@ -719,7 +719,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UploadWidgetFileResponseDto"];
+          'application/json': components['schemas']['UploadWidgetFileResponseDto'];
         };
       };
       /** @description Internal Server Error */
@@ -728,7 +728,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -742,7 +742,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["WidgetVoteDto"];
+        'application/json': components['schemas']['WidgetVoteDto'];
       };
     };
     responses: {
@@ -751,7 +751,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetVoteResponseDto"];
+          'application/json': components['schemas']['WidgetVoteResponseDto'];
         };
       };
       /** @description Internal Server Error */
@@ -760,7 +760,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };
@@ -769,14 +769,14 @@ export interface operations {
     parameters: {
       query?: never;
       header: {
-        "x-bot-token": string;
+        'x-bot-token': string;
       };
       path?: never;
       cookie?: never;
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["CreateUnverifiedContactDto"];
+        'application/json': components['schemas']['CreateUnverifiedContactDto'];
       };
     };
     responses: {
@@ -785,7 +785,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["WidgetContactTokenResponseDto"];
+          'application/json': components['schemas']['WidgetContactTokenResponseDto'];
         };
       };
       /** @description Internal Server Error */
@@ -794,7 +794,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ErrorDto"];
+          'application/json': components['schemas']['ErrorDto'];
         };
       };
     };

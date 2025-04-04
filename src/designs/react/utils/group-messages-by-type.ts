@@ -3,7 +3,7 @@ import type {
   BotMessageType,
   MessageType,
   UserMessageType,
-} from "../../../headless/core";
+} from '../../../headless/core';
 
 export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
   const result: MessageType[][] = [];
@@ -17,8 +17,8 @@ export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
     }
     // Start a new group if the agent changes
     if (
-      currentGroup[0]?.type === "FROM_AGENT" &&
-      message.type === "FROM_AGENT" &&
+      currentGroup[0]?.type === 'FROM_AGENT' &&
+      message.type === 'FROM_AGENT' &&
       message.agent?.id !== currentGroup[0].agent?.id
     ) {
       currentGroup = [];
@@ -33,17 +33,17 @@ export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
 export function isUserMessageGroup(
   messages: MessageType[],
 ): messages is UserMessageType[] {
-  return messages?.[0]?.type === "FROM_USER";
+  return messages?.[0]?.type === 'FROM_USER';
 }
 
 export function isBotMessageGroup(
   messages: MessageType[],
 ): messages is BotMessageType[] {
-  return messages?.[0]?.type === "FROM_BOT";
+  return messages?.[0]?.type === 'FROM_BOT';
 }
 
 export function isAgentMessageGroup(
   messages: MessageType[],
 ): messages is AgentMessageType[] {
-  return messages?.[0]?.type === "FROM_AGENT";
+  return messages?.[0]?.type === 'FROM_AGENT';
 }

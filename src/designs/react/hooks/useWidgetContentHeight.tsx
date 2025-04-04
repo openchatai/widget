@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
-const SELECTOR = "[data-opencx-widget-content-root]" as const;
+const SELECTOR = '[data-opencx-widget-content-root]' as const;
 
 export function useWidgetContentHeight({
   fallbackHeight,
@@ -27,7 +27,7 @@ export function useWidgetContentHeight({
         animationFrame = requestAnimationFrame(() => {
           const height = Math.max(observedElement.offsetHeight, fallbackHeight);
           contentRoot.style.setProperty(
-            "--opencx-widget-height",
+            '--opencx-widget-height',
             `${height.toFixed(1)}px`,
           );
         });

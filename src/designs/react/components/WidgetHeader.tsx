@@ -1,28 +1,24 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   ChevronLeftIcon,
   EllipsisVerticalIcon,
   MessageCirclePlusIcon,
-} from "lucide-react";
-import React, { useState } from "react";
-import { useLocale } from "../hooks/useLocale";
-import {
-  usePreludeData,
-  useWidget,
-  useWidgetRouter,
-} from "../../../headless/react";
-import { Button } from "./lib/button";
+} from 'lucide-react';
+import React, { useState } from 'react';
+import { useLocale } from '../hooks/useLocale';
+import { usePreludeData, useWidgetRouter } from '../../../headless/react';
+import { Button } from './lib/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./lib/dropdown-menu";
-import { Skeleton } from "./lib/skeleton";
-import { useDocumentDir } from "../../../headless/react/hooks/useDocumentDir";
-import { MotionDiv } from "./lib/MotionDiv";
-import { cn } from "./lib/utils/cn";
+} from './lib/dropdown-menu';
+import { Skeleton } from './lib/skeleton';
+import { useDocumentDir } from '../../../headless/react/hooks/useDocumentDir';
+import { MotionDiv } from './lib/MotionDiv';
+import { cn } from './lib/utils/cn';
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -51,7 +47,7 @@ function OptionsMenu() {
             >
               <MessageCirclePlusIcon />
             </motion.div>
-            {locale.get("new-conversation")}
+            {locale.get('new-conversation')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>
@@ -73,7 +69,7 @@ export function WidgetHeader() {
         dir={direction}
         className="flex items-center rtl:flex-row-reverse gap-2"
       >
-        {screen === "chat" && (
+        {screen === 'chat' && (
           <Button
             variant="ghost"
             size="fit"
@@ -84,7 +80,7 @@ export function WidgetHeader() {
             <ChevronLeftIcon className="size-4" />
           </Button>
         )}
-        <div className={cn("flex-1", screen === "sessions" && "pl-2")}>
+        <div className={cn('flex-1', screen === 'sessions' && 'pl-2')}>
           <AnimatePresence mode="wait">
             {isLoading || !data?.data?.organizationName ? (
               <MotionDiv key="skeleton" snapExit>

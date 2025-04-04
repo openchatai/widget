@@ -12,7 +12,7 @@ on:
   #   branches:
   #     - main
   #     - master
-  workflow_dispatch:  # Only manual triggers allowed for now
+  workflow_dispatch: # Only manual triggers allowed for now
 
 jobs:
   test:
@@ -62,4 +62,4 @@ jobs:
           path: |
             coverage/
             test-results/
-          retention-days: 30 
+          retention-days: 30

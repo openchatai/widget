@@ -1,4 +1,4 @@
-import { PrimitiveState } from "./PrimitiveState";
+import { PrimitiveState } from './PrimitiveState';
 
 export type PollingState = {
   isPolling: boolean;
@@ -13,7 +13,7 @@ export class Poller {
   private abortController = new AbortController();
 
   reset = () => {
-    this.abortController.abort("Resetting poller");
+    this.abortController.abort('Resetting poller');
     this.stopPolling?.();
     this.stopPolling = null;
   };
@@ -39,7 +39,7 @@ export class Poller {
           // If aborted, just return and do not schedule the nest poll
           return;
         }
-        console.error("Failed to poll:", error);
+        console.error('Failed to poll:', error);
         this.state.setPartial({ isError: true });
       } finally {
         this.state.setPartial({ isPolling: false });
@@ -47,7 +47,7 @@ export class Poller {
 
       // Another check to stop scheduling polls in case someone removes the early return in the catch above
       if (this.abortController.signal.aborted) {
-        console.log("Poller aborted, not scheduling anymore");
+        console.log('Poller aborted, not scheduling anymore');
       } else {
         timeouts.push(setTimeout(poll, intervalMs));
       }

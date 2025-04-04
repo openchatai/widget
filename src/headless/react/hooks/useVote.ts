@@ -1,5 +1,5 @@
-import useAsyncFn from "react-use/lib/useAsyncFn";
-import { useWidget } from "../WidgetProvider";
+import useAsyncFn from 'react-use/lib/useAsyncFn';
+import { useWidget } from '../WidgetProvider';
 
 /**
  * @param id
@@ -11,10 +11,10 @@ export function useVote(id: string, sessionId: string, onSuccess?: () => void) {
     widgetCtx: { api },
   } = useWidget();
   return useAsyncFn(
-    async (action: "up" | "down") => {
+    async (action: 'up' | 'down') => {
       return api
         .vote({
-          action: action === "up" ? "upvote" : "downvote",
+          action: action === 'up' ? 'upvote' : 'downvote',
           messagePublicId: id,
           sessionId,
         })
@@ -40,7 +40,7 @@ export function useUpvote(
   return useAsyncFn(
     async () =>
       api
-        .vote({ action: "upvote", messagePublicId: id, sessionId })
+        .vote({ action: 'upvote', messagePublicId: id, sessionId })
         .then(onSuccess),
     [api, id, sessionId, onSuccess],
   );
@@ -62,7 +62,7 @@ export function useDownvote(
   return useAsyncFn(
     async () =>
       api
-        .vote({ action: "downvote", messagePublicId: id, sessionId })
+        .vote({ action: 'downvote', messagePublicId: id, sessionId })
         .then(onSuccess),
     [api, id, sessionId, onSuccess],
   );

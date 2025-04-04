@@ -3,9 +3,9 @@ import React, {
   forwardRef,
   type ReactElement,
   useState,
-} from "react";
-import { memo } from "react";
-import { cn } from "./utils/cn";
+} from 'react';
+import { memo } from 'react';
+import { cn } from './utils/cn';
 /**
  * The maximum number of pixels the element can move in the x and y directions
  *
@@ -17,10 +17,10 @@ export const WOBBLE_MAX_MOVEMENT_PIXELS = {
 };
 
 const scaleVariants = {
-  "1": "scale-[1]",
-  "1.01": "scale-[1.01]",
-  "1.02": "scale-[1.02]",
-  "1.1": "scale-[1.1]",
+  '1': 'scale-[1]',
+  '1.01': 'scale-[1.01]',
+  '1.02': 'scale-[1.02]',
+  '1.1': 'scale-[1.1]',
 };
 
 export interface WobbleProps {
@@ -32,14 +32,14 @@ export interface WobbleProps {
 
 const Wobble = memo(
   forwardRef<HTMLElement, WobbleProps>(
-    ({ children, className, scale = "1.02", off = false }, ref) => {
+    ({ children, className, scale = '1.02', off = false }, ref) => {
       const [isHovering, setIsHovering] = useState(false);
       const [movement, setMovement] = useState({ x: 0, y: 0 });
 
       if (off) return children;
 
       const hasTranslateClass = /translate/.test(
-        children.props.className || "",
+        children.props.className || '',
       );
       if (hasTranslateClass) return children;
 
@@ -83,8 +83,8 @@ const Wobble = memo(
       };
 
       const childStyles = {
-        "--opencx-wobble-x": isHovering ? `${movement.x}px` : "0px",
-        "--opencx-wobble-y": isHovering ? `${movement.y}px` : "0px",
+        '--opencx-wobble-x': isHovering ? `${movement.x}px` : '0px',
+        '--opencx-wobble-y': isHovering ? `${movement.y}px` : '0px',
       } as React.CSSProperties;
 
       return cloneElement(children, {
@@ -97,18 +97,18 @@ const Wobble = memo(
           ...children.props.style,
         },
         className: cn(
-          "translate-x-[var(--opencx-wobble-x)]",
-          "translate-y-[var(--opencx-wobble-y)]",
+          'translate-x-[var(--opencx-wobble-x)]',
+          'translate-y-[var(--opencx-wobble-y)]',
           `hover:${scaleVariants[scale]}`,
           className,
           children.props.className,
-          "transition-all ease-out",
+          'transition-all ease-out',
         ),
       });
     },
   ),
 );
 
-Wobble.displayName = "Wobble";
+Wobble.displayName = 'Wobble';
 
 export { Wobble };

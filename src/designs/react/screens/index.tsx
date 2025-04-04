@@ -1,11 +1,11 @@
-import { AnimatePresence } from "framer-motion";
-import React from "react";
-import { ChatScreen } from "./chat";
-import { WelcomeScreen } from "./welcome";
-import { usePreludeData, useWidgetRouter } from "../../../headless/react";
-import { MotionDiv } from "../components/lib/MotionDiv";
-import { SessionsScreen } from "./sessions";
-import { WidgetPortal } from "../components/lib/widget-portal";
+import { AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { ChatScreen } from './chat';
+import { WelcomeScreen } from './welcome';
+import { usePreludeData, useWidgetRouter } from '../../../headless/react';
+import { MotionDiv } from '../components/lib/MotionDiv';
+import { SessionsScreen } from './sessions';
+import { WidgetPortal } from '../components/lib/widget-portal';
 
 export function RootScreen() {
   // Call the prelude ASAP so it's cached for all screens
@@ -21,7 +21,7 @@ export function RootScreen() {
       <AnimatePresence mode="wait">
         {(() => {
           switch (screen) {
-            case "welcome":
+            case 'welcome':
               return (
                 <MotionDiv
                   key={screen}
@@ -33,7 +33,7 @@ export function RootScreen() {
                 </MotionDiv>
               );
 
-            case "sessions":
+            case 'sessions':
               return (
                 <MotionDiv
                   key={screen}
@@ -45,7 +45,7 @@ export function RootScreen() {
                 </MotionDiv>
               );
 
-            case "chat":
+            case 'chat':
               return (
                 <MotionDiv
                   key={screen}

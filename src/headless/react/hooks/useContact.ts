@@ -1,5 +1,5 @@
-import { useWidget } from "../WidgetProvider";
-import { usePrimitiveState } from "./usePrimitiveState";
+import { useWidget } from '../WidgetProvider';
+import { usePrimitiveState } from './usePrimitiveState';
 
 export function useContact() {
   const { widgetCtx } = useWidget();

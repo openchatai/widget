@@ -1,11 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
-import { useWidget } from "../WidgetProvider";
-import { v4 } from "uuid";
+import { useEffect, useMemo, useState } from 'react';
+import { useWidget } from '../WidgetProvider';
+import { v4 } from 'uuid';
 
 const uploadAbortControllers: Map<string, AbortController> = new Map();
 
 interface FileWithProgress {
-  status: "pending" | "uploading" | "success" | "error";
+  status: 'pending' | 'uploading' | 'success' | 'error';
   id: string;
   file: File;
   fileUrl?: string;
@@ -22,7 +22,7 @@ function useUploadFiles() {
     const newFiles = files.map((file) => ({
       file,
       id: v4(),
-      status: "pending" as const,
+      status: 'pending' as const,
       progress: 0,
     }));
 
@@ -47,7 +47,7 @@ function useUploadFiles() {
     try {
       setFiles((prev) =>
         prev.map((f) =>
-          f.id === fileItem.id ? { ...f, status: "uploading", progress: 0 } : f,
+          f.id === fileItem.id ? { ...f, status: 'uploading', progress: 0 } : f,
         ),
       );
 
@@ -60,15 +60,15 @@ function useUploadFiles() {
       });
 
       updateFileById(fileItem.id, {
-        status: "success",
+        status: 'success',
         fileUrl: response.fileUrl,
         progress: 100,
       });
     } catch (error) {
       if (!controller.signal.aborted) {
         updateFileById(fileItem.id, {
-          status: "error",
-          error: error instanceof Error ? error.message : "Upload failed",
+          status: 'error',
+          error: error instanceof Error ? error.message : 'Upload failed',
           progress: 0,
         });
       }
@@ -87,7 +87,7 @@ function useUploadFiles() {
   };
 
   const successFiles = useMemo(() => {
-    return files.filter((f) => f.status === "success" && f.fileUrl);
+    return files.filter((f) => f.status === 'success' && f.fileUrl);
   }, [files]);
 
   function emptyTheFiles() {
@@ -113,8 +113,8 @@ function useUploadFiles() {
     getUploadProgress: (id: string) =>
       files.find((f) => f.id === id)?.progress ?? 0,
     getUploadStatus: (id: string) => files.find((f) => f.id === id)?.status,
-    hasErrors: files.some((f) => f.status === "error"),
-    isUploading: files.some((f) => f.status === "uploading"),
+    hasErrors: files.some((f) => f.status === 'error'),
+    isUploading: files.some((f) => f.status === 'uploading'),
   };
 }
 

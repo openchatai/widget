@@ -1,6 +1,6 @@
-import { vi } from "vitest";
-import type { ApiCaller } from "../api/api-caller";
-import { genUuid } from "../utils/uuid";
+import { vi } from 'vitest';
+import type { ApiCaller } from '../api/api-caller';
+import { genUuid } from '../utils/uuid';
 
 export const TestUtils = {
   sleep: (ms: number) => new Promise((resolve) => setTimeout(resolve, ms)),
@@ -13,13 +13,13 @@ export const TestUtils = {
             response: new Response(),
             data: {
               id: genUuid(),
-              assignee: { kind: "ai", name: null, avatarUrl: null },
-              channel: "",
+              assignee: { kind: 'ai', name: null, avatarUrl: null },
+              channel: '',
               createdAt: new Date().toISOString(),
               isHandedOff: false,
               isOpened: true,
               isVerified: false,
-              lastMessage: "",
+              lastMessage: '',
               updatedAt: new Date().toISOString(),
               ...returnValue?.data,
             },
@@ -31,7 +31,7 @@ export const TestUtils = {
           .mockResolvedValue({
             response: new Response(),
             data: {
-              token: "some-token",
+              token: 'some-token',
               ...returnValue?.data,
             },
           });
@@ -54,18 +54,18 @@ export const TestUtils = {
                 ? {
                     success: false,
                     error: {
-                      code: "some-code",
-                      message: "some-message",
+                      code: 'some-code',
+                      message: 'some-message',
                       ...returnValue?.data?.error,
                     },
                   }
                 : {
                     success: true,
                     autopilotResponse: {
-                      type: "text",
+                      type: 'text',
                       value: {
                         error: false,
-                        content: "some-reply",
+                        content: 'some-reply',
                       },
                       id: genUuid(),
                       mightSolveUserIssue: false,
@@ -81,8 +81,8 @@ export const TestUtils = {
         target.prototype.uploadFile = vi
           .fn(target.prototype.uploadFile)
           .mockResolvedValue({
-            fileName: "some-file-name",
-            fileUrl: "some-file-url",
+            fileName: 'some-file-name',
+            fileUrl: 'some-file-url',
           });
       },
       vote(target, returnValue) {
@@ -105,7 +105,7 @@ export const TestUtils = {
               initialQuestions: [],
               officeHours: {},
               officeHoursTimezone: null,
-              organizationName: "some-org-name",
+              organizationName: 'some-org-name',
               ...returnValue?.data,
             },
           });
@@ -130,13 +130,13 @@ export const TestUtils = {
             data: {
               session: {
                 id: genUuid(),
-                assignee: { kind: "ai", name: null, avatarUrl: null },
-                channel: "",
+                assignee: { kind: 'ai', name: null, avatarUrl: null },
+                channel: '',
                 createdAt: new Date().toISOString(),
                 isHandedOff: false,
                 isOpened: true,
                 isVerified: false,
-                lastMessage: "",
+                lastMessage: '',
                 updatedAt: new Date().toISOString(),
                 ...returnValue?.data?.session,
               },

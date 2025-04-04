@@ -1,5 +1,5 @@
-import React from "react";
-import type { WidgetComponentProps } from "../../../../headless/react";
+import React from 'react';
+import type { WidgetComponentProps } from '../../../../headless/react';
 
 export function HandoffComponent({ data }: WidgetComponentProps) {
   return (

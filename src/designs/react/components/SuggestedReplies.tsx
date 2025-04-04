@@ -1,14 +1,14 @@
-import React from "react";
-import { Button } from "./lib/button";
-import { useLocale } from "../hooks/useLocale";
-import { useMessages } from "../../../headless/react";
+import React from 'react';
+import { Button } from './lib/button';
+import { useLocale } from '../hooks/useLocale';
+import { useMessages } from '../../../headless/react';
 
 export function SuggestedReplies() {
   const { sendMessage } = useMessages();
   const locale = useLocale();
   const options = [
-    locale.get("i-need-more-help"),
-    locale.get("this-was-helpful"),
+    locale.get('i-need-more-help'),
+    locale.get('this-was-helpful'),
   ];
 
   const handleSend = (option: string) => {

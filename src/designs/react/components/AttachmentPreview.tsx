@@ -1,15 +1,13 @@
-import React from "react";
-import type { MessageAttachmentType } from "../../../headless/core";
+import React from 'react';
+import type { MessageAttachmentType } from '../../../headless/core';
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./lib/dialog";
-import { Wobble } from "./lib/wobble";
-import { cn } from "./lib/utils/cn";
+} from './lib/dialog';
+import { Wobble } from './lib/wobble';
+import { cn } from './lib/utils/cn';
 
 type Props = {
   attachment: MessageAttachmentType;
@@ -18,9 +16,9 @@ type Props = {
 export function AttachmentPreview({ attachment }: Props) {
   const { name, size, type, url } = attachment;
 
-  const isImage = type.startsWith("image/");
-  const isVideo = type.startsWith("video/");
-  const isAudio = type.startsWith("audio/");
+  const isImage = type.startsWith('image/');
+  const isVideo = type.startsWith('video/');
+  const isAudio = type.startsWith('audio/');
 
   if (isAudio) {
     return (
@@ -58,8 +56,8 @@ export function AttachmentPreview({ attachment }: Props) {
               target="_blank"
               rel="noopener noreferrer"
               className={cn(
-                "text-xs text-blue-500 line-clamp-2 underline hover:text-blue-600",
-                "break-words [word-break:break-word]", // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
+                'text-xs text-blue-500 line-clamp-2 underline hover:text-blue-600',
+                'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
               )}
             >
               {name}

@@ -1,5 +1,5 @@
-import type { WidgetComponentKey } from "../core";
-import type { WidgetComponentType } from "./types/components";
+import type { WidgetComponentKey } from '../core';
+import type { WidgetComponentType } from './types/components';
 
 export class ComponentRegistry {
   components: WidgetComponentType[] = [];
@@ -12,10 +12,10 @@ export class ComponentRegistry {
     }
 
     if (this.components.length === 0) {
-      throw new Error("No components registered");
+      throw new Error('No components registered');
     }
-    if (!this.get("fallback")) {
-      throw new Error("No fallback component registered");
+    if (!this.get('fallback')) {
+      throw new Error('No fallback component registered');
     }
   }
 

@@ -1,5 +1,5 @@
-import React from "react";
-import type { WidgetComponentProps } from "../../../../headless/react";
+import React from 'react';
+import type { WidgetComponentProps } from '../../../../headless/react';
 
 /**
  * The Basic Fallback component (Rendered when Debug is True and the component key is not found)

@@ -1,12 +1,13 @@
-import React, { StrictMode, useEffect, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { Widget } from "./src/designs/react";
-import { HandoffComponent } from "./src/designs/react/components/custom-components/Handoff.component";
+import React from 'react';
+// import { useEffect, useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { Widget } from './src/designs/react';
+import { HandoffComponent } from './src/designs/react/components/custom-components/Handoff.component';
 
 // const apiUrl = "http://localhost:8080";
-const apiUrl = "https://api.open.cx";
+const apiUrl = 'https://api.open.cx';
 const token = import.meta.env.VITE_ORG_TOKEN;
-const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
+// const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
 
 function App() {
   // const [userToken, setUserToken] = useState("");
@@ -35,14 +36,14 @@ function App() {
   return (
     <div
       data-opencx-widget
-      style={{ width: "100vw", height: "100vh", backgroundColor: "beige" }}
+      style={{ width: '100vw', height: '100vh', backgroundColor: 'beige' }}
     >
       <Widget
-        components={[{ key: "handoff", component: HandoffComponent }]}
+        components={[{ key: 'handoff', component: HandoffComponent }]}
         options={{
           apiUrl,
           token,
-          initialMessages: ["Hi there, how can we help you?"],
+          initialMessages: ['Hi there, how can we help you?'],
           // theme: {
           //   primaryColor: "#639"
           // },
@@ -61,9 +62,9 @@ function App() {
           //   // },
           // },
           bot: {
-            name: "Oppy",
+            name: 'Oppy',
             avatar:
-              "https://framerusercontent.com/images/LKg2ybzxWutds9WSKpqGtaGw.jpg",
+              'https://framerusercontent.com/images/LKg2ybzxWutds9WSKpqGtaGw.jpg',
           },
         }}
       />
@@ -71,8 +72,8 @@ function App() {
   );
 }
 
-const rootElement = document.getElementById("root");
+const rootElement = document.getElementById('root');
 if (!rootElement) {
-  throw new Error("No root element found");
+  throw new Error('No root element found');
 }
 createRoot(rootElement).render(<App />);

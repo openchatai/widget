@@ -1,7 +1,7 @@
-import { vi } from "vitest";
-import { TestUtils } from "./test-utils";
+import { vi } from 'vitest';
+import { TestUtils } from './test-utils';
 
-vi.mock(import("../api/api-caller"), () => {
+vi.mock(import('../api/api-caller'), () => {
   const MockApiCaller = vi.fn();
 
   // Default mock return values for all methods

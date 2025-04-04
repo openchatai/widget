@@ -1,19 +1,19 @@
-import React, { type ComponentType, useEffect, useMemo, useRef } from "react";
+import React, { type ComponentType, useEffect, useMemo, useRef } from 'react';
 import {
   groupMessagesByType,
   isAgentMessageGroup,
   isBotMessageGroup,
   isUserMessageGroup,
-} from "../../utils/group-messages-by-type";
+} from '../../utils/group-messages-by-type';
 import {
   useConfig,
   useIsAwaitingBotReply,
   useMessages,
   useWidget,
-} from "../../../../headless/react";
-import { BotOrAgentMessage } from "../../components/BotOrAgentMessage";
-import { UserMessageGroup } from "../../components/UserMessageGroup";
-import { BotOrAgentMessageGroup } from "../../components/BotOrAgentMessageGroup";
+} from '../../../../headless/react';
+import { BotOrAgentMessage } from '../../components/BotOrAgentMessage';
+import { UserMessageGroup } from '../../components/UserMessageGroup';
+import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
 
 export function ChatMain() {
   const {
@@ -30,11 +30,11 @@ export function ChatMain() {
 
   const initialMessages =
     !config.initialMessages || config.initialMessages.length === 0
-      ? ["Hello, how can I help you?"]
+      ? ['Hello, how can I help you?']
       : config.initialMessages;
 
   const LoadingComponent = componentStore.getComponent(
-    "loading",
+    'loading',
   ) as ComponentType;
 
   /* ------------------------------------------------------ */

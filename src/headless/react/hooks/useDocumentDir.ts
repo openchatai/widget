@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import type { StringOrLiteral } from "../../core";
+import { useEffect, useState } from 'react';
+import type { StringOrLiteral } from '../../core';
 
 const useDocumentDir = () => {
-  const [dir, setDir] = useState<StringOrLiteral<"ltr" | "rtl">>("ltr");
+  const [dir, setDir] = useState<StringOrLiteral<'ltr' | 'rtl'>>('ltr');
 
   useEffect(() => {
     const updateDir = () => {
-      if (typeof document === "undefined") return;
+      if (typeof document === 'undefined') return;
       setDir(window.getComputedStyle(document.body).direction);
     };
 
@@ -19,20 +19,20 @@ const useDocumentDir = () => {
     // Observe both document and documentElement
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ["dir"],
+      attributeFilter: ['dir'],
     });
 
     observer.observe(document.body, {
       attributes: true,
-      attributeFilter: ["dir"],
+      attributeFilter: ['dir'],
     });
 
     // Add event listener for dynamic changes
-    window.addEventListener("languagechange", updateDir);
+    window.addEventListener('languagechange', updateDir);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("languagechange", updateDir);
+      window.removeEventListener('languagechange', updateDir);
     };
   }, []);
 

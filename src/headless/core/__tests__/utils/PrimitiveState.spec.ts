@@ -1,53 +1,53 @@
-import { PrimitiveState } from "../../utils/PrimitiveState";
+import { PrimitiveState } from '../../utils/PrimitiveState';
 
 suite(PrimitiveState.name, () => {
-  suite("constructor", () => {
-    it("should initialize with initial state", () => {
+  suite('constructor', () => {
+    it('should initialize with initial state', () => {
       const state = new PrimitiveState({ count: 0 });
       expect(state.get()).toEqual({ count: 0 });
     });
   });
 
-  suite(new PrimitiveState("").set.name, () => {
-    it("should update the state", () => {
+  suite(new PrimitiveState('').set.name, () => {
+    it('should update the state', () => {
       const state = new PrimitiveState({ count: 0 });
       state.set({ count: 1 });
       expect(state.get()).toEqual({ count: 1 });
     });
   });
 
-  suite(new PrimitiveState("").setPartial.name, () => {
-    it("should update the state", () => {
-      const state = new PrimitiveState({ count: 0, text: "hello" });
+  suite(new PrimitiveState('').setPartial.name, () => {
+    it('should update the state', () => {
+      const state = new PrimitiveState({ count: 0, text: 'hello' });
       state.setPartial({ count: 1 });
-      expect(state.get()).toEqual({ count: 1, text: "hello" });
+      expect(state.get()).toEqual({ count: 1, text: 'hello' });
     });
 
-    it("should ignore `undefined` state updates", () => {
+    it('should ignore `undefined` state updates', () => {
       const state = new PrimitiveState({ count: 0 });
-      // @ts-expect-error
+      // @ts-expect-error The function's type def doesn't accept undefined, but in case it was provided at runtime, it should be ignored
       state.setPartial(undefined);
       expect(state.get()).toEqual({ count: 0 });
     });
 
-    it("should ignore `null` state updates", () => {
+    it('should ignore `null` state updates', () => {
       const state = new PrimitiveState({ count: 0 });
-      // @ts-expect-error
+      // @ts-expect-error The function's type def doesn't accept null, but in case it was provided at runtime, it should be ignored
       state.setPartial(null);
       expect(state.get()).toEqual({ count: 0 });
     });
   });
 
-  suite(new PrimitiveState("").get.name, () => {
-    it("should get the latest state", () => {
+  suite(new PrimitiveState('').get.name, () => {
+    it('should get the latest state', () => {
       const state = new PrimitiveState({ count: 0 });
       state.set({ count: 1 });
       expect(state.get()).toEqual({ count: 1 });
     });
   });
 
-  suite(new PrimitiveState("").reset.name, () => {
-    it("should go back to initial state", () => {
+  suite(new PrimitiveState('').reset.name, () => {
+    it('should go back to initial state', () => {
       const state = new PrimitiveState({ count: 0 });
       state.set({ count: 1 });
       state.reset();
@@ -55,8 +55,8 @@ suite(PrimitiveState.name, () => {
     });
   });
 
-  suite(new PrimitiveState("").subscribe.name, () => {
-    it("should notify subscribers when state changes", () => {
+  suite(new PrimitiveState('').subscribe.name, () => {
+    it('should notify subscribers when state changes', () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber = vi.fn();
       state.subscribe(subscriber);
@@ -65,17 +65,17 @@ suite(PrimitiveState.name, () => {
       expect(subscriber).toHaveBeenCalledWith({ count: 1 });
     });
 
-    it("should notify subscribers on partial state updates", () => {
-      const state = new PrimitiveState({ count: 0, text: "hello" });
+    it('should notify subscribers on partial state updates', () => {
+      const state = new PrimitiveState({ count: 0, text: 'hello' });
       const subscriber = vi.fn();
       state.subscribe(subscriber);
 
       state.setPartial({ count: 1 });
-      expect(subscriber).toHaveBeenCalledWith({ count: 1, text: "hello" });
+      expect(subscriber).toHaveBeenCalledWith({ count: 1, text: 'hello' });
     });
 
-    it("should notify subscribers once on every update", () => {
-      const state = new PrimitiveState({ count: 0, text: "hello" });
+    it('should notify subscribers once on every update', () => {
+      const state = new PrimitiveState({ count: 0, text: 'hello' });
       const subscriber = vi.fn();
       state.subscribe(subscriber);
 
@@ -85,8 +85,8 @@ suite(PrimitiveState.name, () => {
       expect(subscriber).toHaveBeenCalledTimes(2);
     });
 
-    it("should not notify subscribers on redundant set state calls", () => {
-      const state = new PrimitiveState({ count: 0, text: "hello" });
+    it('should not notify subscribers on redundant set state calls', () => {
+      const state = new PrimitiveState({ count: 0, text: 'hello' });
       const subscriber = vi.fn();
       state.subscribe(subscriber);
 
@@ -96,7 +96,7 @@ suite(PrimitiveState.name, () => {
       expect(subscriber).toHaveBeenCalledTimes(1);
     });
 
-    it("should notify subscribers when state is reset", () => {
+    it('should notify subscribers when state is reset', () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber = vi.fn();
       state.subscribe(subscriber);
@@ -107,7 +107,7 @@ suite(PrimitiveState.name, () => {
       expect(subscriber).toHaveBeenCalledTimes(2);
     });
 
-    it("should allow multiple subscribers", () => {
+    it('should allow multiple subscribers', () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber1 = vi.fn();
       const subscriber2 = vi.fn();
@@ -120,7 +120,7 @@ suite(PrimitiveState.name, () => {
       expect(subscriber2).toHaveBeenCalledWith({ count: 1 });
     });
 
-    it("should unsubscribe correctly", () => {
+    it('should unsubscribe correctly', () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber = vi.fn();
       const unsubscribe = state.subscribe(subscriber);
@@ -130,7 +130,7 @@ suite(PrimitiveState.name, () => {
       expect(subscriber).not.toHaveBeenCalled();
     });
 
-    it("should handle multiple subscriptions and unsubscriptions", () => {
+    it('should handle multiple subscriptions and unsubscriptions', () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber1 = vi.fn();
       const subscriber2 = vi.fn();
@@ -148,10 +148,10 @@ suite(PrimitiveState.name, () => {
       expect(subscriber3).toHaveBeenCalledWith({ count: 1 });
     });
 
-    it("should handle subscriber errors gracefully", () => {
+    it('should handle subscriber errors gracefully', () => {
       const state = new PrimitiveState({ count: 0 });
       const errorSubscriber = () => {
-        throw new Error("Subscriber error");
+        throw new Error('Subscriber error');
       };
       const normalSubscriber = vi.fn();
 
@@ -163,7 +163,7 @@ suite(PrimitiveState.name, () => {
       expect(normalSubscriber).toHaveBeenCalledWith({ count: 1 });
     });
 
-    it("should handle unsubscribe being called multiple times", () => {
+    it('should handle unsubscribe being called multiple times', () => {
       const state = new PrimitiveState({ count: 0 });
       const subscriber = vi.fn();
       const unsubscribe = state.subscribe(subscriber);

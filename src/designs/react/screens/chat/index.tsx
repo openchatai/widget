@@ -1,14 +1,14 @@
-import React, { useRef } from "react";
-import { cn } from "../../components/lib/utils/cn";
-import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
-import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
-import { ChatFooter } from "./ChatFooter";
-import { WidgetHeader } from "../../components/WidgetHeader";
-import { ChatMain } from "./ChatMain";
-import { useMessages, useSessions } from "../../../../headless/react";
-import { AnimatePresence } from "framer-motion";
-import { MotionDiv } from "../../components/lib/MotionDiv";
-import { Loading } from "../../components/lib/loading";
+import React, { useRef } from 'react';
+import { cn } from '../../components/lib/utils/cn';
+import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from '../../constants';
+import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
+import { ChatFooter } from './ChatFooter';
+import { WidgetHeader } from '../../components/WidgetHeader';
+import { ChatMain } from './ChatMain';
+import { useMessages, useSessions } from '../../../../headless/react';
+import { AnimatePresence } from 'framer-motion';
+import { MotionDiv } from '../../components/lib/MotionDiv';
+import { Loading } from '../../components/lib/loading';
 
 export function ChatScreen() {
   const {
@@ -22,14 +22,14 @@ export function ChatScreen() {
   });
 
   // The key is the session id, so that when chat is reset, the animation replays
-  const chatContentKeyRef = useRef(session?.id || "chat").current;
+  const chatContentKeyRef = useRef(session?.id || 'chat').current;
 
   return (
     <div
       ref={observedElementRef}
       className={cn(
         DEFAULT_STYLES.widgetHeight,
-        "w-full flex flex-col overflow-hidden bg-background",
+        'w-full flex flex-col overflow-hidden bg-background',
       )}
     >
       <div className="size-full justify-between flex flex-col">

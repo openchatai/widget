@@ -1,5 +1,5 @@
-import { usePrimitiveState } from "./usePrimitiveState";
-import { useWidget } from "../WidgetProvider";
+import { usePrimitiveState } from './usePrimitiveState';
+import { useWidget } from '../WidgetProvider';
 
 export function useMessages() {
   const { widgetCtx } = useWidget();

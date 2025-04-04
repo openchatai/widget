@@ -1,4 +1,4 @@
-import { useWidget } from "../WidgetProvider";
+import { useWidget } from '../WidgetProvider';
 
 export function useConfig() {
   const { widgetCtx } = useWidget();

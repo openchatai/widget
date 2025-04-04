@@ -1,10 +1,10 @@
-import type { ExternalStorage } from "../types/external-storage";
+import type { ExternalStorage } from '../types/external-storage';
 
 export class StorageCtx {
   private storage: ExternalStorage;
   private KEYS = {
-    contactToken: "opencx__widget__contactToken",
-    externalContactId: "opencx__widget__externalContactId",
+    contactToken: 'opencx__widget__contactToken',
+    externalContactId: 'opencx__widget__externalContactId',
   };
 
   constructor({ storage }: { storage: ExternalStorage }) {

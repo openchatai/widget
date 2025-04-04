@@ -1,6 +1,6 @@
-import React from "react";
-import { useWidget, type WidgetComponentProps } from "../../../headless/react";
-import { BotOrAgentResponse } from "./custom-components/BotOrAgentTextResponse.component";
+import React from 'react';
+import { useWidget, type WidgetComponentProps } from '../../../headless/react';
+import { BotOrAgentResponse } from './custom-components/BotOrAgentTextResponse.component';
 
 export function BotOrAgentMessage(props: WidgetComponentProps) {
   const { componentStore } = useWidget();

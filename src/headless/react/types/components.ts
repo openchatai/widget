@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 import type {
   AgentMessageType,
   BotMessageType,
   WidgetComponentKey,
-} from "../../core";
+} from '../../core';
 
 export type WidgetComponentProps<TData = unknown> =
   | BotMessageType<TData>

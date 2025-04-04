@@ -35,12 +35,13 @@
     "index.tsx",
     "src",
     "vite.config.ts",
-    "vitest",
-    "package.json", 
-    "vite-env.d.ts"
+    "vite.embed.config.ts",
+    "vitest.config.ts",
+    "package.json",
+    "vite-env.d.ts",
+    "eslint.config.mjs",
+    "postcss.config.mjs",
+    "tailwind.config.js"
   ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ],
+  "exclude": ["node_modules", "dist"]
 }

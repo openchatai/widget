@@ -1,5 +1,5 @@
-import React from "react";
-import { cn } from "../lib/utils/cn";
+import React from 'react';
+import { cn } from '../lib/utils/cn';
 
 export function OpenLogoSvg({ className }: { className?: string }) {
   return (
@@ -9,7 +9,7 @@ export function OpenLogoSvg({ className }: { className?: string }) {
       viewBox="0 0 26 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className={cn("text-primary-foreground", className)}
+      className={cn('text-primary-foreground', className)}
     >
       <title>Open Logo</title>
       <path

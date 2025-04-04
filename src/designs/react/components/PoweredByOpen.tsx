@@ -1,8 +1,8 @@
-import * as React from "react";
-import { cn } from "./lib/utils/cn";
-import { OpenLogoSvg } from "./svg/OpenLogoSvg";
-import { useConfig } from "../../../headless/react";
-import { Wobble } from "./lib/wobble";
+import * as React from 'react';
+import { cn } from './lib/utils/cn';
+import { OpenLogoSvg } from './svg/OpenLogoSvg';
+import { useConfig } from '../../../headless/react';
+import { Wobble } from './lib/wobble';
 
 export function PoweredByOpen({ className }: { className?: string }) {
   const { token } = useConfig();
@@ -10,7 +10,7 @@ export function PoweredByOpen({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center gap-2 p-2 pt-0 bg-white text-muted-foreground/70 [&_svg]:text-muted-foreground/70",
+        'flex items-center justify-center gap-2 p-2 pt-0 bg-white text-muted-foreground/70 [&_svg]:text-muted-foreground/70',
         className,
       )}
     >

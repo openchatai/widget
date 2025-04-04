@@ -1,5 +1,5 @@
-import useSWR from "swr";
-import { useWidget } from "../WidgetProvider";
+import useSWR from 'swr';
+import { useWidget } from '../WidgetProvider';
 
 function usePreludeData() {
   const { widgetCtx } = useWidget();

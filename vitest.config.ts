@@ -1,6 +1,6 @@
-import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config";
-import react from "@vitejs/plugin-react";
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [tsconfigPaths(), react()],
@@ -9,7 +9,7 @@ export default defineConfig({
       enabled: true,
     },
     printConsoleTrace: true,
-    environment: "jsdom",
+    environment: 'jsdom',
     globals: true,
   },
 });

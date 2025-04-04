@@ -1,14 +1,14 @@
-import "../../../api-caller.mock";
+import '../../../api-caller.mock';
 
-import { ApiCaller } from "../../../../api/api-caller";
-import { WidgetCtx } from "../../../../context/widget.ctx";
-import { TestUtils } from "../../../test-utils";
+import { ApiCaller } from '../../../../api/api-caller';
+import { WidgetCtx } from '../../../../context/widget.ctx';
+import { TestUtils } from '../../../test-utils';
 
-suite("", () => {
-  test("", async () => {
+suite('', () => {
+  test('', async () => {
     expect(ApiCaller.prototype.createUnverifiedContact).toBeCalledTimes(0);
     const widgetCtx = await WidgetCtx.initialize({
-      config: { token: "", user: { data: { email: "test@email.com" } } },
+      config: { token: '', user: { data: { email: 'test@email.com' } } },
     });
 
     expect(widgetCtx.contactCtx.shouldCollectData()).toBeFalsy();

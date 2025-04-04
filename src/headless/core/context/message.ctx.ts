@@ -1,19 +1,19 @@
-import { ApiCaller } from "../api/api-caller";
-import type { WidgetConfig } from "../types/widget-config";
+import { ApiCaller } from '../api/api-caller';
+import type { WidgetConfig } from '../types/widget-config';
 import type {
   BotMessageType,
   MessageType,
   UserMessageType,
-} from "../types/messages";
+} from '../types/messages';
 import type {
   MessageAttachmentType,
   SendMessageDto,
   SendMessageOutputDto,
-} from "../types/schemas";
-import { PrimitiveState } from "../utils/PrimitiveState";
-import { genUuid } from "../utils/uuid";
-import { SessionCtx } from "./session.ctx";
-import type { ContactCtx } from "./contact.ctx";
+} from '../types/schemas';
+import { PrimitiveState } from '../utils/PrimitiveState';
+import { genUuid } from '../utils/uuid';
+import { SessionCtx } from './session.ctx';
+import type { ContactCtx } from './contact.ctx';
 
 type MessageCtxState = {
   messages: MessageType[];
@@ -55,13 +55,13 @@ export class MessageCtx {
   }
 
   reset = () => {
-    this.sendMessageAbortController.abort("Resetting chat");
+    this.sendMessageAbortController.abort('Resetting chat');
     this.state.reset();
   };
 
   sendMessage = async (input: {
-    content: SendMessageDto["content"];
-    attachments?: SendMessageDto["attachments"];
+    content: SendMessageDto['content'];
+    attachments?: SendMessageDto['attachments'];
   }): Promise<void> => {
     /* ------------------------------------------------------ */
     /*         Prevent sending if there is no content         */
@@ -70,7 +70,7 @@ export class MessageCtx {
       !input.content.trim() &&
       (!input.attachments || input.attachments.length === 0)
     ) {
-      console.warn("Cannot send an empty message of no content or attachments");
+      console.warn('Cannot send an empty message of no content or attachments');
       return;
     }
     /* ------------------------------------------------------ */
@@ -78,16 +78,16 @@ export class MessageCtx {
     /* ------------------------------------------------------ */
     const isSending = this.state.get().isSendingMessage;
     const isAssignedToAI =
-      this.sessionCtx.sessionState.get().session?.assignee.kind === "ai";
+      this.sessionCtx.sessionState.get().session?.assignee.kind === 'ai';
     const _messages = this.state.get().messages;
     const lastMessage =
       _messages.length > 0 ? _messages[_messages.length - 1] : undefined;
     if (
       (isAssignedToAI && isSending) ||
       // If last message is from user, then bot response did not arrive yet
-      (isAssignedToAI && lastMessage?.type === "FROM_USER")
+      (isAssignedToAI && lastMessage?.type === 'FROM_USER')
     ) {
-      console.warn("Cannot send messages while awaiting AI response");
+      console.warn('Cannot send messages while awaiting AI response');
       return;
     }
 
@@ -120,7 +120,7 @@ export class MessageCtx {
 
         // TODO: apply some retry logic here
         if (!createdSession) {
-          console.error("Failed to create session");
+          console.error('Failed to create session');
           return;
         }
 
@@ -173,7 +173,7 @@ export class MessageCtx {
         }
       } else {
         const errorMessage = this.toBotErrorMessage(
-          data?.error?.message || "Unknown error occurred",
+          data?.error?.message || 'Unknown error occurred',
         );
         const currentMessages = this.state.get().messages;
         this.state.setPartial({
@@ -182,7 +182,7 @@ export class MessageCtx {
       }
     } catch (error) {
       if (!this.sendMessageAbortController.signal.aborted) {
-        console.error("Failed to send message:", error);
+        console.error('Failed to send message:', error);
       }
     } finally {
       this.state.setPartial({ isSendingMessage: false });
@@ -204,7 +204,7 @@ export class MessageCtx {
         const data = Object.entries(extraCollectedData)
           .filter(([_, value]) => !!value)
           .map(([key, value]) => `${key}: ${value}`)
-          .join(" \n");
+          .join(' \n');
         return `${data} \n\n${content}`;
       }
 
@@ -213,7 +213,7 @@ export class MessageCtx {
 
     return {
       id: genUuid(),
-      type: "FROM_USER",
+      type: 'FROM_USER',
       content: messageContent,
       deliveredAt: new Date().toISOString(),
       attachments,
@@ -226,15 +226,15 @@ export class MessageCtx {
   ): BotMessageType | null => {
     if (response.success && response.autopilotResponse) {
       return {
-        type: "FROM_BOT",
+        type: 'FROM_BOT',
         id: response.autopilotResponse.id || genUuid(),
         timestamp: new Date().toISOString(),
-        component: "bot_message",
+        component: 'bot_message',
         agent: this.config.bot
           ? {
-              name: this.config.bot.name || "",
+              name: this.config.bot.name || '',
               isAi: true,
-              avatar: this.config.bot.avatar || "",
+              avatar: this.config.bot.avatar || '',
               id: null,
             }
           : undefined,
@@ -255,13 +255,13 @@ export class MessageCtx {
 
   private toBotErrorMessage = (message: string): BotMessageType => {
     return {
-      type: "FROM_BOT",
+      type: 'FROM_BOT',
       id: genUuid(),
       timestamp: new Date().toISOString(),
-      component: "TEXT",
+      component: 'TEXT',
       data: {
         message,
-        variant: "error",
+        variant: 'error',
         action: undefined,
       },
     };

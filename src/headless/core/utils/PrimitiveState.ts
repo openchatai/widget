@@ -1,4 +1,4 @@
-import isEqual from "lodash.isequal";
+import isEqual from 'lodash.isequal';
 
 export type Subscriber<T> = (data: T) => void;
 
@@ -37,7 +37,7 @@ export class PrimitiveState<S> {
       try {
         callback(state);
       } catch (error) {
-        if (import.meta.env.MODE !== "test") {
+        if (import.meta.env.MODE !== 'test') {
           console.error(error);
         }
       }

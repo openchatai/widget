@@ -1,8 +1,8 @@
-import { genUuid } from "../../utils/uuid";
-import { z } from "zod";
+import { genUuid } from '../../utils/uuid';
+import { z } from 'zod';
 
 suite(genUuid.name, () => {
-  it("should generate a uuid", () => {
+  it('should generate a uuid', () => {
     const uuid = genUuid();
     const schema = z.string().uuid();
 

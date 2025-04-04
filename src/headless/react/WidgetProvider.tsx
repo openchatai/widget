@@ -1,9 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { ComponentRegistry } from "./ComponentRegistry";
-import type { WidgetComponentType } from "./types/components";
-import { createSafeContext } from "./utils/create-safe-context";
-import { type ExternalStorage, type WidgetConfig, WidgetCtx } from "../core";
-import { version } from "../../../package.json";
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { ComponentRegistry } from './ComponentRegistry';
+import type { WidgetComponentType } from './types/components';
+import { createSafeContext } from './utils/create-safe-context';
+import { type ExternalStorage, type WidgetConfig, WidgetCtx } from '../core';
+import { version } from '../../../package.json';
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
@@ -16,6 +16,7 @@ const [useWidget, SafeProvider] = createSafeContext<WidgetProviderValue>();
 
 function WidgetProvider({
   options: config,
+
   children,
   components,
   storage,

@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import { SendHorizontal } from "lucide-react";
-import { z } from "zod";
-import useAsyncFn from "react-use/lib/useAsyncFn";
+import React, { useState } from 'react';
+import { SendHorizontal } from 'lucide-react';
+import { z } from 'zod';
+import useAsyncFn from 'react-use/lib/useAsyncFn';
 import {
   useConfig,
   useContact,
   usePreludeData,
-} from "../../../../headless/react";
-import { useLocale } from "../../hooks/useLocale";
-import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
-import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from "../../constants";
-import { cn } from "../../components/lib/utils/cn";
-import { Input } from "../../components/lib/input";
-import { Button } from "../../components/lib/button";
-import { PoweredByOpen } from "../../components/PoweredByOpen";
+} from '../../../../headless/react';
+import { useLocale } from '../../hooks/useLocale';
+import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
+import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from '../../constants';
+import { cn } from '../../components/lib/utils/cn';
+import { Input } from '../../components/lib/input';
+import { Button } from '../../components/lib/button';
+import { PoweredByOpen } from '../../components/PoweredByOpen';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -29,11 +29,11 @@ export function WelcomeScreen() {
     fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
 
-  const [name, setName] = useState(config.prefillUserData?.name || "");
-  const [email, setEmail] = useState(config.prefillUserData?.email || "");
+  const [name, setName] = useState(config.prefillUserData?.name || '');
+  const [email, setEmail] = useState(config.prefillUserData?.email || '');
 
   const extraDataFields = (config.extraDataCollectionFields || []).filter(
-    (f) => f !== "name" && f !== "email" && !!f,
+    (f) => f !== 'name' && f !== 'email' && !!f,
   );
 
   const [extraData, setExtraData] = useState<Record<string, string>>({});
@@ -64,7 +64,7 @@ export function WelcomeScreen() {
       ref={observedElementRef}
       className={cn(
         DEFAULT_STYLES.widgetMinHeight,
-        "h-fit bg-primary flex flex-col",
+        'h-fit bg-primary flex flex-col',
       )}
     >
       <div
@@ -90,7 +90,7 @@ export function WelcomeScreen() {
         <div className="space-y-2">
           <h1 className="text-2xl font-bold text-primary-foreground" dir="auto">
             {config.textContent?.welcomeScreen?.title ||
-              locale.get("welcome-title")}
+              locale.get('welcome-title')}
           </h1>
 
           <p
@@ -98,7 +98,7 @@ export function WelcomeScreen() {
             dir="auto"
           >
             {config.textContent?.welcomeScreen?.description ||
-              locale.get("welcome-description")}
+              locale.get('welcome-description')}
           </p>
         </div>
       </div>
@@ -110,7 +110,7 @@ export function WelcomeScreen() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              placeholder={locale.get("your-name")}
+              placeholder={locale.get('your-name')}
               name="name"
               className="rounded-3xl pl-3"
             />
@@ -119,7 +119,7 @@ export function WelcomeScreen() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
-              placeholder={locale.get("your-email")}
+              placeholder={locale.get('your-email')}
               name="email"
               className="rounded-3xl pl-3"
             />
@@ -130,7 +130,7 @@ export function WelcomeScreen() {
                 onChange={(e) =>
                   setExtraData((prev) => ({ ...prev, [field]: e.target.value }))
                 }
-                placeholder={`${field} (${locale.get("optional")})`}
+                placeholder={`${field} (${locale.get('optional')})`}
                 className="rounded-3xl pl-3"
               />
             ))}
@@ -142,8 +142,8 @@ export function WelcomeScreen() {
             size="lg"
           >
             {handleSubmitState.loading
-              ? locale.get("starting-chat")
-              : locale.get("start-chat")}
+              ? locale.get('starting-chat')
+              : locale.get('start-chat')}
             <SendHorizontal className="size-4 rtl:-scale-100" />
           </Button>
         </form>

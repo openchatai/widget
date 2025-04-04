@@ -1,11 +1,11 @@
-import { useMemo } from "react";
-import { useWidget } from "../../../headless/react";
-import type { TranslationKeysU } from "../../translation/translation.types";
+import { useMemo } from 'react';
+import { useWidget } from '../../../headless/react';
+import type { TranslationKeysU } from '../../translation/translation.types';
 import {
   getTranslation,
   isSupportedLocale,
   type Locale,
-} from "../../translation";
+} from '../../translation';
 
 export function useLocale() {
   const {
@@ -18,7 +18,7 @@ export function useLocale() {
   }>(() => {
     const language: Locale = isSupportedLocale(config.language)
       ? config.language
-      : "en";
+      : 'en';
     return {
       get: (key: TranslationKeysU) => getTranslation(key, language),
       lang: language,

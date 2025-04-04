@@ -1,13 +1,13 @@
-import "../../../api-caller.mock";
+import '../../../api-caller.mock';
 
-import { ApiCaller } from "../../../../api/api-caller";
-import { WidgetCtx } from "../../../../context/widget.ctx";
-import { TestUtils } from "../../../test-utils";
+import { ApiCaller } from '../../../../api/api-caller';
+import { WidgetCtx } from '../../../../context/widget.ctx';
+import { TestUtils } from '../../../test-utils';
 
-suite("", () => {
-  test("", async () => {
+suite('', () => {
+  test('', async () => {
     const widgetCtx = await WidgetCtx.initialize({
-      config: { token: "", collectUserData: true },
+      config: { token: '', collectUserData: true },
     });
 
     // Assert that the contact was not auto created
@@ -18,8 +18,8 @@ suite("", () => {
 
     // Mimic user inputting a name and email
     await widgetCtx.contactCtx.createUnverifiedContact({
-      non_verified_name: "some-name",
-      email: "test@email.com",
+      non_verified_name: 'some-name',
+      email: 'test@email.com',
     });
     expect(ApiCaller.prototype.createUnverifiedContact).toBeCalledTimes(1);
     expect(widgetCtx.contactCtx.shouldCollectData()).toBeFalsy();

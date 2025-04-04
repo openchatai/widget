@@ -1,39 +1,39 @@
-import React from "react";
-import { useWidgetContentHeight } from "../../hooks/useWidgetContentHeight";
-import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from "../../constants";
-import { cn } from "../../components/lib/utils/cn";
+import React from 'react';
+import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
+import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from '../../constants';
+import { cn } from '../../components/lib/utils/cn';
 import {
   useConfig,
   useSessions,
   useWidgetRouter,
-} from "../../../../headless/react";
-import { Button } from "../../components/lib/button";
-import { ChevronRightIcon } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
-import { Loading } from "../../components/lib/loading";
-import { MotionDiv } from "../../components/lib/MotionDiv";
-import { WidgetHeader } from "../../components/WidgetHeader";
-import { useLocale } from "../../hooks/useLocale";
-import type { SessionDto } from "../../../../headless/core";
-import { Skeleton } from "../../components/lib/skeleton";
-import { Avatar, AvatarImage } from "../../components/lib/avatar";
-import { MemoizedReactMarkdown } from "../../components/markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import { PoweredByOpen } from "../../components/PoweredByOpen";
+} from '../../../../headless/react';
+import { Button } from '../../components/lib/button';
+import { ChevronRightIcon } from 'lucide-react';
+import { AnimatePresence } from 'framer-motion';
+import { Loading } from '../../components/lib/loading';
+import { MotionDiv } from '../../components/lib/MotionDiv';
+import { WidgetHeader } from '../../components/WidgetHeader';
+import { useLocale } from '../../hooks/useLocale';
+import type { SessionDto } from '../../../../headless/core';
+import { Skeleton } from '../../components/lib/skeleton';
+import { Avatar, AvatarImage } from '../../components/lib/avatar';
+import { MemoizedReactMarkdown } from '../../components/markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { PoweredByOpen } from '../../components/PoweredByOpen';
 
 function SessionCard({ session }: { session: SessionDto }) {
   const { bot } = useConfig();
   const { toChatScreen } = useWidgetRouter();
 
   const assigneeName =
-    session.assignee.kind === "human"
-      ? session.assignee.name || "Support Agent"
-      : bot?.name || "AI Support Agent";
+    session.assignee.kind === 'human'
+      ? session.assignee.name || 'Support Agent'
+      : bot?.name || 'AI Support Agent';
   const assigneeAvatarUrl =
-    session.assignee.kind === "human"
-      ? session.assignee.avatarUrl || ""
-      : bot?.avatar || "";
+    session.assignee.kind === 'human'
+      ? session.assignee.avatarUrl || ''
+      : bot?.avatar || '';
 
   return (
     <Button
@@ -58,7 +58,7 @@ function SessionCard({ session }: { session: SessionDto }) {
           </AnimatePresence>
           <AnimatePresence mode="wait">
             {session.lastMessage ? (
-              <MotionDiv key={session.lastMessage || "content"} snapExit>
+              <MotionDiv key={session.lastMessage || 'content'} snapExit>
                 <MemoizedReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   rehypePlugins={[rehypeRaw]}
@@ -119,7 +119,7 @@ function SessionsList() {
                     className="w-full rounded-3xl"
                     onClick={() => toChatScreen()}
                   >
-                    {locale.get("new-conversation")}
+                    {locale.get('new-conversation')}
                   </Button>
                 </div>
               </>
@@ -127,7 +127,7 @@ function SessionsList() {
               <div className="flex-1 flex flex-col gap-2 items-center">
                 <div className="flex-1 flex items-center justify-center">
                   <p className="text-muted-foreground">
-                    {locale.get("no-conversations-yet")}
+                    {locale.get('no-conversations-yet')}
                   </p>
                 </div>
                 <Button
@@ -136,7 +136,7 @@ function SessionsList() {
                   className="w-full rounded-3xl"
                   onClick={() => toChatScreen()}
                 >
-                  {locale.get("new-conversation")}
+                  {locale.get('new-conversation')}
                 </Button>
               </div>
             )}
@@ -157,7 +157,7 @@ export function SessionsScreen() {
       ref={observedElementRef}
       className={cn(
         DEFAULT_STYLES.widgetHeight,
-        "w-full flex flex-col overflow-hidden bg-background",
+        'w-full flex flex-col overflow-hidden bg-background',
       )}
     >
       <div className="size-full flex flex-col">

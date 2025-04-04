@@ -1,11 +1,11 @@
-import type { ApiCaller } from "../api/api-caller";
-import type { MessageType } from "../types/messages";
-import type { ActionCallDto, MessageDto } from "../types/schemas";
-import type { WidgetConfig } from "../types/widget-config";
-import { Poller } from "../utils/Poller";
-import { runCatching } from "../utils/run-catching";
-import type { MessageCtx } from "./message.ctx";
-import type { SessionCtx } from "./session.ctx";
+import type { ApiCaller } from '../api/api-caller';
+import type { MessageType } from '../types/messages';
+import type { ActionCallDto, MessageDto } from '../types/schemas';
+import type { WidgetConfig } from '../types/widget-config';
+import { Poller } from '../utils/Poller';
+import { runCatching } from '../utils/run-catching';
+import type { MessageCtx } from './message.ctx';
+import type { SessionCtx } from './session.ctx';
 
 export class ActiveSessionPollingCtx {
   private api: ApiCaller;
@@ -104,30 +104,30 @@ export class ActiveSessionPollingCtx {
   mapHistoryToMessage = (history: MessageDto): MessageType => {
     const commonFields = {
       id: history.publicId,
-      timestamp: history.sentAt || "",
+      timestamp: history.sentAt || '',
       attachments: history.attachments || undefined,
     };
 
-    if (history.sender.kind === "user") {
+    if (history.sender.kind === 'user') {
       return {
         ...commonFields,
-        type: "FROM_USER",
-        content: history.content.text || "",
-        deliveredAt: history.sentAt || "",
+        type: 'FROM_USER',
+        content: history.content.text || '',
+        deliveredAt: history.sentAt || '',
       };
     }
 
-    if (history.sender.kind === "agent") {
+    if (history.sender.kind === 'agent') {
       return {
         ...commonFields,
-        type: "FROM_AGENT",
-        component: "agent_message",
+        type: 'FROM_AGENT',
+        component: 'agent_message',
         data: {
-          message: history.content.text || "",
+          message: history.content.text || '',
         },
         agent: {
-          name: history.sender.name || "",
-          avatar: history.sender.avatar || "",
+          name: history.sender.name || '',
+          avatar: history.sender.avatar || '',
           id: null,
           isAi: false,
         },
@@ -141,16 +141,16 @@ export class ActiveSessionPollingCtx {
 
     return {
       ...commonFields,
-      type: "FROM_BOT",
-      component: "bot_message",
+      type: 'FROM_BOT',
+      component: 'bot_message',
       agent: {
         id: null,
-        name: this.config.bot?.name || "",
+        name: this.config.bot?.name || '',
         isAi: true,
-        avatar: this.config.bot?.avatar || "",
+        avatar: this.config.bot?.avatar || '',
       },
       data: {
-        message: history.content.text || "",
+        message: history.content.text || '',
         action: action
           ? {
               name: action.actionName,
@@ -165,11 +165,11 @@ export class ActiveSessionPollingCtx {
     const result = action.result;
 
     if (result === null) return result;
-    if (typeof result !== "object") return result;
+    if (typeof result !== 'object') return result;
 
     if (
-      "responseBodyText" in result &&
-      typeof result.responseBodyText === "string"
+      'responseBodyText' in result &&
+      typeof result.responseBodyText === 'string'
     ) {
       const responseBodyText = result.responseBodyText;
       const parsed = runCatching(() => JSON.parse(responseBodyText)).data;
