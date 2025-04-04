@@ -66,6 +66,8 @@ export default defineConfig([
     },
 
     rules: {
+      '@typescript-eslint/no-unused-expressions': 'off',
+
       'prettier/prettier': 'error',
       'arrow-body-style': 'off',
       'prefer-arrow-callback': 'off',
