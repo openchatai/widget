@@ -10,6 +10,7 @@ import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import prettierPlugin from 'eslint-plugin-prettier';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,12 +29,15 @@ export default defineConfig([
       vitest: vitestPlugin,
       react: reactPlugin,
       'react-hooks': reactHooksPlugin,
+      prettier: prettierPlugin,
     },
 
     extends: compat.extends(
       'plugin:@typescript-eslint/recommended',
       'plugin:react/recommended',
       'plugin:react-hooks/recommended',
+      'plugin:prettier/recommended',
+      'prettier',
     ),
 
     languageOptions: {
@@ -62,6 +66,10 @@ export default defineConfig([
     },
 
     rules: {
+      'prettier/prettier': 'error',
+      'arrow-body-style': 'off',
+      'prefer-arrow-callback': 'off',
+
       'react/prop-types': 'off',
       'react/jsx-uses-react': 'warn',
       'react/jsx-uses-vars': 'warn',
