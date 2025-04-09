@@ -122,11 +122,6 @@ export interface WidgetConfig {
    */
   context?: Record<string, unknown>;
   /**
-   * Turn on to see the debug info attached to the AI responses.
-   * @default false
-   */
-  debug?: boolean;
-  /**
    * An apiUrl to override production backend.
    * This is for us to test the widget locally, you don't need to play with this option 😊.
    * @default https://api.open.cx
