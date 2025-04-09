@@ -1,6 +1,6 @@
 import React from 'react';
 import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
-import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from '../../constants';
+import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from '../../constants';
 import { cn } from '../../components/lib/utils/cn';
 import {
   useConfig,
@@ -149,14 +149,14 @@ function SessionsList() {
 
 export function SessionsScreen() {
   const { observedElementRef } = useWidgetContentHeight({
-    fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
+    minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
 
   return (
     <div
       ref={observedElementRef}
       className={cn(
-        DEFAULT_STYLES.widgetHeight,
+        DEFAULT_STYLES.widgetHeightMin,
         'w-full flex flex-col overflow-hidden bg-background',
       )}
     >

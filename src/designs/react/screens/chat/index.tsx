@@ -18,7 +18,7 @@ export function ChatScreen() {
     sessionState: { session },
   } = useSessions();
   const { observedElementRef } = useWidgetContentHeight({
-    fallbackHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
+    minHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
   });
 
   // The key is the session id, so that when chat is reset, the animation replays
@@ -28,7 +28,7 @@ export function ChatScreen() {
     <div
       ref={observedElementRef}
       className={cn(
-        DEFAULT_STYLES.widgetHeight,
+        DEFAULT_STYLES.widgetHeightMax,
         'w-full flex flex-col overflow-hidden bg-background',
       )}
     >

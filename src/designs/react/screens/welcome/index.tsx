@@ -26,7 +26,7 @@ export function WelcomeScreen() {
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
   const { observedElementRef } = useWidgetContentHeight({
-    fallbackHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
+    minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
   });
 
   const [name, setName] = useState(config.prefillUserData?.name || '');

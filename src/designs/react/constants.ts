@@ -1,14 +1,30 @@
 import type { CSSProperties } from 'react';
 import tc from 'tinycolor2';
 
-// TODO add testing to make sure these number literals are the same values used in DEFAULT_STYLES object
-export const WIDGET_CONTENT_WIDTH_PX = 350;
-export const WIDGET_CONTENT_MIN_HEIGHT_PX = 400;
+export const WIDGET_CONTENT_MIN_WIDTH_PX = 400;
+export const WIDGET_CONTENT_MAX_WIDTH_PX = 800;
+
+export const WIDGET_CONTENT_MIN_HEIGHT_PX = 500;
 export const WIDGET_CONTENT_MAX_HEIGHT_PX = 600;
+
 export const DEFAULT_STYLES = {
-  widgetMinHeight: 'min-h-[400px]',
-  widgetMaxHeight: 'max-h-[600px]',
-  widgetHeight: 'h-[600px]',
+  widgetMinWidth:
+    'min-w-[400px]' satisfies `min-w-[${typeof WIDGET_CONTENT_MIN_WIDTH_PX}px]`,
+  widgetMaxWidth:
+    'max-w-[800px]' satisfies `max-w-[${typeof WIDGET_CONTENT_MAX_WIDTH_PX}px]`,
+  widgetWidthMin:
+    'w-[400px]' satisfies `w-[${typeof WIDGET_CONTENT_MIN_WIDTH_PX}px]`,
+  widgetWidthMax:
+    'w-[800px]' satisfies `w-[${typeof WIDGET_CONTENT_MAX_WIDTH_PX}px]`,
+
+  widgetMinHeight:
+    'min-h-[500px]' satisfies `min-h-[${typeof WIDGET_CONTENT_MIN_HEIGHT_PX}px]`,
+  widgetMaxHeight:
+    'max-h-[600px]' satisfies `max-h-[${typeof WIDGET_CONTENT_MAX_HEIGHT_PX}px]`,
+  widgetHeightMin:
+    'h-[500px]' satisfies `h-[${typeof WIDGET_CONTENT_MIN_HEIGHT_PX}px]`,
+  widgetHeightMax:
+    'h-[600px]' satisfies `h-[${typeof WIDGET_CONTENT_MAX_HEIGHT_PX}px]`,
 } as const;
 
 interface Colors {

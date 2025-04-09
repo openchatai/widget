@@ -2,7 +2,7 @@ import React from 'react';
 import {
   cssVars,
   WIDGET_CONTENT_MIN_HEIGHT_PX,
-  WIDGET_CONTENT_WIDTH_PX,
+  WIDGET_CONTENT_MIN_WIDTH_PX,
 } from './constants';
 import { RootScreen } from './screens';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
@@ -60,6 +60,9 @@ function WidgetContent() {
         style={{
           zIndex: 1000000,
           fontSize: '16px',
+          // @ts-expect-error this is a valid css variable
+          '--opencx-widget-width': `${WIDGET_CONTENT_MIN_WIDTH_PX}px`,
+          '--opencx-widget-height': `${WIDGET_CONTENT_MIN_HEIGHT_PX}px`,
         }}
         sideOffset={8}
         data-opencx-widget
@@ -89,8 +92,9 @@ function WidgetContent() {
             allowFullScreen
             data-opencx-widget
             style={{
-              maxHeight: '85dvh',
-              width: WIDGET_CONTENT_WIDTH_PX,
+              minWidth: WIDGET_CONTENT_MIN_WIDTH_PX,
+              width: 'var(--opencx-widget-width)',
+              maxHeight: '75dvh',
               minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
               height: 'var(--opencx-widget-height)',
               overflow: 'hidden',
@@ -99,9 +103,9 @@ function WidgetContent() {
               outlineColor: 'hsl(0 0% 50% / .5)',
               borderRadius: '32px',
               boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-              transitionProperty: 'height',
-              transitionTimingFunction: 'ease-out',
-              transitionDuration: '150ms',
+              transitionProperty: 'all',
+              transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+              transitionDuration: '800ms',
             }}
           >
             <TooltipProvider
