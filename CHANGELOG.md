@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.65
+
+### Patch Changes
+
+- smoother easing function
+
 ## 3.0.64
 
 ### Patch Changes
