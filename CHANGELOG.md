@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.66
+
+### Patch Changes
+
+- customize basic styles
+
 ## 3.0.65
 
 ### Patch Changes
