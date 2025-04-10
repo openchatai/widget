@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.67
+
+### Patch Changes
+
+- move `eslint-plugin-prettier` to dev dependencies
+
 ## 3.0.66
 
 ### Patch Changes
