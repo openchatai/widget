@@ -1,7 +1,13 @@
 import React from 'react';
 import { cn } from '../lib/utils/cn';
 
-export function ChatBubbleSvg({ className }: { className?: string }) {
+export function ChatBubbleSvg({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <svg
       width="32"
@@ -10,6 +16,7 @@ export function ChatBubbleSvg({ className }: { className?: string }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn('text-primary-foreground', className)}
+      style={style}
     >
       <title>Chat Bubble</title>
       <path

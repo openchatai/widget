@@ -9,6 +9,7 @@ interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
   components?: WidgetComponentType[];
   componentStore: ComponentRegistry;
+  theme: WidgetConfig['theme'];
   version: string;
 }
 
@@ -54,6 +55,7 @@ function WidgetProvider({
         components,
         componentStore,
         version,
+        theme: config.theme,
       }}
     >
       {children}

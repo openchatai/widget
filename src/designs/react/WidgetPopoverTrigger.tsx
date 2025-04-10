@@ -2,8 +2,6 @@ import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon } from 'lucide-react';
 import React from 'react';
-import { cssVars } from './constants';
-import { useConfig } from '../../headless/react';
 import { cn } from './components/lib/utils/cn';
 import { Wobble, WOBBLE_MAX_MOVEMENT_PIXELS } from './components/lib/wobble';
 import { MotionDiv } from './components/lib/MotionDiv';
@@ -11,6 +9,7 @@ import { ChatBubbleSvg } from './components/svg/ChatBubbleSvg';
 import { OpenLogoPatternSvg } from './components/svg/OpenLogoPatternSvg';
 import IFrame from '@uiw/react-iframe';
 import styles from '../../../index.css?inline';
+import { useTheme } from '../../headless/react/hooks/useTheme';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -31,25 +30,25 @@ html, body {
 </html>`;
 
 function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
-  const { theme } = useConfig();
+  const { theme, cssVars } = useTheme();
 
   return (
     <IFrame
       initialContent={initialContent}
       style={{
-        height: `calc(48px + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
-        width: `calc(48px + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,
+        height: `calc(${theme.widgetTrigger.size.button} + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
+        width: `calc(${theme.widgetTrigger.size.button} + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,
         fontSize: '16px',
         position: 'fixed',
         zIndex: 10000000,
-        right: '20px',
-        bottom: '20px',
+        right: theme.widgetTrigger.offset.right,
+        bottom: theme.widgetTrigger.offset.bottom,
       }}
     >
       <div
         data-opencx-widget
         style={{
-          ...cssVars({ primary: theme?.primaryColor }),
+          ...cssVars,
           width: '100%',
           height: '100%',
           display: 'flex',
@@ -58,9 +57,11 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
         }}
       >
         <PopoverPrimitive.PopoverTrigger
-          className={cn(
-            'size-[48px] font-inter flex items-center justify-center',
-          )}
+          className={cn('font-inter flex items-center justify-center')}
+          style={{
+            height: theme.widgetTrigger.size.button,
+            width: theme.widgetTrigger.size.button,
+          }}
         >
           <Wobble>
             <div
@@ -85,7 +86,12 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                       animate: { rotate: 0 },
                     }}
                   >
-                    <ChevronDownIcon className="size-[24px]" />
+                    <ChevronDownIcon
+                      style={{
+                        width: theme.widgetTrigger.size.icon,
+                        height: theme.widgetTrigger.size.icon,
+                      }}
+                    />
                   </MotionDiv>
                 ) : (
                   <MotionDiv
@@ -96,11 +102,23 @@ function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
                       animate: { rotate: 0 },
                     }}
                   >
-                    <ChatBubbleSvg className="size-[24px] mt-0.5 opacity-95" />
+                    <ChatBubbleSvg
+                      style={{
+                        width: theme.widgetTrigger.size.icon,
+                        height: theme.widgetTrigger.size.icon,
+                      }}
+                      className="mt-0.5 opacity-95"
+                    />
                   </MotionDiv>
                 )}
               </AnimatePresence>
-              <OpenLogoPatternSvg className="absolute inset-0 opacity-5 size-[48px]" />
+              <OpenLogoPatternSvg
+                className="absolute inset-0 opacity-5"
+                style={{
+                  width: theme.widgetTrigger.size.button,
+                  height: theme.widgetTrigger.size.button,
+                }}
+              />
             </div>
           </Wobble>
         </PopoverPrimitive.PopoverTrigger>

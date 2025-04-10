@@ -47,8 +47,8 @@ function App() {
           // theme: {
           //   primaryColor: "#639"
           // },
-          collectUserData: true,
-          // extraDataCollectionFields: ["Order number"],
+          // collectUserData: true,
+          extraDataCollectionFields: ['Order number'],
           // prefillUserData: {
           //   // name: "ali",
           //   email: "ali@open.cx",
@@ -66,6 +66,14 @@ function App() {
             avatar:
               'https://framerusercontent.com/images/LKg2ybzxWutds9WSKpqGtaGw.jpg',
           },
+          // theme: {
+          //   screens: {
+          //     chat: {
+          //       height: '100vh',
+          //       width: 'clamp(525px, 33vw, 100vw)',
+          //     },
+          //   },
+          // },
         }}
       />
     </div>

@@ -1,9 +1,4 @@
 import React from 'react';
-import {
-  cssVars,
-  WIDGET_CONTENT_MIN_HEIGHT_PX,
-  WIDGET_CONTENT_MIN_WIDTH_PX,
-} from './constants';
 import { RootScreen } from './screens';
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import IFrame from '@uiw/react-iframe';
@@ -12,7 +7,6 @@ import { useState } from 'react';
 import styles from '../../../index.css?inline';
 import { WidgetPopoverTrigger } from './WidgetPopoverTrigger';
 import {
-  useConfig,
   useWidget,
   WidgetProvider,
   type WidgetComponentType,
@@ -24,6 +18,7 @@ import { BotLoadingComponent } from './components/custom-components/Loading.comp
 import { FallbackComponent } from './components/custom-components/Fallback.component';
 import { BotOrAgentResponse } from './components/custom-components/BotOrAgentTextResponse.component';
 import { useDocumentDir } from '../../headless/react/hooks/useDocumentDir';
+import { useTheme } from '../../headless/react/hooks/useTheme';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -46,7 +41,7 @@ html, body {
 function WidgetContent() {
   const chat = useWidget();
   const dir = useDocumentDir();
-  const { theme } = useConfig();
+  const { theme, cssVars, computed } = useTheme();
   const [isOpen, setIsOpened] = useState(false);
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpened}>
@@ -54,17 +49,17 @@ function WidgetContent() {
       <WidgetPopoverTrigger isOpen={isOpen} />
       <PopoverPrimitive.Content
         onInteractOutside={(ev) => ev.preventDefault()}
-        side="top"
         data-aria-expanded={isOpen}
         forceMount
         style={{
           zIndex: 1000000,
           fontSize: '16px',
           // @ts-expect-error this is a valid css variable
-          '--opencx-widget-width': `${WIDGET_CONTENT_MIN_WIDTH_PX}px`,
-          '--opencx-widget-height': `${WIDGET_CONTENT_MIN_HEIGHT_PX}px`,
+          '--opencx-widget-width': computed.minWidth,
+          '--opencx-widget-height': computed.minHeight,
         }}
-        sideOffset={8}
+        side="top"
+        sideOffset={theme.widgetContentContainer.offset}
         data-opencx-widget
         data-opencx-widget-content-root
         align={dir === 'rtl' ? 'start' : 'end'}
@@ -92,11 +87,14 @@ function WidgetContent() {
             allowFullScreen
             data-opencx-widget
             style={{
-              minWidth: WIDGET_CONTENT_MIN_WIDTH_PX,
+              minWidth: computed.minWidth,
               width: 'var(--opencx-widget-width)',
-              maxHeight: '75dvh',
-              minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
+              maxWidth: computed.maxWidth, // Relative to the viewport
+
+              minHeight: computed.minHeight,
               height: 'var(--opencx-widget-height)',
+              maxHeight: computed.maxHeight, // Relative to the viewport
+
               overflow: 'hidden',
               /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
               outline: '1px solid',
@@ -121,7 +119,7 @@ function WidgetContent() {
               >
                 <div
                   style={{
-                    ...cssVars({ primary: theme?.primaryColor }),
+                    ...cssVars,
                   }}
                   data-version={chat.version}
                   data-opencx-widget

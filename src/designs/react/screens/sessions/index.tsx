@@ -1,6 +1,4 @@
 import React from 'react';
-import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
-import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from '../../constants';
 import { cn } from '../../components/lib/utils/cn';
 import {
   useConfig,
@@ -21,6 +19,8 @@ import { MemoizedReactMarkdown } from '../../components/markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
+import { useTheme } from '../../../../headless/react/hooks/useTheme';
+import { useWidgetSize } from '../../hooks/useWidgetSize';
 
 function SessionCard({ session }: { session: SessionDto }) {
   const { bot } = useConfig();
@@ -148,17 +148,21 @@ function SessionsList() {
 }
 
 export function SessionsScreen() {
-  const { observedElementRef } = useWidgetContentHeight({
-    minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
+  const { theme } = useTheme();
+  useWidgetSize({
+    width: theme.screens.sessions.width,
+    height: theme.screens.sessions.height,
   });
 
   return (
     <div
-      ref={observedElementRef}
-      className={cn(
-        DEFAULT_STYLES.widgetHeightMin,
-        'w-full flex flex-col overflow-hidden bg-background',
-      )}
+      className={cn('flex flex-col overflow-hidden bg-background')}
+      style={{
+        width: '100vw', // Relative to the iframe
+        maxWidth: '100vw', // Relative to the iframe
+        height: '100vh', // Relative to the iframe
+        maxHeight: '100vh', // Relative to the iframe
+      }}
     >
       <div className="size-full flex flex-col">
         <WidgetHeader />

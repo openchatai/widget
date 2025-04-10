@@ -1,7 +1,5 @@
 import React, { useRef } from 'react';
 import { cn } from '../../components/lib/utils/cn';
-import { DEFAULT_STYLES, WIDGET_CONTENT_MAX_HEIGHT_PX } from '../../constants';
-import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
 import { ChatFooter } from './ChatFooter';
 import { WidgetHeader } from '../../components/WidgetHeader';
 import { ChatMain } from './ChatMain';
@@ -9,6 +7,8 @@ import { useMessages, useSessions } from '../../../../headless/react';
 import { AnimatePresence } from 'framer-motion';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Loading } from '../../components/lib/loading';
+import { useTheme } from '../../../../headless/react/hooks/useTheme';
+import { useWidgetSize } from '../../hooks/useWidgetSize';
 
 export function ChatScreen() {
   const {
@@ -17,8 +17,11 @@ export function ChatScreen() {
   const {
     sessionState: { session },
   } = useSessions();
-  const { observedElementRef } = useWidgetContentHeight({
-    minHeight: WIDGET_CONTENT_MAX_HEIGHT_PX,
+  const { theme } = useTheme();
+
+  useWidgetSize({
+    width: theme.screens.chat.width,
+    height: theme.screens.chat.height,
   });
 
   // The key is the session id, so that when chat is reset, the animation replays
@@ -26,11 +29,13 @@ export function ChatScreen() {
 
   return (
     <div
-      ref={observedElementRef}
-      className={cn(
-        DEFAULT_STYLES.widgetHeightMax,
-        'w-full flex flex-col overflow-hidden bg-background',
-      )}
+      className={cn('flex flex-col overflow-hidden bg-background')}
+      style={{
+        width: '100vw', // Relative to the iframe
+        maxWidth: '100vw', // Relative to the iframe
+        height: '100vh', // Relative to the iframe
+        maxHeight: '100vh', // Relative to the iframe
+      }}
     >
       <div className="size-full justify-between flex flex-col">
         <WidgetHeader />

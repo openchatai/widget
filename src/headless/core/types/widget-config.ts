@@ -42,6 +42,37 @@ export interface WidgetConfig {
   bot?: Pick<AgentOrBotType, 'name' | 'avatar'>;
   theme?: {
     primaryColor?: string;
+    widgetTrigger?: {
+      offset?: {
+        right?: string;
+        bottom?: string;
+      };
+      size?: {
+        button?: string;
+        icon?: string;
+      };
+    };
+    widgetContentContainer?: {
+      /** The distance between the widget content and the widget trigger */
+      offset?: number;
+    };
+    screens?: {
+      welcome?: {
+        /**
+         * Because the welcome screen can have dynamic content (org description and extra data collection fields), it is better to set a minHeight instead of a fixed height.
+         */
+        minHeight?: string;
+        width?: string;
+      };
+      sessions?: {
+        height?: string;
+        width?: string;
+      };
+      chat?: {
+        height?: string;
+        width?: string;
+      };
+    };
   };
   assets?: {
     organizationLogo?: string;

@@ -9,11 +9,12 @@ import {
 } from '../../../../headless/react';
 import { useLocale } from '../../hooks/useLocale';
 import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
-import { DEFAULT_STYLES, WIDGET_CONTENT_MIN_HEIGHT_PX } from '../../constants';
 import { cn } from '../../components/lib/utils/cn';
 import { Input } from '../../components/lib/input';
 import { Button } from '../../components/lib/button';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
+import { useTheme } from '../../../../headless/react/hooks/useTheme';
+import { useWidgetSize } from '../../hooks/useWidgetSize';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -23,10 +24,14 @@ const schema = z.object({
 export function WelcomeScreen() {
   const { createUnverifiedContact } = useContact();
   const config = useConfig();
+  const { theme } = useTheme();
   const locale = useLocale();
   const { data: preludeData } = usePreludeData();
-  const { observedElementRef } = useWidgetContentHeight({
-    minHeight: WIDGET_CONTENT_MIN_HEIGHT_PX,
+  const { observedElementRef } = useWidgetContentHeight();
+
+  useWidgetSize({
+    height: undefined,
+    width: theme.screens.welcome.width,
   });
 
   const [name, setName] = useState(config.prefillUserData?.name || '');
@@ -61,95 +66,110 @@ export function WelcomeScreen() {
 
   return (
     <div
-      ref={observedElementRef}
-      className={cn(
-        DEFAULT_STYLES.widgetMinHeight,
-        'h-fit bg-primary flex flex-col',
-      )}
+      className={cn('bg-primary')}
+      style={{
+        width: '100vw', // Relative to the iframe
+        maxWidth: '100vw', // Relative to the iframe
+        minHeight: theme.screens.welcome.minHeight,
+        height: '100vh', // Relative to the iframe
+        maxHeight: '100vh', // Relative to the iframe
+        overflowY: 'auto',
+      }}
     >
-      <div
-        dir="auto"
-        className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10"
-      >
-        <div className="flex items-center justify-between w-full mb-2">
-          {config.assets?.organizationLogo ? (
-            <img
-              src={config.assets?.organizationLogo}
-              alt="Company Logo"
-              className="h-8 w-auto object-contain"
-            />
-          ) : (
-            <h2
-              className="font-bold text-xl text-primary-foreground"
+      <div ref={observedElementRef} className="flex flex-col">
+        <div
+          dir="auto"
+          className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10"
+        >
+          <div className="flex items-center justify-between w-full mb-2">
+            {config.assets?.organizationLogo ? (
+              <img
+                src={config.assets?.organizationLogo}
+                alt="Company Logo"
+                className="h-8 w-auto object-contain"
+              />
+            ) : (
+              <h2
+                className="font-bold text-xl text-primary-foreground"
+                dir="auto"
+              >
+                {preludeData?.data?.organizationName}
+              </h2>
+            )}
+          </div>
+          <div className="space-y-2">
+            <h1
+              className="text-2xl font-bold text-primary-foreground"
               dir="auto"
             >
-              {preludeData?.data?.organizationName}
-            </h2>
-          )}
-        </div>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-primary-foreground" dir="auto">
-            {config.textContent?.welcomeScreen?.title ||
-              locale.get('welcome-title')}
-          </h1>
+              {config.textContent?.welcomeScreen?.title ||
+                locale.get('welcome-title')}
+            </h1>
 
-          <p
-            className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed"
-            dir="auto"
-          >
-            {config.textContent?.welcomeScreen?.description ||
-              locale.get('welcome-description')}
-          </p>
+            <p
+              className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed"
+              dir="auto"
+            >
+              {config.textContent?.welcomeScreen?.description ||
+                locale.get('welcome-description')}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <div className="p-2 bg-background rounded-t-3xl" dir="auto">
-        <form onSubmit={handleSubmit} className="space-y-2">
-          <div className="space-y-2">
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              placeholder={locale.get('your-name')}
-              name="name"
-              className="rounded-3xl pl-3"
-            />
-            <Input
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder={locale.get('your-email')}
-              name="email"
-              className="rounded-3xl pl-3"
-            />
-            {extraDataFields.map((field) => (
+        <div
+          className="z-10 px-2 pt-2 bp-0 bg-background rounded-t-3xl space-y-2"
+          dir="auto"
+        >
+          <form onSubmit={handleSubmit} className="space-y-2">
+            <div className="space-y-2">
               <Input
-                key={field}
-                value={extraData[field]}
-                onChange={(e) =>
-                  setExtraData((prev) => ({ ...prev, [field]: e.target.value }))
-                }
-                placeholder={`${field} (${locale.get('optional')})`}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                placeholder={locale.get('your-name')}
+                name="name"
                 className="rounded-3xl pl-3"
               />
-            ))}
-          </div>
+              <Input
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder={locale.get('your-email')}
+                name="email"
+                className="rounded-3xl pl-3"
+              />
+              {extraDataFields.map((field) => (
+                <Input
+                  key={field}
+                  value={extraData[field]}
+                  onChange={(e) =>
+                    setExtraData((prev) => ({
+                      ...prev,
+                      [field]: e.target.value,
+                    }))
+                  }
+                  placeholder={`${field} (${locale.get('optional')})`}
+                  className="rounded-3xl pl-3"
+                />
+              ))}
+            </div>
 
-          <Button
-            disabled={handleSubmitState.loading}
-            className="w-full rounded-3xl"
-            size="lg"
-          >
-            {handleSubmitState.loading
-              ? locale.get('starting-chat')
-              : locale.get('start-chat')}
-            <SendHorizontal className="size-4 rtl:-scale-100" />
-          </Button>
-        </form>
+            <Button
+              disabled={handleSubmitState.loading}
+              className="w-full rounded-3xl"
+              size="lg"
+            >
+              {handleSubmitState.loading
+                ? locale.get('starting-chat')
+                : locale.get('start-chat')}
+              <SendHorizontal className="size-4 rtl:-scale-100" />
+            </Button>
+          </form>
+
+          <PoweredByOpen />
+        </div>
       </div>
-
-      <PoweredByOpen />
     </div>
   );
 }
