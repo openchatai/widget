@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.68
+
+### Patch Changes
+
+- add option to open links in a new tab (inside AI and human agents replies)
+
 ## 3.0.67
 
 ### Patch Changes
