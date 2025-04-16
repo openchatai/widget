@@ -134,6 +134,16 @@ export interface WidgetConfig {
     goToChatIfNoSessions?: boolean;
   };
   /**
+   * The target attribute for all links in the AI or human agents responses.
+   *
+   * `_blank` opens links in a new tab or window.
+   *
+   * `_top` opens links in the same tab.
+   *
+   * @default '_top'
+   */
+  anchorTarget?: '_blank' | '_top';
+  /**
    * Headers to be sent with each send-message request from the widget.
    * These headers will be sent with each AI action (AI tools) that the LLM can call.
    * This is useful if your AI actions require authentication specific to each contact.

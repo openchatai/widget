@@ -5,6 +5,7 @@ import rehypeRaw from 'rehype-raw';
 import { AttachmentPreview } from '../AttachmentPreview';
 import type { WidgetComponentProps } from '../../../../headless/react/types/components';
 import { cn } from '../lib/utils/cn';
+import { useConfig } from '../../../../headless/react';
 
 export function BotOrAgentResponse({
   data,
@@ -12,6 +13,7 @@ export function BotOrAgentResponse({
   type,
   attachments,
 }: WidgetComponentProps) {
+  const { anchorTarget } = useConfig();
   const { message, variant = 'default' } = data;
 
   if (variant === 'error') {
@@ -42,7 +44,7 @@ export function BotOrAgentResponse({
           components={{
             a: ({ children, ...props }) => {
               return (
-                <a target="_top" {...props}>
+                <a target={anchorTarget ?? '_top'} {...props}>
                   {children}
                 </a>
               );

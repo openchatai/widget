@@ -74,6 +74,7 @@ function App() {
           //     },
           //   },
           // },
+          anchorTarget: '_blank',
         }}
       />
     </div>
