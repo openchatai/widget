@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.69
+
+### Patch Changes
+
+- fix welcome screen animation
+
 ## 3.0.68
 
 ### Patch Changes
