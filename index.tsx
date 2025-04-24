@@ -47,7 +47,7 @@ function App() {
           // theme: {
           //   primaryColor: "#639"
           // },
-          // collectUserData: true,
+          collectUserData: true,
           extraDataCollectionFields: ['Order number'],
           // prefillUserData: {
           //   // name: "ali",

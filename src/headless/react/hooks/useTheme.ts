@@ -32,7 +32,7 @@ export function useTheme() {
       welcome: {
         width: theme?.screens?.welcome?.width || '375px',
         // By setting minHeight to 1px, a nice animation will play from 1px to the dynamic height of the content of the screen
-        minHeight: theme?.screens?.welcome?.minHeight || '1px',
+        minHeight: theme?.screens?.welcome?.minHeight || '200px',
       },
       sessions: {
         width: theme?.screens?.sessions?.width || '450px',
