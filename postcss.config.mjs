@@ -9,6 +9,11 @@ export default {
     prefixer({
       prefix: `[data-opencx-widget]`,
       transform: (prefix, selector, prefixedSelector, filePath) => {
+        // Skip prefixing for styles from root index.html
+        if (filePath.includes('/index.html') || filePath === 'index.html') {
+          return selector;
+        }
+
         if (selector === ':root') {
           return selector; // Don't prefix :root selector
         }
