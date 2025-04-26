@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.71
+
+### Patch Changes
+
+- fix max height
+
 ## 3.0.70
 
 ### Patch Changes
