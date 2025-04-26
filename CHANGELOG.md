@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.70
+
+### Patch Changes
+
+- 🚀 support fullscreen on mobile
+
 ## 3.0.69
 
 ### Patch Changes
