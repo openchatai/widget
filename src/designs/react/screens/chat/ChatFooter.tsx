@@ -9,7 +9,7 @@ import {
   ImageIcon,
   Loader2,
   PaperclipIcon,
-  SendHorizonal,
+  SendHorizontalIcon,
   XIcon,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -31,6 +31,7 @@ import { Button } from '../../components/lib/button';
 import { useDocumentDir } from '../../../../headless/react/hooks/useDocumentDir';
 import { SuggestedReplies } from '../../components/SuggestedReplies';
 import type { SendMessageDto } from '../../../../headless/core';
+import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
 
 function FileDisplay({
   file: { status, file, error },
@@ -128,6 +129,7 @@ function FileDisplay({
 const INPUT_CONTAINER_B_RADIUS = cn('rounded-3xl');
 
 function ChatInput() {
+  const { isSmallScreen } = useIsSmallScreen();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { sendMessage } = useMessages();
   const { sessionState } = useSessions();
@@ -254,7 +256,10 @@ function ChatInput() {
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
             'w-full resize-none px-3',
-            'text-sm rtl:placeholder:text-right bg-transparent outline-none',
+            'bg-transparent outline-none',
+            'rtl:placeholder:text-right',
+            // 16px on mobiles prevents auto-zoom on the input when focused
+            isSmallScreen ? 'text-[16px]' : 'text-sm',
           )}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={async (event) => {
@@ -307,7 +312,7 @@ function ChatInput() {
                   </MotionDiv>
                 ) : (
                   <MotionDiv key="send" snapExit>
-                    <SendHorizonal className="size-4 rtl:-scale-100" />
+                    <SendHorizontalIcon className="size-4 rtl:-scale-100" />
                   </MotionDiv>
                 )}
               </AnimatePresence>

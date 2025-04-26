@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useIsSmallScreen } from './useIsSmallScreen';
 
 const SELECTOR = '[data-opencx-widget-content-root]' as const;
 
@@ -9,6 +10,8 @@ export function useWidgetSize({
   width?: string;
   height?: string;
 }) {
+  const { isSmallScreen } = useIsSmallScreen();
+
   useEffect(() => {
     const contentRoot = document.querySelector<HTMLElement>(SELECTOR);
 
@@ -19,6 +22,5 @@ export function useWidgetSize({
     if (height) {
       contentRoot?.style.setProperty('--opencx-widget-height', height);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isSmallScreen, height, width]);
 }

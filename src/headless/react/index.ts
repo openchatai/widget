@@ -15,3 +15,7 @@ export { useSessions } from './hooks/useSessions';
 export { useWidgetRouter } from './hooks/useWidgetRouter';
 export { useVote } from './hooks/useVote';
 export { type FileWithProgress, useUploadFiles } from './hooks/useUploadFiles';
+export {
+  useWidgetTrigger,
+  WidgetTriggerProvider,
+} from './hooks/useWidgetTrigger';

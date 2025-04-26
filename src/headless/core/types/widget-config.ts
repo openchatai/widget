@@ -43,18 +43,29 @@ export interface WidgetConfig {
   theme?: {
     primaryColor?: string;
     widgetTrigger?: {
+      zIndex?: number;
       offset?: {
-        right?: string;
-        bottom?: string;
+        /** number in pixels */
+        right?: number;
+        /** number in pixels */
+        bottom?: number;
       };
       size?: {
-        button?: string;
-        icon?: string;
+        /** number in pixels */
+        button?: number;
+        /** number in pixels */
+        icon?: number;
       };
     };
     widgetContentContainer?: {
-      /** The distance between the widget content and the widget trigger */
-      offset?: number;
+      borderRadius?: string;
+      zIndex?: number;
+      offset?: {
+        /** number in pixels */
+        side?: number;
+        /** number in pixels */
+        align?: number;
+      };
     };
     screens?: {
       welcome?: {

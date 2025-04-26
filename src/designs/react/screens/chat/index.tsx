@@ -7,7 +7,7 @@ import { useMessages, useSessions } from '../../../../headless/react';
 import { AnimatePresence } from 'framer-motion';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Loading } from '../../components/lib/loading';
-import { useTheme } from '../../../../headless/react/hooks/useTheme';
+import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
 
 export function ChatScreen() {

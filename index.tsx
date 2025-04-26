@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 // import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Widget } from './src/designs/react';
@@ -7,31 +7,31 @@ import { HandoffComponent } from './src/designs/react/components/custom-componen
 // const apiUrl = "http://localhost:8080";
 const apiUrl = 'https://api.open.cx';
 const token = import.meta.env.VITE_ORG_TOKEN;
-// const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
+const apiToken = import.meta.env.VITE_ORG_PUBLIC_API_TOKEN;
 
 function App() {
-  // const [userToken, setUserToken] = useState("");
-  // const didFetchRef = useRef(false);
+  const [userToken, setUserToken] = useState('');
+  const didFetchRef = useRef(false);
 
-  // useEffect(() => {
-  //   if (didFetchRef.current) return;
-  //   didFetchRef.current = true;
-  //   fetch(`${apiUrl}/widget/authenticate-user`, {
-  //     method: "POST",
-  //     body: JSON.stringify({
-  //       email: "ali@open.cx",
-  //     }),
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${apiToken}`,
-  //     },
-  //   }).then(async (res) => {
-  //     const data = await res.json();
-  //     setUserToken(data.token);
-  //   });
-  // }, []);
+  useEffect(() => {
+    if (didFetchRef.current) return;
+    didFetchRef.current = true;
+    fetch(`${apiUrl}/widget/authenticate-user`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'ali@open.cx',
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiToken}`,
+      },
+    }).then(async (res) => {
+      const data = await res.json();
+      setUserToken(data.token);
+    });
+  }, []);
 
-  // if (!userToken) return null;
+  if (!userToken) return null;
 
   return (
     <div
@@ -45,9 +45,9 @@ function App() {
           token,
           initialMessages: ['Hi there, how can we help you?'],
           // theme: {
-          //   primaryColor: "#639"
+          //   primaryColor: '#639',
           // },
-          collectUserData: true,
+          // collectUserData: true,
           extraDataCollectionFields: ['Order number'],
           // prefillUserData: {
           //   // name: "ali",

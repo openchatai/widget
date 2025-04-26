@@ -19,7 +19,7 @@ import { MemoizedReactMarkdown } from '../../components/markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
-import { useTheme } from '../../../../headless/react/hooks/useTheme';
+import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
 
 function SessionCard({ session }: { session: SessionDto }) {

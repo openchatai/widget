@@ -1,15 +1,16 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
+import IFrame from '@uiw/react-iframe';
 import { AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon } from 'lucide-react';
 import React from 'react';
+import styles from '../../../index.css?inline';
+import { useWidgetTrigger } from '../../headless/react';
+import { MotionDiv } from './components/lib/MotionDiv';
 import { cn } from './components/lib/utils/cn';
 import { Wobble, WOBBLE_MAX_MOVEMENT_PIXELS } from './components/lib/wobble';
-import { MotionDiv } from './components/lib/MotionDiv';
 import { ChatBubbleSvg } from './components/svg/ChatBubbleSvg';
 import { OpenLogoPatternSvg } from './components/svg/OpenLogoPatternSvg';
-import IFrame from '@uiw/react-iframe';
-import styles from '../../../index.css?inline';
-import { useTheme } from '../../headless/react/hooks/useTheme';
+import { useTheme } from './hooks/useTheme';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -29,18 +30,19 @@ html, body {
 </body>
 </html>`;
 
-function WidgetPopoverTrigger({ isOpen }: { isOpen: boolean }) {
+function WidgetPopoverTrigger() {
+  const { isOpen } = useWidgetTrigger();
   const { theme, cssVars } = useTheme();
 
   return (
     <IFrame
       initialContent={initialContent}
       style={{
-        height: `calc(${theme.widgetTrigger.size.button} + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
-        width: `calc(${theme.widgetTrigger.size.button} + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,
+        height: `calc(${theme.widgetTrigger.size.button}px + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
+        width: `calc(${theme.widgetTrigger.size.button}px + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,
         fontSize: '16px',
         position: 'fixed',
-        zIndex: 10000000,
+        zIndex: theme.widgetTrigger.zIndex,
         right: theme.widgetTrigger.offset.right,
         bottom: theme.widgetTrigger.offset.bottom,
       }}

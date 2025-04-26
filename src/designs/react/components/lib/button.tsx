@@ -39,6 +39,7 @@ const buttonVariants = cva(
         icon: 'h-10 w-10',
         fit: 'size-fit p-2',
         free: 'p-2',
+        selfless: 'p-0',
       },
     },
     defaultVariants: {

@@ -3,10 +3,15 @@ import {
   ChevronLeftIcon,
   EllipsisVerticalIcon,
   MessageCirclePlusIcon,
+  XIcon,
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { useLocale } from '../hooks/useLocale';
-import { usePreludeData, useWidgetRouter } from '../../../headless/react';
+import {
+  usePreludeData,
+  useWidgetRouter,
+  useWidgetTrigger,
+} from '../../../headless/react';
 import { Button } from './lib/button';
 import {
   DropdownMenu,
@@ -19,6 +24,7 @@ import { Skeleton } from './lib/skeleton';
 import { useDocumentDir } from '../../../headless/react/hooks/useDocumentDir';
 import { MotionDiv } from './lib/MotionDiv';
 import { cn } from './lib/utils/cn';
+import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -55,6 +61,23 @@ function OptionsMenu() {
   );
 }
 
+function CloseWidgetButton() {
+  const { setIsOpen } = useWidgetTrigger();
+  const { isSmallScreen } = useIsSmallScreen();
+
+  if (!isSmallScreen) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="fit"
+      className="rounded-full"
+      onClick={() => setIsOpen(false)}
+    >
+      <XIcon className="size-4" />
+    </Button>
+  );
+}
 export function WidgetHeader() {
   const {
     routerState: { screen },
@@ -64,7 +87,7 @@ export function WidgetHeader() {
   const direction = useDocumentDir();
 
   return (
-    <header className="p-2 border-b bg-background">
+    <header className="p-2 border-b bg-background shrink-0">
       <div
         dir={direction}
         className="flex items-center rtl:flex-row-reverse gap-2"
@@ -96,6 +119,7 @@ export function WidgetHeader() {
           </AnimatePresence>
         </div>
         <OptionsMenu />
+        <CloseWidgetButton />
       </div>
     </header>
   );

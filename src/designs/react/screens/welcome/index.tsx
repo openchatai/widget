@@ -1,19 +1,22 @@
+import { SendHorizontal, XIcon } from 'lucide-react';
 import React, { useState } from 'react';
-import { SendHorizontal } from 'lucide-react';
-import { z } from 'zod';
 import useAsyncFn from 'react-use/lib/useAsyncFn';
+import { z } from 'zod';
 import {
   useConfig,
   useContact,
   usePreludeData,
+  useWidgetTrigger,
 } from '../../../../headless/react';
-import { useLocale } from '../../hooks/useLocale';
-import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
-import { cn } from '../../components/lib/utils/cn';
-import { Input } from '../../components/lib/input';
 import { Button } from '../../components/lib/button';
+import { Input } from '../../components/lib/input';
+import { MotionDiv } from '../../components/lib/MotionDiv';
+import { cn } from '../../components/lib/utils/cn';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
-import { useTheme } from '../../../../headless/react/hooks/useTheme';
+import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
+import { useLocale } from '../../hooks/useLocale';
+import { useTheme } from '../../hooks/useTheme';
+import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
 
 const schema = z.object({
@@ -22,7 +25,9 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
+  const { setIsOpen } = useWidgetTrigger();
   const { createUnverifiedContact } = useContact();
+  const { isSmallScreen } = useIsSmallScreen();
   const config = useConfig();
   const { theme } = useTheme();
   const locale = useLocale();
@@ -76,11 +81,22 @@ export function WelcomeScreen() {
         overflowY: 'auto',
       }}
     >
-      <div ref={observedElementRef} className="flex flex-col">
+      <div
+        ref={observedElementRef}
+        className={cn('flex flex-col', isSmallScreen && 'h-full')}
+      >
         <div
           dir="auto"
           className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10"
         >
+          {isSmallScreen && (
+            <MotionDiv className="absolute top-6 right-6">
+              <Button size="selfless" onClick={() => setIsOpen(false)}>
+                <XIcon className="size-4" />
+              </Button>
+            </MotionDiv>
+          )}
+
           <div className="flex items-center justify-between w-full mb-2">
             {config.assets?.organizationLogo ? (
               <img
