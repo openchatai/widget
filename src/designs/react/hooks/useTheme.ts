@@ -96,9 +96,8 @@ export function useTheme() {
       'h',
       `calc(
         100vh 
-        - ${themeWithFallbacks.widgetTrigger.offset.bottom * 2}px
+        - ${themeWithFallbacks.widgetTrigger.offset.bottom}px
         - ${themeWithFallbacks.widgetContentContainer.offset.side}px
-        - ${themeWithFallbacks.widgetTrigger.size.button}px
         - ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px
       )`,
     ),

@@ -44,9 +44,15 @@ function App() {
           apiUrl,
           token,
           initialMessages: ['Hi there, how can we help you?'],
-          // theme: {
-          //   primaryColor: '#639',
-          // },
+          theme: {
+            primaryColor: '#639',
+            screens: {
+              chat: {
+                height: '100vh',
+                width: '50vw',
+              },
+            },
+          },
           // collectUserData: true,
           extraDataCollectionFields: ['Order number'],
           // prefillUserData: {
