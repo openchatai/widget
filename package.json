@@ -20,7 +20,7 @@
   "scripts": {
     "clean": "rm -rf ./dist ./dist-embed",
     "clean:dist": "rm -rf ./dist ./dist-embed",
-    "dev": "vite -c vite.config.ts",
+    "dev": "vite -c vite.config.ts --host",
     "build:lib": "vite build -c vite.config.ts",
     "build:embed": "vite build -c vite.embed.config.ts",
     "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/headless/core/api/schema.ts && prettier --write ./src/headless/core/api/schema.ts",
