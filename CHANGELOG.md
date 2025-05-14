@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.72
+
+### Patch Changes
+
+- move height and width variables to content iframe and manipulate it via a react ref
+
 ## 3.0.71
 
 ### Patch Changes
