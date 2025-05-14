@@ -1,15 +1,15 @@
 import { useEffect, useRef } from 'react';
-
-const SELECTOR = '[data-opencx-widget-content-root]' as const;
+import { useWidget } from '../../../headless/react';
 
 export function useWidgetContentHeight() {
+  const { contentIframeRef } = useWidget();
   /**
    * This is the element that we will observe for height changes
    */
   const observedElementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const contentRoot = document.querySelector<HTMLElement>(SELECTOR);
+    const contentRoot = contentIframeRef?.current;
 
     if (contentRoot && observedElementRef.current) {
       const observedElement = observedElementRef.current;
@@ -31,7 +31,7 @@ export function useWidgetContentHeight() {
         observer.unobserve(observedElement);
       };
     }
-  }, []);
+  }, [contentIframeRef]);
 
   return { observedElementRef };
 }

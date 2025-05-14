@@ -18,7 +18,6 @@ export function ChatBubbleSvg({
       className={cn('text-primary-foreground', className)}
       style={style}
     >
-      <title>Chat Bubble</title>
       <path
         d="M0 6.94263C0 3.62892 2.68629 0.942627 6 0.942627H26C29.3137 0.942627 32 3.62892 32 6.94263V17.9426C32 21.2563 29.3137 23.9426 26 23.9426H6C2.68629 23.9426 0 21.2563 0 17.9426V6.94263Z"
         fill="currentColor"

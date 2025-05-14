@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useIsSmallScreen } from './useIsSmallScreen';
-
-const SELECTOR = '[data-opencx-widget-content-root]' as const;
+import { useWidget } from '../../../headless/react';
 
 export function useWidgetSize({
   width,
@@ -11,16 +10,21 @@ export function useWidgetSize({
   height?: string;
 }) {
   const { isSmallScreen } = useIsSmallScreen();
+  const { contentIframeRef } = useWidget();
 
   useEffect(() => {
-    const contentRoot = document.querySelector<HTMLElement>(SELECTOR);
-
     if (width) {
-      contentRoot?.style.setProperty('--opencx-widget-width', width);
+      contentIframeRef?.current?.style.setProperty(
+        '--opencx-widget-width',
+        width,
+      );
     }
 
     if (height) {
-      contentRoot?.style.setProperty('--opencx-widget-height', height);
+      contentIframeRef?.current?.style.setProperty(
+        '--opencx-widget-height',
+        height,
+      );
     }
-  }, [isSmallScreen, height, width]);
+  }, [isSmallScreen, height, width, contentIframeRef]);
 }

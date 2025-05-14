@@ -30,7 +30,7 @@ html, body {
 
 export function WidgetPopoverContent() {
   const { isOpen } = useWidgetTrigger();
-  const chat = useWidget();
+  const { version, contentIframeRef } = useWidget();
   const { theme, cssVars, computed } = useTheme();
 
   return (
@@ -40,9 +40,6 @@ export function WidgetPopoverContent() {
       style={{
         zIndex: theme.widgetContentContainer.zIndex,
         fontSize: '16px',
-        // @ts-expect-error this is a valid css variable
-        '--opencx-widget-width': computed.minWidth,
-        '--opencx-widget-height': computed.minHeight,
       }}
       side="top"
       align="end"
@@ -50,7 +47,6 @@ export function WidgetPopoverContent() {
       alignOffset={theme.widgetContentContainer.offset.align}
       avoidCollisions={false}
       data-opencx-widget
-      data-opencx-widget-content-root
       asChild
     >
       <motion.div
@@ -71,11 +67,16 @@ export function WidgetPopoverContent() {
         }}
       >
         <IFrame
+          ref={contentIframeRef}
           initialContent={initialContent}
           allowFullScreen
           title="OpenCX Live Chat"
           data-opencx-widget
           style={{
+            // @ts-expect-error this is a valid css variable
+            '--opencx-widget-width': computed.minWidth,
+            '--opencx-widget-height': computed.minHeight,
+
             minWidth: computed.minWidth,
             width: 'var(--opencx-widget-width)',
             maxWidth: computed.maxWidth, // Relative to the viewport
@@ -110,7 +111,7 @@ export function WidgetPopoverContent() {
                 style={{
                   ...cssVars,
                 }}
-                data-version={chat.version}
+                data-version={version}
                 data-opencx-widget
                 className={cn(
                   'antialiased font-inter bg-primary size-full overflow-hidden isolate relative text-secondary-foreground',

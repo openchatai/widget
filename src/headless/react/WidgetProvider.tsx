@@ -11,13 +11,13 @@ interface WidgetProviderValue {
   componentStore: ComponentRegistry;
   theme: WidgetConfig['theme'];
   version: string;
+  contentIframeRef?: React.MutableRefObject<HTMLIFrameElement | null>;
 }
 
 const [useWidget, SafeProvider] = createSafeContext<WidgetProviderValue>();
 
 function WidgetProvider({
   options: config,
-
   children,
   components,
   storage,
@@ -27,6 +27,8 @@ function WidgetProvider({
   components?: WidgetComponentType[];
   storage?: ExternalStorage;
 }) {
+  const contentIframeRef = useRef<HTMLIFrameElement | null>(null);
+
   const didInitialize = useRef(false);
   const [widgetCtx, setWidgetCtx] = useState<WidgetCtx | null>(null);
 
@@ -56,6 +58,7 @@ function WidgetProvider({
         componentStore,
         version,
         theme: config.theme,
+        contentIframeRef,
       }}
     >
       {children}
