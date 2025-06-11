@@ -51,7 +51,7 @@ export function BotOrAgentResponse({
             },
           }}
           className={cn(
-            'w-fit p-2 rounded-2xl bg-secondary border shadow-sm',
+            'w-fit py-2 px-3 rounded-2xl bg-secondary border shadow-sm',
             'leading-snug text-sm prose prose-sm prose-a:decoration-primary prose-a:underline',
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             // No need to add "whitespace-pre-wrap" in the agent or bot message because it is markup and content appear on separate lines as expected

@@ -18,7 +18,7 @@ function UserMessage({ message }: { message: UserMessageType }) {
       {message.content.length > 0 && (
         <div
           className={cn(
-            'w-fit p-2 rounded-2xl text-sm',
+            'w-fit py-2 px-3 rounded-2xl text-sm',
             'bg-primary text-primary-foreground border shadow-sm',
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             'whitespace-pre-wrap',
