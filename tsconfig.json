@@ -32,7 +32,7 @@
     "types": ["vitest/globals"]
   },
   "include": [
-    "index.tsx",
+    "index.dev.tsx",
     "src",
     "vite.config.ts",
     "vite.embed.config.ts",
