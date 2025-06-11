@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { memo } from 'react';
 import { cn } from './utils/cn';
+
 /**
  * The maximum number of pixels the element can move in the x and y directions
  *
@@ -16,23 +17,27 @@ export const WOBBLE_MAX_MOVEMENT_PIXELS = {
   y: 2,
 };
 
-const scaleVariants = {
-  '1': 'scale-[1]',
-  '1.01': 'scale-[1.01]',
-  '1.02': 'scale-[1.02]',
-  '1.1': 'scale-[1.1]',
+const INVERSE_SCALE = true;
+
+type ChildProps = {
+  onMouseMove?: (event: React.MouseEvent<HTMLElement>) => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  style?: React.CSSProperties;
+  className?: string;
+  ref: React.ForwardedRef<HTMLElement>;
 };
 
 export interface WobbleProps {
-  children: ReactElement;
+  children: ReactElement<ChildProps>;
   className?: string;
-  scale?: keyof typeof scaleVariants;
+  scale?: number;
   off?: boolean;
 }
 
 const Wobble = memo(
   forwardRef<HTMLElement, WobbleProps>(
-    ({ children, className, scale = '1.02', off = false }, ref) => {
+    ({ children, className, scale = 1.02, off = false }, ref) => {
       const [isHovering, setIsHovering] = useState(false);
       const [movement, setMovement] = useState({ x: 0, y: 0 });
 
@@ -83,8 +88,11 @@ const Wobble = memo(
       };
 
       const childStyles = {
-        '--opencx-wobble-x': isHovering ? `${movement.x}px` : '0px',
-        '--opencx-wobble-y': isHovering ? `${movement.y}px` : '0px',
+        '--wobble-x': isHovering ? `${movement.x}px` : '0px',
+        '--wobble-y': isHovering ? `${movement.y}px` : '0px',
+        '--scale': INVERSE_SCALE
+          ? 1 - (scale - 1) // if scale is 1.02, it becomes 0.98
+          : scale,
       } as React.CSSProperties;
 
       return cloneElement(children, {
@@ -97,9 +105,9 @@ const Wobble = memo(
           ...children.props.style,
         },
         className: cn(
-          'translate-x-[var(--opencx-wobble-x)]',
-          'translate-y-[var(--opencx-wobble-y)]',
-          `hover:${scaleVariants[scale]}`,
+          'translate-x-[var(--wobble-x)]',
+          'translate-y-[var(--wobble-y)]',
+          'hover:scale-[var(--scale)] active:hover:scale-[calc(var(--scale)-0.02)]',
           className,
           children.props.className,
           'transition-all ease-out',

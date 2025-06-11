@@ -112,7 +112,7 @@ function SessionsList() {
                     </MotionDiv>
                   ))}
                 </AnimatePresence>
-                <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background">
+                <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background bg-background">
                   <Button
                     size="lg"
                     key="new-session"
