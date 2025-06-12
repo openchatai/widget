@@ -1,5 +1,9 @@
 import type { AgentOrBotType } from './agent-or-bot';
 
+// The enum is imported so the `@link` in the jsdoc works
+// eslint-disable-next-line unused-imports/no-unused-imports
+import { OpenCxComponentName } from './component-name.enum';
+
 type UserBaseConfig =
   | {
       token: string;
@@ -40,6 +44,25 @@ export interface WidgetConfig {
    * A name and an avatar for the bot.
    */
   bot?: Pick<AgentOrBotType, 'name' | 'avatar'>;
+  /**
+   * A custom vanilla stylesheet to override the default styles. See {@link OpenCxComponentName} for available component names.
+   *
+   * @example Overriding a component's styles
+   * ```css
+   * [data-component="sessions-screen__new-conversation-button"] {
+   *   background-color: orangered;
+   * }
+   * ```
+   *
+   * @example Changing the font family
+   * ```css
+   * \@import url('https://fonts.googleapis.com/css2?family=Baskervville:ital,wght@0,400..700;1,400..700&display=swap');
+   * * {
+   *   font-family: "Baskervville", serif;
+   * }
+   * ```
+   */
+  cssOverrides?: string;
   theme?: {
     primaryColor?: string;
     widgetTrigger?: {

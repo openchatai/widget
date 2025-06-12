@@ -25,6 +25,7 @@ import { useDocumentDir } from '../../../headless/react/hooks/useDocumentDir';
 import { MotionDiv } from './lib/MotionDiv';
 import { cn } from './lib/utils/cn';
 import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
+import type { OpenCxComponentName, SafeExtract } from '../../../headless/core';
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -78,7 +79,14 @@ function CloseWidgetButton() {
     </Button>
   );
 }
-export function WidgetHeader() {
+export function WidgetHeader({
+  componentName,
+}: {
+  componentName: SafeExtract<
+    keyof typeof OpenCxComponentName,
+    'chat-screen__header' | 'sessions-screen__header'
+  >;
+}) {
   const {
     routerState: { screen },
     toSessionsScreen,
@@ -87,7 +95,7 @@ export function WidgetHeader() {
   const direction = useDocumentDir();
 
   return (
-    <header className="p-2 border-b bg-background shrink-0">
+    <header data-component={componentName} className="p-2 border-b shrink-0">
       <div
         dir={direction}
         className="flex items-center rtl:flex-row-reverse gap-2"

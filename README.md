@@ -33,13 +33,11 @@ import { Widget } from '@opencx/widget/designs';
 
 function YourComponent() {
   return (
-    <div data-opencx-widget>
-      <Widget
-        options={{
-          token: 'your-token-here',
-        }}
-      />
-    </div>
+    <Widget
+      options={{
+        token: 'your-token-here',
+      }}
+    />
   );
 }
 ```

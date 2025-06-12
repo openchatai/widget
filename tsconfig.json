@@ -33,6 +33,7 @@
   },
   "include": [
     "index.dev.tsx",
+    "app.dev.tsx",
     "src",
     "vite.config.ts",
     "vite.embed.config.ts",

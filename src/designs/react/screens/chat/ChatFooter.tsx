@@ -251,10 +251,12 @@ function ChatInput() {
           id="chat-input"
           dir={dir}
           value={inputText}
+          // Thw `rows` attribute will take effect in browsers that do not support [field-sizing:content;] (Firefox and Safari as of now)
           rows={3}
           className={cn(
             /** Match the border radius of the container */
             INPUT_CONTAINER_B_RADIUS,
+            'max-h-16 [field-sizing:content]',
             'w-full resize-none px-3',
             'bg-transparent outline-none',
             'rtl:placeholder:text-right',

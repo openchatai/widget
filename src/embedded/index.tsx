@@ -28,8 +28,5 @@ export function render(rootId: string, component: React.JSX.Element) {
     document.body.appendChild(rootElement);
   }
 
-  // Set the attribute on the div whether it existed or was just created by this function... without this attribute, styles won't work
-  rootElement.setAttribute('data-opencx-widget', '');
-
   return createRoot(rootElement).render(component);
 }

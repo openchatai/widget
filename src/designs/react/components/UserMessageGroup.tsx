@@ -1,7 +1,10 @@
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './lib/avatar';
 import { AttachmentPreview } from './AttachmentPreview';
-import type { UserMessageType } from '../../../headless/core';
+import {
+  OpenCxComponentName,
+  type UserMessageType,
+} from '../../../headless/core';
 import { cn } from './lib/utils/cn';
 import { useConfig } from '../../../headless/react';
 
@@ -17,6 +20,7 @@ function UserMessage({ message }: { message: UserMessageType }) {
       )}
       {message.content.length > 0 && (
         <div
+          data-component={OpenCxComponentName['chat-screen__user-message']}
           className={cn(
             'w-fit py-2 px-3 rounded-2xl text-sm',
             'bg-primary text-primary-foreground border shadow-sm',

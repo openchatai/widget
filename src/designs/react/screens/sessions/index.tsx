@@ -12,7 +12,10 @@ import { Loading } from '../../components/lib/loading';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { WidgetHeader } from '../../components/WidgetHeader';
 import { useLocale } from '../../hooks/useLocale';
-import type { SessionDto } from '../../../../headless/core';
+import {
+  OpenCxComponentName,
+  type SessionDto,
+} from '../../../../headless/core';
 import { Skeleton } from '../../components/lib/skeleton';
 import { Avatar, AvatarImage } from '../../components/lib/avatar';
 import { MemoizedReactMarkdown } from '../../components/markdown';
@@ -114,6 +117,11 @@ function SessionsList() {
                 </AnimatePresence>
                 <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background bg-background">
                   <Button
+                    data-component={
+                      OpenCxComponentName[
+                        'sessions-screen__new-conversation-button'
+                      ]
+                    }
                     size="lg"
                     key="new-session"
                     className="w-full rounded-3xl"
@@ -165,7 +173,9 @@ export function SessionsScreen() {
       }}
     >
       <div className="size-full flex flex-col">
-        <WidgetHeader />
+        <WidgetHeader
+          componentName={OpenCxComponentName['sessions-screen__header']}
+        />
         <SessionsList />
       </div>
       <PoweredByOpen />

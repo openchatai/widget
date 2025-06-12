@@ -30,7 +30,7 @@ html, body {
 
 export function WidgetPopoverContent() {
   const { isOpen } = useWidgetTrigger();
-  const { version, contentIframeRef } = useWidget();
+  const { version, contentIframeRef, cssOverrides } = useWidget();
   const { theme, cssVars, computed } = useTheme();
 
   return (
@@ -46,7 +46,6 @@ export function WidgetPopoverContent() {
       sideOffset={theme.widgetContentContainer.offset.side}
       alignOffset={theme.widgetContentContainer.offset.align}
       avoidCollisions={false}
-      data-opencx-widget
       asChild
     >
       <motion.div
@@ -71,7 +70,6 @@ export function WidgetPopoverContent() {
           initialContent={initialContent}
           allowFullScreen
           title="OpenCX Live Chat"
-          data-opencx-widget
           style={{
             // @ts-expect-error this is a valid css variable
             '--opencx-widget-width': computed.minWidth,
@@ -94,8 +92,13 @@ export function WidgetPopoverContent() {
             transitionProperty: 'all',
             transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
             transitionDuration: '800ms',
+
+            // reset iframe defaults
+            boxSizing: 'border-box',
+            borderWidth: '0px',
           }}
         >
+          {cssOverrides && <style>{cssOverrides}</style>}
           <TooltipProvider
             delayDuration={200}
             // this is important, because without it, the tooltip remains even after moving the mouse away from trigger
@@ -105,14 +108,12 @@ export function WidgetPopoverContent() {
               style={{
                 display: 'contents',
               }}
-              data-opencx-widget
             >
               <div
                 style={{
                   ...cssVars,
                 }}
                 data-version={version}
-                data-opencx-widget
                 className={cn(
                   'antialiased font-inter bg-primary size-full overflow-hidden isolate relative text-secondary-foreground',
                 )}

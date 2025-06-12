@@ -9,6 +9,7 @@ import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Loading } from '../../components/lib/loading';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
+import { OpenCxComponentName } from '../../../../headless/core';
 
 export function ChatScreen() {
   const {
@@ -29,7 +30,8 @@ export function ChatScreen() {
 
   return (
     <div
-      className={cn('flex flex-col overflow-hidden bg-background')}
+      data-component={OpenCxComponentName['chat-screen__root']}
+      className={cn('flex flex-col overflow-hidden')}
       style={{
         width: '100vw', // Relative to the iframe
         maxWidth: '100vw', // Relative to the iframe
@@ -38,7 +40,9 @@ export function ChatScreen() {
       }}
     >
       <div className="size-full justify-between flex flex-col">
-        <WidgetHeader />
+        <WidgetHeader
+          componentName={OpenCxComponentName['chat-screen__header']}
+        />
         <AnimatePresence mode="wait">
           {isInitialFetchLoading ? (
             <MotionDiv

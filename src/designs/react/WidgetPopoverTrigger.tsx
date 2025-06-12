@@ -4,13 +4,13 @@ import { AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon } from 'lucide-react';
 import React from 'react';
 import styles from '../../../index.css?inline';
-import { useWidgetTrigger } from '../../headless/react';
+import { useWidget, useWidgetTrigger } from '../../headless/react';
 import { MotionDiv } from './components/lib/MotionDiv';
 import { cn } from './components/lib/utils/cn';
 import { Wobble, WOBBLE_MAX_MOVEMENT_PIXELS } from './components/lib/wobble';
 import { ChatBubbleSvg } from './components/svg/ChatBubbleSvg';
-import { OpenLogoPatternSvg } from './components/svg/OpenLogoPatternSvg';
 import { useTheme } from './hooks/useTheme';
+import { OpenCxComponentName } from '../../headless/core';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -32,6 +32,7 @@ html, body {
 
 function WidgetPopoverTrigger() {
   const { isOpen } = useWidgetTrigger();
+  const { cssOverrides } = useWidget();
   const { theme, cssVars } = useTheme();
 
   return (
@@ -45,10 +46,14 @@ function WidgetPopoverTrigger() {
         zIndex: theme.widgetTrigger.zIndex,
         right: theme.widgetTrigger.offset.right,
         bottom: theme.widgetTrigger.offset.bottom,
+
+        // reset iframe defaults
+        boxSizing: 'border-box',
+        borderWidth: '0px',
       }}
     >
+      {cssOverrides && <style>{cssOverrides}</style>}
       <div
-        data-opencx-widget
         style={{
           ...cssVars,
           width: '100%',
@@ -59,7 +64,9 @@ function WidgetPopoverTrigger() {
         }}
       >
         <PopoverPrimitive.PopoverTrigger
-          className={cn('font-inter flex items-center justify-center')}
+          className={cn(
+            'font-inter flex items-center justify-center rounded-full',
+          )}
           style={{
             height: theme.widgetTrigger.size.button,
             width: theme.widgetTrigger.size.button,
@@ -67,14 +74,14 @@ function WidgetPopoverTrigger() {
         >
           <Wobble>
             <div
+              data-component={OpenCxComponentName['trigger__button']}
               className={cn(
                 'relative size-full rounded-full',
                 'flex items-center justify-center',
                 'overflow-hidden',
                 'transition-all',
-                '[background:radial-gradient(50%_50%_at_50%_100%,hsl(var(--opencx-primary-foreground))_-75%,hsl(var(--opencx-primary))_100%)]',
+                'bg-primary',
                 'text-primary-foreground',
-                'active:scale-90',
               )}
             >
               <AnimatePresence mode="wait">
@@ -114,13 +121,6 @@ function WidgetPopoverTrigger() {
                   </MotionDiv>
                 )}
               </AnimatePresence>
-              <OpenLogoPatternSvg
-                className="absolute inset-0 opacity-5"
-                style={{
-                  width: theme.widgetTrigger.size.button,
-                  height: theme.widgetTrigger.size.button,
-                }}
-              />
             </div>
           </Wobble>
         </PopoverPrimitive.PopoverTrigger>

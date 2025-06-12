@@ -10,6 +10,7 @@ interface WidgetProviderValue {
   components?: WidgetComponentType[];
   componentStore: ComponentRegistry;
   theme: WidgetConfig['theme'];
+  cssOverrides: WidgetConfig['cssOverrides'];
   version: string;
   contentIframeRef?: React.MutableRefObject<HTMLIFrameElement | null>;
 }
@@ -58,6 +59,7 @@ function WidgetProvider({
         componentStore,
         version,
         theme: config.theme,
+        cssOverrides: config.cssOverrides,
         contentIframeRef,
       }}
     >

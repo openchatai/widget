@@ -6,6 +6,7 @@ import { AttachmentPreview } from '../AttachmentPreview';
 import type { WidgetComponentProps } from '../../../../headless/react/types/components';
 import { cn } from '../lib/utils/cn';
 import { useConfig } from '../../../../headless/react';
+import { OpenCxComponentName } from '../../../../headless/core';
 
 export function BotOrAgentResponse({
   data,
@@ -36,20 +37,10 @@ export function BotOrAgentResponse({
         })}
       </div>
       {message.length > 0 && (
-        <MemoizedReactMarkdown
-          data-type={type}
-          data-id={id}
-          remarkPlugins={[remarkGfm]}
-          rehypePlugins={[rehypeRaw]}
-          components={{
-            a: ({ children, ...props }) => {
-              return (
-                <a target={anchorTarget ?? '_top'} {...props}>
-                  {children}
-                </a>
-              );
-            },
-          }}
+        <div
+          data-component={
+            OpenCxComponentName['chat-screen__agent-or-bot-message']
+          }
           className={cn(
             'w-fit py-2 px-3 rounded-2xl bg-secondary border shadow-sm',
             'leading-snug text-sm prose prose-sm prose-a:decoration-primary prose-a:underline',
@@ -58,8 +49,25 @@ export function BotOrAgentResponse({
             // Adding "whitespace-pre-wrap" will result in unnecessarily huge line breaks
           )}
         >
-          {message}
-        </MemoizedReactMarkdown>
+          <MemoizedReactMarkdown
+            data-type={type}
+            data-id={id}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+            components={{
+              a: ({ children, ...props }) => {
+                return (
+                  <a target={anchorTarget ?? '_top'} {...props}>
+                    {children}
+                  </a>
+                );
+              },
+            }}
+            // Do not pass className directly to ReactMarkdown component because that will create a container div wrapping the rich text
+          >
+            {message}
+          </MemoizedReactMarkdown>
+        </div>
       )}
     </div>
   );

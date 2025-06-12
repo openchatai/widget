@@ -1,6 +1,5 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
-import styles from '../../../index.css?inline';
 import type { ExternalStorage, WidgetConfig } from '../../headless/core';
 import {
   useWidgetTrigger,
@@ -20,7 +19,6 @@ function WidgetTriggerAndContent() {
 
   return (
     <PopoverPrimitive.Root open={isOpen} onOpenChange={setIsOpen}>
-      {typeof styles === 'string' && <style>{styles}</style>}
       <WidgetPopoverAnchor />
       <WidgetPopoverTrigger />
       <WidgetPopoverContent />
