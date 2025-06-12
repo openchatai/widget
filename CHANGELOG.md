@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.73
+
+### Patch Changes
+
+- add WidgetConfig.cssOverrides
+
 ## 3.0.72
 
 ### Patch Changes
