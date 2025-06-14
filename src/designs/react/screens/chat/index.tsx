@@ -40,9 +40,7 @@ export function ChatScreen() {
       }}
     >
       <div className="size-full justify-between flex flex-col">
-        <WidgetHeader
-          componentName={OpenCxComponentName['chat-screen__header']}
-        />
+        <WidgetHeader />
         <AnimatePresence mode="wait">
           {isInitialFetchLoading ? (
             <MotionDiv

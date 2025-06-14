@@ -173,9 +173,7 @@ export function SessionsScreen() {
       }}
     >
       <div className="size-full flex flex-col">
-        <WidgetHeader
-          componentName={OpenCxComponentName['sessions-screen__header']}
-        />
+        <WidgetHeader />
         <SessionsList />
       </div>
       <PoweredByOpen />
