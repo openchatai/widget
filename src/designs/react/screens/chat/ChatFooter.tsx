@@ -31,7 +31,10 @@ import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Button } from '../../components/lib/button';
 import { useDocumentDir } from '../../../../headless/react/hooks/useDocumentDir';
 import { SuggestedReplies } from '../../components/SuggestedReplies';
-import type { SendMessageDto } from '../../../../headless/core';
+import {
+  OpenCxComponentName,
+  type SendMessageDto,
+} from '../../../../headless/core';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
 
 function FileDisplay({
@@ -226,9 +229,14 @@ function ChatInput() {
   };
 
   return (
-    <div className="p-2 relative space-y-1" {...dropzone__getRootProps()}>
+    <div
+      data-component={OpenCxComponentName['chat-screen__input-box-container']}
+      className="p-2 relative space-y-1"
+      {...dropzone__getRootProps()}
+    >
       <input {...dropzone__getInputProps()} />
       <div
+        data-component={OpenCxComponentName['chat-screen__input-box']}
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
           'relative space-y-2 border transition-all shadow py-2',

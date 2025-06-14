@@ -22,4 +22,7 @@ export enum OpenCxComponentName {
   'chat-screen__user-message' = 'chat-screen__user-message',
   'chat-screen__user-message-group' = 'chat-screen__user-message-group',
   'chat-screen__user-message-group-avatar__root' = 'chat-screen__user-message-group-avatar__root',
+  /* --------------------- Chat Input --------------------- */
+  'chat-screen__input-box-container' = 'chat-screen__input-box-container',
+  'chat-screen__input-box' = 'chat-screen__input-box',
 }
