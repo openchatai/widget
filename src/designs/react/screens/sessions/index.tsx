@@ -8,7 +8,7 @@ import {
 import { Button } from '../../components/lib/button';
 import { ChevronRightIcon } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
-import { Loading } from '../../components/lib/loading';
+import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { WidgetHeader } from '../../components/WidgetHeader';
 import { useLocale } from '../../hooks/useLocale';
@@ -99,7 +99,7 @@ function SessionsList() {
             key="loading"
             className="flex-1 flex items-center justify-center"
           >
-            <Loading />
+            <LoadingSpinner />
           </MotionDiv>
         ) : (
           <MotionDiv

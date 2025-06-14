@@ -6,7 +6,7 @@ import { ChatMain } from './ChatMain';
 import { useMessages, useSessions } from '../../../../headless/react';
 import { AnimatePresence } from 'framer-motion';
 import { MotionDiv } from '../../components/lib/MotionDiv';
-import { Loading } from '../../components/lib/loading';
+import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
 import { OpenCxComponentName } from '../../../../headless/core';
@@ -47,7 +47,7 @@ export function ChatScreen() {
               key="loading"
               className="flex flex-col items-center justify-center w-full flex-1"
             >
-              <Loading />
+              <LoadingSpinner />
             </MotionDiv>
           ) : (
             <MotionDiv
