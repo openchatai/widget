@@ -114,8 +114,16 @@ export interface WidgetConfig {
   /**
    * Initial messages that the contact sees in a new chat session.
    * These messages will disappear once the contact sends their first message.
+   * @default - ['Hello, how can I help you?']
    */
   initialMessages?: string[];
+  /**
+   * Suggested initial questions that the contact sees in a new chat session.
+   * If a user clicks on one of the suggested questions, the widget will send it as the user's first message.
+   * @default undefined
+   * @example - ['What is my account balance?', 'How do I pay my bill?', 'How do I change my address?']
+   */
+  suggestedInitialQuestions?: string[];
   /**
    * If turned on, the widget will have a login-like screen to collect user's name and email.
    * A non-verified contact will be created based on the provided information.

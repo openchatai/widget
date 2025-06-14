@@ -15,6 +15,7 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
+  useConfig,
   useIsAwaitingBotReply,
   useMessages,
   usePreludeData,
@@ -351,11 +352,13 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
+  const { suggestedInitialQuestions } = useConfig();
   const { sessionState } = useSessions();
   const { messagesState, sendMessage } = useMessages();
 
   const preludeSWR = usePreludeData();
-  const initialQuestions = preludeSWR.data?.data?.initialQuestions;
+  const initialQuestions =
+    suggestedInitialQuestions || preludeSWR.data?.data?.initialQuestions;
   const noMessages = messagesState.messages.length === 0;
 
   return (
