@@ -34,6 +34,7 @@
   "include": [
     "index.dev.tsx",
     "app.dev.tsx",
+    "app.dev.example.tsx",
     "src",
     "vite.config.ts",
     "vite.embed.config.ts",

@@ -26,3 +26,6 @@ dist-ssr
 .turbo
 
 .env
+
+# dev stuff
+app.dev.tsx
