@@ -27,6 +27,65 @@ export type UserConfig = UserBaseConfig & {
   externalId?: string;
 };
 
+type ThemeOptions = {
+  primaryColor?: string;
+  widgetTrigger?: {
+    zIndex?: number;
+    offset?: {
+      /** number in pixels */
+      right?: number;
+      /** number in pixels */
+      bottom?: number;
+    };
+    size?: {
+      /** number in pixels */
+      button?: number;
+      /** number in pixels */
+      icon?: number;
+    };
+  };
+  widgetContentContainer?: {
+    borderRadius?: string;
+    zIndex?: number;
+    offset?: {
+      /** number in pixels */
+      side?: number;
+      /** number in pixels */
+      align?: number;
+    };
+  };
+  screens?: {
+    welcome?: {
+      /**
+       * Because the welcome screen can have dynamic content (org description and extra data collection fields), it is better to set a minHeight instead of a fixed height.
+       */
+      minHeight?: string;
+      width?: string;
+    };
+    sessions?: {
+      height?: string;
+      width?: string;
+    };
+    chat?: {
+      height?: string;
+      width?: string;
+    };
+  };
+};
+
+type TextContentOptions = {
+  welcomeScreen?: {
+    title?: string;
+    description?: string;
+  };
+  sessionsScreen?: {
+    headerTitle?: string;
+  };
+  chatScreen?: {
+    headerTitle?: string;
+  };
+};
+
 export interface WidgetConfig {
   /**
    * Your organization's widget token.
@@ -63,51 +122,7 @@ export interface WidgetConfig {
    * ```
    */
   cssOverrides?: string;
-  theme?: {
-    primaryColor?: string;
-    widgetTrigger?: {
-      zIndex?: number;
-      offset?: {
-        /** number in pixels */
-        right?: number;
-        /** number in pixels */
-        bottom?: number;
-      };
-      size?: {
-        /** number in pixels */
-        button?: number;
-        /** number in pixels */
-        icon?: number;
-      };
-    };
-    widgetContentContainer?: {
-      borderRadius?: string;
-      zIndex?: number;
-      offset?: {
-        /** number in pixels */
-        side?: number;
-        /** number in pixels */
-        align?: number;
-      };
-    };
-    screens?: {
-      welcome?: {
-        /**
-         * Because the welcome screen can have dynamic content (org description and extra data collection fields), it is better to set a minHeight instead of a fixed height.
-         */
-        minHeight?: string;
-        width?: string;
-      };
-      sessions?: {
-        height?: string;
-        width?: string;
-      };
-      chat?: {
-        height?: string;
-        width?: string;
-      };
-    };
-  };
+  theme?: ThemeOptions;
   assets?: {
     organizationLogo?: string;
   };
@@ -159,18 +174,7 @@ export interface WidgetConfig {
   /**
    * Custom text content to override the defaults in the default widget.
    */
-  textContent?: {
-    welcomeScreen?: {
-      title?: string;
-      description?: string;
-    };
-    sessionsScreen?: {
-      headerTitle?: string;
-    };
-    chatScreen?: {
-      headerTitle?: string;
-    };
-  };
+  textContent?: TextContentOptions;
   /**
    * Customize the router behavior.
    */
