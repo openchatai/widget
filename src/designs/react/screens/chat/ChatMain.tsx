@@ -14,6 +14,7 @@ import {
 import { BotOrAgentMessage } from '../../components/BotOrAgentMessage';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
+import { OpenCxComponentName } from '../../../../headless/core';
 
 export function ChatMain() {
   const {
@@ -57,7 +58,7 @@ export function ChatMain() {
   return (
     <div
       // Do not add `dir` attribute here... contact messages are always on the right, bot and agent are always on the left for all languages
-      data-messages
+      data-component={OpenCxComponentName['chat-screen__messages-container']}
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
