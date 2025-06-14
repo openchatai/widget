@@ -30,7 +30,7 @@ import { useLocale } from '../../hooks/useLocale';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Button } from '../../components/lib/button';
 import { useDocumentDir } from '../../../../headless/react/hooks/useDocumentDir';
-import { SuggestedReplies } from '../../components/SuggestedReplies';
+import { MightSolveUserIssueSuggestedReplies } from '../../components/MightSolveUserIssueSuggestedReplies';
 import {
   OpenCxComponentName,
   type SendMessageDto,
@@ -396,7 +396,7 @@ export function ChatFooter() {
               }}
             >
               {messagesState.lastAIResMightSolveUserIssue && (
-                <SuggestedReplies />
+                <MightSolveUserIssueSuggestedReplies />
               )}
 
               {noMessages && initialQuestions && (

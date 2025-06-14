@@ -1,9 +1,9 @@
 import React from 'react';
-import { Button } from './lib/button';
-import { useLocale } from '../hooks/useLocale';
 import { useMessages } from '../../../headless/react';
+import { useLocale } from '../hooks/useLocale';
+import { SuggestedReplyButton } from './SuggestedReplyButton';
 
-export function SuggestedReplies() {
+export function MightSolveUserIssueSuggestedReplies() {
   const { sendMessage } = useMessages();
   const locale = useLocale();
   const options = [
@@ -20,14 +20,13 @@ export function SuggestedReplies() {
   return (
     <div className="flex items-center gap-2 p-2 pb-0 flex-wrap">
       {options.map((option) => (
-        <Button
-          onClick={() => handleSend(option)}
-          className="flex-1 rounded-full"
-          size="sm"
+        <SuggestedReplyButton
           key={option}
+          onClick={() => handleSend(option)}
+          className="flex-1"
         >
           {option}
-        </Button>
+        </SuggestedReplyButton>
       ))}
     </div>
   );
