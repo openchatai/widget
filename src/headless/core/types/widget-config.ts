@@ -104,6 +104,13 @@ export interface WidgetConfig {
    */
   bot?: Pick<AgentOrBotType, 'name' | 'avatar'>;
   /**
+   * Whether the widget is open or not.
+   * Can be used to have the widget open by default (useful when embedded in a webview for a mobile app).
+   * Also useful to open and close the widget programmatically.
+   * @default false
+   */
+  isOpen?: boolean;
+  /**
    * A custom vanilla stylesheet to override the default styles. See {@link OpenCxComponentName} for available component names.
    *
    * @example Overriding a component's styles
