@@ -164,6 +164,12 @@ export interface WidgetConfig {
       title?: string;
       description?: string;
     };
+    sessionsScreen?: {
+      headerTitle?: string;
+    };
+    chatScreen?: {
+      headerTitle?: string;
+    };
   };
   /**
    * Customize the router behavior.

@@ -8,6 +8,7 @@ import {
 import React, { useState } from 'react';
 import { useLocale } from '../hooks/useLocale';
 import {
+  useConfig,
   usePreludeData,
   useWidgetRouter,
   useWidgetTrigger,
@@ -25,7 +26,7 @@ import { useDocumentDir } from '../../../headless/react/hooks/useDocumentDir';
 import { MotionDiv } from './lib/MotionDiv';
 import { cn } from './lib/utils/cn';
 import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
-import type { OpenCxComponentName, SafeExtract } from '../../../headless/core';
+import { OpenCxComponentName } from '../../../headless/core';
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -79,20 +80,54 @@ function CloseWidgetButton() {
     </Button>
   );
 }
-export function WidgetHeader({
-  componentName,
-}: {
-  componentName: SafeExtract<
-    keyof typeof OpenCxComponentName,
-    'chat-screen__header' | 'sessions-screen__header'
-  >;
-}) {
+
+function useGetHeaderTitle() {
+  const { data } = usePreludeData();
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
+  const { textContent } = useConfig();
+
+  const override = (() => {
+    switch (screen) {
+      case 'chat':
+        return textContent?.chatScreen?.headerTitle;
+      case 'sessions':
+        return textContent?.sessionsScreen?.headerTitle;
+      case 'welcome':
+        return undefined;
+      default:
+        const _: never = screen;
+        return undefined;
+    }
+  })();
+
+  return override ?? data?.data?.organizationName ?? 'Chat';
+}
+
+export function WidgetHeader() {
   const {
     routerState: { screen },
     toSessionsScreen,
   } = useWidgetRouter();
-  const { data, isLoading } = usePreludeData();
+  const { isLoading } = usePreludeData();
   const direction = useDocumentDir();
+
+  const componentName = (() => {
+    switch (screen) {
+      case 'chat':
+        return OpenCxComponentName['chat-screen__header'];
+      case 'sessions':
+        return OpenCxComponentName['sessions-screen__header'];
+      case 'welcome':
+        return undefined;
+      default:
+        const _: never = screen;
+        return undefined;
+    }
+  })();
+
+  const title = useGetHeaderTitle();
 
   return (
     <header data-component={componentName} className="p-2 border-b shrink-0">
@@ -113,15 +148,13 @@ export function WidgetHeader({
         )}
         <div className={cn('flex-1', screen === 'sessions' && 'pl-2')}>
           <AnimatePresence mode="wait">
-            {isLoading || !data?.data?.organizationName ? (
+            {isLoading ? (
               <MotionDiv key="skeleton" snapExit>
                 <Skeleton className="h-5 w-1/2" />
               </MotionDiv>
             ) : (
               <MotionDiv key="organization-name">
-                <h2 className="font-semibold">
-                  {data?.data?.organizationName}
-                </h2>
+                <h2 className="font-semibold">{title}</h2>
               </MotionDiv>
             )}
           </AnimatePresence>
