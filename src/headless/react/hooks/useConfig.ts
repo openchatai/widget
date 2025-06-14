@@ -1,7 +1,7 @@
 import { useWidget } from '../WidgetProvider';
 
 export function useConfig() {
-  const { widgetCtx } = useWidget();
+  const { config } = useWidget();
 
-  return widgetCtx.config;
+  return config;
 }

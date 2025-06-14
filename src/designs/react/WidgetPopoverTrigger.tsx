@@ -4,7 +4,7 @@ import { AnimatePresence } from 'framer-motion';
 import { ChevronDownIcon } from 'lucide-react';
 import React from 'react';
 import styles from '../../../index.css?inline';
-import { useWidget, useWidgetTrigger } from '../../headless/react';
+import { useConfig, useWidgetTrigger } from '../../headless/react';
 import { MotionDiv } from './components/lib/MotionDiv';
 import { cn } from './components/lib/utils/cn';
 import { Wobble, WOBBLE_MAX_MOVEMENT_PIXELS } from './components/lib/wobble';
@@ -32,7 +32,7 @@ html, body {
 
 function WidgetPopoverTrigger() {
   const { isOpen } = useWidgetTrigger();
-  const { cssOverrides } = useWidget();
+  const { cssOverrides } = useConfig();
   const { theme, cssVars } = useTheme();
 
   return (

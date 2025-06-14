@@ -3,7 +3,7 @@ import IFrame from '@uiw/react-iframe';
 import { motion } from 'framer-motion';
 import React from 'react';
 import styles from '../../../index.css?inline';
-import { useWidget, useWidgetTrigger } from '../../headless/react';
+import { useConfig, useWidget, useWidgetTrigger } from '../../headless/react';
 import { TooltipProvider } from './components/lib/tooltip';
 import { cn } from './components/lib/utils/cn';
 import { useTheme } from './hooks/useTheme';
@@ -30,7 +30,8 @@ html, body {
 
 export function WidgetPopoverContent() {
   const { isOpen } = useWidgetTrigger();
-  const { version, contentIframeRef, cssOverrides } = useWidget();
+  const { version, contentIframeRef } = useWidget();
+  const { cssOverrides } = useConfig();
   const { theme, cssVars, computed } = useTheme();
 
   return (

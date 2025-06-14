@@ -7,10 +7,9 @@ import { version } from '../../../package.json';
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
+  config: WidgetConfig;
   components?: WidgetComponentType[];
   componentStore: ComponentRegistry;
-  theme: WidgetConfig['theme'];
-  cssOverrides: WidgetConfig['cssOverrides'];
   version: string;
   contentIframeRef?: React.MutableRefObject<HTMLIFrameElement | null>;
 }
@@ -55,11 +54,10 @@ function WidgetProvider({
     <SafeProvider
       value={{
         widgetCtx,
+        config,
         components,
         componentStore,
         version,
-        theme: config.theme,
-        cssOverrides: config.cssOverrides,
         contentIframeRef,
       }}
     >

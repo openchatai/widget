@@ -1,9 +1,9 @@
 import type { CSSProperties } from 'react';
-import type { WidgetConfig } from '../../../headless/core';
-import { useWidget } from '../../../headless/react/WidgetProvider';
 import tc from 'tinycolor2';
-import { useIsSmallScreen } from './useIsSmallScreen';
+import type { WidgetConfig } from '../../../headless/core';
+import { useConfig } from '../../../headless/react';
 import { WOBBLE_MAX_MOVEMENT_PIXELS } from '../components/lib/wobble';
+import { useIsSmallScreen } from './useIsSmallScreen';
 
 type DeepRequired<T> = {
   [K in keyof T]-?: DeepRequired<T[K]>;
@@ -14,7 +14,7 @@ type DeepRequired<T> = {
  */
 export function useTheme() {
   const { isSmallScreen } = useIsSmallScreen();
-  const { theme } = useWidget();
+  const { theme } = useConfig();
 
   const withSmallScreenDefault = (target: 'w' | 'h', v: string) => {
     return isSmallScreen ? `100dv${target}` : v;
