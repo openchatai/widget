@@ -1,10 +1,9 @@
-import React, { type ComponentType, useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import {
-  groupMessagesByType,
-  isAgentMessageGroup,
-  isBotMessageGroup,
-  isUserMessageGroup,
-} from '../../utils/group-messages-by-type';
+  OpenCxComponentName,
+  type LiteralWidgetComponentKey,
+  type SafeExtract,
+} from '../../../../headless/core';
 import {
   useConfig,
   useIsAwaitingBotReply,
@@ -12,9 +11,14 @@ import {
   useWidget,
 } from '../../../../headless/react';
 import { BotOrAgentMessage } from '../../components/BotOrAgentMessage';
-import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
-import { OpenCxComponentName } from '../../../../headless/core';
+import { UserMessageGroup } from '../../components/UserMessageGroup';
+import {
+  groupMessagesByType,
+  isAgentMessageGroup,
+  isBotMessageGroup,
+  isUserMessageGroup,
+} from '../../utils/group-messages-by-type';
 
 export function ChatMain() {
   const {
@@ -35,8 +39,8 @@ export function ChatMain() {
       : config.initialMessages;
 
   const LoadingComponent = componentStore.getComponent(
-    'loading',
-  ) as ComponentType;
+    'loading' satisfies SafeExtract<LiteralWidgetComponentKey, 'loading'>,
+  );
 
   /* ------------------------------------------------------ */
   /*                      Auto Scroller                     */
@@ -104,7 +108,9 @@ export function ChatMain() {
 
         return null;
       })}
-      {isAwaitingBotReply && <LoadingComponent />}
+      {isAwaitingBotReply && LoadingComponent && (
+        <LoadingComponent agent={config.bot} />
+      )}
     </div>
   );
 }

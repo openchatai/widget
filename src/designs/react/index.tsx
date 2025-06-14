@@ -1,6 +1,10 @@
 import * as PopoverPrimitive from '@radix-ui/react-popover';
 import React from 'react';
-import type { ExternalStorage, WidgetConfig } from '../../headless/core';
+import type {
+  ExternalStorage,
+  LiteralWidgetComponentKey,
+  WidgetConfig,
+} from '../../headless/core';
 import {
   useWidgetTrigger,
   WidgetProvider,
@@ -28,19 +32,19 @@ function WidgetTriggerAndContent() {
 
 const defaultComponents: WidgetComponentType[] = [
   {
-    key: 'loading',
+    key: 'loading' satisfies LiteralWidgetComponentKey,
     component: BotLoadingComponent,
   },
   {
-    key: 'fallback',
+    key: 'fallback' satisfies LiteralWidgetComponentKey,
     component: FallbackComponent,
   },
   {
-    key: 'bot_message',
+    key: 'bot_message' satisfies LiteralWidgetComponentKey,
     component: BotOrAgentResponse,
   },
   {
-    key: 'agent_message',
+    key: 'agent_message' satisfies LiteralWidgetComponentKey,
     component: BotOrAgentResponse,
   },
 ];

@@ -5,9 +5,12 @@ import type { AgentOrBotType } from './agent-or-bot';
 /* ------------------------------------------------------ */
 /*                 Component-related types                */
 /* ------------------------------------------------------ */
-export type WidgetComponentKey = StringOrLiteral<
-  'bot_message' | 'agent_message' | 'loading' | 'fallback'
->;
+export type LiteralWidgetComponentKey =
+  | 'bot_message'
+  | 'agent_message'
+  | 'loading'
+  | 'fallback';
+export type WidgetComponentKey = StringOrLiteral<LiteralWidgetComponentKey>;
 
 /* ------------------------------------------------------ */
 /*                      Message types                     */
@@ -52,7 +55,7 @@ export type BotMessageType<TActionData = unknown> = {
 export type AgentMessageType = {
   id: string;
   type: 'FROM_AGENT';
-  component: SafeExtract<WidgetComponentKey, 'agent_message'>;
+  component: SafeExtract<LiteralWidgetComponentKey, 'agent_message'>;
   data: {
     message: string;
     variant?: 'default' | 'error';

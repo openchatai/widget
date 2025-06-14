@@ -1,14 +1,14 @@
-import { Avatar, AvatarFallback, AvatarImage } from './lib/avatar';
 import React from 'react';
-import { BotOrAgentMessage } from './BotOrAgentMessage';
 import {
   OpenCxComponentName,
   type AgentMessageType,
   type AgentOrBotType,
   type BotMessageType,
 } from '../../../headless/core';
-import { cn } from './lib/utils/cn';
+import { AgentOrBotAvatar } from './AgentOrBotAvatar';
+import { BotOrAgentMessage } from './BotOrAgentMessage';
 import { Tooltippy } from './lib/tooltip';
+import { cn } from './lib/utils/cn';
 
 export function BotOrAgentMessageGroup({
   messages,
@@ -25,14 +25,7 @@ export function BotOrAgentMessageGroup({
       className={cn('flex flex-col items-start gap-2')}
     >
       <Tooltippy content={agent?.name} side="right" align="end">
-        <Avatar>
-          <AvatarImage src={agent?.avatar ?? ''} alt="Agent Icon" />
-          {agent?.name && (
-            <AvatarFallback>
-              {agent?.name?.slice(0, 1)?.toUpperCase()}
-            </AvatarFallback>
-          )}
-        </Avatar>
+        <AgentOrBotAvatar agent={agent} />
       </Tooltippy>
       {messages.map((message) => (
         <BotOrAgentMessage key={message.id} {...message} />
