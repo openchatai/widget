@@ -1,10 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from './lib/avatar';
 import React from 'react';
 import { BotOrAgentMessage } from './BotOrAgentMessage';
-import type {
-  AgentMessageType,
-  AgentOrBotType,
-  BotMessageType,
+import {
+  OpenCxComponentName,
+  type AgentMessageType,
+  type AgentOrBotType,
+  type BotMessageType,
 } from '../../../headless/core';
 import { cn } from './lib/utils/cn';
 import { Tooltippy } from './lib/tooltip';
@@ -17,7 +18,12 @@ export function BotOrAgentMessageGroup({
   agent: AgentOrBotType | undefined;
 }) {
   return (
-    <div className={cn('flex flex-col items-start gap-2')}>
+    <div
+      data-component={
+        OpenCxComponentName['chat-screen__agent-or-bot-message-group']
+      }
+      className={cn('flex flex-col items-start gap-2')}
+    >
       <Tooltippy content={agent?.name} side="right" align="end">
         <Avatar>
           <AvatarImage src={agent?.avatar ?? ''} alt="Agent Icon" />

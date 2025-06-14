@@ -43,8 +43,16 @@ export function UserMessageGroup({
   const { user } = useConfig();
 
   return (
-    <div className={cn('group', 'flex flex-col gap-2 justify-end items-end')}>
-      <Avatar className="bg-primary text-primary-foreground">
+    <div
+      data-component={OpenCxComponentName['chat-screen__user-message-group']}
+      className={cn('group', 'flex flex-col gap-2 justify-end items-end')}
+    >
+      <Avatar
+        data-component={
+          OpenCxComponentName['chat-screen__user-message-group-avatar__root']
+        }
+        className="bg-primary text-primary-foreground"
+      >
         <AvatarImage
           src={user?.data?.avatarUrl}
           alt={user?.data?.name || 'User avatar'}
