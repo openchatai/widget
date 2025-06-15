@@ -17,8 +17,11 @@ export enum OpenCxComponentName {
   'chat-screen__header' = 'chat-screen__header',
   'chat-screen__messages-container' = 'chat-screen__messages-container',
   /* -------------------- Agent Message ------------------- */
+  'chat-screen__agent-or-bot-messages-group' = 'chat-screen__agent-or-bot-messages-group',
+  'chat-screen__agent-or-bot-message-container' = 'chat-screen__agent-or-bot-message-container',
   'chat-screen__agent-or-bot-message' = 'chat-screen__agent-or-bot-message',
-  'chat-screen__agent-or-bot-message-group' = 'chat-screen__agent-or-bot-message-group',
+  'chat-screen__persistent-initial-message-container' = 'chat-screen__persistent-initial-message-container',
+  'chat-screen__persistent-initial-message' = 'chat-screen__persistent-initial-message',
   /* -------------------- Chat Message -------------------- */
   'chat-screen__user-message' = 'chat-screen__user-message',
   'chat-screen__user-message-group' = 'chat-screen__user-message-group',

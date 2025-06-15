@@ -20,7 +20,7 @@ export function BotOrAgentMessageGroup({
   return (
     <div
       data-component={
-        OpenCxComponentName['chat-screen__agent-or-bot-message-group']
+        OpenCxComponentName['chat-screen__agent-or-bot-messages-group']
       }
       className={cn('flex flex-col items-start gap-2')}
     >

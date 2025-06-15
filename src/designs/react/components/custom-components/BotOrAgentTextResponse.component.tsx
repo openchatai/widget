@@ -13,7 +13,13 @@ export function BotOrAgentResponse({
   id,
   type,
   attachments,
-}: WidgetComponentProps) {
+  dataComponentNames,
+}: WidgetComponentProps & {
+  dataComponentNames?: {
+    messageContainer?: string;
+    message?: string;
+  };
+}) {
   const { anchorTarget } = useConfig();
   const { message, variant = 'default' } = data;
 
@@ -28,17 +34,24 @@ export function BotOrAgentResponse({
   }
 
   return (
-    <div className="w-5/6 flex flex-col items-start gap-1">
-      <div className="w-full gap-1 flex flex-row flex-wrap items-center justify-start">
-        {attachments?.map((attachment) => {
-          return (
+    <div
+      data-component={
+        dataComponentNames?.messageContainer ??
+        OpenCxComponentName['chat-screen__agent-or-bot-message-container']
+      }
+      className="w-5/6 flex flex-col items-start gap-1"
+    >
+      {attachments && attachments.length > 0 && (
+        <div className="w-full gap-1 flex flex-row flex-wrap items-center justify-start">
+          {attachments?.map((attachment) => (
             <AttachmentPreview attachment={attachment} key={attachment.id} />
-          );
-        })}
-      </div>
+          ))}
+        </div>
+      )}
       {message.length > 0 && (
         <div
           data-component={
+            dataComponentNames?.message ??
             OpenCxComponentName['chat-screen__agent-or-bot-message']
           }
           className={cn(

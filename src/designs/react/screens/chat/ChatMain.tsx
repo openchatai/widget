@@ -10,7 +10,6 @@ import {
   useMessages,
   useWidget,
 } from '../../../../headless/react';
-import { BotOrAgentMessage } from '../../components/BotOrAgentMessage';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import {
@@ -19,6 +18,7 @@ import {
   isBotMessageGroup,
   isUserMessageGroup,
 } from '../../utils/group-messages-by-type';
+import { BotOrAgentResponse } from '../../components/custom-components/BotOrAgentTextResponse.component';
 
 export function ChatMain() {
   const {
@@ -68,18 +68,26 @@ export function ChatMain() {
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
       {persistentInitialMessages.map((message) => (
-        <BotOrAgentMessage
+        <BotOrAgentResponse
           key={message}
           component="bot_message"
           data={{ message }}
           id={message}
           type="FROM_BOT"
           timestamp={Date.now().toString()}
+          dataComponentNames={{
+            messageContainer:
+              OpenCxComponentName[
+                'chat-screen__persistent-initial-message-container'
+              ],
+            message:
+              OpenCxComponentName['chat-screen__persistent-initial-message'],
+          }}
         />
       ))}
       {messages.length === 0 &&
         initialMessages.map((message) => (
-          <BotOrAgentMessage
+          <BotOrAgentResponse
             key={message}
             component="bot_message"
             data={{ message }}
