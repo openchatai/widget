@@ -239,49 +239,57 @@ function ChatInput() {
         data-component={OpenCxComponentName['chat-screen__input-box']}
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
-          'relative space-y-2 border transition-all shadow py-2',
+          'relative flex flex-col gap-2 border transition-all shadow p-2',
         )}
       >
-        <div className="flex items-center gap-1 px-2">
-          <AnimatePresence mode="popLayout">
-            {allFiles.map((file) => (
-              <MotionDiv key={file.id} snapExit>
-                <FileDisplay
-                  onCancel={() => handleCancelUpload(file.id)}
-                  file={file}
-                />
-              </MotionDiv>
-            ))}
-          </AnimatePresence>
-        </div>
-        <textarea
-          onPaste={handlePaste}
-          ref={inputRef}
-          id="chat-input"
-          dir={dir}
-          value={inputText}
-          // Thw `rows` attribute will take effect in browsers that do not support [field-sizing:content;] (Firefox and Safari as of now)
-          rows={3}
-          className={cn(
-            /** Match the border radius of the container */
-            INPUT_CONTAINER_B_RADIUS,
-            'max-h-16 [field-sizing:content]',
-            'w-full resize-none px-3',
-            'bg-transparent outline-none',
-            'rtl:placeholder:text-right',
-            // 16px on mobiles prevents auto-zoom on the input when focused
-            isSmallScreen ? 'text-[16px]' : 'text-sm',
+        <div className="flex flex-col gap-2">
+          {allFiles.length > 0 && (
+            <div className="flex items-center gap-1">
+              <AnimatePresence mode="popLayout">
+                {allFiles.map((file) => (
+                  <MotionDiv key={file.id} snapExit>
+                    <FileDisplay
+                      onCancel={() => handleCancelUpload(file.id)}
+                      file={file}
+                    />
+                  </MotionDiv>
+                ))}
+              </AnimatePresence>
+            </div>
           )}
-          onChange={(e) => setInputText(e.target.value)}
-          onKeyDown={async (event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault();
-              handleSubmit();
+          <textarea
+            data-component={
+              OpenCxComponentName['chat-screen__input-box__textarea']
             }
-          }}
-          placeholder={locale.get('write-a-message')}
-        />
-        <div dir={dir} className="px-2 flex justify-between rtl:text-right">
+            onPaste={handlePaste}
+            ref={inputRef}
+            id="chat-input"
+            dir={dir}
+            value={inputText}
+            // Thw `rows` attribute will take effect in browsers that do not support [field-sizing:content;] (Firefox and Safari as of now)
+            rows={3}
+            className={cn(
+              /** Match the border radius of the container */
+              // INPUT_CONTAINER_B_RADIUS,
+              'max-h-16 [field-sizing:content]',
+              'w-full resize-none px-1',
+              allFiles.length === 0 && 'pt-1',
+              'bg-transparent outline-none',
+              'rtl:placeholder:text-right',
+              // 16px on mobiles prevents auto-zoom on the input when focused
+              isSmallScreen ? 'text-[16px]' : 'text-sm',
+            )}
+            onChange={(e) => setInputText(e.target.value)}
+            onKeyDown={async (event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                handleSubmit();
+              }
+            }}
+            placeholder={locale.get('write-a-message')}
+          />
+        </div>
+        <div dir={dir} className="gap-2 flex justify-between rtl:text-right">
           <Tooltippy
             side="top"
             align="start"

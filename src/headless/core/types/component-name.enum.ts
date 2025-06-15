@@ -29,6 +29,7 @@ export enum OpenCxComponentName {
   /* --------------------- Chat Input --------------------- */
   'chat-screen__input-box-container' = 'chat-screen__input-box-container',
   'chat-screen__input-box' = 'chat-screen__input-box',
+  'chat-screen__input-box__textarea' = 'chat-screen__input-box__textarea',
   /* --------------------- Chat Utils --------------------- */
   'chat-screen__agent-or-bot-avatar__root' = 'chat-screen__agent-or-bot-avatar__root',
   'chat-screen__bot-loading__root' = 'chat-screen__bot-loading__root',
