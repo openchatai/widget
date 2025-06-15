@@ -119,7 +119,7 @@ function SessionsList() {
                   <Button
                     data-component={
                       OpenCxComponentName[
-                        'sessions-screen__new-conversation-button'
+                        'sessions_screen/new_conversation_button'
                       ]
                     }
                     size="lg"

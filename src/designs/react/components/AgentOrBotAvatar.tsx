@@ -13,7 +13,7 @@ export function AgentOrBotAvatar({
   return (
     <Avatar
       data-component={
-        OpenCxComponentName['chat-screen__agent-or-bot-avatar__root']
+        OpenCxComponentName['chat_screen/agent_or_bot_avatar/root']
       }
     >
       <AvatarImage src={agent?.avatar ?? ''} alt="Agent Icon" />

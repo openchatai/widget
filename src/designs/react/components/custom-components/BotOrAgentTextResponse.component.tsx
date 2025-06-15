@@ -37,7 +37,7 @@ export function BotOrAgentResponse({
     <div
       data-component={
         dataComponentNames?.messageContainer ??
-        OpenCxComponentName['chat-screen__agent-or-bot-message-container']
+        OpenCxComponentName['chat_screen/agent_or_bot_message_container']
       }
       className="w-5/6 flex flex-col items-start gap-1"
     >
@@ -52,7 +52,7 @@ export function BotOrAgentResponse({
         <div
           data-component={
             dataComponentNames?.message ??
-            OpenCxComponentName['chat-screen__agent-or-bot-message']
+            OpenCxComponentName['chat_screen/agent_or_bot_message']
           }
           className={cn(
             'w-fit py-2 px-3 rounded-2xl bg-secondary border shadow-sm',

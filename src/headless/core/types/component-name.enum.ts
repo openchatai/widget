@@ -2,37 +2,37 @@ export enum OpenCxComponentName {
   /* ------------------------------------------------------ */
   /*                         Trigger                        */
   /* ------------------------------------------------------ */
-  'trigger__button' = 'trigger__button',
+  'trigger/button' = 'trigger/button',
 
   /* ------------------------------------------------------ */
   /*                     Sessions Screen                    */
   /* ------------------------------------------------------ */
-  'sessions-screen__header' = 'sessions-screen__header',
-  'sessions-screen__new-conversation-button' = 'sessions-screen__new-conversation-button',
+  'sessions_screen/header' = 'sessions_screen/header',
+  'sessions_screen/new_conversation_button' = 'sessions_screen/new_conversation_button',
 
   /* ------------------------------------------------------ */
   /*                       Chat Screen                      */
   /* ------------------------------------------------------ */
-  'chat-screen__root' = 'chat-screen__root',
-  'chat-screen__header' = 'chat-screen__header',
-  'chat-screen__messages-container' = 'chat-screen__messages-container',
+  'chat_screen/root' = 'chat_screen/root',
+  'chat_screen/header' = 'chat_screen/header',
+  'chat_screen/messages_container' = 'chat_screen/messages_container',
   /* -------------------- Agent Message ------------------- */
-  'chat-screen__agent-or-bot-messages-group' = 'chat-screen__agent-or-bot-messages-group',
-  'chat-screen__agent-or-bot-message-container' = 'chat-screen__agent-or-bot-message-container',
-  'chat-screen__agent-or-bot-message' = 'chat-screen__agent-or-bot-message',
-  'chat-screen__persistent-initial-message-container' = 'chat-screen__persistent-initial-message-container',
-  'chat-screen__persistent-initial-message' = 'chat-screen__persistent-initial-message',
+  'chat_screen/agent_or_bot_messages_group' = 'chat_screen/agent_or_bot_messages_group',
+  'chat_screen/agent_or_bot_message_container' = 'chat_screen/agent_or_bot_message_container',
+  'chat_screen/agent_or_bot_message' = 'chat_screen/agent_or_bot_message',
+  'chat_screen/persistent_initial_message_container' = 'chat_screen/persistent_initial_message_container',
+  'chat_screen/persistent_initial_message' = 'chat_screen/persistent_initial_message',
   /* -------------------- Chat Message -------------------- */
-  'chat-screen__user-message' = 'chat-screen__user-message',
-  'chat-screen__user-message-group' = 'chat-screen__user-message-group',
-  'chat-screen__user-message-group-avatar__root' = 'chat-screen__user-message-group-avatar__root',
+  'chat_screen/user_message' = 'chat_screen/user_message',
+  'chat_screen/user_message_group' = 'chat_screen/user_message_group',
+  'chat_screen/user_message_group_avatar/root' = 'chat_screen/user_message_group_avatar/root',
   /* --------------------- Chat Input --------------------- */
-  'chat-screen__input-box-container' = 'chat-screen__input-box-container',
-  'chat-screen__input-box' = 'chat-screen__input-box',
-  'chat-screen__input-box__textarea' = 'chat-screen__input-box__textarea',
+  'chat_screen/input_box_container' = 'chat_screen/input_box_container',
+  'chat_screen/input_box' = 'chat_screen/input_box',
+  'chat_screen/input_box/textarea' = 'chat_screen/input_box/textarea',
   /* --------------------- Chat Utils --------------------- */
-  'chat-screen__agent-or-bot-avatar__root' = 'chat-screen__agent-or-bot-avatar__root',
-  'chat-screen__bot-loading__root' = 'chat-screen__bot-loading__root',
-  'chat-screen__bot-loading__bouncing-dots-container' = 'chat-screen__bot-loading__bouncing-dots-container',
-  'chat-screen__suggested-reply-button' = 'chat-screen__suggested-reply-button',
+  'chat_screen/agent_or_bot_avatar/root' = 'chat_screen/agent_or_bot_avatar/root',
+  'chat_screen/bot_loading/root' = 'chat_screen/bot_loading/root',
+  'chat_screen/bot_loading/bouncing_dots_container' = 'chat_screen/bot_loading/bouncing_dots_container',
+  'chat_screen/suggested_reply_button' = 'chat_screen/suggested_reply_button',
 }

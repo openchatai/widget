@@ -30,7 +30,7 @@ export function ChatScreen() {
 
   return (
     <div
-      data-component={OpenCxComponentName['chat-screen__root']}
+      data-component={OpenCxComponentName['chat_screen/root']}
       className={cn('flex flex-col overflow-hidden')}
       style={{
         width: '100vw', // Relative to the iframe

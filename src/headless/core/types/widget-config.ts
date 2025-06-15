@@ -115,7 +115,7 @@ export interface WidgetConfig {
    *
    * @example Overriding a component's styles
    * ```css
-   * [data-component="sessions-screen__new-conversation-button"] {
+   * [data-component="sessions_screen/new_conversation_button"] {
    *   background-color: orangered;
    * }
    * ```

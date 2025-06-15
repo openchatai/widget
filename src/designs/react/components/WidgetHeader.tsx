@@ -116,9 +116,9 @@ export function WidgetHeader() {
   const componentName = (() => {
     switch (screen) {
       case 'chat':
-        return OpenCxComponentName['chat-screen__header'];
+        return OpenCxComponentName['chat_screen/header'];
       case 'sessions':
-        return OpenCxComponentName['sessions-screen__header'];
+        return OpenCxComponentName['sessions_screen/header'];
       case 'welcome':
         return undefined;
       default:

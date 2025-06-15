@@ -74,7 +74,7 @@ function WidgetPopoverTrigger() {
         >
           <Wobble>
             <div
-              data-component={OpenCxComponentName['trigger__button']}
+              data-component={OpenCxComponentName['trigger/button']}
               className={cn(
                 'relative size-full rounded-full',
                 'flex items-center justify-center',

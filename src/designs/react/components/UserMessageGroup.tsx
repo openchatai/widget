@@ -20,7 +20,7 @@ function UserMessage({ message }: { message: UserMessageType }) {
       )}
       {message.content.length > 0 && (
         <div
-          data-component={OpenCxComponentName['chat-screen__user-message']}
+          data-component={OpenCxComponentName['chat_screen/user_message']}
           className={cn(
             'w-fit py-2 px-3 rounded-2xl text-sm',
             'bg-primary text-primary-foreground border shadow-sm',
@@ -44,12 +44,12 @@ export function UserMessageGroup({
 
   return (
     <div
-      data-component={OpenCxComponentName['chat-screen__user-message-group']}
+      data-component={OpenCxComponentName['chat_screen/user_message_group']}
       className={cn('group', 'flex flex-col gap-2 justify-end items-end')}
     >
       <Avatar
         data-component={
-          OpenCxComponentName['chat-screen__user-message-group-avatar__root']
+          OpenCxComponentName['chat_screen/user_message_group_avatar/root']
         }
         className="bg-primary text-primary-foreground"
       >

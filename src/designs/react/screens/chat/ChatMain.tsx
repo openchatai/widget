@@ -63,7 +63,7 @@ export function ChatMain() {
   return (
     <div
       // Do not add `dir` attribute here... contact messages are always on the right, bot and agent are always on the left for all languages
-      data-component={OpenCxComponentName['chat-screen__messages-container']}
+      data-component={OpenCxComponentName['chat_screen/messages_container']}
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
@@ -78,10 +78,10 @@ export function ChatMain() {
           dataComponentNames={{
             messageContainer:
               OpenCxComponentName[
-                'chat-screen__persistent-initial-message-container'
+                'chat_screen/persistent_initial_message_container'
               ],
             message:
-              OpenCxComponentName['chat-screen__persistent-initial-message'],
+              OpenCxComponentName['chat_screen/persistent_initial_message'],
           }}
         />
       ))}

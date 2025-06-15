@@ -230,13 +230,13 @@ function ChatInput() {
 
   return (
     <div
-      data-component={OpenCxComponentName['chat-screen__input-box-container']}
+      data-component={OpenCxComponentName['chat_screen/input_box_container']}
       className="p-2 relative space-y-1"
       {...dropzone__getRootProps()}
     >
       <input {...dropzone__getInputProps()} />
       <div
-        data-component={OpenCxComponentName['chat-screen__input-box']}
+        data-component={OpenCxComponentName['chat_screen/input_box']}
         className={cn(
           INPUT_CONTAINER_B_RADIUS,
           'relative flex flex-col gap-2 border transition-all shadow p-2',
@@ -259,7 +259,7 @@ function ChatInput() {
           )}
           <textarea
             data-component={
-              OpenCxComponentName['chat-screen__input-box__textarea']
+              OpenCxComponentName['chat_screen/input_box/textarea']
             }
             onPaste={handlePaste}
             ref={inputRef}

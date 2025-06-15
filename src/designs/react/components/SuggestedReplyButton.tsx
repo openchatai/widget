@@ -6,9 +6,7 @@ import { OpenCxComponentName } from '../../../headless/core';
 export function SuggestedReplyButton({ className, ...props }: ButtonProps) {
   return (
     <Button
-      data-component={
-        OpenCxComponentName['chat-screen__suggested-reply-button']
-      }
+      data-component={OpenCxComponentName['chat_screen/suggested_reply_button']}
       size="sm"
       className={cn('rounded-full', className)}
       {...props}
