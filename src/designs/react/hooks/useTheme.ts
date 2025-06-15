@@ -158,19 +158,19 @@ function cssVars({ primary }: Colors) {
     '--opencx-foreground': '240 10% 3.9%',
 
     '--opencx-accent': '240 4.8% 95.9%',
-    '--opencx-accent-foreground': '240 5.9% 10%',
+    '--opencx-accent-foreground': '240 10% 3.9',
 
     '--opencx-destructive': '0 84.2% 60.2%',
     '--opencx-destructive-foreground': '0 0% 98%',
 
     '--opencx-secondary': '240 4.8% 95.9%',
-    '--opencx-secondary-foreground': '240 5.9% 10%',
+    '--opencx-secondary-foreground': '240 10% 3.9',
 
     '--opencx-muted': '240 4.8% 95.9%',
     '--opencx-muted-foreground': '240 3.8% 46.1%',
 
     '--opencx-input': '240 5.9% 90%',
     '--opencx-border': '240 5.9% 90%',
-    '--opencx-ring': '240 5.9% 10%',
+    '--opencx-ring': '240 10% 3.9',
   } as CSSProperties;
 }

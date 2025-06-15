@@ -22,14 +22,14 @@ const buttonVariants = cva(
         default: 'border-primary bg-primary text-primary-foreground',
         destructive:
           'border-destructive bg-destructive text-destructive-foreground',
-        outline: 'bg-background hover:bg-accent hover:text-accent-foreground',
+        outline: 'bg-background hover:border-primary',
         secondary: 'bg-secondary text-secondary-foreground',
         ghost: 'border-transparent shadow-none',
         link: 'border-transparent shadow-none text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',
-        sm: 'h-8 px-3 text-xs',
+        sm: 'py-2 px-3.5 text-xs',
         /**
          * This size is useful for top level buttons that needs to sit nicely inside the iframe's border radius.
          * Having the minimum height higher than usual (the `default` variant) will make the border radius look just right.

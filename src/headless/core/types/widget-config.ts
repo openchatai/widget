@@ -1,8 +1,8 @@
 import type { AgentOrBotType } from './agent-or-bot';
 
-// The enum is imported so the `@link` in the jsdoc works
+// The type is imported so the `@link` in the jsdoc works
 // eslint-disable-next-line unused-imports/no-unused-imports
-import { OpenCxComponentName } from './component-name.enum';
+import type { OpenCxComponentNameU } from './component-name';
 
 type UserBaseConfig =
   | {
@@ -111,7 +111,7 @@ export interface WidgetConfig {
    */
   isOpen?: boolean;
   /**
-   * A custom vanilla stylesheet to override the default styles. See {@link OpenCxComponentName} for available component names.
+   * A custom vanilla stylesheet to override the default styles. See {@link OpenCxComponentNameU} for available component names.
    *
    * @example Overriding a component's styles
    * ```css

@@ -1,6 +1,7 @@
 import { AnimatePresence } from 'framer-motion';
 import {
   AlertCircle,
+  ArrowUpIcon,
   CheckCheckIcon,
   CircleDashed,
   FileAudio2Icon,
@@ -9,15 +10,11 @@ import {
   ImageIcon,
   Loader2,
   PaperclipIcon,
-  SendHorizontalIcon,
   XIcon,
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import {
-  OpenCxComponentName,
-  type SendMessageDto,
-} from '../../../../headless/core';
+import { type SendMessageDto } from '../../../../headless/core';
 import {
   useConfig,
   useIsAwaitingBotReply,
@@ -29,13 +26,14 @@ import {
 } from '../../../../headless/react';
 import { useDocumentDir } from '../../../../headless/react/hooks/useDocumentDir';
 import { MightSolveUserIssueSuggestedReplies } from '../../components/MightSolveUserIssueSuggestedReplies';
+import { SuggestedReplyButton } from '../../components/SuggestedReplyButton';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Button } from '../../components/lib/button';
 import { Tooltippy } from '../../components/lib/tooltip';
 import { cn } from '../../components/lib/utils/cn';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
 import { useLocale } from '../../hooks/useLocale';
-import { SuggestedReplyButton } from '../../components/SuggestedReplyButton';
+import { dc } from '../../utils/data-component';
 
 function FileDisplay({
   file: { status, file, error },
@@ -129,8 +127,6 @@ function FileDisplay({
     </Tooltippy>
   );
 }
-
-const INPUT_CONTAINER_B_RADIUS = cn('rounded-3xl');
 
 function ChatInput() {
   const { isSmallScreen } = useIsSmallScreen();
@@ -230,33 +226,26 @@ function ChatInput() {
 
   return (
     <div
-      data-component={OpenCxComponentName['chat_screen/input_box_container']}
+      {...dc('chat/input_box/root')}
       className="p-2 relative space-y-1"
       {...dropzone__getRootProps()}
     >
       <input {...dropzone__getInputProps()} />
       <div
-        data-component={OpenCxComponentName['chat_screen/input_box']}
+        {...dc('chat/input_box/inner_root')}
         className={cn(
-          INPUT_CONTAINER_B_RADIUS,
-          'relative flex flex-col gap-2 border transition-all shadow p-2',
+          'transition-all',
+          'relative rounded-3xl flex flex-col gap-2 border p-2',
+          'hover:border-primary focus-within:border-primary',
         )}
       >
         <div
-          data-component={
-            OpenCxComponentName[
-              'chat_screen/input_box/textarea_and_attachments_container'
-            ]
-          }
+          {...dc('chat/input_box/textarea_and_attachments_container')}
           className="flex flex-col gap-2"
         >
           {allFiles.length > 0 && (
             <div
-              data-component={
-                OpenCxComponentName[
-                  'chat_screen/input_box/attachments_container'
-                ]
-              }
+              {...dc('chat/input_box/attachments_container')}
               className="flex items-center gap-1"
             >
               <AnimatePresence mode="popLayout">
@@ -272,9 +261,7 @@ function ChatInput() {
             </div>
           )}
           <textarea
-            data-component={
-              OpenCxComponentName['chat_screen/input_box/textarea']
-            }
+            {...dc('chat/input_box/textarea')}
             onPaste={handlePaste}
             ref={inputRef}
             id="chat-input"
@@ -345,7 +332,7 @@ function ChatInput() {
                   </MotionDiv>
                 ) : (
                   <MotionDiv key="send" snapExit>
-                    <SendHorizontalIcon className="size-4 rtl:-scale-100" />
+                    <ArrowUpIcon className="size-4" />
                   </MotionDiv>
                 )}
               </AnimatePresence>
@@ -422,8 +409,11 @@ export function ChatFooter() {
                 initialQuestions &&
                 initialQuestionsPosition !== 'below-initial-messages' && (
                   <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
-                    {initialQuestions?.map((iq) => (
-                      <SuggestedReplyButton key={iq} suggestion={iq} />
+                    {initialQuestions?.map((iq, index) => (
+                      <SuggestedReplyButton
+                        key={`${iq}-${index}`}
+                        suggestion={iq}
+                      />
                     ))}
                   </div>
                 )}

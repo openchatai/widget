@@ -10,7 +10,7 @@ import { cn } from './components/lib/utils/cn';
 import { Wobble, WOBBLE_MAX_MOVEMENT_PIXELS } from './components/lib/wobble';
 import { ChatBubbleSvg } from './components/svg/ChatBubbleSvg';
 import { useTheme } from './hooks/useTheme';
-import { OpenCxComponentName } from '../../headless/core';
+import { dc } from './utils/data-component';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -74,7 +74,7 @@ function WidgetPopoverTrigger() {
         >
           <Wobble>
             <div
-              data-component={OpenCxComponentName['trigger/button']}
+              {...dc('trigger/btn')}
               className={cn(
                 'relative size-full rounded-full',
                 'flex items-center justify-center',

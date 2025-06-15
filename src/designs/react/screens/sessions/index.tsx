@@ -12,10 +12,7 @@ import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { WidgetHeader } from '../../components/WidgetHeader';
 import { useLocale } from '../../hooks/useLocale';
-import {
-  OpenCxComponentName,
-  type SessionDto,
-} from '../../../../headless/core';
+import { type SessionDto } from '../../../../headless/core';
 import { Skeleton } from '../../components/lib/skeleton';
 import { Avatar, AvatarImage } from '../../components/lib/avatar';
 import { MemoizedReactMarkdown } from '../../components/markdown';
@@ -24,6 +21,7 @@ import rehypeRaw from 'rehype-raw';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
+import { dc } from '../../utils/data-component';
 
 function SessionCard({ session }: { session: SessionDto }) {
   const { bot } = useConfig();
@@ -117,11 +115,7 @@ function SessionsList() {
                 </AnimatePresence>
                 <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background bg-background">
                   <Button
-                    data-component={
-                      OpenCxComponentName[
-                        'sessions_screen/new_conversation_button'
-                      ]
-                    }
+                    {...dc('sessions/new_conversation_btn')}
                     size="lg"
                     key="new-session"
                     className="w-full rounded-3xl"
@@ -139,6 +133,7 @@ function SessionsList() {
                   </p>
                 </div>
                 <Button
+                  {...dc('sessions/new_conversation_btn')}
                   size="lg"
                   key="new-session"
                   className="w-full rounded-3xl"

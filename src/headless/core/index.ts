@@ -21,7 +21,7 @@ export type {
 } from './types/schemas';
 export type { WidgetConfig } from './types/widget-config';
 export type { ExternalStorage } from './types/external-storage';
-export { OpenCxComponentName } from './types/component-name.enum';
+export type { OpenCxComponentNameU } from './types/component-name';
 
 export { WidgetCtx } from './context/widget.ctx';
 export type { ContactCtx } from './context/contact.ctx';

@@ -26,7 +26,7 @@ import { useDocumentDir } from '../../../headless/react/hooks/useDocumentDir';
 import { MotionDiv } from './lib/MotionDiv';
 import { cn } from './lib/utils/cn';
 import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
-import { OpenCxComponentName } from '../../../headless/core';
+import { dc } from '../utils/data-component';
 
 function OptionsMenu() {
   const locale = useLocale();
@@ -36,7 +36,7 @@ function OptionsMenu() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="fit" className="rounded-full">
+        <Button variant="outline" size="fit" className="rounded-full">
           <EllipsisVerticalIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -71,7 +71,7 @@ function CloseWidgetButton() {
 
   return (
     <Button
-      variant="ghost"
+      variant="outline"
       size="fit"
       className="rounded-full"
       onClick={() => setIsOpen(false)}
@@ -113,12 +113,12 @@ export function WidgetHeader() {
   const { isLoading } = usePreludeData();
   const direction = useDocumentDir();
 
-  const componentName = (() => {
+  const dataComponentProp = (() => {
     switch (screen) {
       case 'chat':
-        return OpenCxComponentName['chat_screen/header'];
+        return dc('chat/header');
       case 'sessions':
-        return OpenCxComponentName['sessions_screen/header'];
+        return dc('sessions/header');
       case 'welcome':
         return undefined;
       default:
@@ -130,14 +130,14 @@ export function WidgetHeader() {
   const title = useGetHeaderTitle();
 
   return (
-    <header data-component={componentName} className="p-2 border-b shrink-0">
+    <header {...dataComponentProp} className="py-2 px-4 border-b shrink-0">
       <div
         dir={direction}
         className="flex items-center rtl:flex-row-reverse gap-2"
       >
         {screen === 'chat' && (
           <Button
-            variant="ghost"
+            variant="outline"
             size="fit"
             className="rounded-full"
             onClick={toSessionsScreen}

@@ -3,7 +3,7 @@ import type { WidgetComponentProps } from '../../../../headless/react';
 
 export function HandoffComponent({ data }: WidgetComponentProps) {
   return (
-    <div className="w-full max-w-full overflow-auto shrink-0 p-2 rounded-2xl border bg-secondary">
+    <div className="w-full max-w-full overflow-auto shrink-0 p-2 rounded-2xl bg-secondary">
       <p className="text-sm font-bold">Handoff Custom Component</p>
       <pre
         dir="auto"

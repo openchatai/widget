@@ -6,16 +6,28 @@ import { AttachmentPreview } from '../AttachmentPreview';
 import type { WidgetComponentProps } from '../../../../headless/react/types/components';
 import { cn } from '../lib/utils/cn';
 import { useConfig } from '../../../../headless/react';
-import { OpenCxComponentName } from '../../../../headless/core';
+import type { OpenCxComponentNameU } from '../../../../headless/core';
+import { dc } from '../../utils/data-component';
 
 export function BotOrAgentResponse({
   data,
   id,
   type,
   attachments,
+  isFirstInGroup,
+  isLastInGroup,
+  isAloneInGroup,
   dataComponentNames,
+  classNames,
 }: WidgetComponentProps & {
+  isFirstInGroup: boolean;
+  isLastInGroup: boolean;
+  isAloneInGroup: boolean;
   dataComponentNames?: {
+    messageContainer?: OpenCxComponentNameU;
+    message?: OpenCxComponentNameU;
+  };
+  classNames?: {
     messageContainer?: string;
     message?: string;
   };
@@ -35,11 +47,11 @@ export function BotOrAgentResponse({
 
   return (
     <div
-      data-component={
-        dataComponentNames?.messageContainer ??
-        OpenCxComponentName['chat_screen/agent_or_bot_message_container']
-      }
-      className="w-5/6 flex flex-col items-start gap-1"
+      {...dc(dataComponentNames?.messageContainer ?? 'chat/agent_msg/root')}
+      className={cn(
+        'w-5/6 flex flex-col items-start gap-1',
+        classNames?.messageContainer,
+      )}
     >
       {attachments && attachments.length > 0 && (
         <div className="w-full gap-1 flex flex-row flex-wrap items-center justify-start">
@@ -50,16 +62,22 @@ export function BotOrAgentResponse({
       )}
       {message.length > 0 && (
         <div
-          data-component={
-            dataComponentNames?.message ??
-            OpenCxComponentName['chat_screen/agent_or_bot_message']
-          }
+          {...dc(dataComponentNames?.message ?? 'chat/agent_msg/msg')}
+          data-first={isFirstInGroup}
+          data-last={isLastInGroup}
+          data-alone={isAloneInGroup}
           className={cn(
-            'w-fit py-2 px-3 rounded-2xl bg-secondary border shadow-sm',
+            'transition-all',
+            'w-fit py-3 px-4 rounded-3xl bg-secondary text-secondary-foreground',
+            // 'border shadow-sm',
             'leading-snug text-sm prose prose-sm prose-a:decoration-primary prose-a:underline',
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             // No need to add "whitespace-pre-wrap" in the agent or bot message because it is markup and content appear on separate lines as expected
             // Adding "whitespace-pre-wrap" will result in unnecessarily huge line breaks
+            'data-[first=true]:data-[alone=false]:rounded-bl-md',
+            'data-[last=true]:data-[alone=false]:rounded-tl-md',
+            'data-[first=false]:data-[last=false]:data-[alone=false]:rounded-l-md',
+            classNames?.message,
           )}
         >
           <MemoizedReactMarkdown

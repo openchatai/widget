@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button, type ButtonProps } from './lib/button';
 import { cn } from './lib/utils/cn';
-import { OpenCxComponentName } from '../../../headless/core';
 import { useMessages } from '../../../headless/react';
+import { dc } from '../utils/data-component';
 
 export function SuggestedReplyButton({
   suggestion,
@@ -19,9 +19,10 @@ export function SuggestedReplyButton({
 
   return (
     <Button
-      data-component={OpenCxComponentName['chat_screen/suggested_reply_button']}
+      {...dc('chat/suggested_reply_btn')}
       size="sm"
-      className={cn('rounded-full w-fit', className)}
+      variant="outline"
+      className={cn('rounded-xl w-fit', className)}
       {...props}
       onClick={handleSend}
     >

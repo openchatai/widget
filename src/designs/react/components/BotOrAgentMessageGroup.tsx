@@ -1,10 +1,10 @@
 import React from 'react';
 import {
-  OpenCxComponentName,
   type AgentMessageType,
   type AgentOrBotType,
   type BotMessageType,
 } from '../../../headless/core';
+import { dc } from '../utils/data-component';
 import { AgentOrBotAvatar } from './AgentOrBotAvatar';
 import { BotOrAgentMessage } from './BotOrAgentMessage';
 import { Tooltippy } from './lib/tooltip';
@@ -22,28 +22,55 @@ export function BotOrAgentMessageGroup({
 }) {
   return (
     <div
-      data-component={
-        OpenCxComponentName['chat_screen/agent_or_bot_messages_group']
-      }
-      className={cn('flex flex-col items-start gap-2')}
+      {...dc('chat/agent_msg_group/root')}
+      className={cn('flex items-end gap-2')}
     >
       <Tooltippy content={agent?.name} side="right" align="end">
-        <AgentOrBotAvatar agent={agent} />
+        <AgentOrBotAvatar
+          {...dc('chat/agent_msg_group/root/avatar')}
+          agent={agent}
+          className="hidden"
+        />
       </Tooltippy>
-      <div
-        data-component={
-          OpenCxComponentName[
-            'chat_screen/agent_or_bot_messages_group/messages_container'
-          ]
-        }
-        className={cn('flex flex-col gap-2')}
-      >
-        {messages.map((message) => (
-          <BotOrAgentMessage key={message.id} {...message} />
-        ))}
-        {suggestedReplies?.map((suggestion) => (
-          <SuggestedReplyButton key={suggestion} suggestion={suggestion} />
-        ))}
+
+      <div className={cn('flex-1 flex flex-col gap-2')}>
+        <div
+          {...dc('chat/agent_msg_group/avatar_and_msgs/root')}
+          className={cn('flex items-end gap-2')}
+        >
+          <Tooltippy content={agent?.name} side="right" align="end">
+            <AgentOrBotAvatar
+              {...dc('chat/agent_msg_group/avatar_and_msgs/avatar')}
+              agent={agent}
+            />
+          </Tooltippy>
+          <div
+            {...dc('chat/agent_msg_group/avatar_and_msgs/msgs')}
+            className={cn('flex-1 flex flex-col gap-1')}
+          >
+            {messages.map((message, index, array) => (
+              <BotOrAgentMessage
+                key={message.id}
+                isFirstInGroup={index === 0}
+                isLastInGroup={index === array.length - 1}
+                isAloneInGroup={array.length === 1}
+                {...message}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div
+          {...dc('chat/agent_msg_group/suggestions')}
+          className={cn('flex flex-col gap-2 pl-8')}
+        >
+          {suggestedReplies?.map((suggestion, index) => (
+            <SuggestedReplyButton
+              key={`${suggestion}-${index}`}
+              suggestion={suggestion}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );

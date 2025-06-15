@@ -9,7 +9,7 @@ import { MotionDiv } from '../../components/lib/MotionDiv';
 import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
-import { OpenCxComponentName } from '../../../../headless/core';
+import { dc } from '../../utils/data-component';
 
 export function ChatScreen() {
   const {
@@ -30,7 +30,7 @@ export function ChatScreen() {
 
   return (
     <div
-      data-component={OpenCxComponentName['chat_screen/root']}
+      {...dc('chat/root')}
       className={cn('flex flex-col overflow-hidden')}
       style={{
         width: '100vw', // Relative to the iframe

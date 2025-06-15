@@ -1,21 +1,16 @@
 import React from 'react';
-import {
-  OpenCxComponentName,
-  type AgentOrBotType,
-} from '../../../headless/core';
+import { type AgentOrBotType } from '../../../headless/core';
 import { Avatar, AvatarFallback, AvatarImage } from './lib/avatar';
+import type { AvatarProps } from '@radix-ui/react-avatar';
 
 export function AgentOrBotAvatar({
   agent,
-}: {
+  ...props
+}: AvatarProps & {
   agent: AgentOrBotType | undefined;
 }) {
   return (
-    <Avatar
-      data-component={
-        OpenCxComponentName['chat_screen/agent_or_bot_avatar/root']
-      }
-    >
+    <Avatar {...props}>
       <AvatarImage src={agent?.avatar ?? ''} alt="Agent Icon" />
       {agent?.name && (
         <AvatarFallback>

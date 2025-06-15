@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import {
-  OpenCxComponentName,
   type BotMessageType,
   type LiteralWidgetComponentKey,
   type SafeExtract,
@@ -20,6 +19,8 @@ import {
   isUserMessageGroup,
 } from '../../utils/group-messages-by-type';
 import { BotOrAgentResponse } from '../../components/custom-components/BotOrAgentTextResponse.component';
+import { cn } from '../../components/lib/utils/cn';
+import { dc } from '../../utils/data-component';
 
 export function ChatMain() {
   const {
@@ -65,36 +66,43 @@ export function ChatMain() {
   return (
     <div
       // Do not add `dir` attribute here... contact messages are always on the right, bot and agent are always on the left for all languages
-      data-component={OpenCxComponentName['chat_screen/messages_container']}
+      {...dc('chat/msgs/root')}
       ref={messagesContainerRef}
-      className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
+      className="max-h-full scroll-smooth relative flex-1 py-2 px-4 flex flex-col gap-2 overflow-auto"
     >
-      {persistentInitialMessages.map((message) => (
-        <BotOrAgentResponse
-          key={message}
-          component="bot_message"
-          data={{ message }}
-          id={message}
-          type="FROM_BOT"
-          timestamp={Date.now().toString()}
-          dataComponentNames={{
-            messageContainer:
-              OpenCxComponentName[
-                'chat_screen/persistent_initial_message_container'
-              ],
-            message:
-              OpenCxComponentName['chat_screen/persistent_initial_message'],
-          }}
-        />
-      ))}
+      <div {...dc('chat/persistent_initial_msgs/root')}>
+        {persistentInitialMessages.map((message, index, array) => (
+          <BotOrAgentResponse
+            key={`${message}-${index}`}
+            component="bot_message"
+            data={{ message }}
+            id={message}
+            type="FROM_BOT"
+            timestamp={Date.now().toString()}
+            dataComponentNames={{
+              messageContainer: 'chat/persistent_initial_msg/root',
+              message: 'chat/persistent_initial_msg/msg',
+            }}
+            classNames={{
+              messageContainer: cn(
+                'w-full flex flex-col items-center text-center',
+              ),
+              message: 'w-full bg-transparent border-none shadow-none text-xs',
+            }}
+            isFirstInGroup={index === 0}
+            isLastInGroup={index === array.length - 1}
+            isAloneInGroup={array.length === 1}
+          />
+        ))}
+      </div>
       {messages.length === 0 && (
         <BotOrAgentMessageGroup
           messages={initialMessages.map(
-            (m) =>
+            (m, index) =>
               ({
                 component: 'bot_message',
                 data: { message: m },
-                id: m,
+                id: `${m}-${index}`,
                 type: 'FROM_BOT',
                 timestamp: Date.now().toString(),
               }) satisfies BotMessageType,

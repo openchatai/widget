@@ -1,7 +1,7 @@
 import React from 'react';
 import { useLocale } from '../hooks/useLocale';
 import { SuggestedReplyButton } from './SuggestedReplyButton';
-import { OpenCxComponentName } from '../../../headless/core';
+import { dc } from '../utils/data-component';
 
 export function MightSolveUserIssueSuggestedReplies() {
   const locale = useLocale();
@@ -12,11 +12,7 @@ export function MightSolveUserIssueSuggestedReplies() {
 
   return (
     <div
-      data-component={
-        OpenCxComponentName[
-          'chat_screen/might_solve_user_issue_suggested_replies_container'
-        ]
-      }
+      {...dc('chat/might_solve_user_issue_suggested_replies_container')}
       className="flex items-center gap-2 p-2 pb-0 flex-wrap"
     >
       {options.map((option) => (

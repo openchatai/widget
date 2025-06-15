@@ -10,7 +10,7 @@ export function PoweredByOpen({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex items-center justify-center gap-2 p-2 pt-0 bg-white text-muted-foreground/70 [&_svg]:text-muted-foreground/70',
+        'flex items-center justify-center gap-2 p-2 pt-0 bg-background',
         className,
       )}
     >
@@ -19,7 +19,11 @@ export function PoweredByOpen({ className }: { className?: string }) {
           href={`https://open.cx/?ref=${token}`}
           target="_blank"
           rel="noreferrer"
-          className="text-[10px] flex items-center"
+          className={cn(
+            'text-[10px] flex items-center',
+            'text-muted-foreground/70 [&_svg]:text-muted-foreground/70',
+            'hover:text-primary [&_svg]:hover:text-primary',
+          )}
         >
           <span>Powered by</span>
           <span>&nbsp;</span>
