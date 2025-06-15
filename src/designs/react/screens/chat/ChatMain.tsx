@@ -33,6 +33,7 @@ export function ChatMain() {
     [messages],
   );
 
+  const persistentInitialMessages = config.persistentInitialMessages || [];
   const initialMessages =
     !config.initialMessages || config.initialMessages.length === 0
       ? ['Hello, how can I help you?']
@@ -66,6 +67,16 @@ export function ChatMain() {
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 p-2 space-y-2 overflow-auto"
     >
+      {persistentInitialMessages.map((message) => (
+        <BotOrAgentMessage
+          key={message}
+          component="bot_message"
+          data={{ message }}
+          id={message}
+          type="FROM_BOT"
+          timestamp={Date.now().toString()}
+        />
+      ))}
       {messages.length === 0 &&
         initialMessages.map((message) => (
           <BotOrAgentMessage
@@ -74,15 +85,6 @@ export function ChatMain() {
             data={{ message }}
             id={message}
             type="FROM_BOT"
-            agent={
-              config.bot
-                ? {
-                    ...config.bot,
-                    isAi: true,
-                    id: null,
-                  }
-                : undefined
-            }
             timestamp={Date.now().toString()}
           />
         ))}

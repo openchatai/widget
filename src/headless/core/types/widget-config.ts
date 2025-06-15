@@ -147,6 +147,12 @@ export interface WidgetConfig {
    */
   initialMessages?: string[];
   /**
+   * Similar to `initialMessages`, but these messages will persist at the top of the chat session.
+   * Useful if you want to keep a notice or a privacy policy warning.
+   * @default undefined
+   */
+  persistentInitialMessages?: string[];
+  /**
    * Suggested initial questions that the contact sees in a new chat session.
    * If a user clicks on one of the suggested questions, the widget will send it as the user's first message.
    * @default undefined
