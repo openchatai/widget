@@ -242,9 +242,23 @@ function ChatInput() {
           'relative flex flex-col gap-2 border transition-all shadow p-2',
         )}
       >
-        <div className="flex flex-col gap-2">
+        <div
+          data-component={
+            OpenCxComponentName[
+              'chat_screen/input_box/textarea_and_attachments_container'
+            ]
+          }
+          className="flex flex-col gap-2"
+        >
           {allFiles.length > 0 && (
-            <div className="flex items-center gap-1">
+            <div
+              data-component={
+                OpenCxComponentName[
+                  'chat_screen/input_box/attachments_container'
+                ]
+              }
+              className="flex items-center gap-1"
+            >
               <AnimatePresence mode="popLayout">
                 {allFiles.map((file) => (
                   <MotionDiv key={file.id} snapExit>
