@@ -2,7 +2,7 @@ import { AnimatePresence } from 'framer-motion';
 import {
   AlertCircle,
   ArrowUpIcon,
-  CheckCheckIcon,
+  CircleCheckIcon,
   CircleDashed,
   FileAudio2Icon,
   FileIcon,
@@ -235,7 +235,9 @@ function ChatInput() {
         {...dc('chat/input_box/inner_root')}
         className={cn(
           'transition-all',
-          'relative rounded-3xl flex flex-col gap-2 border p-2',
+          'bg-white',
+          // 'border',
+          'relative rounded-3xl flex flex-col gap-2 p-2',
           'hover:border-primary focus-within:border-primary',
         )}
       >
@@ -273,9 +275,10 @@ function ChatInput() {
               /** Match the border radius of the container */
               // INPUT_CONTAINER_B_RADIUS,
               'max-h-16 [field-sizing:content]',
-              'w-full resize-none px-1',
+              'w-full resize-none px-2',
               allFiles.length === 0 && 'pt-1',
               'bg-transparent outline-none',
+              'placeholder:text-muted-foreground',
               'rtl:placeholder:text-right',
               // 16px on mobiles prevents auto-zoom on the input when focused
               isSmallScreen ? 'text-[16px]' : 'text-sm',
@@ -299,7 +302,7 @@ function ChatInput() {
             <Button
               onClick={dropzone__openFileSelect}
               size="fit"
-              variant="outline"
+              variant="ghost"
               className={cn(
                 'rounded-full size-8 flex items-center justify-center p-0 overflow-hidden',
               )}
@@ -350,9 +353,9 @@ function SessionClosedSection() {
 
   return (
     <div className="p-2">
-      <div className="p-2 bg-background rounded-3xl border shadow-2xl space-y-2">
-        <div className="flex items-center gap-1">
-          <CheckCheckIcon className="size-4 text-emerald-500" />
+      <div className="p-2 bg-muted rounded-3xl space-y-2">
+        <div className="pl-2 flex items-center gap-1">
+          <CircleCheckIcon className="size-4 text-emerald-600" />
           <h2 className="text-sm font-medium" dir="auto">
             {locale.get('session-closed-lead')}
           </h2>

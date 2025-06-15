@@ -10,7 +10,7 @@ const buttonVariants = cva(
     'text-sm font-medium whitespace-nowrap',
     'ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
     'disabled:pointer-events-none disabled:opacity-50',
-    'shadow-sm active:shadow-none active:scale-95 hover:active:scale-95',
+    'active:scale-95 hover:active:scale-95',
     'rounded-xl',
     // Add border to make transitions between variants smoother... because border takes 1 pixel of space in each direction
     'border',
@@ -24,8 +24,8 @@ const buttonVariants = cva(
           'border-destructive bg-destructive text-destructive-foreground',
         outline: 'bg-background hover:border-primary',
         secondary: 'bg-secondary text-secondary-foreground',
-        ghost: 'border-transparent shadow-none',
-        link: 'border-transparent shadow-none text-primary underline-offset-4 hover:underline',
+        ghost: 'border-transparent hover:bg-secondary',
+        link: 'border-transparent text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',

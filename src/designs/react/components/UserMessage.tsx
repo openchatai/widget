@@ -37,7 +37,6 @@ export function UserMessage({
             'transition-all',
             'w-fit py-3 px-4 rounded-3xl text-sm',
             'bg-primary text-primary-foreground',
-            // 'border shadow-sm',
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             'whitespace-pre-wrap',
             'data-[first=true]:data-[alone=false]:rounded-br-md',

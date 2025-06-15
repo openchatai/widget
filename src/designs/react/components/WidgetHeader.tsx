@@ -36,7 +36,7 @@ function OptionsMenu() {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="fit" className="rounded-full">
+        <Button variant="ghost" size="fit" className="rounded-full">
           <EllipsisVerticalIcon className="size-4" />
         </Button>
       </DropdownMenuTrigger>
@@ -71,7 +71,7 @@ function CloseWidgetButton() {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="fit"
       className="rounded-full"
       onClick={() => setIsOpen(false)}
@@ -130,14 +130,14 @@ export function WidgetHeader() {
   const title = useGetHeaderTitle();
 
   return (
-    <header {...dataComponentProp} className="py-2 px-4 border-b shrink-0">
+    <header {...dataComponentProp} className="py-2 px-4 shrink-0">
       <div
         dir={direction}
         className="flex items-center rtl:flex-row-reverse gap-2"
       >
         {screen === 'chat' && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="fit"
             className="rounded-full"
             onClick={toSessionsScreen}

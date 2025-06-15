@@ -33,7 +33,7 @@ export function useTheme() {
   } satisfies NonNullable<DeepRequired<WidgetConfig['theme']>>['widgetTrigger'];
 
   const themeWithFallbacks = {
-    primaryColor: theme?.primaryColor ?? 'hsl(0, 0%, 0%)',
+    primaryColor: theme?.primaryColor ?? 'hsl(0 0% 9%)',
     widgetTrigger,
     widgetContentContainer: {
       borderRadius: isSmallScreen
@@ -141,9 +141,7 @@ interface Colors {
 
 function cssVars({ primary }: Colors) {
   const _primary = tc(primary).toHsl();
-  const primaryForeground = tc(primary).isLight()
-    ? '240 10% 3.9%'
-    : '0 0% 100%';
+  const primaryForeground = tc(primary).isLight() ? '0 0% 3.9%' : '0 0% 98%';
 
   /**
    * Spread the primary color without the `hsl()` call so that we can use tailwind opacity classes on it
@@ -154,23 +152,23 @@ function cssVars({ primary }: Colors) {
     '--opencx-primary': primitivePrimary,
     '--opencx-primary-foreground': primaryForeground,
 
-    '--opencx-background': '0 0% 100%',
-    '--opencx-foreground': '240 10% 3.9%',
+    '--opencx-background': '0 0% 96.1%',
+    '--opencx-foreground': '0 0% 3.9%',
 
-    '--opencx-accent': '240 4.8% 95.9%',
-    '--opencx-accent-foreground': '240 10% 3.9',
-
-    '--opencx-destructive': '0 84.2% 60.2%',
+    '--opencx-destructive': '0 72.2% 50.6%',
     '--opencx-destructive-foreground': '0 0% 98%',
 
-    '--opencx-secondary': '240 4.8% 95.9%',
-    '--opencx-secondary-foreground': '240 10% 3.9',
+    '--opencx-accent': '0 0% 89.8%',
+    '--opencx-accent-foreground': 'var(--opencx-foreground)',
 
-    '--opencx-muted': '240 4.8% 95.9%',
-    '--opencx-muted-foreground': '240 3.8% 46.1%',
+    '--opencx-secondary': '0 0% 89.8%',
+    '--opencx-secondary-foreground': 'var(--opencx-foreground)',
 
-    '--opencx-input': '240 5.9% 90%',
-    '--opencx-border': '240 5.9% 90%',
-    '--opencx-ring': '240 10% 3.9',
+    '--opencx-muted': '0 0% 89.8%',
+    '--opencx-muted-foreground': '0 0% 45.1%',
+
+    '--opencx-input': '0 0% 83.1%',
+    '--opencx-border': '0 0% 83.1%',
+    '--opencx-ring': 'var(--opencx-foreground)',
   } as CSSProperties;
 }

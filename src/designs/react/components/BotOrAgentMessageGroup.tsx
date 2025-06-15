@@ -62,7 +62,7 @@ export function BotOrAgentMessageGroup({
 
         <div
           {...dc('chat/agent_msg_group/suggestions')}
-          className={cn('flex flex-col gap-2 pl-8')}
+          className={cn('flex flex-col gap-1 pl-8')}
         >
           {suggestedReplies?.map((suggestion, index) => (
             <SuggestedReplyButton

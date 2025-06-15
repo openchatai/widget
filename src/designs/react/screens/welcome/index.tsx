@@ -144,7 +144,6 @@ export function WelcomeScreen() {
                 required
                 placeholder={locale.get('your-name')}
                 name="name"
-                className="rounded-3xl pl-3"
               />
               <Input
                 required
@@ -153,7 +152,6 @@ export function WelcomeScreen() {
                 type="email"
                 placeholder={locale.get('your-email')}
                 name="email"
-                className="rounded-3xl pl-3"
               />
               {extraDataFields.map((field) => (
                 <Input
@@ -166,7 +164,6 @@ export function WelcomeScreen() {
                     }))
                   }
                   placeholder={`${field} (${locale.get('optional')})`}
-                  className="rounded-3xl pl-3"
                 />
               ))}
             </div>

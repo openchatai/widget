@@ -1,24 +1,28 @@
+import { AnimatePresence } from 'framer-motion';
+import { ChevronRightIcon, UserRoundIcon } from 'lucide-react';
 import React from 'react';
-import { cn } from '../../components/lib/utils/cn';
+import rehypeRaw from 'rehype-raw';
+import remarkGfm from 'remark-gfm';
+import { type SessionDto } from '../../../../headless/core';
 import {
   useConfig,
   useSessions,
   useWidgetRouter,
 } from '../../../../headless/react';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from '../../components/lib/avatar';
 import { Button } from '../../components/lib/button';
-import { ChevronRightIcon } from 'lucide-react';
-import { AnimatePresence } from 'framer-motion';
 import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { MotionDiv } from '../../components/lib/MotionDiv';
+import { Skeleton } from '../../components/lib/skeleton';
+import { cn } from '../../components/lib/utils/cn';
+import { MemoizedReactMarkdown } from '../../components/markdown';
+import { PoweredByOpen } from '../../components/PoweredByOpen';
 import { WidgetHeader } from '../../components/WidgetHeader';
 import { useLocale } from '../../hooks/useLocale';
-import { type SessionDto } from '../../../../headless/core';
-import { Skeleton } from '../../components/lib/skeleton';
-import { Avatar, AvatarImage } from '../../components/lib/avatar';
-import { MemoizedReactMarkdown } from '../../components/markdown';
-import remarkGfm from 'remark-gfm';
-import rehypeRaw from 'rehype-raw';
-import { PoweredByOpen } from '../../components/PoweredByOpen';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
 import { dc } from '../../utils/data-component';
@@ -38,9 +42,9 @@ function SessionCard({ session }: { session: SessionDto }) {
 
   return (
     <Button
-      variant="outline"
+      variant="ghost"
       size="lg"
-      className="border-muted rounded-full p-2 flex text-start justify-between w-full whitespace-normal"
+      className="rounded-full p-2 flex text-start justify-between w-full whitespace-normal"
       onClick={() => toChatScreen(session.id)}
     >
       <div className="flex-1 flex gap-2 items-center">
@@ -48,6 +52,9 @@ function SessionCard({ session }: { session: SessionDto }) {
           <MotionDiv snapExit>
             <Avatar className="size-10">
               <AvatarImage src={assigneeAvatarUrl} alt="Agent Icon" />
+              <AvatarFallback>
+                <UserRoundIcon className="size-4" />
+              </AvatarFallback>
             </Avatar>
           </MotionDiv>
         </AnimatePresence>

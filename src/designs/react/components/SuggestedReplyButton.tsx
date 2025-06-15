@@ -21,7 +21,6 @@ export function SuggestedReplyButton({
     <Button
       {...dc('chat/suggested_reply_btn')}
       size="sm"
-      variant="outline"
       className={cn('rounded-xl w-fit', className)}
       {...props}
       onClick={handleSend}
