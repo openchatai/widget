@@ -1,9 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { version } from '../../../package.json';
+import { type ExternalStorage, type WidgetConfig, WidgetCtx } from '../core';
 import { ComponentRegistry } from './ComponentRegistry';
 import type { WidgetComponentType } from './types/components';
-import { createSafeContext } from './utils/create-safe-context';
-import { type ExternalStorage, type WidgetConfig, WidgetCtx } from '../core';
-import { version } from '../../../package.json';
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
@@ -14,9 +20,9 @@ interface WidgetProviderValue {
   contentIframeRef?: React.MutableRefObject<HTMLIFrameElement | null>;
 }
 
-const [useWidget, SafeProvider] = createSafeContext<WidgetProviderValue>();
+const context = createContext<WidgetProviderValue | null>(null);
 
-function WidgetProvider({
+export function WidgetProvider({
   options: config,
   children,
   components,
@@ -51,7 +57,7 @@ function WidgetProvider({
   if (!widgetCtx) return null;
 
   return (
-    <SafeProvider
+    <context.Provider
       value={{
         widgetCtx,
         config,
@@ -62,8 +68,14 @@ function WidgetProvider({
       }}
     >
       {children}
-    </SafeProvider>
+    </context.Provider>
   );
 }
 
-export { useWidget, WidgetProvider };
+export function useWidget() {
+  const ctx = useContext(context);
+  if (!ctx) {
+    throw new Error('useWidget must be used within a WidgetProvider');
+  }
+  return ctx;
+}

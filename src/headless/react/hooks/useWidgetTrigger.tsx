@@ -1,11 +1,12 @@
 import React, {
+  createContext,
+  useContext,
   useEffect,
   useState,
   type Dispatch,
   type ReactNode,
   type SetStateAction,
 } from 'react';
-import { createSafeContext } from '../utils/create-safe-context';
 import { useConfig } from './useConfig';
 
 type WidgetTriggerCtx = {
@@ -13,8 +14,7 @@ type WidgetTriggerCtx = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export const [useWidgetTrigger, SafeProvider] =
-  createSafeContext<WidgetTriggerCtx>();
+const context = createContext<WidgetTriggerCtx | null>(null);
 
 export function WidgetTriggerProvider({ children }: { children: ReactNode }) {
   const config = useConfig();
@@ -24,5 +24,19 @@ export function WidgetTriggerProvider({ children }: { children: ReactNode }) {
     setIsOpen((prev) => config.isOpen ?? prev);
   }, [config.isOpen]);
 
-  return <SafeProvider value={{ isOpen, setIsOpen }}>{children}</SafeProvider>;
+  return (
+    <context.Provider value={{ isOpen, setIsOpen }}>
+      {children}
+    </context.Provider>
+  );
+}
+
+export function useWidgetTrigger() {
+  const ctx = useContext(context);
+  if (!ctx) {
+    throw new Error(
+      'useWidgetTrigger must be used within a WidgetTriggerProvider',
+    );
+  }
+  return ctx;
 }
