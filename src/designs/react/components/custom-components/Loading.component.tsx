@@ -22,7 +22,7 @@ export function BotLoadingComponent({ agent }: LoadingComponentProps) {
         <div
           data-component={
             OpenCxComponentName[
-              'chat-screen__bot-loading__bounding-dots-container'
+              'chat-screen__bot-loading__bouncing-dots-container'
             ]
           }
           className="flex items-center [&_span]:bg-secondary-foreground [&_span]:size-1 gap-1 p-2 rounded-xl bg-secondary border"
