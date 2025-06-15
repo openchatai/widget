@@ -32,7 +32,7 @@ html, body {
 
 function WidgetPopoverTrigger() {
   const { isOpen } = useWidgetTrigger();
-  const { cssOverrides } = useConfig();
+  const { cssOverrides, assets } = useConfig();
   const { theme, cssVars } = useTheme();
 
   return (
@@ -95,12 +95,23 @@ function WidgetPopoverTrigger() {
                       animate: { rotate: 0 },
                     }}
                   >
-                    <ChevronDownIcon
-                      style={{
-                        width: theme.widgetTrigger.size.icon,
-                        height: theme.widgetTrigger.size.icon,
-                      }}
-                    />
+                    {assets?.widgetTrigger?.closeIcon ? (
+                      <img
+                        src={assets.widgetTrigger.closeIcon}
+                        alt="Widget trigger close icon"
+                        style={{
+                          width: theme.widgetTrigger.size.icon,
+                          height: theme.widgetTrigger.size.icon,
+                        }}
+                      />
+                    ) : (
+                      <ChevronDownIcon
+                        style={{
+                          width: theme.widgetTrigger.size.icon,
+                          height: theme.widgetTrigger.size.icon,
+                        }}
+                      />
+                    )}
                   </MotionDiv>
                 ) : (
                   <MotionDiv
@@ -111,13 +122,24 @@ function WidgetPopoverTrigger() {
                       animate: { rotate: 0 },
                     }}
                   >
-                    <ChatBubbleSvg
-                      style={{
-                        width: theme.widgetTrigger.size.icon,
-                        height: theme.widgetTrigger.size.icon,
-                      }}
-                      className="mt-0.5 opacity-95"
-                    />
+                    {assets?.widgetTrigger?.openIcon ? (
+                      <img
+                        src={assets.widgetTrigger.openIcon}
+                        alt="Widget trigger open icon"
+                        style={{
+                          width: theme.widgetTrigger.size.icon,
+                          height: theme.widgetTrigger.size.icon,
+                        }}
+                      />
+                    ) : (
+                      <ChatBubbleSvg
+                        style={{
+                          width: theme.widgetTrigger.size.icon,
+                          height: theme.widgetTrigger.size.icon,
+                        }}
+                        className="mt-0.5 opacity-95"
+                      />
+                    )}
                   </MotionDiv>
                 )}
               </AnimatePresence>

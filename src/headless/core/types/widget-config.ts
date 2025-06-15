@@ -130,8 +130,15 @@ export interface WidgetConfig {
    */
   cssOverrides?: string;
   theme?: ThemeOptions;
+  /**
+   * Assets URLs to be used in the widget.
+   */
   assets?: {
     organizationLogo?: string;
+    widgetTrigger?: {
+      openIcon?: string;
+      closeIcon?: string;
+    };
   };
   /**
    * Initial messages that the contact sees in a new chat session.
