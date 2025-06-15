@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import {
   OpenCxComponentName,
+  type BotMessageType,
   type LiteralWidgetComponentKey,
   type SafeExtract,
 } from '../../../../headless/core';
@@ -85,17 +86,25 @@ export function ChatMain() {
           }}
         />
       ))}
-      {messages.length === 0 &&
-        initialMessages.map((message) => (
-          <BotOrAgentResponse
-            key={message}
-            component="bot_message"
-            data={{ message }}
-            id={message}
-            type="FROM_BOT"
-            timestamp={Date.now().toString()}
-          />
-        ))}
+      {messages.length === 0 && (
+        <BotOrAgentMessageGroup
+          messages={[
+            ...initialMessages.map(
+              (m) =>
+                ({
+                  component: 'bot_message',
+                  data: { message: m },
+                  id: m,
+                  type: 'FROM_BOT',
+                  timestamp: Date.now().toString(),
+                }) satisfies BotMessageType,
+            ),
+          ]}
+          agent={
+            config.bot ? { ...config.bot, isAi: true, id: null } : undefined
+          }
+        />
+      )}
       {groupedMessages.map((group) => {
         const type = group?.[0]?.type;
         const firstIdInGroup = group[0]?.id;

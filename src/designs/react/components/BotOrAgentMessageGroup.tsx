@@ -27,9 +27,18 @@ export function BotOrAgentMessageGroup({
       <Tooltippy content={agent?.name} side="right" align="end">
         <AgentOrBotAvatar agent={agent} />
       </Tooltippy>
-      {messages.map((message) => (
-        <BotOrAgentMessage key={message.id} {...message} />
-      ))}
+      <div
+        data-component={
+          OpenCxComponentName[
+            'chat_screen/agent_or_bot_messages_group/messages_container'
+          ]
+        }
+        className={cn('flex flex-col gap-2')}
+      >
+        {messages.map((message) => (
+          <BotOrAgentMessage key={message.id} {...message} />
+        ))}
+      </div>
     </div>
   );
 }

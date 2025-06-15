@@ -18,6 +18,7 @@ export enum OpenCxComponentName {
   'chat_screen/messages_container' = 'chat_screen/messages_container',
   /* -------------------- Agent Message ------------------- */
   'chat_screen/agent_or_bot_messages_group' = 'chat_screen/agent_or_bot_messages_group',
+  'chat_screen/agent_or_bot_messages_group/messages_container' = 'chat_screen/agent_or_bot_messages_group/messages_container',
   'chat_screen/agent_or_bot_message_container' = 'chat_screen/agent_or_bot_message_container',
   'chat_screen/agent_or_bot_message' = 'chat_screen/agent_or_bot_message',
   'chat_screen/persistent_initial_message_container' = 'chat_screen/persistent_initial_message_container',
