@@ -9,13 +9,16 @@ import { AgentOrBotAvatar } from './AgentOrBotAvatar';
 import { BotOrAgentMessage } from './BotOrAgentMessage';
 import { Tooltippy } from './lib/tooltip';
 import { cn } from './lib/utils/cn';
+import { SuggestedReplyButton } from './SuggestedReplyButton';
 
 export function BotOrAgentMessageGroup({
   messages,
   agent,
+  suggestedReplies,
 }: {
   messages: BotMessageType[] | AgentMessageType[];
   agent: AgentOrBotType | undefined;
+  suggestedReplies?: string[];
 }) {
   return (
     <div
@@ -37,6 +40,9 @@ export function BotOrAgentMessageGroup({
       >
         {messages.map((message) => (
           <BotOrAgentMessage key={message.id} {...message} />
+        ))}
+        {suggestedReplies?.map((suggestion) => (
+          <SuggestedReplyButton key={suggestion} suggestion={suggestion} />
         ))}
       </div>
     </div>

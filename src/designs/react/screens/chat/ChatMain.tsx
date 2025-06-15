@@ -28,6 +28,7 @@ export function ChatMain() {
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();
   const config = useConfig();
+  const { initialQuestions, initialQuestionsPosition } = config;
 
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
@@ -88,18 +89,21 @@ export function ChatMain() {
       ))}
       {messages.length === 0 && (
         <BotOrAgentMessageGroup
-          messages={[
-            ...initialMessages.map(
-              (m) =>
-                ({
-                  component: 'bot_message',
-                  data: { message: m },
-                  id: m,
-                  type: 'FROM_BOT',
-                  timestamp: Date.now().toString(),
-                }) satisfies BotMessageType,
-            ),
-          ]}
+          messages={initialMessages.map(
+            (m) =>
+              ({
+                component: 'bot_message',
+                data: { message: m },
+                id: m,
+                type: 'FROM_BOT',
+                timestamp: Date.now().toString(),
+              }) satisfies BotMessageType,
+          )}
+          suggestedReplies={
+            initialQuestionsPosition === 'below-initial-messages'
+              ? initialQuestions
+              : undefined
+          }
           agent={
             config.bot ? { ...config.bot, isAi: true, id: null } : undefined
           }

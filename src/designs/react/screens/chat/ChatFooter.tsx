@@ -15,27 +15,27 @@ import {
 import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
+  OpenCxComponentName,
+  type SendMessageDto,
+} from '../../../../headless/core';
+import {
   useConfig,
   useIsAwaitingBotReply,
   useMessages,
-  usePreludeData,
   useSessions,
   useUploadFiles,
   useWidget,
   type FileWithProgress,
 } from '../../../../headless/react';
-import { Tooltippy } from '../../components/lib/tooltip';
-import { cn } from '../../components/lib/utils/cn';
-import { useLocale } from '../../hooks/useLocale';
-import { MotionDiv } from '../../components/lib/MotionDiv';
-import { Button } from '../../components/lib/button';
 import { useDocumentDir } from '../../../../headless/react/hooks/useDocumentDir';
 import { MightSolveUserIssueSuggestedReplies } from '../../components/MightSolveUserIssueSuggestedReplies';
-import {
-  OpenCxComponentName,
-  type SendMessageDto,
-} from '../../../../headless/core';
+import { MotionDiv } from '../../components/lib/MotionDiv';
+import { Button } from '../../components/lib/button';
+import { Tooltippy } from '../../components/lib/tooltip';
+import { cn } from '../../components/lib/utils/cn';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
+import { useLocale } from '../../hooks/useLocale';
+import { SuggestedReplyButton } from '../../components/SuggestedReplyButton';
 
 function FileDisplay({
   file: { status, file, error },
@@ -382,13 +382,10 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
-  const { suggestedInitialQuestions } = useConfig();
+  const { initialQuestions, initialQuestionsPosition } = useConfig();
   const { sessionState } = useSessions();
-  const { messagesState, sendMessage } = useMessages();
+  const { messagesState } = useMessages();
 
-  const preludeSWR = usePreludeData();
-  const initialQuestions =
-    suggestedInitialQuestions || preludeSWR.data?.data?.initialQuestions;
   const noMessages = messagesState.messages.length === 0;
 
   return (
@@ -421,23 +418,15 @@ export function ChatFooter() {
                 <MightSolveUserIssueSuggestedReplies />
               )}
 
-              {noMessages && initialQuestions && (
-                <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
-                  {initialQuestions?.map((iq) => (
-                    <Button
-                      key={iq}
-                      dir="auto"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => {
-                        sendMessage({ content: iq });
-                      }}
-                    >
-                      {iq}
-                    </Button>
-                  ))}
-                </div>
-              )}
+              {noMessages &&
+                initialQuestions &&
+                initialQuestionsPosition !== 'below-initial-messages' && (
+                  <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
+                    {initialQuestions?.map((iq) => (
+                      <SuggestedReplyButton key={iq} suggestion={iq} />
+                    ))}
+                  </div>
+                )}
 
               <ChatInput />
             </MotionDiv>

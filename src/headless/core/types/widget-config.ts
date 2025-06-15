@@ -158,7 +158,12 @@ export interface WidgetConfig {
    * @default undefined
    * @example - ['What is my account balance?', 'How do I pay my bill?', 'How do I change my address?']
    */
-  suggestedInitialQuestions?: string[];
+  initialQuestions?: string[];
+  /**
+   * Where to display the suggested initial questions.
+   * @default 'above-chat-input'
+   */
+  initialQuestionsPosition?: 'above-chat-input' | 'below-initial-messages';
   /**
    * If turned on, the widget will have a login-like screen to collect user's name and email.
    * A non-verified contact will be created based on the provided information.

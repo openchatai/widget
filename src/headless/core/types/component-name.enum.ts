@@ -38,4 +38,5 @@ export enum OpenCxComponentName {
   'chat_screen/bot_loading/root' = 'chat_screen/bot_loading/root',
   'chat_screen/bot_loading/bouncing_dots_container' = 'chat_screen/bot_loading/bouncing_dots_container',
   'chat_screen/suggested_reply_button' = 'chat_screen/suggested_reply_button',
+  'chat_screen/might_solve_user_issue_suggested_replies_container' = 'chat_screen/might_solve_user_issue_suggested_replies_container',
 }
