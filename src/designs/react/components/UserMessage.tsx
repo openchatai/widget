@@ -44,7 +44,10 @@ export function UserMessage({
             // We're using the booleans directly here, not the data attributes, to make any external styling more specific than this
             isFirstInGroup && !isAloneInGroup && 'rounded-br-md',
             isLastInGroup && !isAloneInGroup && 'rounded-tr-md',
-            isAloneInGroup && 'rounded-r-md',
+            !isFirstInGroup &&
+              !isLastInGroup &&
+              !isAloneInGroup &&
+              'rounded-r-md',
           )}
         >
           {message.content}

@@ -78,7 +78,10 @@ export function BotOrAgentResponse({
             // We're using the booleans directly here, not the data attributes, to make any external styling more specific than this
             isFirstInGroup && !isAloneInGroup && 'rounded-bl-md',
             isLastInGroup && !isAloneInGroup && 'rounded-tl-md',
-            isAloneInGroup && 'rounded-l-md',
+            !isFirstInGroup &&
+              !isLastInGroup &&
+              !isAloneInGroup &&
+              'rounded-l-md',
             classNames?.message,
           )}
         >
