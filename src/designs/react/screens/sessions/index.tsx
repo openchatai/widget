@@ -44,7 +44,7 @@ function SessionCard({ session }: { session: SessionDto }) {
     <Button
       variant="ghost"
       size="lg"
-      className="rounded-full p-2 flex text-start justify-between w-full whitespace-normal"
+      className="rounded-full p-2 pr-4 flex text-start justify-between w-full whitespace-normal"
       onClick={() => toChatScreen(session.id)}
     >
       <div className="flex-1 flex gap-2 items-center">
@@ -97,7 +97,7 @@ function SessionsList() {
   } = useSessions();
 
   return (
-    <div className="flex-1 flex flex-col overflow-scroll p-2">
+    <div className="flex-1 flex flex-col overflow-scroll py-2 px-2">
       <AnimatePresence mode="wait">
         {isLoading ? (
           <MotionDiv
