@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.74
+
+### Patch Changes
+
+- expose components for styling
+
 ## 3.0.73
 
 ### Patch Changes
