@@ -60,17 +60,19 @@ export function BotOrAgentMessageGroup({
           </div>
         </div>
 
-        <div
-          {...dc('chat/agent_msg_group/suggestions')}
-          className={cn('flex flex-col gap-1 pl-8')}
-        >
-          {suggestedReplies?.map((suggestion, index) => (
-            <SuggestedReplyButton
-              key={`${suggestion}-${index}`}
-              suggestion={suggestion}
-            />
-          ))}
-        </div>
+        {suggestedReplies && suggestedReplies.length > 0 && (
+          <div
+            {...dc('chat/agent_msg_group/suggestions')}
+            className={cn('flex flex-col gap-1 pl-8')}
+          >
+            {suggestedReplies?.map((suggestion, index) => (
+              <SuggestedReplyButton
+                key={`${suggestion}-${index}`}
+                suggestion={suggestion}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
