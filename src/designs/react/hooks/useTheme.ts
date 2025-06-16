@@ -33,7 +33,7 @@ export function useTheme() {
   } satisfies NonNullable<DeepRequired<WidgetConfig['theme']>>['widgetTrigger'];
 
   const themeWithFallbacks = {
-    palette: theme?.palette ?? 'neutral',
+    palette: theme?.palette ?? 'stone',
     primaryColor: theme?.primaryColor ?? 'hsl(0 0% 9%)',
     widgetTrigger,
     widgetContentContainer: {
