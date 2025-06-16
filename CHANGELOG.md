@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.75
+
+### Patch Changes
+
+- fix: only render suggested replies container if there are suggested replies
+
 ## 3.0.74
 
 ### Patch Changes
