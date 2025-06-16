@@ -166,6 +166,7 @@ export function SessionsScreen() {
 
   return (
     <div
+      {...dc('sessions/root')}
       className={cn('flex flex-col overflow-hidden bg-background')}
       style={{
         width: '100vw', // Relative to the iframe

@@ -7,6 +7,7 @@ export type OpenCxComponentNameU =
   /* ------------------------------------------------------ */
   /*                     Sessions Screen                    */
   /* ------------------------------------------------------ */
+  | 'sessions/root'
   | 'sessions/header'
   | 'sessions/new_conversation_btn'
 
