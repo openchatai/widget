@@ -69,6 +69,7 @@ export const TestUtils = {
                       },
                       id: genUuid(),
                       mightSolveUserIssue: false,
+                      completelyAndFullyCoveredUserIssue: false,
                     },
                     ...returnValue?.data,
                   },
