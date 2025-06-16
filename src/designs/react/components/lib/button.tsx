@@ -3,6 +3,7 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Wobble } from './wobble';
 import { cn } from './utils/cn';
+import { dc } from '../../utils/data-component';
 
 const buttonVariants = cva(
   cn(
@@ -55,11 +56,16 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    { className, variant = 'default', size, asChild = false, ...props },
+    ref,
+  ) => {
     const Comp = asChild ? Slot : 'button';
     return (
       <Wobble ref={ref}>
         <Comp
+          {...dc('ui_lib/btn')}
+          data-variant={variant}
           className={cn(buttonVariants({ variant, size, className }))}
           {...props}
         />
