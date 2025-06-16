@@ -3,6 +3,7 @@ import type { AgentOrBotType } from './agent-or-bot';
 // The type is imported so the `@link` in the jsdoc works
 // eslint-disable-next-line unused-imports/no-unused-imports
 import type { OpenCxComponentNameU } from './component-name';
+import type { JsonValue } from './json-value';
 
 type UserBaseConfig =
   | {
@@ -231,19 +232,20 @@ export interface WidgetConfig {
    */
   anchorTarget?: '_blank' | '_top';
   /**
-   * Headers to be sent with each send-message request from the widget.
-   * These headers will be sent with each AI action (AI tools) that the LLM can call.
-   * This is useful if your AI actions require authentication specific to each contact.
+   * Headers to be added to every Http AI action taken.
    * @default undefined
    */
   headers?: Record<string, string>;
   /**
-   * Query params to be sent with each send-message request from the widget.
-   * These query params will be sent with each AI action (AI tools) that the LLM can call.
-   * This is useful if you want to send extra information with each AI action.
+   * Query params to be added to every Http AI action taken.
    * @default undefined
    */
   queryParams?: Record<string, string>;
+  /**
+   * Properties to be added to the `body` of every Http AI action taken.
+   * @default undefined
+   */
+  bodyProperties?: Record<string, JsonValue>;
   /**
    * Dynamic context to be sent with each send-message request from the widget.
    * Useful if you want to send data regarding the current page the user is viewing.

@@ -138,6 +138,7 @@ export class MessageCtx {
           bot_token: this.config.token,
           headers: this.config.headers,
           query_params: this.config.queryParams,
+          body_properties: this.config.bodyProperties,
           session_id: sessionId,
           content: userMessage.content,
           attachments: input.attachments,
