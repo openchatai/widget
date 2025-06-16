@@ -28,6 +28,10 @@ export type UserConfig = UserBaseConfig & {
 };
 
 type ThemeOptions = {
+  /**
+   * @default 'neutral'
+   */
+  palette?: 'neutral' | 'stone' | 'zinc' | 'slate';
   primaryColor?: string;
   widgetTrigger?: {
     zIndex?: number;
