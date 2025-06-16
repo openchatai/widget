@@ -63,6 +63,7 @@ export function BotOrAgentResponse({
       {message.length > 0 && (
         <div
           {...dc(dataComponentNames?.message ?? 'chat/agent_msg/msg')}
+          // Expose these data attributes for external styling customization
           data-first={isFirstInGroup}
           data-last={isLastInGroup}
           data-alone={isAloneInGroup}
@@ -73,9 +74,11 @@ export function BotOrAgentResponse({
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             // No need to add "whitespace-pre-wrap" in the agent or bot message because it is markup and content appear on separate lines as expected
             // Adding "whitespace-pre-wrap" will result in unnecessarily huge line breaks
-            'data-[first=true]:data-[alone=false]:rounded-bl-md',
-            'data-[last=true]:data-[alone=false]:rounded-tl-md',
-            'data-[first=false]:data-[last=false]:data-[alone=false]:rounded-l-md',
+
+            // We're using the booleans directly here, not the data attributes, to make any external styling more specific than this
+            isFirstInGroup && !isAloneInGroup && 'rounded-bl-md',
+            isLastInGroup && !isAloneInGroup && 'rounded-tl-md',
+            isAloneInGroup && 'rounded-l-md',
             classNames?.message,
           )}
         >

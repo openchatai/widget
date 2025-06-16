@@ -30,6 +30,7 @@ export function UserMessage({
       {message.content.length > 0 && (
         <div
           {...dc('chat/user_msg/msg')}
+          // Expose these data attributes for external styling customization
           data-first={isFirstInGroup}
           data-last={isLastInGroup}
           data-alone={isAloneInGroup}
@@ -39,9 +40,11 @@ export function UserMessage({
             'bg-primary text-primary-foreground',
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             'whitespace-pre-wrap',
-            'data-[first=true]:data-[alone=false]:rounded-br-md',
-            'data-[last=true]:data-[alone=false]:rounded-tr-md',
-            'data-[first=false]:data-[last=false]:data-[alone=false]:rounded-r-md',
+
+            // We're using the booleans directly here, not the data attributes, to make any external styling more specific than this
+            isFirstInGroup && !isAloneInGroup && 'rounded-br-md',
+            isLastInGroup && !isAloneInGroup && 'rounded-tr-md',
+            isAloneInGroup && 'rounded-r-md',
           )}
         >
           {message.content}
