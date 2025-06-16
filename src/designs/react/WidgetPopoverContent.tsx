@@ -86,13 +86,14 @@ export function WidgetPopoverContent() {
 
             overflow: 'hidden',
             /** outline is better than border because of box sizing; the outline wouldn't affect the content inside... the border will mess up how the children's border radius sits with the parent */
-            outline: '1px solid',
-            outlineColor: 'hsl(0 0% 50% / .5)',
+            outline: theme.widgetContentContainer.outline,
+            outlineColor: theme.widgetContentContainer.outlineColor,
             borderRadius: theme.widgetContentContainer.borderRadius,
-            boxShadow: '0 25px 50px -12px rgb(0 0 0 / 0.25)',
-            transitionProperty: 'all',
-            transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
-            transitionDuration: '800ms',
+            boxShadow: theme.widgetContentContainer.boxShadow,
+            transitionProperty: theme.widgetContentContainer.transitionProperty,
+            transitionTimingFunction:
+              theme.widgetContentContainer.transitionTimingFunction,
+            transitionDuration: theme.widgetContentContainer.transitionDuration,
 
             // reset iframe defaults
             boxSizing: 'border-box',

@@ -45,7 +45,6 @@ type ThemeOptions = {
     };
   };
   widgetContentContainer?: {
-    borderRadius?: string;
     zIndex?: number;
     offset?: {
       /** number in pixels */
@@ -53,6 +52,13 @@ type ThemeOptions = {
       /** number in pixels */
       align?: number;
     };
+    outline?: string;
+    outlineColor?: string;
+    borderRadius?: string;
+    boxShadow?: string;
+    transitionProperty?: string;
+    transitionTimingFunction?: string;
+    transitionDuration?: string;
   };
   screens?: {
     welcome?: {

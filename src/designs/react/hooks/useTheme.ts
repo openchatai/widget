@@ -40,6 +40,19 @@ export function useTheme() {
         ? '0px'
         : (theme?.widgetContentContainer?.borderRadius ?? '32px'),
       zIndex: theme?.widgetContentContainer?.zIndex ?? widgetTrigger.zIndex + 1,
+      outline: theme?.widgetContentContainer?.outline ?? '1px solid',
+      outlineColor:
+        theme?.widgetContentContainer?.outlineColor ?? 'hsl(0 0% 50% / .5)',
+      boxShadow:
+        theme?.widgetContentContainer?.boxShadow ??
+        '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+      transitionProperty:
+        theme?.widgetContentContainer?.transitionProperty ?? 'all',
+      transitionTimingFunction:
+        theme?.widgetContentContainer?.transitionTimingFunction ??
+        'cubic-bezier(0.16, 1, 0.3, 1)',
+      transitionDuration:
+        theme?.widgetContentContainer?.transitionDuration ?? '800ms',
       offset: {
         side: isSmallScreen
           ? 0
