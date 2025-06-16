@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.76
+
+### Patch Changes
+
+- added `WidgetConfig.bodyProperties`
+
 ## 3.0.75
 
 ### Patch Changes
