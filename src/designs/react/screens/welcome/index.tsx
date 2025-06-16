@@ -71,7 +71,6 @@ export function WelcomeScreen() {
 
   return (
     <div
-      className={cn('bg-primary')}
       style={{
         width: '100vw', // Relative to the iframe
         maxWidth: '100vw', // Relative to the iframe
@@ -105,37 +104,25 @@ export function WelcomeScreen() {
                 className="h-8 w-auto object-contain"
               />
             ) : (
-              <h2
-                className="font-bold text-xl text-primary-foreground"
-                dir="auto"
-              >
+              <h2 className="font-bold text-xl" dir="auto">
                 {preludeData?.data?.organizationName}
               </h2>
             )}
           </div>
           <div className="space-y-2">
-            <h1
-              className="text-2xl font-bold text-primary-foreground"
-              dir="auto"
-            >
+            <h1 className="text-2xl font-bold" dir="auto">
               {config.textContent?.welcomeScreen?.title ||
                 locale.get('welcome-title')}
             </h1>
 
-            <p
-              className="text-primary-foreground/90 text-sm max-w-[320px] leading-relaxed"
-              dir="auto"
-            >
+            <p className="/90 text-sm max-w-[320px] leading-relaxed" dir="auto">
               {config.textContent?.welcomeScreen?.description ||
                 locale.get('welcome-description')}
             </p>
           </div>
         </div>
 
-        <div
-          className="z-10 px-2 pt-2 bp-0 bg-background rounded-t-3xl space-y-2"
-          dir="auto"
-        >
+        <div className="z-10 px-2 pt-2 bp-0 bg-background space-y-2" dir="auto">
           <form onSubmit={handleSubmit} className="space-y-2">
             <div className="space-y-2">
               <Input
