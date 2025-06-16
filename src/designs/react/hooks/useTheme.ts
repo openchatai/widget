@@ -41,7 +41,7 @@ export function useTheme() {
         ? '0px'
         : (theme?.widgetContentContainer?.borderRadius ?? '32px'),
       zIndex: theme?.widgetContentContainer?.zIndex ?? widgetTrigger.zIndex + 1,
-      outline: theme?.widgetContentContainer?.outline ?? '1px solid',
+      outline: theme?.widgetContentContainer?.outline ?? 'none', // was: '1px solid'
       outlineColor:
         theme?.widgetContentContainer?.outlineColor ?? 'hsl(0 0% 50% / .5)',
       boxShadow:
