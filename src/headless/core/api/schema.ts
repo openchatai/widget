@@ -172,7 +172,7 @@ export interface components {
       email?: string;
       non_verified_name?: string;
       non_verified_custom_data?: {
-        [key: string]: string;
+        [key: string]: string | number | boolean;
       };
     };
     CreateWidgetSessionDto: {
@@ -188,7 +188,10 @@ export interface components {
       | {
           /** @enum {boolean} */
           success: true;
-          code?: string | 'session_assigned_to_human_agent';
+          code?:
+            | string
+            | 'session_assigned_to_human_agent'
+            | 'response_cancelled';
           autopilotResponse?: {
             /** @enum {string} */
             type: 'text';
@@ -198,6 +201,7 @@ export interface components {
             };
             id?: string;
             mightSolveUserIssue: boolean;
+            completelyAndFullyCoveredUserIssue: boolean;
           };
           uiResponse?: {
             /** @enum {string} */
@@ -248,12 +252,18 @@ export interface components {
       uuid: string;
       content: string;
       session_id: string;
+      bot_token: string;
+      /** @description Additional headers to be included in the request of action calls */
       headers?: {
         [key: string]: string;
       } | null;
-      bot_token: string;
+      /** @description Additional query parameters to be included in the query of action calls */
       query_params?: {
         [key: string]: string;
+      } | null;
+      /** @description Additional body properties to be included in the body of action calls */
+      body_properties?: {
+        [key: string]: unknown;
       } | null;
       language?: string | null;
       attachments?:
