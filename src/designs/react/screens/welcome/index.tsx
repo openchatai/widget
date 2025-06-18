@@ -134,7 +134,7 @@ export function WelcomeScreen() {
         <div
           className={cn(
             'z-10 px-4 pt-4 bp-0 space-y-2',
-            'bg-background',
+            'bg-[radial-gradient(ellipse_at_top_left,hsl(var(--opencx-muted)),hsl(var(--opencx-background))),radial-gradient(ellipse_at_top_right,hsl(var(--opencx-muted)),hsl(var(--opencx-background)))]',
             'rounded-t-3xl',
           )}
           dir="auto"
