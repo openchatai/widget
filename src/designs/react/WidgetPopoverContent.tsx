@@ -117,7 +117,7 @@ export function WidgetPopoverContent() {
                 }}
                 data-version={version}
                 className={cn(
-                  'antialiased font-inter size-full overflow-hidden isolate relative text-secondary-foreground',
+                  'antialiased font-sans size-full overflow-hidden isolate relative text-secondary-foreground',
                 )}
               >
                 <RootScreen />

@@ -71,7 +71,7 @@ export function useTheme() {
       welcome: {
         width: withSmallScreenDefault(
           'w',
-          theme?.screens?.welcome?.width ?? '375px',
+          theme?.screens?.welcome?.width ?? '400px',
         ),
         // By setting minHeight to 1px, a nice animation will play from 1px to the dynamic height of the content of the screen
         minHeight: withSmallScreenDefault(

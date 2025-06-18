@@ -65,7 +65,7 @@ function WidgetPopoverTrigger() {
       >
         <PopoverPrimitive.PopoverTrigger
           className={cn(
-            'font-inter flex items-center justify-center rounded-full',
+            'font-sans flex items-center justify-center rounded-full',
           )}
           style={{
             height: theme.widgetTrigger.size.button,

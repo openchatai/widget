@@ -85,15 +85,13 @@ export function WelcomeScreen() {
         className={cn(
           'flex flex-col',
           isSmallScreen && 'h-full',
-          // 'bg-gradient-to-b from-primary to-primary/0',
-          // 'bg-[radial-gradient(circle_at_top_left,hsl(var(--opencx-primary)),hsl(var(--opencx-primary)/0.25),hsl(var(--opencx-primary)/0.10),white),radial-gradient(circle_at_top_right,hsl(var(--opencx-primary)),hsl(var(--opencx-primary)/0.25),white)]',
           'bg-[radial-gradient(ellipse_at_top_left,hsl(var(--opencx-primary)),transparent),radial-gradient(ellipse_at_top_right,hsl(var(--opencx-primary)),transparent)]',
         )}
       >
         <div
           dir="auto"
           className={cn(
-            'flex-1 flex flex-col px-4 pt-8 pb-20 text-start space-y-4 relative z-10',
+            'flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10',
             'text-primary-foreground',
           )}
         >
@@ -113,18 +111,21 @@ export function WelcomeScreen() {
                 className="h-8 w-auto object-contain"
               />
             ) : (
-              <h2 className="font-bold text-xl" dir="auto">
+              <h2 className="font-bold text-sm" dir="auto">
                 {preludeData?.data?.organizationName}
               </h2>
             )}
           </div>
           <div className="space-y-2">
-            <h1 className="text-2xl font-bold" dir="auto">
+            <h1
+              className="text-[1.75rem] font-semibold tracking-tight leading-none"
+              dir="auto"
+            >
               {config.textContent?.welcomeScreen?.title ||
                 locale.get('welcome-title')}
             </h1>
 
-            <p className="/90 text-sm max-w-[320px] leading-relaxed" dir="auto">
+            <p className="text-sm" dir="auto">
               {config.textContent?.welcomeScreen?.description ||
                 locale.get('welcome-description')}
             </p>
@@ -134,7 +135,7 @@ export function WelcomeScreen() {
         <div
           className={cn(
             'z-10 px-4 pt-4 bp-0 space-y-2',
-            'bg-[radial-gradient(ellipse_at_top_left,hsl(var(--opencx-muted)),hsl(var(--opencx-background))),radial-gradient(ellipse_at_top_right,hsl(var(--opencx-muted)),hsl(var(--opencx-background)))]',
+            'bg-[white]',
             'rounded-t-3xl',
           )}
           dir="auto"
