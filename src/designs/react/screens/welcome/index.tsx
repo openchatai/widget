@@ -82,11 +82,20 @@ export function WelcomeScreen() {
     >
       <div
         ref={observedElementRef}
-        className={cn('flex flex-col', isSmallScreen && 'h-full')}
+        className={cn(
+          'flex flex-col',
+          isSmallScreen && 'h-full',
+          // 'bg-gradient-to-b from-primary to-primary/0',
+          // 'bg-[radial-gradient(circle_at_top_left,hsl(var(--opencx-primary)),hsl(var(--opencx-primary)/0.25),hsl(var(--opencx-primary)/0.10),white),radial-gradient(circle_at_top_right,hsl(var(--opencx-primary)),hsl(var(--opencx-primary)/0.25),white)]',
+          'bg-[radial-gradient(ellipse_at_top_left,hsl(var(--opencx-primary)),transparent),radial-gradient(ellipse_at_top_right,hsl(var(--opencx-primary)),transparent)]',
+        )}
       >
         <div
           dir="auto"
-          className="flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10"
+          className={cn(
+            'flex-1 flex flex-col px-4 pt-8 pb-20 text-start space-y-4 relative z-10',
+            'text-primary-foreground',
+          )}
         >
           {isSmallScreen && (
             <MotionDiv className="absolute top-6 right-6">
@@ -122,7 +131,14 @@ export function WelcomeScreen() {
           </div>
         </div>
 
-        <div className="z-10 px-2 pt-2 bp-0 bg-background space-y-2" dir="auto">
+        <div
+          className={cn(
+            'z-10 px-4 pt-4 bp-0 space-y-2',
+            'bg-background',
+            'rounded-t-3xl',
+          )}
+          dir="auto"
+        >
           <form onSubmit={handleSubmit} className="space-y-2">
             <div className="space-y-2">
               <Input

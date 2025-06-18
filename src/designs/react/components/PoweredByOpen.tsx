@@ -10,7 +10,7 @@ export function PoweredByOpen({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        'flex items-center justify-center gap-2 p-2 pt-0 bg-background',
+        'flex items-center justify-center gap-2 p-2 pt-0',
         className,
       )}
     >
