@@ -35,7 +35,7 @@ const buttonVariants = cva(
          * This size is useful for top level buttons that needs to sit nicely inside the iframe's border radius.
          * Having the minimum height higher than usual (the `default` variant) will make the border radius look just right.
          */
-        lg: 'min-h-12 px-4',
+        lg: 'min-h-12 px-4 rounded-[20px]',
         icon: 'h-10 w-10',
         fit: 'size-fit p-2',
         free: 'p-2',
