@@ -157,7 +157,7 @@ export function WelcomeScreen() {
 
             <Button
               disabled={handleSubmitState.loading}
-              className="w-full rounded-3xl"
+              className="w-full"
               size="lg"
             >
               {handleSubmitState.loading

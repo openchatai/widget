@@ -125,7 +125,7 @@ function SessionsList() {
                     {...dc('sessions/new_conversation_btn')}
                     size="lg"
                     key="new-session"
-                    className="w-full rounded-3xl"
+                    className="w-full"
                     onClick={() => toChatScreen()}
                   >
                     {locale.get('new-conversation')}
@@ -143,7 +143,7 @@ function SessionsList() {
                   {...dc('sessions/new_conversation_btn')}
                   size="lg"
                   key="new-session"
-                  className="w-full rounded-3xl"
+                  className="w-full"
                   onClick={() => toChatScreen()}
                 >
                   {locale.get('new-conversation')}
