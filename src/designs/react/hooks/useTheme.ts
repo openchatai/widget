@@ -46,7 +46,7 @@ export function useTheme() {
         theme?.widgetContentContainer?.outlineColor ?? 'hsl(0 0% 50% / .5)',
       boxShadow:
         theme?.widgetContentContainer?.boxShadow ??
-        '0 25px 50px -12px rgb(0 0 0 / 0.25)',
+        '0 0px 100px 0px rgb(0 0 0 / 0.25)',
       transitionProperty:
         theme?.widgetContentContainer?.transitionProperty ?? 'all',
       transitionTimingFunction:
