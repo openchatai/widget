@@ -148,6 +148,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/backend/widget/v2/session/resolve': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['resolveSession'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/backend/widget/v2/contact/create-unverified': {
     parameters: {
       query?: never;
@@ -379,6 +395,13 @@ export interface components {
       };
       officeHoursTimezone: string | null;
       organizationName: string;
+    };
+    WidgetResolveSessionInputDto: {
+      session_id: string;
+    };
+    WidgetResolveSessionOutputDto: {
+      /** @description Whether the session status is open or closed */
+      is_open: boolean;
     };
     WidgetSessionAndHistoryDto: {
       /** @description WidgetSession */
@@ -762,6 +785,38 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['WidgetVoteResponseDto'];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  resolveSession: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WidgetResolveSessionInputDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WidgetResolveSessionOutputDto'];
         };
       };
       /** @description Internal Server Error */
