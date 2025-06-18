@@ -1,6 +1,10 @@
 import { type Dto, type Endpoint, basicClient } from './client';
 import type { WidgetConfig } from '../types/widget-config';
-import type { SendMessageDto, VoteInputDto } from '../types/dtos';
+import type {
+  ResolveSessionDto,
+  SendMessageDto,
+  VoteInputDto,
+} from '../types/dtos';
 
 export class ApiCaller {
   private client: ReturnType<typeof basicClient>;
@@ -202,5 +206,15 @@ export class ApiCaller {
 
   vote = async (body: VoteInputDto) => {
     return await this.client.POST('/backend/widget/v2/chat/vote', { body });
+  };
+
+  resolveSession = async (
+    body: ResolveSessionDto,
+    abortSignal?: AbortSignal,
+  ) => {
+    return await this.client.POST('/backend/widget/v2/session/resolve', {
+      body,
+      signal: abortSignal,
+    });
   };
 }

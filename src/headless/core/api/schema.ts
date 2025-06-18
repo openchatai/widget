@@ -399,10 +399,6 @@ export interface components {
     WidgetResolveSessionInputDto: {
       session_id: string;
     };
-    WidgetResolveSessionOutputDto: {
-      /** @description Whether the session status is open or closed */
-      is_open: boolean;
-    };
     WidgetSessionAndHistoryDto: {
       /** @description WidgetSession */
       session: {
@@ -816,7 +812,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['WidgetResolveSessionOutputDto'];
+          'application/json': components['schemas']['WidgetSessionDto'];
         };
       };
       /** @description Internal Server Error */

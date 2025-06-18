@@ -145,6 +145,25 @@ export const TestUtils = {
             },
           });
       },
+      resolveSession(target, returnValue) {
+        target.prototype.resolveSession = vi
+          .fn(target.prototype.resolveSession)
+          .mockResolvedValue({
+            response: new Response(),
+            data: {
+              id: genUuid(),
+              assignee: { kind: 'ai', name: null, avatarUrl: null },
+              channel: '',
+              createdAt: new Date().toISOString(),
+              isHandedOff: false,
+              isOpened: false,
+              isVerified: false,
+              lastMessage: '',
+              updatedAt: new Date().toISOString(),
+              ...returnValue?.data,
+            },
+          });
+      },
     } satisfies {
       [K in keyof ApiCaller]: (
         target: typeof ApiCaller,

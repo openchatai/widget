@@ -167,4 +167,17 @@ export class SessionCtx {
     if (!data) return;
     this.setSessions(data.items);
   };
+
+  resolveSession = async () => {
+    const session = this.sessionState.get().session;
+    if (!session || !session.isOpened) return;
+
+    const { data } = await this.api.resolveSession({
+      session_id: session.id,
+    });
+
+    if (data) {
+      this.sessionState.setPartial({ session: data });
+    }
+  };
 }

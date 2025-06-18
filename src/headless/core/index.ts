@@ -14,6 +14,7 @@ export type {
   PreludeDto,
   SendMessageDto,
   SendMessageOutputDto,
+  ResolveSessionDto,
   SessionDto,
   VoteInputDto,
   VoteOutputDto,
