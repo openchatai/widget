@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.77
+
+### Patch Changes
+
+- add `SessionCtx.resolveSession`
+
 ## 3.0.76
 
 ### Patch Changes
