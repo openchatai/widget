@@ -1,6 +1,6 @@
 import type { ApiCaller } from '../api/api-caller';
 import type { MessageType } from '../types/messages';
-import type { ActionCallDto, MessageDto } from '../types/schemas';
+import type { ActionCallDto, MessageDto } from '../types/dtos';
 import type { WidgetConfig } from '../types/widget-config';
 import { Poller } from '../utils/Poller';
 import { runCatching } from '../utils/run-catching';

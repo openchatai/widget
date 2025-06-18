@@ -18,7 +18,7 @@ export type {
   VoteInputDto,
   VoteOutputDto,
   ActionCallDto,
-} from './types/schemas';
+} from './types/dtos';
 export type { WidgetConfig } from './types/widget-config';
 export type { ExternalStorage } from './types/external-storage';
 export type { OpenCxComponentNameU } from './types/component-name';

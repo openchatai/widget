@@ -1,5 +1,5 @@
 import type { ApiCaller } from '../api/api-caller';
-import type { SessionDto } from '../types/schemas';
+import type { SessionDto } from '../types/dtos';
 import { Poller } from '../utils/Poller';
 import { PrimitiveState } from '../utils/PrimitiveState';
 import type { ContactCtx } from './contact.ctx';

@@ -1,6 +1,6 @@
 import { type Dto, type Endpoint, basicClient } from './client';
 import type { WidgetConfig } from '../types/widget-config';
-import type { SendMessageDto, VoteInputDto } from '../types/schemas';
+import type { SendMessageDto, VoteInputDto } from '../types/dtos';
 
 export class ApiCaller {
   private client: ReturnType<typeof basicClient>;

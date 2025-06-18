@@ -1,4 +1,4 @@
-import type { MessageAttachmentType, MessageDto } from './schemas';
+import type { MessageAttachmentType, MessageDto } from './dtos';
 import type { SafeExtract, StringOrLiteral } from './helpers';
 import type { AgentOrBotType } from './agent-or-bot';
 

@@ -9,7 +9,7 @@ import type {
   MessageAttachmentType,
   SendMessageDto,
   SendMessageOutputDto,
-} from '../types/schemas';
+} from '../types/dtos';
 import { PrimitiveState } from '../utils/PrimitiveState';
 import { genUuid } from '../utils/uuid';
 import { SessionCtx } from './session.ctx';
