@@ -134,43 +134,42 @@ export function WelcomeScreen() {
 
         <div
           className={cn(
-            'z-10 px-4 pt-4 bp-0 space-y-2',
+            'z-10 m-2 px-2 pt-2 bp-0 space-y-2',
             'bg-[white]',
-            'rounded-t-3xl',
+            'border shadow',
+            'rounded-3xl',
           )}
           dir="auto"
         >
           <form onSubmit={handleSubmit} className="space-y-2">
-            <div className="space-y-2">
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              placeholder={locale.get('your-name')}
+              name="name"
+            />
+            <Input
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              placeholder={locale.get('your-email')}
+              name="email"
+            />
+            {extraDataFields.map((field) => (
               <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                placeholder={locale.get('your-name')}
-                name="name"
+                key={field}
+                value={extraData[field]}
+                onChange={(e) =>
+                  setExtraData((prev) => ({
+                    ...prev,
+                    [field]: e.target.value,
+                  }))
+                }
+                placeholder={`${field} (${locale.get('optional')})`}
               />
-              <Input
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                type="email"
-                placeholder={locale.get('your-email')}
-                name="email"
-              />
-              {extraDataFields.map((field) => (
-                <Input
-                  key={field}
-                  value={extraData[field]}
-                  onChange={(e) =>
-                    setExtraData((prev) => ({
-                      ...prev,
-                      [field]: e.target.value,
-                    }))
-                  }
-                  placeholder={`${field} (${locale.get('optional')})`}
-                />
-              ))}
-            </div>
+            ))}
 
             <Button
               disabled={handleSubmitState.loading}
