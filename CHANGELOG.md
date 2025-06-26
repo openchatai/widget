@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.79
+
+### Patch Changes
+
+- change form style in welcome screen
+
 ## 3.0.78
 
 ### Patch Changes
