@@ -54,7 +54,7 @@ export function WidgetProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!widgetCtx) return null;
+  if (!widgetCtx) return children;
 
   return (
     <context.Provider
