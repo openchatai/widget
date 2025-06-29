@@ -27,11 +27,13 @@ export function WidgetProvider({
   children,
   components,
   storage,
+  loadingComponent,
 }: {
   options: WidgetConfig;
   children: React.ReactNode;
   components?: WidgetComponentType[];
   storage?: ExternalStorage;
+  loadingComponent?: React.ReactNode;
 }) {
   const contentIframeRef = useRef<HTMLIFrameElement | null>(null);
 
@@ -54,7 +56,9 @@ export function WidgetProvider({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (!widgetCtx) return null;
+  if (!widgetCtx) {
+    return loadingComponent || null;
+  }
 
   return (
     <context.Provider
