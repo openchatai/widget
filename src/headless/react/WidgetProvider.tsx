@@ -33,6 +33,10 @@ export function WidgetProvider({
   children: React.ReactNode;
   components?: WidgetComponentType[];
   storage?: ExternalStorage;
+  /**
+   * Custom loading component while the widget is initializing
+   * Not to be confused with the `loading` custom component which renders when the bot's reply is pending
+   */
   loadingComponent?: React.ReactNode;
 }) {
   const contentIframeRef = useRef<HTMLIFrameElement | null>(null);

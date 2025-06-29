@@ -64,15 +64,18 @@ const storage: ExternalStorage = {
 function WidgetWrapper({
   options,
   components = [],
+  loadingComponent,
 }: {
   options: WidgetConfig;
   components?: WidgetComponentType[];
+  loadingComponent?: React.ReactNode;
 }) {
   return (
     <WidgetProvider
       components={[...defaultComponents, ...components]}
       options={options}
       storage={storage}
+      loadingComponent={loadingComponent}
     >
       <WidgetTriggerProvider>
         <WidgetTriggerAndContent />
