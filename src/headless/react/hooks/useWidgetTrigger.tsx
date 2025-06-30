@@ -24,6 +24,16 @@ export function WidgetTriggerProvider({ children }: { children: ReactNode }) {
     setIsOpen((prev) => config.isOpen ?? prev);
   }, [config.isOpen]);
 
+  useEffect(() => {
+    const openAfterNSeconds = config.openAfterNSeconds;
+    if (typeof openAfterNSeconds !== 'number' || isNaN(openAfterNSeconds))
+      return;
+
+    const timeout = setTimeout(() => setIsOpen(true), openAfterNSeconds * 1000);
+
+    return () => clearTimeout(timeout);
+  }, [config.openAfterNSeconds]);
+
   return (
     <context.Provider value={{ isOpen, setIsOpen }}>
       {children}

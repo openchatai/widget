@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.81
+
+### Patch Changes
+
+- add `WidgetConfig.openAfterNSeconds`
+
 ## 3.0.80
 
 ### Patch Changes

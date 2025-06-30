@@ -122,6 +122,11 @@ export interface WidgetConfig {
    */
   isOpen?: boolean;
   /**
+   * Automatically open the widget after N seconds.
+   * @default undefined
+   */
+  openAfterNSeconds?: number;
+  /**
    * A custom vanilla stylesheet to override the default styles. See {@link OpenCxComponentNameU} for available component names.
    *
    * @example Overriding a component's styles
