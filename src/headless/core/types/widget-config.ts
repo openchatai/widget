@@ -254,8 +254,15 @@ export interface WidgetConfig {
   /**
    * Dynamic context to be sent with each send-message request from the widget.
    * Useful if you want to send data regarding the current page the user is viewing.
+   * @default undefined
    */
   context?: Record<string, unknown>;
+  /**
+   * Dynamic custom data to be sent with each contact message.
+   * This custom data is intended for human use only; the AI will not see it and it will not affect the AI's response.
+   * @default undefined
+   */
+  messageCustomData?: Record<string, unknown>;
   /**
    * An apiUrl to override production backend.
    * This is for us to test the widget locally, you don't need to play with this option 😊.

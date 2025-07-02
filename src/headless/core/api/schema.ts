@@ -291,7 +291,12 @@ export interface components {
             url: string;
           }[]
         | null;
+      /** @description Context for the AI to be sent with each contact message */
       clientContext?: {
+        [key: string]: unknown;
+      } | null;
+      /** @description Custom data to be sent with each contact message */
+      custom_data?: {
         [key: string]: unknown;
       } | null;
     };

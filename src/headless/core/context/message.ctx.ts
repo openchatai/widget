@@ -62,6 +62,7 @@ export class MessageCtx {
   sendMessage = async (input: {
     content: SendMessageDto['content'];
     attachments?: SendMessageDto['attachments'];
+    customData?: SendMessageDto['custom_data'];
   }): Promise<void> => {
     /* ------------------------------------------------------ */
     /*         Prevent sending if there is no content         */
@@ -143,6 +144,10 @@ export class MessageCtx {
           content: userMessage.content,
           attachments: input.attachments,
           clientContext: this.config.context,
+          custom_data: {
+            ...(this.config.messageCustomData || {}),
+            ...(input.customData || {}),
+          },
         },
         this.sendMessageAbortController.signal,
       );

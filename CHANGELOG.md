@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.82
+
+### Patch Changes
+
+- ad `WidgetConfig.messageCustomData` option
+
 ## 3.0.81
 
 ### Patch Changes
