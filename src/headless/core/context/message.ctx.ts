@@ -148,6 +148,7 @@ export class MessageCtx {
             ...(this.config.messageCustomData || {}),
             ...(input.customData || {}),
           },
+          language: this.config.language,
         },
         this.sendMessageAbortController.signal,
       );
