@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.83
+
+### Patch Changes
+
+- send language with contat messages
+
 ## 3.0.82
 
 ### Patch Changes
