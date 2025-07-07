@@ -4,6 +4,7 @@ import { enLocale } from './en.locale';
 import { frLocale } from './fr.locale';
 import { nlLocale } from './nl.locale';
 import { ptLocale } from './pt.locale';
+import { esLocale } from './es.locale';
 import type { TranslationKeysU } from './translation.types';
 
 const locales = {
@@ -13,6 +14,7 @@ const locales = {
   fr: frLocale,
   de: deLocale,
   pt: ptLocale,
+  es: esLocale,
 } as const;
 
 export const LOCALES = Object.keys(locales) as (keyof typeof locales)[];
