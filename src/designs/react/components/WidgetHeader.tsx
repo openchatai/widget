@@ -1,67 +1,19 @@
-import { AnimatePresence, motion } from 'framer-motion';
-import {
-  ChevronLeftIcon,
-  EllipsisVerticalIcon,
-  MessageCirclePlusIcon,
-  XIcon,
-} from 'lucide-react';
-import React, { useState } from 'react';
-import { useLocale } from '../hooks/useLocale';
+import { AnimatePresence } from 'framer-motion';
+import { ChevronLeftIcon, XIcon } from 'lucide-react';
+import React from 'react';
 import {
   useConfig,
   usePreludeData,
   useWidgetRouter,
   useWidgetTrigger,
 } from '../../../headless/react';
-import { Button } from './lib/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from './lib/dropdown-menu';
-import { Skeleton } from './lib/skeleton';
 import { useDocumentDir } from '../../../headless/react/hooks/useDocumentDir';
-import { MotionDiv } from './lib/MotionDiv';
-import { cn } from './lib/utils/cn';
 import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
 import { dc } from '../utils/data-component';
-
-function OptionsMenu() {
-  const locale = useLocale();
-  const [open, setOpen] = useState(false);
-  const { toChatScreen } = useWidgetRouter();
-
-  return (
-    <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="fit" className="rounded-full">
-          <EllipsisVerticalIcon className="size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-
-      <DropdownMenuContent align="end" className="min-w-56">
-        <DropdownMenuGroup>
-          <DropdownMenuItem
-            onSelect={() => {
-              setOpen(false);
-              toChatScreen();
-            }}
-          >
-            <motion.div
-              initial={{ opacity: 0, x: -4, rotate: 360 }}
-              animate={{ opacity: 1, x: 0, rotate: 0 }}
-            >
-              <MessageCirclePlusIcon />
-            </motion.div>
-            {locale.get('new-conversation')}
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
+import { Button } from './lib/button';
+import { MotionDiv } from './lib/MotionDiv';
+import { Skeleton } from './lib/skeleton';
+import { cn } from './lib/utils/cn';
 
 function CloseWidgetButton() {
   const { setIsOpen } = useWidgetTrigger();
@@ -131,10 +83,7 @@ export function WidgetHeader() {
 
   return (
     <header {...dataComponentProp} className="py-2 px-4 shrink-0">
-      <div
-        dir={direction}
-        className="flex items-center rtl:flex-row-reverse gap-2"
-      >
+      <div dir={direction} className="flex items-center gap-2">
         {screen === 'chat' && (
           <Button
             variant="ghost"
@@ -146,7 +95,12 @@ export function WidgetHeader() {
             <ChevronLeftIcon className="size-4" />
           </Button>
         )}
-        <div className={cn('flex-1', screen === 'sessions' && 'pl-2')}>
+        <div
+          className={cn(
+            'flex-1 h-8 flex items-center',
+            screen === 'sessions' && 'pl-2',
+          )}
+        >
           <AnimatePresence mode="wait">
             {isLoading ? (
               <MotionDiv key="skeleton" snapExit>
@@ -159,7 +113,6 @@ export function WidgetHeader() {
             )}
           </AnimatePresence>
         </div>
-        <OptionsMenu />
         <CloseWidgetButton />
       </div>
     </header>
