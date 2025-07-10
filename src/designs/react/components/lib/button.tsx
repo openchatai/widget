@@ -13,20 +13,17 @@ const buttonVariants = cva(
     'disabled:pointer-events-none disabled:opacity-50',
     'active:scale-95 hover:active:scale-95',
     'rounded-xl',
-    // Add border to make transitions between variants smoother... because border takes 1 pixel of space in each direction
-    'border',
     'transition',
   ),
   {
     variants: {
       variant: {
-        default: 'border-primary bg-primary text-primary-foreground',
-        destructive:
-          'border-destructive bg-destructive text-destructive-foreground',
-        outline: 'bg-background hover:border-primary',
+        default: 'bg-primary text-primary-foreground',
+        destructive: 'bg-destructive text-destructive-foreground',
+        outline: 'bg-background',
         secondary: 'bg-secondary text-secondary-foreground',
-        ghost: 'border-transparent hover:bg-secondary',
-        link: 'border-transparent text-primary underline-offset-4 hover:underline',
+        ghost: 'hover:bg-secondary',
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-10 px-4 py-2',
