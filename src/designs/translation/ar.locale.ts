@@ -58,4 +58,6 @@ export const arLocale: TranslationInterface = {
   'this-was-helpful': 'كان هذا مفيدًا',
   optional: 'اختياري',
   'no-conversations-yet': 'لا يوجد محادثات',
+  'back-to-conversations': 'العودة إلى المحادثات',
+  'closed-conversations': 'المحادثات المغلقة',
 };

@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.84
+
+### Patch Changes
+
+- add `WidgetConfig.oneOpenSessionAllowed`
+
 ## 3.0.83
 
 ### Patch Changes

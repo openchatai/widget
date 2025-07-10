@@ -27,7 +27,21 @@ import { useTheme } from '../../hooks/useTheme';
 import { useWidgetSize } from '../../hooks/useWidgetSize';
 import { dc } from '../../utils/data-component';
 
-function SessionCard({ session }: { session: SessionDto }) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="pl-4 text-xs text-muted-foreground/75 uppercase font-semibold tracking-tight">
+      {children}
+    </p>
+  );
+}
+
+function SessionCard({
+  session,
+  className,
+}: {
+  session: SessionDto;
+  className?: string;
+}) {
   const { bot } = useConfig();
   const { toChatScreen } = useWidgetRouter();
 
@@ -44,7 +58,10 @@ function SessionCard({ session }: { session: SessionDto }) {
     <Button
       variant="ghost"
       size="lg"
-      className="rounded-full p-2 pr-4 flex text-start justify-between w-full whitespace-normal"
+      className={cn(
+        'rounded-full p-2 pr-4 flex text-start justify-between w-full whitespace-normal',
+        className,
+      )}
       onClick={() => toChatScreen(session.id)}
     >
       <div className="flex-1 flex gap-2 items-center">
@@ -94,6 +111,9 @@ function SessionsList() {
   const { toChatScreen } = useWidgetRouter();
   const {
     sessionsState: { data: sessions, isInitialFetchLoading: isLoading },
+    openSessions,
+    closedSessions,
+    canCreateNewSession,
   } = useSessions();
 
   return (
@@ -114,23 +134,54 @@ function SessionsList() {
             {sessions.length ? (
               <>
                 <AnimatePresence>
-                  {sessions.map((s, i) => (
-                    <MotionDiv key={`${s.id}-${i}`} snapExit>
-                      <SessionCard session={s} />
+                  {openSessions.length > 0 && (
+                    <MotionDiv
+                      fadeIn="up"
+                      delay={0.2}
+                      key="open-sessions"
+                      className="space-y-2"
+                      snapExit
+                    >
+                      {openSessions.map((s) => (
+                        <SessionCard key={s.id} session={s} />
+                      ))}
                     </MotionDiv>
-                  ))}
+                  )}
+
+                  {closedSessions.length > 0 && (
+                    <MotionDiv
+                      key="closed-sessions"
+                      className="space-y-2"
+                      delay={0.2}
+                      snapExit
+                    >
+                      <SectionTitle>
+                        {locale.get('closed-conversations')}
+                      </SectionTitle>
+                      {closedSessions.map((s) => (
+                        <SessionCard
+                          key={s.id}
+                          session={s}
+                          className="opacity-50 hover:opacity-100"
+                        />
+                      ))}
+                    </MotionDiv>
+                  )}
                 </AnimatePresence>
-                <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background bg-background">
-                  <Button
-                    {...dc('sessions/new_conversation_btn')}
-                    size="lg"
-                    key="new-session"
-                    className="w-full"
-                    onClick={() => toChatScreen()}
-                  >
-                    {locale.get('new-conversation')}
-                  </Button>
-                </div>
+
+                {canCreateNewSession && (
+                  <div className="mt-auto w-full rounded-3xl sticky bottom-0 outline outline-8 outline-background bg-background">
+                    <Button
+                      {...dc('sessions/new_conversation_btn')}
+                      size="lg"
+                      key="new-session"
+                      className="w-full"
+                      onClick={() => toChatScreen()}
+                    >
+                      {locale.get('new-conversation')}
+                    </Button>
+                  </div>
+                )}
               </>
             ) : (
               <div className="flex-1 flex flex-col gap-2 items-center">

@@ -227,6 +227,14 @@ export interface WidgetConfig {
     goToChatIfNoSessions?: boolean;
   };
   /**
+   * By default, the user can have multiple open sessions.
+   *
+   * Setting this option to `true` will hide the `new conversation` button if there is an open session.
+   *
+   * @default false
+   */
+  oneOpenSessionAllowed?: boolean;
+  /**
    * The target attribute for all links in the AI or human agents responses.
    *
    * `_blank` opens links in a new tab or window.

@@ -58,4 +58,6 @@ export const nlLocale: TranslationInterface = {
   'this-was-helpful': 'Mijn vraag is opgelost',
   optional: 'Optioneel',
   'no-conversations-yet': 'Nog geen gesprekken',
+  'back-to-conversations': 'Terug naar gesprekken',
+  'closed-conversations': 'Afgesloten gesprekken',
 };

@@ -55,7 +55,9 @@ export type TranslationKeysU =
   | 'i-need-more-help'
   | 'this-was-helpful'
   | 'optional'
-  | 'no-conversations-yet';
+  | 'no-conversations-yet'
+  | 'back-to-conversations'
+  | 'closed-conversations';
 
 export type TranslationInterface = {
   [K in TranslationKeysU]: string;

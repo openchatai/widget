@@ -58,4 +58,6 @@ export const enLocale: TranslationInterface = {
   'this-was-helpful': 'This was helpful',
   optional: 'Optional',
   'no-conversations-yet': 'No conversations yet',
+  'back-to-conversations': 'Back to conversations',
+  'closed-conversations': 'Closed conversations',
 };

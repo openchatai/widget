@@ -59,4 +59,6 @@ export const deLocale: TranslationInterface = {
   'this-was-helpful': 'Dies war hilfreich',
   optional: 'Optional',
   'no-conversations-yet': 'noch keine Gespräche',
+  'back-to-conversations': 'Zurück zur Konversationen',
+  'closed-conversations': 'Geschlossene Konversationen',
 };

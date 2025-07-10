@@ -58,4 +58,6 @@ export const frLocale: TranslationInterface = {
   'this-was-helpful': "C'était utile",
   optional: 'Optionnel',
   'no-conversations-yet': 'Aucune conversation pour le moment',
+  'back-to-conversations': 'Retour aux conversations',
+  'closed-conversations': 'Conversations fermées',
 };

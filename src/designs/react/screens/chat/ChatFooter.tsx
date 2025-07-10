@@ -22,6 +22,7 @@ import {
   useSessions,
   useUploadFiles,
   useWidget,
+  useWidgetRouter,
   type FileWithProgress,
 } from '../../../../headless/react';
 import { useDocumentDir } from '../../../../headless/react/hooks/useDocumentDir';
@@ -349,6 +350,8 @@ function ChatInput() {
 
 function SessionClosedSection() {
   const { widgetCtx } = useWidget();
+  const { canCreateNewSession } = useSessions();
+  const { toSessionsScreen } = useWidgetRouter();
   const locale = useLocale();
 
   return (
@@ -362,9 +365,18 @@ function SessionClosedSection() {
         </div>
 
         <div>
-          <Button onClick={widgetCtx.resetChat} className="rounded-2xl w-full">
-            {locale.get('new-conversation')}
-          </Button>
+          {canCreateNewSession ? (
+            <Button
+              onClick={widgetCtx.resetChat}
+              className="rounded-2xl w-full"
+            >
+              {locale.get('new-conversation')}
+            </Button>
+          ) : (
+            <Button onClick={toSessionsScreen} className="rounded-2xl w-full">
+              {locale.get('back-to-conversations')}
+            </Button>
+          )}
         </div>
       </div>
     </div>
