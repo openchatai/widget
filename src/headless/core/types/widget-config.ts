@@ -30,7 +30,7 @@ export type UserConfig = UserBaseConfig & {
 
 type ThemeOptions = {
   /**
-   * @default 'neutral'
+   * @default 'stone'
    */
   palette?: 'neutral' | 'stone' | 'zinc' | 'slate';
   primaryColor?: string;
