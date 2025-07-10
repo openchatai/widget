@@ -9,6 +9,7 @@ type MotionDivProps = MotionProps & {
   distance?: number;
   snapExit?: boolean;
   overrides?: Overrides;
+  delay?: number;
 };
 
 type Overrides = {
@@ -19,33 +20,49 @@ type Overrides = {
 
 export const ANIMATION_DISTANCE_PX = 10;
 
-const fadeInRight = (distance: number, overrides: Overrides): MotionProps => ({
+const fadeInRight = (
+  distance: number,
+  overrides: Overrides,
+  delay: number,
+): MotionProps => ({
   initial: { opacity: 0, x: -distance, ...overrides.initial },
-  animate: { opacity: 1, x: 0, ...overrides.animate },
+  animate: { opacity: 1, x: 0, ...overrides.animate, transition: { delay } },
   exit: { opacity: 0, x: distance, ...overrides.exit },
 });
 
-const fadeInLeft = (distance: number, overrides: Overrides): MotionProps => ({
+const fadeInLeft = (
+  distance: number,
+  overrides: Overrides,
+  delay: number,
+): MotionProps => ({
   initial: { opacity: 0, x: distance, ...overrides.initial },
-  animate: { opacity: 1, x: 0, ...overrides.animate },
+  animate: { opacity: 1, x: 0, ...overrides.animate, transition: { delay } },
   exit: { opacity: 0, x: -distance, ...overrides.exit },
 });
 
-const fadeInUp = (distance: number, overrides: Overrides): MotionProps => ({
+const fadeInUp = (
+  distance: number,
+  overrides: Overrides,
+  delay: number,
+): MotionProps => ({
   initial: { opacity: 0, y: distance, ...overrides.initial },
-  animate: { opacity: 1, y: 0, ...overrides.animate },
+  animate: { opacity: 1, y: 0, ...overrides.animate, transition: { delay } },
   exit: { opacity: 0, y: -distance, ...overrides.exit },
 });
 
-const fadeInDown = (distance: number, overrides: Overrides): MotionProps => ({
+const fadeInDown = (
+  distance: number,
+  overrides: Overrides,
+  delay: number,
+): MotionProps => ({
   initial: { opacity: 0, y: -distance, ...overrides.initial },
-  animate: { opacity: 1, y: 0, ...overrides.animate },
+  animate: { opacity: 1, y: 0, ...overrides.animate, transition: { delay } },
   exit: { opacity: 0, y: distance, ...overrides.exit },
 });
 
 const treasureMap: Record<
   AnimationDirection,
-  (distance: number, overrides: Overrides) => MotionProps
+  (distance: number, overrides: Overrides, delay: number) => MotionProps
 > = {
   right: fadeInRight,
   left: fadeInLeft,
@@ -61,12 +78,13 @@ const MotionDiv = forwardRef<HTMLDivElement, MotionDivProps>(
       children,
       snapExit = false,
       overrides = {},
+      delay = 0,
       ...props
     },
     ref,
   ) => {
     const fadeInProps: MotionProps = fadeIn
-      ? treasureMap[fadeIn](distance, overrides)
+      ? treasureMap[fadeIn](distance, overrides, delay)
       : {};
 
     if (
