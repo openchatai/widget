@@ -229,8 +229,8 @@ export function SessionsScreen() {
       <div className="size-full flex flex-col">
         <WidgetHeader />
         <SessionsList />
+        <PoweredByOpen />
       </div>
-      <PoweredByOpen />
     </div>
   );
 }
