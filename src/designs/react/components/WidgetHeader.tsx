@@ -14,6 +14,7 @@ import { Button } from './lib/button';
 import { MotionDiv } from './lib/MotionDiv';
 import { Skeleton } from './lib/skeleton';
 import { cn } from './lib/utils/cn';
+import type { ScreenU } from '../../../headless/core';
 
 function CloseWidgetButton() {
   const { setIsOpen } = useWidgetTrigger();
@@ -57,44 +58,58 @@ function useGetHeaderTitle() {
   return override ?? data?.data?.organizationName ?? 'Chat';
 }
 
-export function WidgetHeader() {
+function useGetHeaderDataComponentProp(
+  screen: ScreenU,
+): ReturnType<typeof dc> | undefined {
+  switch (screen) {
+    case 'chat':
+      return dc('chat/header');
+    case 'sessions':
+      return dc('sessions/header');
+    case 'welcome':
+      return undefined;
+    default:
+      const _: never = screen;
+      return undefined;
+  }
+}
+
+function BackToSessionsScreenButton() {
+  const { router } = useConfig();
   const {
     routerState: { screen },
     toSessionsScreen,
   } = useWidgetRouter();
+
+  if (screen !== 'chat') return null;
+  if (router?.chatScreenOnly) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="fit"
+      className="rounded-full"
+      onClick={toSessionsScreen}
+    >
+      <ChevronLeftIcon className="size-4" />
+    </Button>
+  );
+}
+
+export function WidgetHeader() {
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
   const { isLoading } = usePreludeData();
   const direction = useDocumentDir();
 
-  const dataComponentProp = (() => {
-    switch (screen) {
-      case 'chat':
-        return dc('chat/header');
-      case 'sessions':
-        return dc('sessions/header');
-      case 'welcome':
-        return undefined;
-      default:
-        const _: never = screen;
-        return undefined;
-    }
-  })();
-
+  const dataComponentProp = useGetHeaderDataComponentProp(screen);
   const title = useGetHeaderTitle();
 
   return (
     <header {...dataComponentProp} className="py-2 px-4 shrink-0">
       <div dir={direction} className="flex items-center gap-2">
-        {screen === 'chat' && (
-          <Button
-            variant="ghost"
-            size="fit"
-            className="rounded-full"
-            onClick={toSessionsScreen}
-          >
-            {/* TODO handle rtl here */}
-            <ChevronLeftIcon className="size-4" />
-          </Button>
-        )}
+        <BackToSessionsScreenButton />
         <div
           className={cn(
             'flex-1 h-8 flex items-center',

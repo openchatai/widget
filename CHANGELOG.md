@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.85
+
+### Patch Changes
+
+- add `WidgetConfig.router.chatScreenOnly`
+
 ## 3.0.84
 
 ### Patch Changes

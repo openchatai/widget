@@ -4,14 +4,16 @@ import type { ContactCtx } from './contact.ctx';
 import type { SessionCtx } from './session.ctx';
 import type { WidgetCtx } from './widget.ctx';
 
+export type ScreenU =
+  | /** A welcome screen to collect user data. Useful in public non-logged-in environments */
+  'welcome'
+  /** Show a list of the user's previous sessions */
+  | 'sessions'
+  /** Self-explanatory */
+  | 'chat';
+
 type RouterState = {
-  screen:
-    | /** A welcome screen to collect user data. Useful in public non-logged-in environments */
-    'welcome'
-    /** Show a list of the user's previous sessions */
-    | 'sessions'
-    /** Self-explanatory */
-    | 'chat';
+  screen: ScreenU;
 };
 
 export class RouterCtx {
@@ -33,13 +35,17 @@ export class RouterCtx {
     sessionCtx: SessionCtx;
     resetChat: WidgetCtx['resetChat'];
   }) {
-    this.state = new PrimitiveState<RouterState>({
-      screen: contactCtx.shouldCollectData() ? 'welcome' : 'sessions',
-    });
     this.config = config;
     this.contactCtx = contactCtx;
     this.sessionCtx = sessionCtx;
     this.resetChat = resetChat;
+    this.state = new PrimitiveState<RouterState>({
+      screen: this.contactCtx.shouldCollectData()
+        ? 'welcome'
+        : this.config.router?.chatScreenOnly
+          ? 'chat'
+          : 'sessions',
+    });
 
     this.registerRoutingListener();
   }
@@ -48,12 +54,26 @@ export class RouterCtx {
     this.contactCtx.state.subscribe(({ contact }) => {
       // Auto navigate to sessions screen after collecting user data
       if (contact?.token && this.state.get().screen === 'welcome') {
-        this.state.setPartial({ screen: 'sessions' });
+        this.state.setPartial({
+          screen: this.config.router?.chatScreenOnly ? 'chat' : 'sessions',
+        });
       }
     });
 
     this.sessionCtx.sessionsState.subscribe(
       ({ isInitialFetchLoading, data }) => {
+        if (
+          this.config.router?.chatScreenOnly &&
+          // Do not route to a chat if we are currently inside one already
+          // This also applies to newly created sessions; the new session will be in `sessionState` before it is refreshed and included in `sessionsState`
+          !this.sessionCtx.sessionState.get().session?.id
+        ) {
+          const mostRecentOpenSessionId = data.find((s) => s.isOpened)?.id;
+          return mostRecentOpenSessionId
+            ? this.toChatScreen(mostRecentOpenSessionId)
+            : undefined;
+        }
+
         if (data.length) return;
         if (this.config.router?.goToChatIfNoSessions === false) return;
 

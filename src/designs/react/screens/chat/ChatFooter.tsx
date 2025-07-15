@@ -350,6 +350,7 @@ function ChatInput() {
 
 function SessionClosedSection() {
   const { widgetCtx } = useWidget();
+  const { router } = useConfig();
   const { canCreateNewSession } = useSessions();
   const { toSessionsScreen } = useWidgetRouter();
   const locale = useLocale();
@@ -365,7 +366,7 @@ function SessionClosedSection() {
         </div>
 
         <div>
-          {canCreateNewSession ? (
+          {canCreateNewSession || !!router?.chatScreenOnly ? (
             <Button
               onClick={widgetCtx.resetChat}
               className="rounded-2xl w-full"

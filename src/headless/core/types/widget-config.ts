@@ -225,6 +225,15 @@ export interface WidgetConfig {
      * @default true
      */
     goToChatIfNoSessions?: boolean;
+    /**
+     * If true, only the `welcome` and `chat` screens are visible.
+     * The most recent `open` session will be selected.
+     * If none found, a new empty conversation will be opened, and a session will be created if the user sends a message.
+     * The `back to sessions screen` button in the header will be hidden.
+     *
+     * @default false
+     */
+    chatScreenOnly?: boolean;
   };
   /**
    * By default, the user can have multiple open sessions.
