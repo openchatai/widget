@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import tc from 'tinycolor2';
-import type { WidgetConfig } from '../../../headless/core';
+import { isExhaustive, type WidgetConfig } from '../../../headless/core';
 import { useConfig } from '../../../headless/react';
 import { WOBBLE_MAX_MOVEMENT_PIXELS } from '../components/lib/wobble';
 import { useIsSmallScreen } from './useIsSmallScreen';
@@ -280,7 +280,7 @@ function getPaletteColors(
     case 'slate':
       return slate;
     default:
-      const _: never = palette;
+      isExhaustive(palette, getPaletteColors.name);
       return neutral;
   }
 }

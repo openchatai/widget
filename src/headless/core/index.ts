@@ -31,3 +31,4 @@ export type { MessageCtx } from './context/message.ctx';
 export type { RouterCtx, ScreenU } from './context/router.ctx';
 
 export { PrimitiveState } from './utils/PrimitiveState';
+export { isExhaustive } from './utils/is-exhaustive';

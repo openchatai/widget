@@ -6,6 +6,7 @@ import { usePreludeData, useWidgetRouter } from '../../../headless/react';
 import { MotionDiv } from '../components/lib/MotionDiv';
 import { SessionsScreen } from './sessions';
 import { WidgetPortal } from '../components/lib/widget-portal';
+import { isExhaustive } from '../../../headless/core';
 
 export function RootScreen() {
   // Call the prelude ASAP so it's cached for all screens
@@ -57,7 +58,7 @@ export function RootScreen() {
                 </MotionDiv>
               );
             default: {
-              const _: never = screen;
+              isExhaustive(screen, RootScreen.name);
               return null;
             }
           }
