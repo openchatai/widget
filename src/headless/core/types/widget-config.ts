@@ -123,6 +123,13 @@ export type HeaderButtonU =
         | 'reset-chat'
         | 'close-widget'
         | 'reset-chat-and-close-widget';
+      confirmation?: {
+        type: 'modal';
+        title?: string;
+        description?: string;
+        confirmButtonText?: string;
+        cancelButtonText?: string;
+      };
     });
 
 export interface WidgetConfig {

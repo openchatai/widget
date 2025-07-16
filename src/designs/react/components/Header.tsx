@@ -21,6 +21,16 @@ import { useSetWidgetSizeFn } from '../hooks/useSetWidgetSize';
 import { useTheme } from '../hooks/useTheme';
 import { dc } from '../utils/data-component';
 import { Button } from './lib/button';
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './lib/dialog';
 import { DynamicIcon } from './lib/DynamicIcon';
 import { MotionDiv } from './lib/MotionDiv';
 import { Skeleton } from './lib/skeleton';
@@ -66,7 +76,7 @@ function useGetHeaderDataComponentProp(
   }
 }
 
-function BackToSessionsScreenButton() {
+function Header__BackToSessionsScreenButton() {
   const { router } = useConfig();
   const {
     routerState: { screen },
@@ -88,7 +98,7 @@ function BackToSessionsScreenButton() {
   );
 }
 
-function HeaderButton__CloseWidget({
+function Header__Buttons__Item__CloseWidget({
   button,
 }: {
   button: SafeExtract<HeaderButtonU, { functionality: 'close-widget' }>;
@@ -111,7 +121,7 @@ function HeaderButton__CloseWidget({
   );
 }
 
-function HeaderButton__ExpandShrink({
+function Header__Buttons__Item__ExpandShrink({
   button,
 }: {
   button: SafeExtract<HeaderButtonU, { functionality: 'expand-shrink' }>;
@@ -134,7 +144,7 @@ function HeaderButton__ExpandShrink({
       case 'sessions':
         return theme.screens.sessions.height;
       default:
-        isExhaustive(screen, HeaderButton__ExpandShrink.name);
+        isExhaustive(screen, Header__Buttons__Item__ExpandShrink.name);
         return theme.screens.chat.height;
     }
   })();
@@ -145,7 +155,7 @@ function HeaderButton__ExpandShrink({
       case 'sessions':
         return theme.screens.sessions.width;
       default:
-        isExhaustive(screen, HeaderButton__ExpandShrink.name);
+        isExhaustive(screen, Header__Buttons__Item__ExpandShrink.name);
         return theme.screens.chat.width;
     }
   })();
@@ -177,11 +187,12 @@ function HeaderButton__ExpandShrink({
   );
 }
 
-function HeaderButton__ResolveSession({
+function Header__Buttons__Item__ResolveSession({
   button,
 }: {
   button: SafeExtract<HeaderButtonU, { functionality: 'resolve-session' }>;
 }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { widgetCtx } = useWidget();
   const { setIsOpen } = useWidgetTrigger();
   const { resolveSession, sessionState } = useSessions();
@@ -189,6 +200,7 @@ function HeaderButton__ResolveSession({
 
   const handleResolve = async () => {
     const { success, error } = await resolveSession();
+    setIsDialogOpen(false);
     if (!success) return console.error(error);
 
     if (button.onResolved === 'close-widget') setIsOpen(false);
@@ -201,6 +213,55 @@ function HeaderButton__ResolveSession({
 
   if (isSmallScreen && button.hideOnSmallScreen) return null;
   if (!isSmallScreen && button.hideOnLargeScreen) return null;
+
+  // TODO: add translations for fallbacks
+  if (button.confirmation?.type === 'modal') {
+    return (
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="fit"
+            className="rounded-full"
+            disabled={
+              sessionState.isResolvingSession || !sessionState.session?.isOpened
+            }
+          >
+            <DynamicIcon name={button.icon} />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {button.confirmation.title || 'Close conversation'}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <DialogDescription>
+              {button.confirmation.description ||
+                'Are you sure you want to close this conversation?'}
+            </DialogDescription>
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setIsDialogOpen(false)}
+              disabled={sessionState.isResolvingSession}
+            >
+              {button.confirmation.cancelButtonText || 'No'}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleResolve}
+              disabled={sessionState.isResolvingSession}
+            >
+              {button.confirmation.confirmButtonText || 'Yes'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
   return (
     <Button
@@ -217,16 +278,16 @@ function HeaderButton__ResolveSession({
   );
 }
 
-function Header__Button({ button }: { button: HeaderButtonU }) {
+function Header__Buttons__Item({ button }: { button: HeaderButtonU }) {
   switch (button.functionality) {
     case 'close-widget':
-      return <HeaderButton__CloseWidget button={button} />;
+      return <Header__Buttons__Item__CloseWidget button={button} />;
     case 'expand-shrink':
-      return <HeaderButton__ExpandShrink button={button} />;
+      return <Header__Buttons__Item__ExpandShrink button={button} />;
     case 'resolve-session':
-      return <HeaderButton__ResolveSession button={button} />;
+      return <Header__Buttons__Item__ResolveSession button={button} />;
     default:
-      isExhaustive(button, Header__Button.name);
+      isExhaustive(button, Header__Buttons__Item.name);
       return null;
   }
 }
@@ -251,13 +312,13 @@ export function Header__Buttons() {
         : [];
 
   if (!buttons || buttons.length === 0) {
-    return <Header__Button button={defaultCloseWidgetButton} />;
+    return <Header__Buttons__Item button={defaultCloseWidgetButton} />;
   }
 
   return (
     <>
       {buttons.map((button) => (
-        <Header__Button
+        <Header__Buttons__Item
           key={`${button.functionality}-${button.icon}`}
           button={button}
         />
@@ -279,7 +340,7 @@ export function Header() {
   return (
     <header {...dataComponentProp} className="py-2 px-4 shrink-0">
       <div dir={direction} className="flex items-center gap-2">
-        <BackToSessionsScreenButton />
+        <Header__BackToSessionsScreenButton />
         <div
           className={cn(
             'flex-1 h-8 flex items-center',
