@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.86
+
+### Patch Changes
+
+- add WidgetConfig.headerButtons
+
 ## 3.0.85
 
 ### Patch Changes
