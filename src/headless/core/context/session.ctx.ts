@@ -114,6 +114,7 @@ export class SessionCtx {
       return session;
     }
 
+    this.sessionState.setPartial({ isCreatingSession: false });
     console.error('Failed to create session:', error);
     return null;
   };
