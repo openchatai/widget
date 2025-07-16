@@ -1,14 +1,14 @@
 import React, { useRef } from 'react';
 import { cn } from '../../components/lib/utils/cn';
 import { ChatFooter } from './ChatFooter';
-import { WidgetHeader } from '../../components/WidgetHeader';
+import { Header } from '../../components/Header';
 import { ChatMain } from './ChatMain';
 import { useMessages, useSessions } from '../../../../headless/react';
 import { AnimatePresence } from 'framer-motion';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { useTheme } from '../../hooks/useTheme';
-import { useWidgetSize } from '../../hooks/useWidgetSize';
+import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';
 import { dc } from '../../utils/data-component';
 
 export function ChatScreen() {
@@ -20,7 +20,7 @@ export function ChatScreen() {
   } = useSessions();
   const { theme } = useTheme();
 
-  useWidgetSize({
+  useSetWidgetSize({
     width: theme.screens.chat.width,
     height: theme.screens.chat.height,
   });
@@ -40,7 +40,7 @@ export function ChatScreen() {
       }}
     >
       <div className="size-full justify-between flex flex-col">
-        <WidgetHeader />
+        <Header />
         <AnimatePresence mode="wait">
           {isInitialFetchLoading ? (
             <MotionDiv

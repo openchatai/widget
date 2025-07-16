@@ -11,6 +11,7 @@ type SessionState = {
    */
   session: SessionDto | null;
   isCreatingSession: boolean;
+  isResolvingSession: boolean;
 };
 type SessionsState = {
   /** List of all user sessions */
@@ -33,6 +34,7 @@ export class SessionCtx {
   public sessionState = new PrimitiveState<SessionState>({
     session: null,
     isCreatingSession: false,
+    isResolvingSession: false,
   });
   public sessionsState = new PrimitiveState<SessionsState>({
     data: [],
@@ -170,15 +172,23 @@ export class SessionCtx {
   };
 
   resolveSession = async () => {
-    const session = this.sessionState.get().session;
-    if (!session || !session.isOpened) return;
+    const currentSession = this.sessionState.get().session;
+    if (!currentSession || !currentSession.isOpened) {
+      return { success: false, error: 'Session is not opened' } as const;
+    }
 
-    const { data } = await this.api.resolveSession({
-      session_id: session.id,
+    this.sessionState.setPartial({ isResolvingSession: true });
+
+    const { data: session, error } = await this.api.resolveSession({
+      session_id: currentSession.id,
     });
 
-    if (data) {
-      this.sessionState.setPartial({ session: data });
+    if (session) {
+      this.sessionState.setPartial({ session, isResolvingSession: false });
+      return { success: true, data: session } as const;
     }
+
+    this.sessionState.setPartial({ isResolvingSession: false });
+    return { success: false, error } as const;
   };
 }

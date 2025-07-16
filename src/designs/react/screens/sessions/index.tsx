@@ -21,10 +21,10 @@ import { Skeleton } from '../../components/lib/skeleton';
 import { cn } from '../../components/lib/utils/cn';
 import { MemoizedReactMarkdown } from '../../components/markdown';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
-import { WidgetHeader } from '../../components/WidgetHeader';
+import { Header } from '../../components/Header';
 import { useLocale } from '../../hooks/useLocale';
 import { useTheme } from '../../hooks/useTheme';
-import { useWidgetSize } from '../../hooks/useWidgetSize';
+import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';
 import { dc } from '../../utils/data-component';
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -210,7 +210,7 @@ function SessionsList() {
 
 export function SessionsScreen() {
   const { theme } = useTheme();
-  useWidgetSize({
+  useSetWidgetSize({
     width: theme.screens.sessions.width,
     height: theme.screens.sessions.height,
   });
@@ -227,7 +227,7 @@ export function SessionsScreen() {
       }}
     >
       <div className="size-full flex flex-col">
-        <WidgetHeader />
+        <Header />
         <SessionsList />
         <PoweredByOpen />
       </div>

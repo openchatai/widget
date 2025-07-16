@@ -3,6 +3,7 @@ import type { AgentOrBotType } from './agent-or-bot';
 // The type is imported so the `@link` in the jsdoc works
 // eslint-disable-next-line unused-imports/no-unused-imports
 import type { OpenCxComponentNameU } from './component-name';
+import type { IconNameU } from './icons';
 import type { JsonValue } from './json-value';
 
 type UserBaseConfig =
@@ -96,6 +97,33 @@ type TextContentOptions = {
     headerTitle?: string;
   };
 };
+
+type HeaderButtonBase = {
+  icon?: IconNameU;
+  // textContent?: string;
+  // tooltipContent?: string;
+  hideOnSmallScreen?: boolean;
+  hideOnLargeScreen?: boolean;
+};
+
+export type HeaderButtonU =
+  | (HeaderButtonBase & {
+      functionality: 'expand-shrink';
+      /** if `HeaderButtonBase.icon` is passed, it will override this option  */
+      expandIcon?: IconNameU;
+      /** if `HeaderButtonBase.icon` is passed, it will override this option  */
+      shrinkIcon?: IconNameU;
+    })
+  | (HeaderButtonBase & {
+      functionality: 'close-widget';
+    })
+  | (HeaderButtonBase & {
+      functionality: 'resolve-session';
+      onResolved?:
+        | 'reset-chat'
+        | 'close-widget'
+        | 'reset-chat-and-close-widget';
+    });
 
 export interface WidgetConfig {
   /**
@@ -216,6 +244,17 @@ export interface WidgetConfig {
    * Custom text content to override the defaults in the default widget.
    */
   textContent?: TextContentOptions;
+  /**
+   * Custom header buttons to expand-shrink the size of the widget, close the widget, resolve the session, etc.
+   *
+   * Note that using this options will remove the default `close-widget` button on small screens.
+   *
+   * @default close-widget button on small screens
+   */
+  headerButtons?: {
+    sessionsScreen?: Array<HeaderButtonU>;
+    chatScreen?: Array<HeaderButtonU>;
+  };
   /**
    * Customize the router behavior.
    */

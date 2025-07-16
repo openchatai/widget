@@ -27,6 +27,7 @@ export function useSessions() {
     sessionState,
     sessionsState,
     loadMoreSessions: widgetCtx.sessionCtx.loadMoreSessions,
+    resolveSession: widgetCtx.sessionCtx.resolveSession,
     openSessions,
     closedSessions,
     canCreateNewSession,

@@ -17,7 +17,7 @@ import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
 import { useLocale } from '../../hooks/useLocale';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
-import { useWidgetSize } from '../../hooks/useWidgetSize';
+import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';
 
 const schema = z.object({
   name: z.string().min(2),
@@ -34,7 +34,7 @@ export function WelcomeScreen() {
   const { data: preludeData } = usePreludeData();
   const { observedElementRef } = useWidgetContentHeight();
 
-  useWidgetSize({
+  useSetWidgetSize({
     height: undefined,
     width: theme.screens.welcome.width,
   });
