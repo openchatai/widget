@@ -86,7 +86,8 @@ export function AttachmentPreview({ attachment }: Props) {
       <DialogContent
         // This suppresses the stupid `DialogDescription is required` warning
         aria-describedby={undefined}
-        className="size-full rounded-3xl flex items-center justify-center bg-transparent backdrop-blur border-none gap-0"
+        className="size-full max-w-full rounded-3xl flex items-center justify-center bg-transparent border-none gap-0"
+        withClose
       >
         <DialogTitle className="sr-only">Image preview</DialogTitle>
 
