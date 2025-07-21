@@ -36,6 +36,7 @@
     "app.dev.tsx",
     "app.dev.example.tsx",
     "src",
+    "dev",
     "vite.config.ts",
     "vite.embed.config.ts",
     "vitest.config.ts",
