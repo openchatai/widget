@@ -9,6 +9,11 @@ type DeepRequired<T> = {
   [K in keyof T]-?: DeepRequired<T[K]>;
 };
 
+const DEFAULTS = {
+  transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
+  transitionDuration: '1000ms',
+};
+
 /**
  * @returns The widget config theme with fallback default value
  */
@@ -51,9 +56,10 @@ export function useTheme() {
         theme?.widgetContentContainer?.transitionProperty ?? 'all',
       transitionTimingFunction:
         theme?.widgetContentContainer?.transitionTimingFunction ??
-        'cubic-bezier(0.16, 1, 0.3, 1)',
+        DEFAULTS.transitionTimingFunction,
       transitionDuration:
-        theme?.widgetContentContainer?.transitionDuration ?? '800ms',
+        theme?.widgetContentContainer?.transitionDuration ??
+        DEFAULTS.transitionDuration,
       offset: {
         side: isSmallScreen
           ? 0
@@ -98,6 +104,22 @@ export function useTheme() {
           'h',
           theme?.screens?.chat?.height ?? '700px',
         ),
+        withCanvas: {
+          width: withSmallScreenDefault(
+            'w',
+            theme?.screens?.chat?.withCanvas?.width ?? 'min(1050px, 100vw)',
+          ),
+          height: withSmallScreenDefault(
+            'h',
+            theme?.screens?.chat?.withCanvas?.height ?? 'min(800px, 100vh)',
+          ),
+          transitionTimingFunction:
+            theme?.screens?.chat?.withCanvas?.transitionTimingFunction ??
+            DEFAULTS.transitionTimingFunction,
+          transitionDuration:
+            theme?.screens?.chat?.withCanvas?.transitionDuration ??
+            DEFAULTS.transitionDuration,
+        },
       },
     },
   } satisfies NonNullable<DeepRequired<WidgetConfig['theme']>>;

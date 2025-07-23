@@ -10,6 +10,8 @@ import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { useTheme } from '../../hooks/useTheme';
 import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';
 import { dc } from '../../utils/data-component';
+import { ChatCanvas } from './ChatCanvas';
+import { useCanvas } from '../../hooks/useCanvas';
 
 export function ChatScreen() {
   const {
@@ -18,11 +20,16 @@ export function ChatScreen() {
   const {
     sessionState: { session },
   } = useSessions();
+  const { isCanvasOpen } = useCanvas();
   const { theme } = useTheme();
 
   useSetWidgetSize({
-    width: theme.screens.chat.width,
-    height: theme.screens.chat.height,
+    width: isCanvasOpen
+      ? theme.screens.chat.withCanvas.width
+      : theme.screens.chat.width,
+    height: isCanvasOpen
+      ? theme.screens.chat.withCanvas.height
+      : theme.screens.chat.height,
   });
 
   // The key is the session id, so that when chat is reset, the animation replays
@@ -52,12 +59,39 @@ export function ChatScreen() {
           ) : (
             <MotionDiv
               key={chatContentKeyRef}
-              className="flex flex-col w-full flex-1 overflow-auto"
+              className="flex items-start h-full flex-1 overflow-auto"
               // If we don't snap exit, the initial questions will show before the animation starts
               snapExit
             >
-              <ChatMain />
-              <ChatFooter />
+              <div
+                className={cn(
+                  'flex flex-col h-full overflow-auto transition-all',
+                  isCanvasOpen ? 'w-1/2' : 'w-full',
+                )}
+                style={{
+                  transitionTimingFunction:
+                    theme.screens.chat.withCanvas.transitionTimingFunction,
+                  transitionDuration:
+                    theme.screens.chat.withCanvas.transitionDuration,
+                }}
+              >
+                <ChatMain />
+                <ChatFooter />
+              </div>
+              <div
+                className={cn(
+                  'h-full overflow-auto transition-all',
+                  isCanvasOpen ? 'w-1/2' : 'w-0',
+                )}
+                style={{
+                  transitionTimingFunction:
+                    theme.screens.chat.withCanvas.transitionTimingFunction,
+                  transitionDuration:
+                    theme.screens.chat.withCanvas.transitionDuration,
+                }}
+              >
+                <ChatCanvas />
+              </div>
             </MotionDiv>
           )}
         </AnimatePresence>

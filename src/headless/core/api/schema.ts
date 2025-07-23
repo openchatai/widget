@@ -200,47 +200,6 @@ export interface components {
       /** Format: binary */
       file: string;
     };
-    HandleContactMessageOutputDto:
-      | {
-          /** @enum {boolean} */
-          success: true;
-          code?:
-            | string
-            | 'session_assigned_to_human_agent'
-            | 'response_cancelled';
-          autopilotResponse?: {
-            /** @enum {string} */
-            type: 'text';
-            value: {
-              error: boolean;
-              content: string;
-            };
-            id?: string;
-            mightSolveUserIssue: boolean;
-            completelyAndFullyCoveredUserIssue: boolean;
-          };
-          uiResponse?: {
-            /** @enum {string} */
-            type: 'ui';
-            value: {
-              /** @enum {string} */
-              type: 'ui_component';
-              request_response?: unknown;
-              name: string;
-              content?: string;
-            };
-            mightSolveUserIssue: boolean;
-          };
-          sessionIsHandedOff?: boolean;
-        }
-      | {
-          /** @enum {boolean} */
-          success: false;
-          error: {
-            code?: string;
-            message?: string;
-          };
-        };
     /** @description Paginated response. */
     PaginatedWidgetSessionsDto: {
       items: {
@@ -259,46 +218,14 @@ export interface components {
         channel: string;
         isVerified: boolean;
         lastMessage: string | null;
+        mode?: {
+          id: string;
+          name: string;
+          slug?: string | null;
+        } | null;
       }[];
       /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
       next: string | null;
-    };
-    SendWidgetMessageDto: {
-      /** Format: uuid */
-      uuid: string;
-      content: string;
-      session_id: string;
-      bot_token: string;
-      /** @description Additional headers to be included in the request of action calls */
-      headers?: {
-        [key: string]: string;
-      } | null;
-      /** @description Additional query parameters to be included in the query of action calls */
-      query_params?: {
-        [key: string]: string;
-      } | null;
-      /** @description Additional body properties to be included in the body of action calls */
-      body_properties?: {
-        [key: string]: unknown;
-      } | null;
-      language?: string | null;
-      attachments?:
-        | {
-            id: string;
-            name: string;
-            size: number;
-            type: string;
-            url: string;
-          }[]
-        | null;
-      /** @description Context for the AI to be sent with each contact message */
-      clientContext?: {
-        [key: string]: unknown;
-      } | null;
-      /** @description Custom data to be sent with each contact message */
-      custom_data?: {
-        [key: string]: unknown;
-      } | null;
     };
     UploadWidgetFileResponseDto: {
       fileName: string;
@@ -319,6 +246,7 @@ export interface components {
         | 'message'
         | 'handoff'
         | 'handoff_to_zendesk'
+        | 'handoff_to_salesforce_miaw'
         | 'agent_message'
         | 'agent_joined'
         | 'agent_comment'
@@ -404,6 +332,112 @@ export interface components {
     WidgetResolveSessionInputDto: {
       session_id: string;
     };
+    WidgetSendMessageInputDto: {
+      /** Format: uuid */
+      uuid: string;
+      content: string;
+      session_id: string;
+      bot_token: string;
+      /** @description Additional headers to be included in the request of action calls */
+      headers?: {
+        [key: string]: string;
+      } | null;
+      /** @description Additional query parameters to be included in the query of action calls */
+      query_params?: {
+        [key: string]: string;
+      } | null;
+      /** @description Additional body properties to be included in the body of action calls */
+      body_properties?: {
+        [key: string]: unknown;
+      } | null;
+      language?: string | null;
+      attachments?:
+        | {
+            id: string;
+            name: string;
+            size: number;
+            type: string;
+            url: string;
+          }[]
+        | null;
+      /** @description Context for the AI to be sent with each contact message */
+      clientContext?: {
+        [key: string]: unknown;
+      } | null;
+      /** @description Custom data to be sent with each contact message */
+      custom_data?: {
+        [key: string]: unknown;
+      } | null;
+    };
+    WidgetSendMessageOutputDto:
+      | {
+          /** @enum {boolean} */
+          success: true;
+          code?:
+            | string
+            | 'session_assigned_to_human_agent'
+            | 'response_cancelled';
+          autopilotResponse?: {
+            /** @enum {string} */
+            type: 'text';
+            value: {
+              error: boolean;
+              content: string;
+            };
+            id?: string;
+            mightSolveUserIssue: boolean;
+            completelyAndFullyCoveredUserIssue: boolean;
+            mode?: {
+              id: string;
+              name: string;
+              slug?: string;
+            };
+          };
+          uiResponse?: {
+            /** @enum {string} */
+            type: 'ui';
+            value: {
+              /** @enum {string} */
+              type: 'ui_component';
+              request_response?: unknown;
+              name: string;
+              content?: string;
+            };
+            mightSolveUserIssue: boolean;
+          };
+          sessionIsHandedOff?: boolean;
+          /** @description WidgetSession */
+          session?: {
+            /** Format: uuid */
+            id: string;
+            createdAt: string;
+            updatedAt: string;
+            isHandedOff: boolean;
+            isOpened: boolean;
+            assignee: {
+              /** @enum {string} */
+              kind: 'human' | 'ai' | 'none' | 'unknown';
+              name: string | null;
+              avatarUrl: string | null;
+            };
+            channel: string;
+            isVerified: boolean;
+            lastMessage: string | null;
+            mode?: {
+              id: string;
+              name: string;
+              slug?: string | null;
+            } | null;
+          };
+        }
+      | {
+          /** @enum {boolean} */
+          success: false;
+          error: {
+            code?: string;
+            message?: string;
+          };
+        };
     WidgetSessionAndHistoryDto: {
       /** @description WidgetSession */
       session: {
@@ -422,6 +456,11 @@ export interface components {
         channel: string;
         isVerified: boolean;
         lastMessage: string | null;
+        mode?: {
+          id: string;
+          name: string;
+          slug?: string | null;
+        } | null;
       };
       history: {
         publicId: string;
@@ -430,6 +469,7 @@ export interface components {
           | 'message'
           | 'handoff'
           | 'handoff_to_zendesk'
+          | 'handoff_to_salesforce_miaw'
           | 'agent_message'
           | 'agent_joined'
           | 'agent_comment'
@@ -486,6 +526,11 @@ export interface components {
       channel: string;
       isVerified: boolean;
       lastMessage: string | null;
+      mode?: {
+        id: string;
+        name: string;
+        slug?: string | null;
+      } | null;
     };
     WidgetVoteDto: {
       /** @enum {string} */
@@ -711,7 +756,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        'application/json': components['schemas']['SendWidgetMessageDto'];
+        'application/json': components['schemas']['WidgetSendMessageInputDto'];
       };
     };
     responses: {
@@ -720,7 +765,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          'application/json': components['schemas']['HandleContactMessageOutputDto'];
+          'application/json': components['schemas']['WidgetSendMessageOutputDto'];
         };
       };
       /** @description Internal Server Error */

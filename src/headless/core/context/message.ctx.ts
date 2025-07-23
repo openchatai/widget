@@ -178,6 +178,9 @@ export class MessageCtx {
               data.uiResponse?.mightSolveUserIssue,
           });
         }
+        if (data.session) {
+          this.sessionCtx.sessionState.setPartial({ session: data.session });
+        }
       } else {
         const errorMessage = this.toBotErrorMessage(
           data?.error?.message || 'Unknown error occurred',

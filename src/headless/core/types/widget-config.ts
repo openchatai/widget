@@ -81,6 +81,13 @@ type ThemeOptions = {
     chat?: {
       height?: string;
       width?: string;
+      /** When the canvas is open */
+      withCanvas?: {
+        height?: string;
+        width?: string;
+        transitionTimingFunction?: string;
+        transitionDuration?: string;
+      };
     };
   };
 };

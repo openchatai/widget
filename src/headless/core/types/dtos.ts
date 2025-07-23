@@ -3,8 +3,8 @@ import type { Dto } from '../api/client';
 export type VoteInputDto = Dto['WidgetVoteDto'];
 export type VoteOutputDto = Dto['WidgetVoteResponseDto'];
 
-export type SendMessageDto = Dto['SendWidgetMessageDto'];
-export type SendMessageOutputDto = Dto['HandleContactMessageOutputDto'];
+export type SendMessageDto = Dto['WidgetSendMessageInputDto'];
+export type SendMessageOutputDto = Dto['WidgetSendMessageOutputDto'];
 
 export type ResolveSessionDto = Dto['WidgetResolveSessionInputDto'];
 
@@ -18,3 +18,5 @@ export type MessageAttachmentType = NonNullable<
 export type ActionCallDto = NonNullable<
   Dto['WidgetHistoryDto']['actionCalls']
 >[number];
+
+export type ModeDto = Dto['WidgetSessionDto']['mode'];
