@@ -1,15 +1,15 @@
 import { useMessages } from '../../../headless/react';
 import { useIsSmallScreen } from './useIsSmallScreen';
-import { useMode } from './useMode';
+import { useModes } from '../../../headless/react';
 
 export function useCanvas() {
   const {
     messagesState: { isInitialFetchLoading },
   } = useMessages();
   const { isSmallScreen } = useIsSmallScreen();
-  const { mode } = useMode();
+  const { activeMode } = useModes();
 
-  const isCanvasOpen = !isInitialFetchLoading && !isSmallScreen && !!mode;
+  const isCanvasOpen = !isInitialFetchLoading && !isSmallScreen && !!activeMode;
 
   return {
     isCanvasOpen,

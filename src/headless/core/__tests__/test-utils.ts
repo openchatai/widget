@@ -21,6 +21,8 @@ export const TestUtils = {
               isVerified: false,
               lastMessage: '',
               updatedAt: new Date().toISOString(),
+              latestStateCheckpointPayload: null,
+              modeId: null,
               ...returnValue?.data,
             },
           });
@@ -119,6 +121,7 @@ export const TestUtils = {
             data: {
               sessionsPollingIntervalSeconds: 60,
               sessionPollingIntervalSeconds: 10,
+              modes: [],
               ...returnValue?.data,
             },
           });
@@ -139,6 +142,8 @@ export const TestUtils = {
                 isVerified: false,
                 lastMessage: '',
                 updatedAt: new Date().toISOString(),
+                modeId: null,
+                latestStateCheckpointPayload: null,
                 ...returnValue?.data?.session,
               },
               history: [...(returnValue?.data?.history || [])],
@@ -160,6 +165,8 @@ export const TestUtils = {
               isVerified: false,
               lastMessage: '',
               updatedAt: new Date().toISOString(),
+              modeId: null,
+              latestStateCheckpointPayload: null,
               ...returnValue?.data,
             },
           });

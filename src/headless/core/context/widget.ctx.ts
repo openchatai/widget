@@ -1,4 +1,5 @@
 import { ApiCaller } from '../api/api-caller';
+import type { ModeDto } from '../types/dtos';
 import type { ExternalStorage } from '../types/external-storage';
 import type { WidgetConfig } from '../types/widget-config';
 import { ActiveSessionPollingCtx } from './active-session-polling.ctx';
@@ -17,6 +18,7 @@ export class WidgetCtx {
   public messageCtx: MessageCtx;
   public routerCtx: RouterCtx;
   public storageCtx?: StorageCtx;
+  public modes: ModeDto[] = [];
 
   private static pollingIntervalsSeconds: {
     session: number;
@@ -27,9 +29,11 @@ export class WidgetCtx {
   private constructor({
     config,
     storage,
+    modes,
   }: {
     config: WidgetConfig;
     storage?: ExternalStorage;
+    modes: ModeDto[];
   }) {
     if (!WidgetCtx.pollingIntervalsSeconds) {
       throw Error(
@@ -40,6 +44,7 @@ export class WidgetCtx {
     this.config = config;
     this.api = new ApiCaller({ config });
     this.storageCtx = storage ? new StorageCtx({ storage }) : undefined;
+    this.modes = modes;
 
     this.contactCtx = new ContactCtx({
       api: this.api,
@@ -96,6 +101,7 @@ export class WidgetCtx {
     return new WidgetCtx({
       config,
       storage,
+      modes: externalConfig.data?.modes || [],
     });
   };
 

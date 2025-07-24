@@ -1,11 +1,11 @@
 import React from 'react';
-import { useMode } from '../../hooks/useMode';
+import { useModes } from '../../../../headless/react';
 
 export function ChatCanvas() {
-  const { mode } = useMode();
+  const { activeMode } = useModes();
   return (
     <div>
-      <p>{mode?.name}</p>
+      <p>{activeMode?.name}</p>
     </div>
   );
 }

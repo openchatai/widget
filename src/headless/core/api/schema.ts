@@ -116,6 +116,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/backend/widget/v2/checkpoint': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['createStateCheckpoint'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/backend/widget/v2/upload': {
     parameters: {
       query?: never;
@@ -218,10 +234,9 @@ export interface components {
         channel: string;
         isVerified: boolean;
         lastMessage: string | null;
-        mode?: {
-          id: string;
-          name: string;
-          slug?: string | null;
+        modeId: string | null;
+        latestStateCheckpointPayload: {
+          [key: string]: unknown;
         } | null;
       }[];
       /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
@@ -234,29 +249,44 @@ export interface components {
     WidgetConfigDto: {
       sessionsPollingIntervalSeconds: number;
       sessionPollingIntervalSeconds: number;
+      modes: {
+        id: string;
+        name: string;
+        slug?: string | null;
+      }[];
     };
     WidgetContactTokenResponseDto: {
       /** @description The JWT token to use for further requests */
       token: string;
+    };
+    WidgetCreateStateCheckpointInputDto: {
+      session_id: string;
+      payload: {
+        [key: string]: unknown;
+      };
+    };
+    WidgetCreateStateCheckpointOutputDto: {
+      success: boolean;
     };
     WidgetHistoryDto: {
       publicId: string;
       /** @enum {string} */
       type:
         | 'message'
-        | 'handoff'
-        | 'handoff_to_zendesk'
-        | 'handoff_to_salesforce_miaw'
         | 'agent_message'
         | 'agent_joined'
         | 'agent_comment'
         | 'agent_took_session_from_ai'
         | 'agent_reopened_session'
+        | 'handoff'
+        | 'handoff_to_zendesk'
+        | 'handoff_to_salesforce_miaw'
         | 'ai_decided_to_resolve_the_issue'
-        | 'email_draft_message'
-        | 'followup'
         | 'ai_assumed_the_session_resolved'
         | 'user_confirmed_the_session_resolved'
+        | 'state_checkpoint'
+        | 'email_draft_message'
+        | 'followup'
         | 'system_message';
       content: {
         text?: string | null;
@@ -423,10 +453,9 @@ export interface components {
             channel: string;
             isVerified: boolean;
             lastMessage: string | null;
-            mode?: {
-              id: string;
-              name: string;
-              slug?: string | null;
+            modeId: string | null;
+            latestStateCheckpointPayload: {
+              [key: string]: unknown;
             } | null;
           };
         }
@@ -456,10 +485,9 @@ export interface components {
         channel: string;
         isVerified: boolean;
         lastMessage: string | null;
-        mode?: {
-          id: string;
-          name: string;
-          slug?: string | null;
+        modeId: string | null;
+        latestStateCheckpointPayload: {
+          [key: string]: unknown;
         } | null;
       };
       history: {
@@ -467,19 +495,20 @@ export interface components {
         /** @enum {string} */
         type:
           | 'message'
-          | 'handoff'
-          | 'handoff_to_zendesk'
-          | 'handoff_to_salesforce_miaw'
           | 'agent_message'
           | 'agent_joined'
           | 'agent_comment'
           | 'agent_took_session_from_ai'
           | 'agent_reopened_session'
+          | 'handoff'
+          | 'handoff_to_zendesk'
+          | 'handoff_to_salesforce_miaw'
           | 'ai_decided_to_resolve_the_issue'
-          | 'email_draft_message'
-          | 'followup'
           | 'ai_assumed_the_session_resolved'
           | 'user_confirmed_the_session_resolved'
+          | 'state_checkpoint'
+          | 'email_draft_message'
+          | 'followup'
           | 'system_message';
         content: {
           text?: string | null;
@@ -526,10 +555,9 @@ export interface components {
       channel: string;
       isVerified: boolean;
       lastMessage: string | null;
-      mode?: {
-        id: string;
-        name: string;
-        slug?: string | null;
+      modeId: string | null;
+      latestStateCheckpointPayload: {
+        [key: string]: unknown;
       } | null;
     };
     WidgetVoteDto: {
@@ -766,6 +794,38 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['WidgetSendMessageOutputDto'];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  createStateCheckpoint: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WidgetCreateStateCheckpointInputDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WidgetCreateStateCheckpointOutputDto'];
         };
       };
       /** @description Internal Server Error */

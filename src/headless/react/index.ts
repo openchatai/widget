@@ -19,3 +19,4 @@ export {
   useWidgetTrigger,
   WidgetTriggerProvider,
 } from './hooks/useWidgetTrigger';
+export { useModes } from './hooks/useModes';

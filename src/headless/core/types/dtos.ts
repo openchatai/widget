@@ -19,4 +19,4 @@ export type ActionCallDto = NonNullable<
   Dto['WidgetHistoryDto']['actionCalls']
 >[number];
 
-export type ModeDto = Dto['WidgetSessionDto']['mode'];
+export type ModeDto = Dto['WidgetConfigDto']['modes'][number];
