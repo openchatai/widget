@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.87
+
+### Patch Changes
+
+- init modes
+
 ## 3.0.86
 
 ### Patch Changes
