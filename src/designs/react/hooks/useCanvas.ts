@@ -7,9 +7,10 @@ export function useCanvas() {
     messagesState: { isInitialFetchLoading },
   } = useMessages();
   const { isSmallScreen } = useIsSmallScreen();
-  const { activeMode } = useModes();
+  const { activeMode, Component } = useModes();
 
-  const isCanvasOpen = !isInitialFetchLoading && !isSmallScreen && !!activeMode;
+  const isCanvasOpen =
+    !isInitialFetchLoading && !isSmallScreen && !!activeMode && !!Component;
 
   return {
     isCanvasOpen,
