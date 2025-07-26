@@ -10,6 +10,7 @@ import {
   WidgetProvider,
   WidgetTriggerProvider,
   type WidgetComponentType,
+  type WidgetModeComponentType,
 } from '../../headless/react';
 import { BotOrAgentResponse } from './components/custom-components/BotOrAgentTextResponse.component';
 import { FallbackComponent } from './components/custom-components/Fallback.component';
@@ -64,15 +65,18 @@ const storage: ExternalStorage = {
 function WidgetWrapper({
   options,
   components = [],
+  modesComponents = [],
   loadingComponent,
 }: {
   options: WidgetConfig;
   components?: WidgetComponentType[];
+  modesComponents?: WidgetModeComponentType[];
   loadingComponent?: React.ReactNode;
 }) {
   return (
     <WidgetProvider
       components={[...defaultComponents, ...components]}
+      modesComponents={modesComponents}
       options={options}
       storage={storage}
       loadingComponent={loadingComponent}

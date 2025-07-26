@@ -10,11 +10,13 @@ import { version } from '../../../package.json';
 import { type ExternalStorage, type WidgetConfig, WidgetCtx } from '../core';
 import { ComponentRegistry } from './ComponentRegistry';
 import type { WidgetComponentType } from './types/components';
+import type { WidgetModeComponentType } from './types/modes.components';
 
 interface WidgetProviderValue {
   widgetCtx: WidgetCtx;
   config: WidgetConfig;
   components?: WidgetComponentType[];
+  modesComponents?: WidgetModeComponentType[];
   componentStore: ComponentRegistry;
   version: string;
   contentIframeRef?: React.MutableRefObject<HTMLIFrameElement | null>;
@@ -26,12 +28,14 @@ export function WidgetProvider({
   options: config,
   children,
   components,
+  modesComponents,
   storage,
   loadingComponent,
 }: {
   options: WidgetConfig;
   children: React.ReactNode;
   components?: WidgetComponentType[];
+  modesComponents?: WidgetModeComponentType[];
   storage?: ExternalStorage;
   /**
    * Custom loading component while the widget is initializing
@@ -71,6 +75,7 @@ export function WidgetProvider({
         config,
         components,
         componentStore,
+        modesComponents,
         version,
         contentIframeRef,
       }}

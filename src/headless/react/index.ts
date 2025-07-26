@@ -2,6 +2,7 @@ export type {
   WidgetComponentType,
   WidgetComponentProps,
 } from './types/components';
+export type { WidgetModeComponentType } from './types/modes.components';
 
 export { WidgetProvider, useWidget } from './WidgetProvider';
 

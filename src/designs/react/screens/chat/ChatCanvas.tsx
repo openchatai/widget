@@ -2,10 +2,9 @@ import React from 'react';
 import { useModes } from '../../../../headless/react';
 
 export function ChatCanvas() {
-  const { activeMode } = useModes();
-  return (
-    <div>
-      <p>{activeMode?.name}</p>
-    </div>
-  );
+  const { activeMode, Component } = useModes();
+
+  if (!Component || !activeMode) return null;
+
+  return <Component mode={activeMode} />;
 }

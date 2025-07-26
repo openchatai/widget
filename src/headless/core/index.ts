@@ -19,6 +19,7 @@ export type {
   VoteInputDto,
   VoteOutputDto,
   ActionCallDto,
+  ModeDto,
 } from './types/dtos';
 export type { WidgetConfig, HeaderButtonU } from './types/widget-config';
 export type { ExternalStorage } from './types/external-storage';
