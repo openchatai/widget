@@ -398,6 +398,8 @@ export interface components {
       custom_data?: {
         [key: string]: unknown;
       } | null;
+      /** @description If there is an active mode, it will be exited and the prompt will be given to the AI for a customized response */
+      exit_mode_prompt?: string;
     };
     WidgetSendMessageOutputDto:
       | {
@@ -422,6 +424,7 @@ export interface components {
               name: string;
               slug?: string;
             };
+            didExitMode?: boolean;
           };
           uiResponse?: {
             /** @enum {string} */

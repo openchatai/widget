@@ -63,6 +63,7 @@ export class MessageCtx {
     content: SendMessageDto['content'];
     attachments?: SendMessageDto['attachments'];
     customData?: SendMessageDto['custom_data'];
+    exitModePrompt?: string;
   }): Promise<void> => {
     /* ------------------------------------------------------ */
     /*         Prevent sending if there is no content         */
@@ -149,6 +150,7 @@ export class MessageCtx {
             ...(input.customData || {}),
           },
           language: this.config.language,
+          exit_mode_prompt: input.exitModePrompt,
         },
         this.sendMessageAbortController.signal,
       );
