@@ -58,9 +58,6 @@
       "require": "./dist/designs.cjs"
     }
   },
-  "optionalDependencies": {
-    "zod": "^3.23.8"
-  },
   "dependencies": {
     "lodash.isequal": "^4.5.0",
     "openapi-fetch": "^0.13.4",
