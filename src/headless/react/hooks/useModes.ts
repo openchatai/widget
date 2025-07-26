@@ -1,4 +1,5 @@
-import { useSessions, useWidget } from '..';
+import { useWidget } from '../WidgetProvider';
+import { useSessions } from './useSessions';
 
 export function useModes() {
   const { widgetCtx, modesComponents } = useWidget();
@@ -7,6 +8,7 @@ export function useModes() {
   const modes = widgetCtx.modes;
   const activeModeId = sessionState.session?.modeId;
   const activeMode = modes.find((mode) => mode.id === activeModeId);
+
   const Component = modesComponents?.find((modeComponent) =>
     [
       activeMode?.id || '',

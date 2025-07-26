@@ -1,10 +1,32 @@
-import React from 'react';
-import { useModes } from '../../../../headless/react';
+import React, { useState } from 'react';
+import { useMessages, useModes, useSessions } from '../../../../headless/react';
 
 export function ChatCanvas() {
   const { activeMode, Component } = useModes();
+  const { sendMessage } = useMessages();
+  const { createStateCheckpoint } = useSessions();
 
-  if (!Component || !activeMode) return null;
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
 
-  return <Component mode={activeMode} />;
+  const handleSendMessage = async (args: Parameters<typeof sendMessage>[0]) => {
+    try {
+      setIsSendingMessage(true);
+      await sendMessage(args);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+
+  if (!activeMode || !Component) return null;
+
+  return (
+    <Component
+      mode={activeMode}
+      createStateCheckpoint={createStateCheckpoint}
+      sendMessage={handleSendMessage}
+      isSendingMessage={isSendingMessage}
+    />
+  );
 }
