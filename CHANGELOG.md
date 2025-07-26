@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.89
+
+### Patch Changes
+
+- turn off `externalizeDeps`
+
 ## 3.0.88
 
 ### Patch Changes
