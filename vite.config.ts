@@ -14,7 +14,7 @@ export default defineConfig({
       include: ['src'],
     }),
     externalizeDeps({
-      except: ['rehype-raw'],
+      deps: false,
     }),
     react(),
   ],
