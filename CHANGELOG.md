@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.88
+
+### Patch Changes
+
+- add modes custom components
+
 ## 3.0.87
 
 ### Patch Changes
