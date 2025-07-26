@@ -171,6 +171,17 @@ export const TestUtils = {
             },
           });
       },
+      createStateCheckpoint(target, returnValue) {
+        target.prototype.createStateCheckpoint = vi
+          .fn(target.prototype.createStateCheckpoint)
+          .mockResolvedValue({
+            response: new Response(),
+            data: {
+              success: true,
+              ...returnValue?.data,
+            },
+          });
+      },
     } satisfies {
       [K in keyof ApiCaller]: (
         target: typeof ApiCaller,

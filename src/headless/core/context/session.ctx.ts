@@ -1,4 +1,5 @@
 import type { ApiCaller } from '../api/api-caller';
+import type { Dto } from '../api/client';
 import type { SessionDto } from '../types/dtos';
 import { Poller } from '../utils/Poller';
 import { PrimitiveState } from '../utils/PrimitiveState';
@@ -189,6 +190,22 @@ export class SessionCtx {
     }
 
     this.sessionState.setPartial({ isResolvingSession: false });
+    return { success: false, error } as const;
+  };
+
+  createStateCheckpoint = async (
+    payload: Dto['WidgetCreateStateCheckpointInputDto']['payload'],
+  ) => {
+    const session_id = this.sessionState.get().session?.id;
+    if (!session_id) return;
+
+    const { data, error } = await this.api.createStateCheckpoint({
+      session_id,
+      payload,
+    });
+
+    if (data) return { data } as const;
+
     return { success: false, error } as const;
   };
 }

@@ -217,4 +217,12 @@ export class ApiCaller {
       signal: abortSignal,
     });
   };
+
+  createStateCheckpoint = async (
+    body: Dto['WidgetCreateStateCheckpointInputDto'],
+  ) => {
+    return await this.client.POST('/backend/widget/v2/checkpoint', {
+      body,
+    });
+  };
 }

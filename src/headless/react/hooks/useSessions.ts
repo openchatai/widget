@@ -28,6 +28,7 @@ export function useSessions() {
     sessionsState,
     loadMoreSessions: widgetCtx.sessionCtx.loadMoreSessions,
     resolveSession: widgetCtx.sessionCtx.resolveSession,
+    createStateCheckpoint: widgetCtx.sessionCtx.createStateCheckpoint,
     openSessions,
     closedSessions,
     canCreateNewSession,
