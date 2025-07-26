@@ -2,7 +2,7 @@ import { resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
-import { externalizeDeps } from 'vite-plugin-externalize-deps';
+// import { externalizeDeps } from 'vite-plugin-externalize-deps';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { version } from './package.json';
 
@@ -13,9 +13,9 @@ export default defineConfig({
       insertTypesEntry: true,
       include: ['src'],
     }),
-    externalizeDeps({
-      deps: false,
-    }),
+    // externalizeDeps({
+    //   except: ['rehype-raw'],
+    // }),
     react(),
   ],
   server: {
