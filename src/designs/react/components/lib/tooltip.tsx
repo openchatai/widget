@@ -1,6 +1,7 @@
 import * as TooltipPrimitive from '@radix-ui/react-tooltip';
 import * as React from 'react';
 import { cn } from './utils/cn';
+import { useConfig } from '../../../../headless/react';
 
 const TooltipProvider = TooltipPrimitive.Provider;
 
@@ -36,7 +37,8 @@ function Tooltippy({
   side?: TooltipPrimitive.TooltipContentProps['side'];
   align?: TooltipPrimitive.TooltipContentProps['align'];
 }) {
-  if (!content) return children;
+  const { disableTooltips } = useConfig();
+  if (!content || disableTooltips) return children;
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>

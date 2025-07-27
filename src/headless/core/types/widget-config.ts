@@ -208,6 +208,11 @@ export interface WidgetConfig {
   cssOverrides?: string;
   theme?: ThemeOptions;
   /**
+   * Disable tooltips for all components.
+   * @default false
+   */
+  disableTooltips?: boolean;
+  /**
    * Assets URLs to be used in the widget.
    */
   assets?: {
