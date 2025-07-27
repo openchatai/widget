@@ -64,9 +64,10 @@ export function ChatScreen() {
               snapExit
             >
               <div
+                {...dc('chat/main/root')}
                 className={cn(
                   'flex flex-col h-full overflow-auto transition-all',
-                  isCanvasOpen ? 'w-1/2' : 'w-full',
+                  isCanvasOpen ? 'w-2/5' : 'w-full',
                 )}
                 style={{
                   transitionTimingFunction:
@@ -79,9 +80,10 @@ export function ChatScreen() {
                 <ChatFooter />
               </div>
               <div
+                {...dc('chat/canvas/root')}
                 className={cn(
                   'h-full overflow-auto transition-all',
-                  isCanvasOpen ? 'w-1/2' : 'w-0',
+                  isCanvasOpen ? 'w-3/5' : 'w-0',
                 )}
                 style={{
                   transitionTimingFunction:

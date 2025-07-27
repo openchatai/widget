@@ -20,6 +20,8 @@ export type OpenCxComponentNameU =
   /* ------------------------------------------------------ */
   | 'chat/root'
   | 'chat/header'
+  | 'chat/main/root'
+  | 'chat/canvas/root'
   | 'chat/msgs/root'
   /* -------------------- Agent Message ------------------- */
   | 'chat/agent_msg_group/root'
