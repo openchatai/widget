@@ -21,7 +21,12 @@ export type {
   ActionCallDto,
   ModeDto,
 } from './types/dtos';
-export type { WidgetConfig, HeaderButtonU } from './types/widget-config';
+export type {
+  WidgetConfig,
+  HeaderButtonU,
+  ModeComponent,
+  ModeComponentProps,
+} from './types/widget-config';
 export type { ExternalStorage } from './types/external-storage';
 export type { OpenCxComponentNameU } from './types/component-name';
 export type { IconNameU } from './types/icons';

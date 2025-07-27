@@ -1,8 +1,10 @@
 import { useWidget } from '../WidgetProvider';
+import { useConfig } from './useConfig';
 import { useSessions } from './useSessions';
 
 export function useModes() {
-  const { widgetCtx, modesComponents } = useWidget();
+  const { widgetCtx } = useWidget();
+  const { modesComponents } = useConfig();
   const { sessionState } = useSessions();
 
   const modes = widgetCtx.modes;

@@ -23,6 +23,7 @@ export function ChatCanvas() {
 
   return (
     <Component
+      react={React}
       mode={activeMode}
       createStateCheckpoint={createStateCheckpoint}
       sendMessage={handleSendMessage}

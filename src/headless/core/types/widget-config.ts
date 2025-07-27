@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { AgentOrBotType } from './agent-or-bot';
 
 // The type is imported so the `@link` in the jsdoc works
@@ -5,6 +6,9 @@ import type { AgentOrBotType } from './agent-or-bot';
 import type { OpenCxComponentNameU } from './component-name';
 import type { IconNameU } from './icons';
 import type { JsonValue } from './json-value';
+import type { ModeDto } from './dtos';
+import type { SessionCtx } from '../context/session.ctx';
+import type { MessageCtx } from '../context/message.ctx';
 
 type UserBaseConfig =
   | {
@@ -139,6 +143,21 @@ export type HeaderButtonU =
       };
     });
 
+export type ModeComponentProps = {
+  react: typeof React;
+  mode: ModeDto;
+  createStateCheckpoint: SessionCtx['createStateCheckpoint'];
+  sendMessage: MessageCtx['sendMessage'];
+  isSendingMessage: boolean;
+};
+export type ModeComponent = {
+  /** The mode's ID, name or slug */
+  key: string;
+  component: (
+    props: ModeComponentProps,
+  ) => ReturnType<typeof React.createElement>;
+};
+
 export interface WidgetConfig {
   /**
    * Your organization's widget token.
@@ -269,6 +288,10 @@ export interface WidgetConfig {
     sessionsScreen?: Array<HeaderButtonU>;
     chatScreen?: Array<HeaderButtonU>;
   };
+  /**
+   * Custom components to be mounted in the canvas if there is an active mode.
+   */
+  modesComponents?: Array<ModeComponent>;
   /**
    * Customize the router behavior.
    */

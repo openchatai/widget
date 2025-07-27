@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.91
+
+### Patch Changes
+
+- take `modesComponents` directly from headless WidgetConfig
+
 ## 3.0.90
 
 ### Patch Changes
