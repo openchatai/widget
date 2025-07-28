@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.92
+
+### Patch Changes
+
+- add `WidgetConfig.disableTooltips` option
+
 ## 3.0.91
 
 ### Patch Changes
