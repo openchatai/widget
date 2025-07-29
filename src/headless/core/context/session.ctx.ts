@@ -1,6 +1,7 @@
 import type { ApiCaller } from '../api/api-caller';
 import type { Dto } from '../api/client';
 import type { SessionDto } from '../types/dtos';
+import type { WidgetConfig } from '../types/widget-config';
 import { Poller } from '../utils/Poller';
 import { PrimitiveState } from '../utils/PrimitiveState';
 import type { ContactCtx } from './contact.ctx';
@@ -27,6 +28,7 @@ type SessionsState = {
 };
 
 export class SessionCtx {
+  private config: WidgetConfig;
   private api: ApiCaller;
   private contactCtx: ContactCtx;
   private sessionsPollingIntervalSeconds: number;
@@ -49,14 +51,17 @@ export class SessionCtx {
   });
 
   constructor({
+    config,
     api,
     contactCtx,
     sessionsPollingIntervalSeconds,
   }: {
+    config: WidgetConfig;
     api: ApiCaller;
     contactCtx: ContactCtx;
     sessionsPollingIntervalSeconds: number;
   }) {
+    this.config = config;
     this.api = api;
     this.contactCtx = contactCtx;
     this.sessionsPollingIntervalSeconds = sessionsPollingIntervalSeconds;
@@ -105,12 +110,12 @@ export class SessionCtx {
     this.sessionState.setPartial({ session: null, isCreatingSession: true });
 
     const externalId = this.contactCtx.state.get().contact?.externalId;
+    const customData = {
+      ...this.config.sessionCustomData,
+      ...(externalId ? { external_id: externalId } : {}),
+    };
     const { data: session, error } = await this.api.createSession({
-      customData: externalId
-        ? {
-            external_id: externalId,
-          }
-        : undefined,
+      customData: Object.keys(customData).length > 0 ? customData : undefined,
     });
     if (session) {
       this.sessionState.setPartial({ session, isCreatingSession: false });

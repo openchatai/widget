@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.94
+
+### Patch Changes
+
+- add `WidgetConfig.sessionCustomData`
+
 ## 3.0.93
 
 ### Patch Changes

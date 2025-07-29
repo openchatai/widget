@@ -53,6 +53,7 @@ export class WidgetCtx {
     });
 
     this.sessionCtx = new SessionCtx({
+      config: this.config,
       api: this.api,
       contactCtx: this.contactCtx,
       sessionsPollingIntervalSeconds:

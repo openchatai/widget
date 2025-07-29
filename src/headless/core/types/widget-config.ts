@@ -373,6 +373,12 @@ export interface WidgetConfig {
    */
   messageCustomData?: Record<string, unknown>;
   /**
+   * Custom data to be added to the session upon creation.
+   * This custom data is intended for human use only; the AI will not see it and it will not affect the AI's response.
+   * @default undefined
+   */
+  sessionCustomData?: Record<string, unknown>;
+  /**
    * An apiUrl to override production backend.
    * This is for us to test the widget locally, you don't need to play with this option 😊.
    * @default https://api.open.cx
