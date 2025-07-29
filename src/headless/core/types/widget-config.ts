@@ -235,6 +235,17 @@ export interface WidgetConfig {
    */
   persistentInitialMessages?: string[];
   /**
+   * Initial messages that the contact sees in a new chat session.
+   * Similar to the `initialMessages` option, but with more control over the messages.
+   * Using this option will override the `initialMessages` option.
+   * @default undefined
+   */
+  advancedInitialMessages?: Array<{
+    message: string;
+    /** Whether it stays at the top of chat after the user sends their first message. */
+    persistent?: boolean;
+  }>;
+  /**
    * Suggested initial questions that the contact sees in a new chat session.
    * If a user clicks on one of the suggested questions, the widget will send it as the user's first message.
    * @default undefined

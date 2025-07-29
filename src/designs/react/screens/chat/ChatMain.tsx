@@ -21,6 +21,7 @@ import {
 import { BotOrAgentResponse } from '../../components/custom-components/BotOrAgentTextResponse.component';
 import { cn } from '../../components/lib/utils/cn';
 import { dc } from '../../utils/data-component';
+import { run } from '../../../../headless/core/utils/run-catching';
 
 export function ChatMain() {
   const {
@@ -37,10 +38,19 @@ export function ChatMain() {
   );
 
   const persistentInitialMessages = config.persistentInitialMessages || [];
-  const initialMessages =
-    !config.initialMessages || config.initialMessages.length === 0
-      ? ['Hello, how can I help you?']
-      : config.initialMessages;
+
+  const advancedInitialMessages = run(() => {
+    if (!messages.length) return config.advancedInitialMessages || [];
+    return config.advancedInitialMessages?.filter((m) => !!m.persistent) || [];
+  });
+
+  const initialMessages = run(() => {
+    if (advancedInitialMessages.length) return [];
+    if (messages.length) return [];
+    // TODO translate default welcome message
+    if (!config.initialMessages?.length) return ['Hello, how can I help you?'];
+    return config.initialMessages;
+  });
 
   const LoadingComponent = componentStore.getComponent(
     'loading' satisfies SafeExtract<LiteralWidgetComponentKey, 'loading'>,
@@ -95,14 +105,37 @@ export function ChatMain() {
           />
         ))}
       </div>
-      {messages.length === 0 && (
+      {advancedInitialMessages.length > 0 && (
+        <BotOrAgentMessageGroup
+          messages={advancedInitialMessages.map(
+            ({ message }, index) =>
+              ({
+                component: 'bot_message',
+                data: { message },
+                id: `${index}-${message}`,
+                type: 'FROM_BOT',
+                timestamp: Date.now().toString(),
+              }) satisfies BotMessageType,
+          )}
+          suggestedReplies={
+            messages.length === 0 &&
+            initialQuestionsPosition === 'below-initial-messages'
+              ? initialQuestions
+              : undefined
+          }
+          agent={
+            config.bot ? { ...config.bot, isAi: true, id: null } : undefined
+          }
+        />
+      )}
+      {messages.length === 0 && initialMessages.length > 0 && (
         <BotOrAgentMessageGroup
           messages={initialMessages.map(
             (m, index) =>
               ({
                 component: 'bot_message',
                 data: { message: m },
-                id: `${m}-${index}`,
+                id: `${index}-${m}`,
                 type: 'FROM_BOT',
                 timestamp: Date.now().toString(),
               }) satisfies BotMessageType,

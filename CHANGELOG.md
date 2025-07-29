@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.93
+
+### Patch Changes
+
+- add `WidgetConfig.advancedInitialMessages`
+
 ## 3.0.92
 
 ### Patch Changes
