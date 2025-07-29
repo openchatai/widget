@@ -1,3 +1,7 @@
+export function run<T>(fn: () => T): T {
+  return fn();
+}
+
 export type Result<T, E> =
   | { data: T; error?: undefined }
   | { data?: undefined; error: E };
