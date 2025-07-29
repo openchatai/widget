@@ -130,10 +130,18 @@ export type HeaderButtonU =
     })
   | (HeaderButtonBase & {
       functionality: 'resolve-session';
+      /**
+       * The side effect after the session is resolved.
+       * @default 'stay-in-chat'
+       */
       onResolved?:
+        | 'stay-in-chat'
         | 'reset-chat'
         | 'close-widget'
         | 'reset-chat-and-close-widget';
+      /**
+       * Optional confirmation dialog before the session is resolved.
+       */
       confirmation?: {
         type: 'modal';
         title?: string;
@@ -141,6 +149,20 @@ export type HeaderButtonU =
         confirmButtonText?: string;
         cancelButtonText?: string;
       };
+      /**
+       * The button's behavior before the session is created (before the user sends their first message).
+       * @default 'disabled'
+       */
+      behaviorBeforeSessionCreation?: 'disabled' | 'close-widget';
+      /**
+       * The button's behavior after the session is resolved and the user is still in the same chat session.
+       * @default 'disabled'
+       */
+      behaviorIfSessionIsResolved?:
+        | 'disabled'
+        | 'reset-chat'
+        | 'close-widget'
+        | 'reset-chat-and-close-widget';
     });
 
 export type ModeComponentProps = {

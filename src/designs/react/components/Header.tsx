@@ -35,6 +35,7 @@ import { DynamicIcon } from './lib/DynamicIcon';
 import { MotionDiv } from './lib/MotionDiv';
 import { Skeleton } from './lib/skeleton';
 import { cn } from './lib/utils/cn';
+import { run } from '../../../headless/core/utils/run-catching';
 
 function useGetHeaderTitle() {
   const { data } = usePreludeData();
@@ -198,16 +199,85 @@ function Header__Buttons__Item__ResolveSession({
   const { resolveSession, sessionState } = useSessions();
   const { isSmallScreen } = useIsSmallScreen();
 
+  const isNoSession = !sessionState.session;
+  const isResolved = sessionState.session?.isOpened === false;
+  const onResolved: NonNullable<typeof button.onResolved> =
+    button.onResolved || 'stay-in-chat';
+  const behaviorBeforeSessionCreation: NonNullable<
+    typeof button.behaviorBeforeSessionCreation
+  > = button.behaviorBeforeSessionCreation || 'disabled';
+  const behaviorIfSessionIsResolved: NonNullable<
+    typeof button.behaviorIfSessionIsResolved
+  > = button.behaviorIfSessionIsResolved || 'disabled';
+
+  const isDisabled = run(() => {
+    if (sessionState.isResolvingSession) return true;
+    if (isNoSession && behaviorBeforeSessionCreation === 'disabled')
+      return true;
+    if (isResolved && behaviorIfSessionIsResolved === 'disabled') return true;
+    return false;
+  });
+
   const handleResolve = async () => {
     const { success, error } = await resolveSession();
     setIsDialogOpen(false);
     if (!success) return console.error(error);
 
-    if (button.onResolved === 'close-widget') setIsOpen(false);
-    if (button.onResolved === 'reset-chat') widgetCtx.resetChat();
-    if (button.onResolved === 'reset-chat-and-close-widget') {
-      setIsOpen(false);
-      widgetCtx.resetChat();
+    switch (onResolved) {
+      case 'stay-in-chat':
+        return;
+      case 'close-widget':
+        setIsOpen(false);
+        break;
+      case 'reset-chat':
+        widgetCtx.resetChat();
+        break;
+      case 'reset-chat-and-close-widget':
+        setIsOpen(false);
+        widgetCtx.resetChat();
+        break;
+      default:
+        isExhaustive(onResolved, Header__Buttons__Item__ResolveSession.name);
+        break;
+    }
+  };
+
+  const handleResolveAlternative = () => {
+    if (isNoSession) {
+      switch (behaviorBeforeSessionCreation) {
+        case 'disabled':
+          return;
+        case 'close-widget':
+          setIsOpen(false);
+          break;
+        default:
+          isExhaustive(
+            behaviorBeforeSessionCreation,
+            handleResolveAlternative.name,
+          );
+      }
+    }
+
+    if (isResolved) {
+      switch (behaviorIfSessionIsResolved) {
+        case 'disabled':
+          return;
+        case 'close-widget':
+          setIsOpen(false);
+          break;
+        case 'reset-chat':
+          widgetCtx.resetChat();
+          break;
+        case 'reset-chat-and-close-widget':
+          setIsOpen(false);
+          widgetCtx.resetChat();
+          break;
+        default:
+          isExhaustive(
+            behaviorIfSessionIsResolved,
+            handleResolveAlternative.name,
+          );
+      }
     }
   };
 
@@ -215,7 +285,7 @@ function Header__Buttons__Item__ResolveSession({
   if (!isSmallScreen && button.hideOnLargeScreen) return null;
 
   // TODO: add translations for fallbacks
-  if (button.confirmation?.type === 'modal') {
+  if (button.confirmation?.type === 'modal' && !isResolved && !isNoSession) {
     return (
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
@@ -223,9 +293,7 @@ function Header__Buttons__Item__ResolveSession({
             variant="ghost"
             size="fit"
             className="rounded-full"
-            disabled={
-              sessionState.isResolvingSession || !sessionState.session?.isOpened
-            }
+            disabled={isDisabled}
           >
             <DynamicIcon name={button.icon} />
           </Button>
@@ -268,10 +336,10 @@ function Header__Buttons__Item__ResolveSession({
       variant="ghost"
       size="fit"
       className="rounded-full"
-      onClick={handleResolve}
-      disabled={
-        sessionState.isResolvingSession || !sessionState.session?.isOpened
+      onClick={
+        isResolved || isNoSession ? handleResolveAlternative : handleResolve
       }
+      disabled={isDisabled}
     >
       <DynamicIcon name={button.icon} />
     </Button>

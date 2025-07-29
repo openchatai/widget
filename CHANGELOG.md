@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.95
+
+### Patch Changes
+
+- add `behaviorBeforeSessionCreation` and `behaviorIfSessionIsResolved` for the `resolve-session` header button
+
 ## 3.0.94
 
 ### Patch Changes
