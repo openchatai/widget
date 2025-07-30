@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.96
+
+### Patch Changes
+
+- add `WidgetConfig.inline`
+
 ## 3.0.95
 
 ### Patch Changes

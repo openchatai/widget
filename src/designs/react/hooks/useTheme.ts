@@ -19,10 +19,18 @@ const DEFAULTS = {
  */
 export function useTheme() {
   const { isSmallScreen } = useIsSmallScreen();
-  const { theme } = useConfig();
+  const { theme, inline } = useConfig();
+
+  const withInlineDefault = (v: string) => {
+    return inline ? '100%' : v;
+  };
 
   const withSmallScreenDefault = (target: 'w' | 'h', v: string) => {
     return isSmallScreen ? `100dv${target}` : v;
+  };
+
+  const withDefaults = (target: 'w' | 'h', v: string) => {
+    return withInlineDefault(withSmallScreenDefault(target, v));
   };
 
   const widgetTrigger = {
@@ -75,41 +83,26 @@ export function useTheme() {
     },
     screens: {
       welcome: {
-        width: withSmallScreenDefault(
-          'w',
-          theme?.screens?.welcome?.width ?? '400px',
-        ),
+        width: withDefaults('w', theme?.screens?.welcome?.width ?? '400px'),
         // By setting minHeight to 1px, a nice animation will play from 1px to the dynamic height of the content of the screen
-        minHeight: withSmallScreenDefault(
+        minHeight: withDefaults(
           'h',
           theme?.screens?.welcome?.minHeight ?? '1px',
         ),
       },
       sessions: {
-        width: withSmallScreenDefault(
-          'w',
-          theme?.screens?.sessions?.width ?? '450px',
-        ),
-        height: withSmallScreenDefault(
-          'h',
-          theme?.screens?.sessions?.height ?? '600px',
-        ),
+        width: withDefaults('w', theme?.screens?.sessions?.width ?? '450px'),
+        height: withDefaults('h', theme?.screens?.sessions?.height ?? '600px'),
       },
       chat: {
-        width: withSmallScreenDefault(
-          'w',
-          theme?.screens?.chat?.width ?? '525px',
-        ),
-        height: withSmallScreenDefault(
-          'h',
-          theme?.screens?.chat?.height ?? '700px',
-        ),
+        width: withDefaults('w', theme?.screens?.chat?.width ?? '525px'),
+        height: withDefaults('h', theme?.screens?.chat?.height ?? '700px'),
         withCanvas: {
-          width: withSmallScreenDefault(
+          width: withDefaults(
             'w',
             theme?.screens?.chat?.withCanvas?.width ?? 'min(1050px, 100vw)',
           ),
-          height: withSmallScreenDefault(
+          height: withDefaults(
             'h',
             theme?.screens?.chat?.withCanvas?.height ?? 'min(800px, 100vh)',
           ),
@@ -128,7 +121,7 @@ export function useTheme() {
     // Subtract the offset.bottom twice so that it adds a bit of padding to the top
     // Subtract the distance between the trigger and the widget content container
     // Subtract the invisible padding of the trigger (for the wobble effect)
-    maxHeight: withSmallScreenDefault(
+    maxHeight: withDefaults(
       'h',
       `calc(
         100vh 
@@ -138,7 +131,7 @@ export function useTheme() {
       )`,
     ),
     // Subtract the offset.right twice so that it adds a bit of padding to the left
-    maxWidth: withSmallScreenDefault(
+    maxWidth: withDefaults(
       'w',
       `calc(
         100vw 
@@ -146,7 +139,7 @@ export function useTheme() {
       )`,
     ),
 
-    minHeight: withSmallScreenDefault(
+    minHeight: withDefaults(
       'h',
       `min(
         ${themeWithFallbacks.screens.welcome.minHeight}, 
@@ -154,7 +147,7 @@ export function useTheme() {
         ${themeWithFallbacks.screens.chat.height}
       )`,
     ),
-    minWidth: withSmallScreenDefault(
+    minWidth: withDefaults(
       'w',
       `min(
         ${themeWithFallbacks.screens.welcome.width}, 

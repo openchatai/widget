@@ -401,6 +401,17 @@ export interface WidgetConfig {
    */
   sessionCustomData?: Record<string, unknown>;
   /**
+   * If this is set to `true`:
+   * 1. The widget content will fill it's parent element.
+   * 2. The content will always be open.
+   * 3. The widget trigger will not be visible.
+   *
+   * This is useful if you want to embed the widget in a parent element and have it always open.
+   *
+   * @default false
+   */
+  inline?: boolean;
+  /**
    * An apiUrl to override production backend.
    * This is for us to test the widget locally, you don't need to play with this option 😊.
    * @default https://api.open.cx

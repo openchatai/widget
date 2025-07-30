@@ -18,7 +18,10 @@ const context = createContext<WidgetTriggerCtx | null>(null);
 
 export function WidgetTriggerProvider({ children }: { children: ReactNode }) {
   const config = useConfig();
-  const [isOpen, setIsOpen] = useState(config.isOpen ?? false);
+  const [isOpen, setIsOpen] = useState(() => {
+    if (config.inline) return true;
+    return config.isOpen ?? false;
+  });
 
   useEffect(() => {
     setIsOpen((prev) => config.isOpen ?? prev);

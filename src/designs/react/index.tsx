@@ -14,11 +14,11 @@ import {
 import { BotOrAgentResponse } from './components/custom-components/BotOrAgentTextResponse.component';
 import { FallbackComponent } from './components/custom-components/Fallback.component';
 import { BotLoadingComponent } from './components/custom-components/Loading.component';
-import { WidgetPopoverContent } from './WidgetPopoverContent';
+import { WidgetContent, WidgetPopoverContent } from './WidgetPopoverContent';
 import { WidgetPopoverTrigger } from './WidgetPopoverTrigger';
 import { WidgetPopoverAnchor } from './WidgetPopoverAnchor';
 
-function WidgetTriggerAndContent() {
+function WidgetPopoverTriggerAndContent() {
   const { isOpen, setIsOpen } = useWidgetTrigger();
 
   return (
@@ -78,7 +78,11 @@ function WidgetWrapper({
       loadingComponent={loadingComponent}
     >
       <WidgetTriggerProvider>
-        <WidgetTriggerAndContent />
+        {options.inline ? (
+          <WidgetContent />
+        ) : (
+          <WidgetPopoverTriggerAndContent />
+        )}
       </WidgetTriggerProvider>
     </WidgetProvider>
   );

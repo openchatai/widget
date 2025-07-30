@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { useWidget } from '../../../headless/react';
+import { useConfig, useWidget } from '../../../headless/react';
 
 export function useWidgetContentHeight() {
   const { contentIframeRef } = useWidget();
+  const { inline } = useConfig();
   /**
    * This is the element that we will observe for height changes
    */
@@ -20,7 +21,7 @@ export function useWidgetContentHeight() {
           const height = observedElement.offsetHeight;
           contentRoot.style.setProperty(
             '--opencx-widget-height',
-            `${height.toFixed(1)}px`,
+            inline ? '100%' : `${height.toFixed(1)}px`,
           );
         });
       });
@@ -31,7 +32,7 @@ export function useWidgetContentHeight() {
         observer.unobserve(observedElement);
       };
     }
-  }, [contentIframeRef]);
+  }, [contentIframeRef, inline]);
 
   return { observedElementRef };
 }

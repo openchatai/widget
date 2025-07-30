@@ -1,21 +1,22 @@
 import { useEffect } from 'react';
 import { useIsSmallScreen } from './useIsSmallScreen';
-import { useWidget } from '../../../headless/react';
+import { useConfig, useWidget } from '../../../headless/react';
 
 export function useSetWidgetSizeFn() {
   const { contentIframeRef } = useWidget();
+  const { inline } = useConfig();
 
   return {
     setWidth: (width: string) => {
       contentIframeRef?.current?.style.setProperty(
         '--opencx-widget-width',
-        width,
+        inline ? '100%' : width,
       );
     },
     setHeight: (height: string) => {
       contentIframeRef?.current?.style.setProperty(
         '--opencx-widget-height',
-        height,
+        inline ? '100%' : height,
       );
     },
   };
