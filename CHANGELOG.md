@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.97
+
+### Patch Changes
+
+- fix: scope contact jwt caching by org
+
 ## 3.0.96
 
 ### Patch Changes

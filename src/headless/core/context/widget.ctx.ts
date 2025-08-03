@@ -43,7 +43,7 @@ export class WidgetCtx {
 
     this.config = config;
     this.api = new ApiCaller({ config });
-    this.storageCtx = storage ? new StorageCtx({ storage }) : undefined;
+    this.storageCtx = storage ? new StorageCtx({ storage, config }) : undefined;
     this.modes = modes;
 
     this.contactCtx = new ContactCtx({
