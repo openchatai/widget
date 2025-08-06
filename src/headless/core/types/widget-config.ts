@@ -412,6 +412,14 @@ export interface WidgetConfig {
    */
   inline?: boolean;
   /**
+   * This shows when the AI's response might have solved the user's issue.
+   * The prompt shows as two buttons: "This was helpful" and "I need more help".
+   */
+  thisWasHelpfulOrNot?: {
+    /** @default true */
+    enabled?: boolean;
+  };
+  /**
    * An apiUrl to override production backend.
    * This is for us to test the widget locally, you don't need to play with this option 😊.
    * @default https://api.open.cx

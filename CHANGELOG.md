@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.98
+
+### Patch Changes
+
+- add `WidgetConfig.thisWasHelpfulOrNot`
+
 ## 3.0.97
 
 ### Patch Changes

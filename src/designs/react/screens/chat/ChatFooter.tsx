@@ -385,7 +385,8 @@ function SessionClosedSection() {
 }
 
 export function ChatFooter() {
-  const { initialQuestions, initialQuestionsPosition } = useConfig();
+  const { initialQuestions, initialQuestionsPosition, thisWasHelpfulOrNot } =
+    useConfig();
   const { sessionState } = useSessions();
   const { messagesState } = useMessages();
 
@@ -417,9 +418,10 @@ export function ChatFooter() {
                 exit: { height: 0 },
               }}
             >
-              {messagesState.lastAIResMightSolveUserIssue && (
-                <MightSolveUserIssueSuggestedReplies />
-              )}
+              {messagesState.lastAIResMightSolveUserIssue &&
+                thisWasHelpfulOrNot?.enabled !== false && (
+                  <MightSolveUserIssueSuggestedReplies />
+                )}
 
               {noMessages &&
                 initialQuestions &&
