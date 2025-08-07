@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.99
+
+### Patch Changes
+
+- add turkish locale
+
 ## 3.0.98
 
 ### Patch Changes
