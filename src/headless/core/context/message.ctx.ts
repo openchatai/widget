@@ -65,42 +65,44 @@ export class MessageCtx {
     customData?: SendMessageDto['custom_data'];
     exitModePrompt?: string;
   }): Promise<void> => {
-    /* ------------------------------------------------------ */
-    /*         Prevent sending if there is no content         */
-    /* ------------------------------------------------------ */
-    if (
-      !input.content.trim() &&
-      (!input.attachments || input.attachments.length === 0)
-    ) {
-      console.warn('Cannot send an empty message of no content or attachments');
-      return;
-    }
-    /* ------------------------------------------------------ */
-    /*        Prevent sending while waiting for AI res        */
-    /* ------------------------------------------------------ */
-    const isSending = this.state.get().isSendingMessage;
-    const isAssignedToAI =
-      this.sessionCtx.sessionState.get().session?.assignee.kind === 'ai';
-    const _messages = this.state.get().messages;
-    const lastMessage =
-      _messages.length > 0 ? _messages[_messages.length - 1] : undefined;
-    if (
-      (isAssignedToAI && isSending) ||
-      // If last message is from user, then bot response did not arrive yet
-      (isAssignedToAI && lastMessage?.type === 'FROM_USER')
-    ) {
-      console.warn('Cannot send messages while awaiting AI response');
-      return;
-    }
-
-    this.sendMessageAbortController = new AbortController();
-
-    /* ------------------------------------------------------ */
-    /*      Clear last AI response might solve user issue     */
-    /* ------------------------------------------------------ */
-    this.state.setPartial({ lastAIResMightSolveUserIssue: false });
-
     try {
+      /* ------------------------------------------------------ */
+      /*         Prevent sending if there is no content         */
+      /* ------------------------------------------------------ */
+      if (
+        !input.content.trim() &&
+        (!input.attachments || input.attachments.length === 0)
+      ) {
+        console.warn(
+          'Cannot send an empty message of no content or attachments',
+        );
+        return;
+      }
+      /* ------------------------------------------------------ */
+      /*        Prevent sending while waiting for AI res        */
+      /* ------------------------------------------------------ */
+      const isSending = this.state.get().isSendingMessage;
+      const isAssignedToAI =
+        this.sessionCtx.sessionState.get().session?.assignee.kind === 'ai';
+      const _messages = this.state.get().messages;
+      const lastMessage =
+        _messages.length > 0 ? _messages[_messages.length - 1] : undefined;
+      if (
+        (isAssignedToAI && isSending) ||
+        // If last message is from user, then bot response did not arrive yet
+        (isAssignedToAI && lastMessage?.type === 'FROM_USER')
+      ) {
+        console.warn('Cannot send messages while awaiting AI response');
+        return;
+      }
+
+      this.sendMessageAbortController = new AbortController();
+
+      /* ------------------------------------------------------ */
+      /*      Clear last AI response might solve user issue     */
+      /* ------------------------------------------------------ */
+      this.state.setPartial({ lastAIResMightSolveUserIssue: false });
+
       this.state.setPartial({ isSendingMessage: true });
       /* ------------------------------------------------------ */
       /*     Optimistically add message to rendered messages    */
