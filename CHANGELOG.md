@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 3.0.100
+
+### Patch Changes
+
+- switch to `neutral` palette
+
 ## 3.0.99
 
 ### Patch Changes
