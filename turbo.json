@@ -1,0 +1,34 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["*"],
+  "ui": "stream",
+  "globalDependencies": [".env"],
+  "tasks": {
+    "clean": {},
+    "clean:dist": {},
+    "build": {
+      "persistent": false,
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "dist-embed/**"]
+    },
+    "type-check": {
+      "persistent": false,
+      "dependsOn": ["build"]
+    },
+    "test": {
+      "persistent": false,
+      "dependsOn": ["build"]
+    },
+    "dev:prepare": {
+      "persistent": false,
+      "dependsOn": [
+        "@opencx/widget-core#build",
+        "@opencx/widget-react-headless#build"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "dependsOn": ["dev:prepare"]
+    }
+  }
+}

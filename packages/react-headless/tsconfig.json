@@ -1,0 +1,6 @@
+{
+  "extends": "@opencx/tsconfig/tsconfig.base.json",
+  "compilerOptions": {
+    "resolveJsonModule": true
+  }
+}

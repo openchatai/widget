@@ -1,0 +1,50 @@
+{
+  "name": "@opencx/widget-core",
+  "private": false,
+  "version": "3.0.100",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openchatai/widget"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules dist .turbo",
+    "clean:dist": "rm -rf dist .turbo",
+    "build": "vite build",
+    "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/headless/core/api/schema.ts && prettier --write ./src/headless/core/api/schema.ts",
+    "test": "vitest run",
+    "cs": "changeset",
+    "csv": "changeset version",
+    "csp": "changeset publish",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepublishOnly": "pnpm clean && pnpm test && pnpm type-check && pnpm build"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "dependencies": {
+    "lodash.isequal": "^4.5.0",
+    "openapi-fetch": "^0.13.4",
+    "uuid": "^11.0.4"
+  },
+  "devDependencies": {
+    "@opencx/eslint-config": "workspace:*",
+    "@opencx/tsconfig": "workspace:*",
+    "@types/lodash.isequal": "^4.5.8",
+    "lucide": "^0.525.0",
+    "openapi-typescript": "^7.5.2"
+  },
+  "peerDependencies": {
+    "@types/react": ">=18 <20",
+    "@types/react-dom": ">=18 <20"
+  }
+}

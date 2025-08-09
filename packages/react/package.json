@@ -1,0 +1,76 @@
+{
+  "name": "@opencx/widget-react",
+  "private": false,
+  "version": "3.0.100",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openchatai/widget"
+  },
+  "scripts": {
+    "clean": "rm -rf node_modules dist .turbo",
+    "clean:dist": "rm -rf dist dist-embed .turbo",
+    "dev": "vite --host",
+    "build:lib": "vite build -c vite.config.ts",
+    "build:embed": "vite build -c vite.embed.config.ts",
+    "build": "pnpm build:lib && pnpm build:embed",
+    "test": "vitest run",
+    "cs": "changeset",
+    "csv": "changeset version",
+    "csp": "changeset publish",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "prepublishOnly": "pnpm clean && pnpm test && pnpm type-check && pnpm build"
+  },
+  "files": [
+    "dist",
+    "dist-embed"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "dependencies": {
+    "@opencx/widget-core": "workspace:*",
+    "@opencx/widget-react-headless": "workspace:*",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.1.5",
+    "@radix-ui/react-dropdown-menu": "^2.1.4",
+    "@radix-ui/react-popover": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.3.30",
+    "lucide-react": "^0.436.0",
+    "react-dropzone": "^14.3.5",
+    "tinycolor2": "^1.6.0",
+    "zod": "^3.23.8",
+    "react-markdown": "^9.0.1",
+    "react-use": "^17.5.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.0",
+    "tailwind-merge": "^2.4.0",
+    "class-variance-authority": "^0.7.0",
+    "@uiw/react-iframe": "^1.0.3"
+  },
+  "peerDependencies": {
+    "@types/react": ">=18 <20",
+    "@types/react-dom": ">=18 <20",
+    "react": ">=18 <20",
+    "react-dom": ">=18 <20"
+  },
+  "devDependencies": {
+    "@opencx/eslint-config": "workspace:*",
+    "@opencx/tsconfig": "workspace:*",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/tinycolor2": "^1.4.6",
+    "tailwindcss": "^3.4.6",
+    "tailwindcss-animate": "^1.0.7",
+    "postcss": "^8.4.41"
+  }
+}

@@ -1,0 +1,433 @@
+import { AnimatePresence } from 'framer-motion';
+import { ChevronLeftIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  isExhaustive,
+  type HeaderButtonU,
+  type SafeExtract,
+  type ScreenU,
+} from '@opencx/widget-core';
+import {
+  useConfig,
+  usePreludeData,
+  useSessions,
+  useWidget,
+  useWidgetRouter,
+  useWidgetTrigger,
+  useDocumentDir,
+} from '@opencx/widget-react-headless';
+import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
+import { useSetWidgetSizeFn } from '../hooks/useSetWidgetSize';
+import { useTheme } from '../hooks/useTheme';
+import { dc } from '../utils/data-component';
+import { Button } from './lib/button';
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './lib/dialog';
+import { DynamicIcon } from './lib/DynamicIcon';
+import { MotionDiv } from './lib/MotionDiv';
+import { Skeleton } from './lib/skeleton';
+import { cn } from './lib/utils/cn';
+
+function useGetHeaderTitle() {
+  const { data } = usePreludeData();
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
+  const { textContent } = useConfig();
+
+  const override = (() => {
+    switch (screen) {
+      case 'chat':
+        return textContent?.chatScreen?.headerTitle;
+      case 'sessions':
+        return textContent?.sessionsScreen?.headerTitle;
+      case 'welcome':
+        return undefined;
+      default:
+        isExhaustive(screen, useGetHeaderTitle.name);
+        return undefined;
+    }
+  })();
+
+  return override ?? data?.data?.organizationName ?? 'Chat';
+}
+
+function useGetHeaderDataComponentProp(
+  screen: ScreenU,
+): ReturnType<typeof dc> | undefined {
+  switch (screen) {
+    case 'chat':
+      return dc('chat/header');
+    case 'sessions':
+      return dc('sessions/header');
+    case 'welcome':
+      return undefined;
+    default:
+      isExhaustive(screen, useGetHeaderTitle.name);
+      return undefined;
+  }
+}
+
+function Header__BackToSessionsScreenButton() {
+  const { router } = useConfig();
+  const {
+    routerState: { screen },
+    toSessionsScreen,
+  } = useWidgetRouter();
+
+  if (screen !== 'chat') return null;
+  if (router?.chatScreenOnly) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="fit"
+      className="rounded-full"
+      onClick={toSessionsScreen}
+    >
+      <ChevronLeftIcon className="size-4" />
+    </Button>
+  );
+}
+
+function Header__Buttons__Item__CloseWidget({
+  button,
+}: {
+  button: SafeExtract<HeaderButtonU, { functionality: 'close-widget' }>;
+}) {
+  const { setIsOpen } = useWidgetTrigger();
+  const { isSmallScreen } = useIsSmallScreen();
+
+  if (isSmallScreen && button.hideOnSmallScreen) return null;
+  if (!isSmallScreen && button.hideOnLargeScreen) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="fit"
+      className="rounded-full"
+      onClick={() => setIsOpen(false)}
+    >
+      <DynamicIcon name={button.icon} />
+    </Button>
+  );
+}
+
+function Header__Buttons__Item__ExpandShrink({
+  button,
+}: {
+  button: SafeExtract<HeaderButtonU, { functionality: 'expand-shrink' }>;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
+  const { isSmallScreen } = useIsSmallScreen();
+  const { theme } = useTheme();
+  const { setWidth, setHeight } = useSetWidgetSizeFn();
+
+  if (screen !== 'chat' && screen !== 'sessions') return null;
+
+  const screenHeight = (() => {
+    switch (screen) {
+      case 'chat':
+        return theme.screens.chat.height;
+      case 'sessions':
+        return theme.screens.sessions.height;
+      default:
+        isExhaustive(screen, Header__Buttons__Item__ExpandShrink.name);
+        return theme.screens.chat.height;
+    }
+  })();
+  const screenWidth = (() => {
+    switch (screen) {
+      case 'chat':
+        return theme.screens.chat.width;
+      case 'sessions':
+        return theme.screens.sessions.width;
+      default:
+        isExhaustive(screen, Header__Buttons__Item__ExpandShrink.name);
+        return theme.screens.chat.width;
+    }
+  })();
+
+  const handleClick = () => {
+    setExpanded((prev) => {
+      const isExpanded = !prev;
+      setHeight(isExpanded ? '100vh' : screenHeight);
+      setWidth(isExpanded ? `max(40vw, ${screenWidth})` : screenWidth);
+
+      return isExpanded;
+    });
+  };
+
+  if (isSmallScreen && button.hideOnSmallScreen) return null;
+  if (!isSmallScreen && button.hideOnLargeScreen) return null;
+
+  return (
+    <Button
+      variant="ghost"
+      size="fit"
+      className="rounded-full"
+      onClick={handleClick}
+    >
+      <DynamicIcon
+        name={button.icon || (expanded ? button.shrinkIcon : button.expandIcon)}
+      />
+    </Button>
+  );
+}
+
+function Header__Buttons__Item__ResolveSession({
+  button,
+}: {
+  button: SafeExtract<HeaderButtonU, { functionality: 'resolve-session' }>;
+}) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { widgetCtx } = useWidget();
+  const { setIsOpen } = useWidgetTrigger();
+  const { resolveSession, sessionState } = useSessions();
+  const { isSmallScreen } = useIsSmallScreen();
+
+  const isNoSession = !sessionState.session;
+  const isResolved = sessionState.session?.isOpened === false;
+  const onResolved: NonNullable<typeof button.onResolved> =
+    button.onResolved || 'stay-in-chat';
+  const behaviorBeforeSessionCreation: NonNullable<
+    typeof button.behaviorBeforeSessionCreation
+  > = button.behaviorBeforeSessionCreation || 'disabled';
+  const behaviorIfSessionIsResolved: NonNullable<
+    typeof button.behaviorIfSessionIsResolved
+  > = button.behaviorIfSessionIsResolved || 'disabled';
+
+  const isDisabled = (() => {
+    if (sessionState.isResolvingSession) return true;
+    if (isNoSession && behaviorBeforeSessionCreation === 'disabled')
+      return true;
+    if (isResolved && behaviorIfSessionIsResolved === 'disabled') return true;
+    return false;
+  })();
+
+  const handleResolve = async () => {
+    const { success, error } = await resolveSession();
+    setIsDialogOpen(false);
+    if (!success) return console.error(error);
+
+    switch (onResolved) {
+      case 'stay-in-chat':
+        return;
+      case 'close-widget':
+        setIsOpen(false);
+        break;
+      case 'reset-chat':
+        widgetCtx.resetChat();
+        break;
+      case 'reset-chat-and-close-widget':
+        setIsOpen(false);
+        widgetCtx.resetChat();
+        break;
+      default:
+        isExhaustive(onResolved, Header__Buttons__Item__ResolveSession.name);
+        break;
+    }
+  };
+
+  const handleResolveAlternative = () => {
+    if (isNoSession) {
+      switch (behaviorBeforeSessionCreation) {
+        case 'disabled':
+          return;
+        case 'close-widget':
+          setIsOpen(false);
+          break;
+        default:
+          isExhaustive(
+            behaviorBeforeSessionCreation,
+            handleResolveAlternative.name,
+          );
+      }
+    }
+
+    if (isResolved) {
+      switch (behaviorIfSessionIsResolved) {
+        case 'disabled':
+          return;
+        case 'close-widget':
+          setIsOpen(false);
+          break;
+        case 'reset-chat':
+          widgetCtx.resetChat();
+          break;
+        case 'reset-chat-and-close-widget':
+          setIsOpen(false);
+          widgetCtx.resetChat();
+          break;
+        default:
+          isExhaustive(
+            behaviorIfSessionIsResolved,
+            handleResolveAlternative.name,
+          );
+      }
+    }
+  };
+
+  if (isSmallScreen && button.hideOnSmallScreen) return null;
+  if (!isSmallScreen && button.hideOnLargeScreen) return null;
+
+  // TODO: add translations for fallbacks
+  if (button.confirmation?.type === 'modal' && !isResolved && !isNoSession) {
+    return (
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTrigger asChild>
+          <Button
+            variant="ghost"
+            size="fit"
+            className="rounded-full"
+            disabled={isDisabled}
+          >
+            <DynamicIcon name={button.icon} />
+          </Button>
+        </DialogTrigger>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {button.confirmation.title || 'Close conversation'}
+            </DialogTitle>
+          </DialogHeader>
+          <DialogBody>
+            <DialogDescription>
+              {button.confirmation.description ||
+                'Are you sure you want to close this conversation?'}
+            </DialogDescription>
+          </DialogBody>
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setIsDialogOpen(false)}
+              disabled={sessionState.isResolvingSession}
+            >
+              {button.confirmation.cancelButtonText || 'No'}
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleResolve}
+              disabled={sessionState.isResolvingSession}
+            >
+              {button.confirmation.confirmButtonText || 'Yes'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  return (
+    <Button
+      variant="ghost"
+      size="fit"
+      className="rounded-full"
+      onClick={
+        isResolved || isNoSession ? handleResolveAlternative : handleResolve
+      }
+      disabled={isDisabled}
+    >
+      <DynamicIcon name={button.icon} />
+    </Button>
+  );
+}
+
+function Header__Buttons__Item({ button }: { button: HeaderButtonU }) {
+  switch (button.functionality) {
+    case 'close-widget':
+      return <Header__Buttons__Item__CloseWidget button={button} />;
+    case 'expand-shrink':
+      return <Header__Buttons__Item__ExpandShrink button={button} />;
+    case 'resolve-session':
+      return <Header__Buttons__Item__ResolveSession button={button} />;
+    default:
+      isExhaustive(button, Header__Buttons__Item.name);
+      return null;
+  }
+}
+
+const defaultCloseWidgetButton = {
+  functionality: 'close-widget',
+  hideOnLargeScreen: true,
+  icon: 'X',
+} satisfies HeaderButtonU;
+
+export function Header__Buttons() {
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
+  const { headerButtons } = useConfig();
+
+  const buttons =
+    screen === 'chat'
+      ? headerButtons?.chatScreen
+      : screen === 'sessions'
+        ? headerButtons?.sessionsScreen
+        : [];
+
+  if (!buttons || buttons.length === 0) {
+    return <Header__Buttons__Item button={defaultCloseWidgetButton} />;
+  }
+
+  return (
+    <>
+      {buttons.map((button) => (
+        <Header__Buttons__Item
+          key={`${button.functionality}-${button.icon}`}
+          button={button}
+        />
+      ))}
+    </>
+  );
+}
+
+export function Header() {
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
+  const { isLoading } = usePreludeData();
+  const direction = useDocumentDir();
+
+  const dataComponentProp = useGetHeaderDataComponentProp(screen);
+  const title = useGetHeaderTitle();
+
+  return (
+    <header {...dataComponentProp} className="py-2 px-4 shrink-0">
+      <div dir={direction} className="flex items-center gap-2">
+        <Header__BackToSessionsScreenButton />
+        <div
+          className={cn(
+            'flex-1 h-8 flex items-center',
+            screen === 'sessions' && 'pl-2',
+          )}
+        >
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <MotionDiv key="skeleton" snapExit>
+                <Skeleton className="h-5 w-1/2" />
+              </MotionDiv>
+            ) : (
+              <MotionDiv key="organization-name">
+                <h2 className="font-semibold">{title}</h2>
+              </MotionDiv>
+            )}
+          </AnimatePresence>
+        </div>
+        <Header__Buttons />
+      </div>
+    </header>
+  );
+}

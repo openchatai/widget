@@ -1,0 +1,3 @@
+{
+  "extends": "@opencx/tsconfig/tsconfig.base.json"
+}
