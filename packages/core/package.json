@@ -18,8 +18,7 @@
     "csp": "changeset publish",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "prepublishOnly": "pnpm clean && pnpm test && pnpm type-check && pnpm build"
+    "format": "prettier --write ."
   },
   "files": [
     "dist"

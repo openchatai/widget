@@ -11,14 +11,8 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**", "dist-embed/**"]
     },
-    "type-check": {
-      "persistent": false,
-      "dependsOn": ["build"]
-    },
-    "test": {
-      "persistent": false,
-      "dependsOn": ["build"]
-    },
+    "type-check": {},
+    "test": {},
     "dev:prepare": {
       "persistent": false,
       "dependsOn": [
