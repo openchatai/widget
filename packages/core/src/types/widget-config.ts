@@ -189,7 +189,7 @@ export interface WidgetConfig {
   /**
    * The language of the widget.
    * Translations are available in the default non-headless widget.
-   * Check available translations in `src/designs/translation`
+   * Check available translations in `packages/react/src/translation`
    * @default en
    */
   language?: string;
