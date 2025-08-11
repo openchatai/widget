@@ -109,12 +109,17 @@ function Header__Buttons__Item__CloseWidget({
   if (isSmallScreen && button.hideOnSmallScreen) return null;
   if (!isSmallScreen && button.hideOnLargeScreen) return null;
 
+  const handleClick = () => {
+    if (button.handleClick) return button.handleClick();
+    setIsOpen(false);
+  };
+
   return (
     <Button
       variant="ghost"
       size="fit"
       className="rounded-full"
-      onClick={() => setIsOpen(false)}
+      onClick={handleClick}
     >
       <DynamicIcon name={button.icon} />
     </Button>

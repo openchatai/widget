@@ -127,6 +127,12 @@ export type HeaderButtonU =
     })
   | (HeaderButtonBase & {
       functionality: 'close-widget';
+      /**
+       * A side effect to be executed when the button is clicked.
+       * This will override the default behavior of closing the widget.
+       * This is useful If opening and closing the widget is externally controlled.
+       */
+      handleClick?: () => void;
     })
   | (HeaderButtonBase & {
       functionality: 'resolve-session';
