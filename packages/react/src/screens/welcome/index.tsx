@@ -14,7 +14,7 @@ import { MotionDiv } from '../../components/lib/MotionDiv';
 import { cn } from '../../components/lib/utils/cn';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
-import { useLocale } from '../../hooks/useLocale';
+import { useTranslation } from '../../hooks/useTranslation';
 import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';
 import { useTheme } from '../../hooks/useTheme';
 import { useWidgetContentHeight } from '../../hooks/useWidgetContentHeight';
@@ -30,7 +30,7 @@ export function WelcomeScreen() {
   const { isSmallScreen } = useIsSmallScreen();
   const config = useConfig();
   const { theme } = useTheme();
-  const locale = useLocale();
+  const locale = useTranslation();
   const { data: preludeData } = usePreludeData();
   const { observedElementRef } = useWidgetContentHeight();
 

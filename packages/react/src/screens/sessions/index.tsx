@@ -22,7 +22,7 @@ import { Skeleton } from '../../components/lib/skeleton';
 import { cn } from '../../components/lib/utils/cn';
 import { MemoizedReactMarkdown } from '../../components/markdown';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
-import { useLocale } from '../../hooks/useLocale';
+import { useTranslation } from '../../hooks/useTranslation';
 import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';
 import { useTheme } from '../../hooks/useTheme';
 import { dc } from '../../utils/data-component';
@@ -107,7 +107,7 @@ function SessionCard({
 }
 
 function SessionsList() {
-  const locale = useLocale();
+  const locale = useTranslation();
   const { toChatScreen } = useWidgetRouter();
   const {
     sessionsState: { data: sessions, isInitialFetchLoading: isLoading },

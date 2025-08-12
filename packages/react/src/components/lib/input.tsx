@@ -1,4 +1,3 @@
-import { useDocumentDir } from '@opencx/widget-react-headless';
 import * as React from 'react';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen.js';
 import { cn } from './utils/cn.js';
@@ -9,12 +8,10 @@ export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     const { isSmallScreen } = useIsSmallScreen();
-    const direction = useDocumentDir();
 
     return (
       <Wobble ref={ref}>
         <input
-          dir={direction}
           type={type}
           className={cn(
             // 16px on mobiles prevents auto-zoom on the input when focused

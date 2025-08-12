@@ -1,6 +1,3 @@
-import { AnimatePresence } from 'framer-motion';
-import { ChevronLeftIcon } from 'lucide-react';
-import React, { useState } from 'react';
 import {
   isExhaustive,
   type HeaderButtonU,
@@ -13,9 +10,11 @@ import {
   useSessions,
   useWidget,
   useWidgetRouter,
-  useWidgetTrigger,
-  useDocumentDir,
+  useWidgetTrigger
 } from '@opencx/widget-react-headless';
+import { AnimatePresence } from 'framer-motion';
+import { ChevronLeftIcon } from 'lucide-react';
+import React, { useState } from 'react';
 import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
 import { useSetWidgetSizeFn } from '../hooks/useSetWidgetSize';
 import { useTheme } from '../hooks/useTheme';
@@ -404,14 +403,13 @@ export function Header() {
     routerState: { screen },
   } = useWidgetRouter();
   const { isLoading } = usePreludeData();
-  const direction = useDocumentDir();
 
   const dataComponentProp = useGetHeaderDataComponentProp(screen);
   const title = useGetHeaderTitle();
 
   return (
     <header {...dataComponentProp} className="py-2 px-4 shrink-0">
-      <div dir={direction} className="flex items-center gap-2">
+      <div className="flex items-center gap-2">
         <Header__BackToSessionsScreenButton />
         <div
           className={cn(

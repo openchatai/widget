@@ -46,6 +46,7 @@ function WidgetPopoverTrigger() {
         zIndex: theme.widgetTrigger.zIndex,
         right: theme.widgetTrigger.offset.right,
         bottom: theme.widgetTrigger.offset.bottom,
+        left: theme.widgetTrigger.offset.left,
 
         // reset iframe defaults
         boxSizing: 'border-box',

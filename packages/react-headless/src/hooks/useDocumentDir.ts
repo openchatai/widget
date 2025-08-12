@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import type { StringOrLiteral } from '@opencx/widget-core';
 
-const useDocumentDir = () => {
+export function useDocumentDir() {
   const [dir, setDir] = useState<StringOrLiteral<'ltr' | 'rtl'>>('ltr');
 
   useEffect(() => {
     const updateDir = () => {
       if (typeof document === 'undefined') return;
-      setDir(window.getComputedStyle(document.body).direction);
+      setDir(
+        window.getComputedStyle((window.top || window).document.body).direction,
+      );
     };
 
     // Set initial direction
@@ -36,7 +38,5 @@ const useDocumentDir = () => {
     };
   }, []);
 
-  return dir;
-};
-
-export { useDocumentDir };
+  return { dir };
+}

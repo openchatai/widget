@@ -1,10 +1,10 @@
 import React from 'react';
-import { useLocale } from '../hooks/useLocale';
+import { useTranslation } from '../hooks/useTranslation';
 import { SuggestedReplyButton } from './SuggestedReplyButton';
 import { dc } from '../utils/data-component';
 
 export function MightSolveUserIssueSuggestedReplies() {
-  const locale = useLocale();
+  const locale = useTranslation();
   const options = [
     locale.get('i-need-more-help'),
     locale.get('this-was-helpful'),

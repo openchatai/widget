@@ -42,10 +42,20 @@ type ThemeOptions = {
   widgetTrigger?: {
     zIndex?: number;
     offset?: {
-      /** number in pixels */
-      right?: number;
-      /** number in pixels */
+      /**
+       * number in pixels
+       */
       bottom?: number;
+      /**
+       * number in pixels
+       * @default if host document direction === "ltr" then 20, otherwise `initial`
+       */
+      right?: number | 'initial';
+      /**
+       * number in pixels
+       * @default if host document direction ===="rtl" then 20, otherwise `initial`
+       */
+      left?: number | 'initial';
     };
     size?: {
       /** number in pixels */

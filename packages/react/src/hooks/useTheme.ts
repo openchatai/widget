@@ -1,7 +1,7 @@
 import type { CSSProperties } from 'react';
 import tc from 'tinycolor2';
 import { isExhaustive, type WidgetConfig } from '@opencx/widget-core';
-import { useConfig } from '@opencx/widget-react-headless';
+import { useConfig, useDocumentDir } from '@opencx/widget-react-headless';
 import { WOBBLE_MAX_MOVEMENT_PIXELS } from '../components/lib/wobble';
 import { useIsSmallScreen } from './useIsSmallScreen';
 
@@ -18,6 +18,7 @@ const DEFAULTS = {
  * @returns The widget config theme with fallback default value
  */
 export function useTheme() {
+  const { dir } = useDocumentDir();
   const { isSmallScreen } = useIsSmallScreen();
   const { theme, inline } = useConfig();
 
@@ -37,13 +38,23 @@ export function useTheme() {
     zIndex: theme?.widgetTrigger?.zIndex ?? 10000000,
     offset: {
       bottom: theme?.widgetTrigger?.offset?.bottom ?? 20,
-      right: theme?.widgetTrigger?.offset?.right ?? 20,
+      right:
+        theme?.widgetTrigger?.offset?.right ?? (dir === 'ltr' ? 20 : 'initial'),
+      left:
+        theme?.widgetTrigger?.offset?.left ?? (dir === 'rtl' ? 20 : 'initial'),
     },
     size: {
       button: theme?.widgetTrigger?.size?.button ?? 48,
       icon: theme?.widgetTrigger?.size?.icon ?? 24,
     },
   } satisfies NonNullable<DeepRequired<WidgetConfig['theme']>>['widgetTrigger'];
+
+  const triggerOffset = (() => {
+    const v =
+      dir === 'ltr' ? widgetTrigger.offset.right : widgetTrigger.offset.left;
+    if (typeof v !== 'number') return 0;
+    return v;
+  })();
 
   const themeWithFallbacks = {
     palette: theme?.palette ?? 'neutral',
@@ -77,8 +88,7 @@ export function useTheme() {
             (theme?.widgetContentContainer?.offset?.side ?? 10),
         align: isSmallScreen
           ? 0
-          : widgetTrigger.offset.right +
-            (theme?.widgetContentContainer?.offset?.align ?? 0),
+          : triggerOffset + (theme?.widgetContentContainer?.offset?.align ?? 0),
       },
     },
     screens: {
@@ -135,7 +145,7 @@ export function useTheme() {
       'w',
       `calc(
         100vw 
-        - ${themeWithFallbacks.widgetTrigger.offset.right * 2}px
+        - ${triggerOffset * 2}px
       )`,
     ),
 

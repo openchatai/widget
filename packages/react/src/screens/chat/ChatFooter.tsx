@@ -1,3 +1,14 @@
+import { type SendMessageDto } from '@opencx/widget-core';
+import {
+  useConfig,
+  useIsAwaitingBotReply,
+  useMessages,
+  useSessions,
+  useUploadFiles,
+  useWidget,
+  useWidgetRouter,
+  type FileWithProgress,
+} from '@opencx/widget-react-headless';
 import { AnimatePresence } from 'framer-motion';
 import {
   AlertCircle,
@@ -14,18 +25,6 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { type SendMessageDto } from '@opencx/widget-core';
-import {
-  useConfig,
-  useIsAwaitingBotReply,
-  useMessages,
-  useSessions,
-  useUploadFiles,
-  useWidget,
-  useWidgetRouter,
-  type FileWithProgress,
-  useDocumentDir,
-} from '@opencx/widget-react-headless';
 import { MightSolveUserIssueSuggestedReplies } from '../../components/MightSolveUserIssueSuggestedReplies';
 import { SuggestedReplyButton } from '../../components/SuggestedReplyButton';
 import { MotionDiv } from '../../components/lib/MotionDiv';
@@ -33,7 +32,7 @@ import { Button } from '../../components/lib/button';
 import { Tooltippy } from '../../components/lib/tooltip';
 import { cn } from '../../components/lib/utils/cn';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
-import { useLocale } from '../../hooks/useLocale';
+import { useTranslation } from '../../hooks/useTranslation';
 import { dc } from '../../utils/data-component';
 
 function FileDisplay({
@@ -134,8 +133,7 @@ function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { sendMessage } = useMessages();
   const { sessionState } = useSessions();
-  const locale = useLocale();
-  const dir = useDocumentDir();
+  const locale = useTranslation();
   const [inputText, setInputText] = useState('');
 
   const {
@@ -268,7 +266,6 @@ function ChatInput() {
             onPaste={handlePaste}
             ref={inputRef}
             id="chat-input"
-            dir={dir}
             value={inputText}
             // Thw `rows` attribute will take effect in browsers that do not support [field-sizing:content;] (Firefox and Safari as of now)
             rows={3}
@@ -294,7 +291,7 @@ function ChatInput() {
             placeholder={locale.get('write-a-message')}
           />
         </div>
-        <div dir={dir} className="gap-2 flex justify-between rtl:text-right">
+        <div className="gap-2 flex justify-between rtl:text-right">
           <Tooltippy
             side="top"
             align="start"
@@ -353,7 +350,7 @@ function SessionClosedSection() {
   const { router } = useConfig();
   const { canCreateNewSession } = useSessions();
   const { toSessionsScreen } = useWidgetRouter();
-  const locale = useLocale();
+  const locale = useTranslation();
 
   return (
     <div className="p-2">
