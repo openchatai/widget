@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.2
+
+### Patch Changes
+
+- add `borderRadius: 100%` for widget iframe
+
 ## 4.0.1
 
 ### Patch Changes

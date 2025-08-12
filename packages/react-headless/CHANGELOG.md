@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.2
+
+### Patch Changes
+
+- add `borderRadius: 100%` for widget iframe
+- Updated dependencies
+  - @opencx/widget-core@4.0.2
+
 ## 4.0.1
 
 ### Patch Changes

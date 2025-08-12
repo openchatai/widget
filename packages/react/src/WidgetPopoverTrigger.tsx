@@ -50,6 +50,9 @@ function WidgetPopoverTrigger() {
         // reset iframe defaults
         boxSizing: 'border-box',
         borderWidth: '0px',
+
+        // A quick fix for the white square background of the iframe when the hosting website switches to dark mode
+        borderRadius: '100%',
       }}
     >
       {cssOverrides && <style>{cssOverrides}</style>}
