@@ -20,7 +20,7 @@ function Portal({ children }: { children: React.ReactNode }) {
 }
 
 function Container() {
-  return <div id={PORTAL_ID} className="absolute size-full top-0 left-0" />;
+  return <div id={PORTAL_ID} className="absolute size-full top-0 start-0" />;
 }
 
 WidgetPortal.Portal = Portal;

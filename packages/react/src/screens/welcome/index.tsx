@@ -95,7 +95,7 @@ export function WelcomeScreen() {
           )}
         >
           {isSmallScreen && (
-            <MotionDiv className="absolute top-6 right-6">
+            <MotionDiv className="absolute top-6 end-6">
               <Button size="selfless" onClick={() => setIsOpen(false)}>
                 <XIcon className="size-4" />
               </Button>
