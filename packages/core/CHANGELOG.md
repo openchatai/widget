@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.3
+
+### Patch Changes
+
+- add rtl support
+
 ## 4.0.2
 
 ### Patch Changes

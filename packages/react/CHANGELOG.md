@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.3
+
+### Patch Changes
+
+- add rtl support
+- Updated dependencies
+  - @opencx/widget-core@4.0.3
+  - @opencx/widget-react-headless@4.0.3
+
 ## 4.0.2
 
 ### Patch Changes
