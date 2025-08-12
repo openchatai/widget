@@ -1,6 +1,6 @@
 import type { TranslationInterface } from './translation.types';
 
-export const enLocale: TranslationInterface = {
+export const enLanguage: TranslationInterface = {
   'write-a-message': 'Write a message...',
   'session-closed-lead': 'Your issue has been resolved!',
   'new-conversation': 'New conversation',

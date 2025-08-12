@@ -1,6 +1,6 @@
 import type { TranslationInterface } from './translation.types';
 
-export const trLocale: TranslationInterface = {
+export const trLanguage: TranslationInterface = {
   'write-a-message': 'Bir mesaj yazın...',
   'session-closed-lead': 'Sorununuz çözüldü!',
   'new-conversation': 'Yeni konuşma',

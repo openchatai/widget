@@ -30,7 +30,7 @@ export function WelcomeScreen() {
   const { isSmallScreen } = useIsSmallScreen();
   const config = useConfig();
   const { theme } = useTheme();
-  const locale = useTranslation();
+  const { t } = useTranslation();
   const { data: preludeData } = usePreludeData();
   const { observedElementRef } = useWidgetContentHeight();
 
@@ -122,12 +122,12 @@ export function WelcomeScreen() {
               dir="auto"
             >
               {config.textContent?.welcomeScreen?.title ||
-                locale.get('welcome-title')}
+                t('welcome-title')}
             </h1>
 
             <p className="text-sm" dir="auto">
               {config.textContent?.welcomeScreen?.description ||
-                locale.get('welcome-description')}
+                t('welcome-description')}
             </p>
           </div>
         </div>
@@ -146,7 +146,7 @@ export function WelcomeScreen() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              placeholder={locale.get('your-name')}
+              placeholder={t('your-name')}
               name="name"
             />
             <Input
@@ -154,7 +154,7 @@ export function WelcomeScreen() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
-              placeholder={locale.get('your-email')}
+              placeholder={t('your-email')}
               name="email"
             />
             {extraDataFields.map((field) => (
@@ -167,7 +167,7 @@ export function WelcomeScreen() {
                     [field]: e.target.value,
                   }))
                 }
-                placeholder={`${field} (${locale.get('optional')})`}
+                placeholder={`${field} (${t('optional')})`}
               />
             ))}
 
@@ -177,8 +177,8 @@ export function WelcomeScreen() {
               size="lg"
             >
               {handleSubmitState.loading
-                ? locale.get('starting-chat')
-                : locale.get('start-chat')}
+                ? t('starting-chat')
+                : t('start-chat')}
               <SendHorizontal className="size-4 rtl:-scale-100" />
             </Button>
           </form>

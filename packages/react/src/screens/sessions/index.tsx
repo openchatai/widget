@@ -107,7 +107,7 @@ function SessionCard({
 }
 
 function SessionsList() {
-  const locale = useTranslation();
+  const { t } = useTranslation();
   const { toChatScreen } = useWidgetRouter();
   const {
     sessionsState: { data: sessions, isInitialFetchLoading: isLoading },
@@ -156,7 +156,7 @@ function SessionsList() {
                       snapExit
                     >
                       <SectionTitle>
-                        {locale.get('closed-conversations')}
+                        {t('closed-conversations')}
                       </SectionTitle>
                       {closedSessions.map((s) => (
                         <SessionCard
@@ -178,7 +178,7 @@ function SessionsList() {
                       className="w-full"
                       onClick={() => toChatScreen()}
                     >
-                      {locale.get('new-conversation')}
+                      {t('new-conversation')}
                     </Button>
                   </div>
                 )}
@@ -187,7 +187,7 @@ function SessionsList() {
               <div className="flex-1 flex flex-col gap-2 items-center">
                 <div className="flex-1 flex items-center justify-center">
                   <p className="text-muted-foreground">
-                    {locale.get('no-conversations-yet')}
+                    {t('no-conversations-yet')}
                   </p>
                 </div>
                 <Button
@@ -197,7 +197,7 @@ function SessionsList() {
                   className="w-full"
                   onClick={() => toChatScreen()}
                 >
-                  {locale.get('new-conversation')}
+                  {t('new-conversation')}
                 </Button>
               </div>
             )}

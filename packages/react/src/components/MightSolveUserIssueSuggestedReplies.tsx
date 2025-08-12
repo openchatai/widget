@@ -4,10 +4,10 @@ import { SuggestedReplyButton } from './SuggestedReplyButton';
 import { dc } from '../utils/data-component';
 
 export function MightSolveUserIssueSuggestedReplies() {
-  const locale = useTranslation();
+  const { t } = useTranslation();
   const options = [
-    locale.get('i-need-more-help'),
-    locale.get('this-was-helpful'),
+    t('i-need-more-help'),
+    t('this-was-helpful'),
   ];
 
   return (

@@ -133,7 +133,7 @@ function ChatInput() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { sendMessage } = useMessages();
   const { sessionState } = useSessions();
-  const locale = useTranslation();
+  const { t } = useTranslation();
   const [inputText, setInputText] = useState('');
 
   const {
@@ -288,7 +288,7 @@ function ChatInput() {
                 handleSubmit();
               }
             }}
-            placeholder={locale.get('write-a-message')}
+            placeholder={t('write-a-message')}
           />
         </div>
         <div className="gap-2 flex justify-between rtl:text-right">
@@ -350,7 +350,7 @@ function SessionClosedSection() {
   const { router } = useConfig();
   const { canCreateNewSession } = useSessions();
   const { toSessionsScreen } = useWidgetRouter();
-  const locale = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <div className="p-2">
@@ -358,7 +358,7 @@ function SessionClosedSection() {
         <div className="pl-2 flex items-center gap-1">
           <CircleCheckIcon className="size-4 text-emerald-600" />
           <h2 className="text-sm font-medium" dir="auto">
-            {locale.get('session-closed-lead')}
+            {t('session-closed-lead')}
           </h2>
         </div>
 
@@ -368,11 +368,11 @@ function SessionClosedSection() {
               onClick={widgetCtx.resetChat}
               className="rounded-2xl w-full"
             >
-              {locale.get('new-conversation')}
+              {t('new-conversation')}
             </Button>
           ) : (
             <Button onClick={toSessionsScreen} className="rounded-2xl w-full">
-              {locale.get('back-to-conversations')}
+              {t('back-to-conversations')}
             </Button>
           )}
         </div>

@@ -1,6 +1,6 @@
 import type { TranslationInterface } from './translation.types';
 
-export const arLocale: TranslationInterface = {
+export const arLanguage: TranslationInterface = {
   'write-a-message': 'اكتب رسالة...',
   'session-closed-lead': 'تم حل مشكلتك!',
   'new-conversation': 'محادثة جديدة',
