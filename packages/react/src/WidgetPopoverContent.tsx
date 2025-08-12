@@ -133,7 +133,7 @@ export function WidgetPopoverContent() {
       sideOffset={theme.widgetContentContainer.offset.side}
       alignOffset={theme.widgetContentContainer.offset.align}
       avoidCollisions={false}
-      asChild
+      // do not use `asChild` as it will mess up setting the zIndex correctly on the top-most div
     >
       <WidgetContent />
     </PopoverPrimitive.Content>

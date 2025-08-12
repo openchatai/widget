@@ -35,7 +35,7 @@ export function useTheme() {
   };
 
   const widgetTrigger = {
-    zIndex: theme?.widgetTrigger?.zIndex ?? 10000000,
+    zIndex: theme?.widgetTrigger?.zIndex ?? 10_000_000,
     offset: {
       bottom: theme?.widgetTrigger?.offset?.bottom ?? 20,
       right:
