@@ -3,11 +3,16 @@ import IFrame from '@uiw/react-iframe';
 import { motion } from 'framer-motion';
 import React from 'react';
 import styles from '../index.css?inline.css';
-import { useConfig, useWidget, useWidgetTrigger } from '@opencx/widget-react-headless';
+import {
+  useConfig,
+  useWidget,
+  useWidgetTrigger,
+} from '@opencx/widget-react-headless';
 import { TooltipProvider } from './components/lib/tooltip';
 import { cn } from './components/lib/utils/cn';
 import { useTheme } from './hooks/useTheme';
 import { RootScreen } from './screens';
+import { useTranslation } from './hooks/useTranslation';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -33,6 +38,7 @@ export function WidgetContent() {
   const { version, contentIframeRef } = useWidget();
   const { cssOverrides, inline } = useConfig();
   const { theme, cssVars, computed } = useTheme();
+  const { dir } = useTranslation();
 
   return (
     <motion.div
@@ -95,20 +101,15 @@ export function WidgetContent() {
         >
           <div
             style={{
-              display: 'contents',
+              ...cssVars,
             }}
+            data-version={version}
+            className={cn(
+              'antialiased font-sans size-full overflow-hidden isolate relative text-secondary-foreground',
+            )}
+            dir={dir}
           >
-            <div
-              style={{
-                ...cssVars,
-              }}
-              data-version={version}
-              className={cn(
-                'antialiased font-sans size-full overflow-hidden isolate relative text-secondary-foreground',
-              )}
-            >
-              <RootScreen />
-            </div>
+            <RootScreen />
           </div>
         </TooltipProvider>
       </IFrame>

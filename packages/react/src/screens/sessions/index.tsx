@@ -101,7 +101,7 @@ function SessionCard({
           </AnimatePresence>
         </div>
       </div>
-      <ChevronRightIcon className="size-4 text-muted-foreground shrink-0" />
+      <ChevronRightIcon className="size-4 text-muted-foreground shrink-0 rtl:-scale-100" />
     </Button>
   );
 }

@@ -89,7 +89,6 @@ export function WelcomeScreen() {
         )}
       >
         <div
-          dir="auto"
           className={cn(
             'flex-1 flex flex-col px-4 py-12 text-start space-y-4 relative z-10',
             'text-primary-foreground',
@@ -111,21 +110,17 @@ export function WelcomeScreen() {
                 className="h-8 w-auto object-contain"
               />
             ) : (
-              <h2 className="font-bold text-sm" dir="auto">
+              <h2 className="font-bold text-sm">
                 {preludeData?.data?.organizationName}
               </h2>
             )}
           </div>
           <div className="space-y-2">
-            <h1
-              className="text-[1.75rem] font-semibold tracking-tight leading-none"
-              dir="auto"
-            >
-              {config.textContent?.welcomeScreen?.title ||
-                t('welcome-title')}
+            <h1 className="text-[1.75rem] font-semibold tracking-tight leading-none">
+              {config.textContent?.welcomeScreen?.title || t('welcome-title')}
             </h1>
 
-            <p className="text-sm" dir="auto">
+            <p className="text-sm">
               {config.textContent?.welcomeScreen?.description ||
                 t('welcome-description')}
             </p>
@@ -139,7 +134,6 @@ export function WelcomeScreen() {
             'border shadow',
             'rounded-3xl',
           )}
-          dir="auto"
         >
           <form onSubmit={handleSubmit} className="space-y-2">
             <Input
@@ -176,9 +170,7 @@ export function WelcomeScreen() {
               className="w-full"
               size="lg"
             >
-              {handleSubmitState.loading
-                ? t('starting-chat')
-                : t('start-chat')}
+              {handleSubmitState.loading ? t('starting-chat') : t('start-chat')}
               <SendHorizontal className="size-4 rtl:-scale-100" />
             </Button>
           </form>

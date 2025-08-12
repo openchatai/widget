@@ -92,7 +92,7 @@ function Header__BackToSessionsScreenButton() {
       className="rounded-full"
       onClick={toSessionsScreen}
     >
-      <ChevronLeftIcon className="size-4" />
+      <ChevronLeftIcon className="size-4 rtl:-scale-100" />
     </Button>
   );
 }

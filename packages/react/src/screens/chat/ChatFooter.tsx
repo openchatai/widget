@@ -277,7 +277,6 @@ function ChatInput() {
               allFiles.length === 0 && 'pt-1',
               'bg-transparent outline-none',
               'placeholder:text-muted-foreground',
-              'rtl:placeholder:text-right',
               // 16px on mobiles prevents auto-zoom on the input when focused
               isSmallScreen ? 'text-[16px]' : 'text-sm',
             )}
@@ -291,7 +290,7 @@ function ChatInput() {
             placeholder={t('write-a-message')}
           />
         </div>
-        <div className="gap-2 flex justify-between rtl:text-right">
+        <div className="gap-2 flex justify-between">
           <Tooltippy
             side="top"
             align="start"
@@ -357,7 +356,7 @@ function SessionClosedSection() {
       <div className="p-2 bg-muted rounded-3xl space-y-2">
         <div className="pl-2 flex items-center gap-1">
           <CircleCheckIcon className="size-4 text-emerald-600" />
-          <h2 className="text-sm font-medium" dir="auto">
+          <h2 className="text-sm font-medium">
             {t('session-closed-lead')}
           </h2>
         </div>

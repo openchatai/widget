@@ -18,7 +18,7 @@ export function useTranslation() {
     return {
       t: (key: TranslationKeysU) => getTranslation(key, language),
       language: language,
-      dir: language === 'ar',
+      dir: language === 'ar' ? 'rtl' : 'ltr',
       hostDocumentDir,
     };
   }, [config.language, hostDocumentDir]);
