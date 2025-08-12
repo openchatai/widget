@@ -354,11 +354,9 @@ function SessionClosedSection() {
   return (
     <div className="p-2">
       <div className="p-2 bg-muted rounded-3xl space-y-2">
-        <div className="pl-2 flex items-center gap-1">
+        <div className="ps-2 flex items-center gap-1">
           <CircleCheckIcon className="size-4 text-emerald-600" />
-          <h2 className="text-sm font-medium">
-            {t('session-closed-lead')}
-          </h2>
+          <h2 className="text-sm font-medium">{t('session-closed-lead')}</h2>
         </div>
 
         <div>

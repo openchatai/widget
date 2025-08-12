@@ -10,7 +10,7 @@ import {
   useSessions,
   useWidget,
   useWidgetRouter,
-  useWidgetTrigger
+  useWidgetTrigger,
 } from '@opencx/widget-react-headless';
 import { AnimatePresence } from 'framer-motion';
 import { ChevronLeftIcon } from 'lucide-react';
@@ -414,7 +414,7 @@ export function Header() {
         <div
           className={cn(
             'flex-1 h-8 flex items-center',
-            screen === 'sessions' && 'pl-2',
+            screen === 'sessions' && 'ps-2',
           )}
         >
           <AnimatePresence mode="wait">

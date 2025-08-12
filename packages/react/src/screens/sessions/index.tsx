@@ -29,7 +29,7 @@ import { dc } from '../../utils/data-component';
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <p className="pl-4 text-xs text-muted-foreground/75 uppercase font-semibold tracking-tight">
+    <p className="ps-4 text-xs text-muted-foreground/75 uppercase font-semibold tracking-tight">
       {children}
     </p>
   );
@@ -59,7 +59,7 @@ function SessionCard({
       variant="ghost"
       size="lg"
       className={cn(
-        'rounded-full p-2 pr-4 flex text-start justify-between w-full whitespace-normal',
+        'rounded-full p-2 pe-4 flex text-start justify-between w-full whitespace-normal',
         className,
       )}
       onClick={() => toChatScreen(session.id)}
@@ -155,9 +155,7 @@ function SessionsList() {
                       delay={0.2}
                       snapExit
                     >
-                      <SectionTitle>
-                        {t('closed-conversations')}
-                      </SectionTitle>
+                      <SectionTitle>{t('closed-conversations')}</SectionTitle>
                       {closedSessions.map((s) => (
                         <SessionCard
                           key={s.id}
