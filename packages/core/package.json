@@ -11,7 +11,7 @@
     "clean": "rm -rf node_modules dist .turbo",
     "clean:dist": "rm -rf dist .turbo",
     "build": "vite build",
-    "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/headless/core/api/schema.ts && prettier --write ./src/headless/core/api/schema.ts",
+    "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/api/schema.ts && prettier --write ./src/api/schema.ts",
     "test": "vitest run",
     "cs": "changeset",
     "csv": "changeset version",
