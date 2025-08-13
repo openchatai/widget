@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.4
+
+### Patch Changes
+
+- fix portal position
+- Updated dependencies
+  - @opencx/widget-core@4.0.4
+
 ## 4.0.3
 
 ### Patch Changes

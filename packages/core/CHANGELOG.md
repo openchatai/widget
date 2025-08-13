@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.4
+
+### Patch Changes
+
+- fix portal position
+
 ## 4.0.3
 
 ### Patch Changes

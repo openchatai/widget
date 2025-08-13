@@ -105,7 +105,7 @@ export function WidgetContent() {
             }}
             data-version={version}
             className={cn(
-              'antialiased font-sans size-full overflow-hidden isolate relative text-secondary-foreground',
+              'antialiased font-sans size-full overflow-hidden relative text-secondary-foreground',
             )}
             dir={dir}
           >
