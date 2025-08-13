@@ -13,6 +13,7 @@ import { cn } from './components/lib/utils/cn';
 import { useTheme } from './hooks/useTheme';
 import { RootScreen } from './screens';
 import { useTranslation } from './hooks/useTranslation';
+import { version } from '../package.json';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -35,7 +36,7 @@ html, body {
 
 export function WidgetContent() {
   const { isOpen } = useWidgetTrigger();
-  const { version, contentIframeRef } = useWidget();
+  const { contentIframeRef } = useWidget();
   const { cssOverrides, inline } = useConfig();
   const { theme, cssVars, computed } = useTheme();
   const { dir } = useTranslation();

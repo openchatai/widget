@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.6
+
+### Patch Changes
+
+- read version from local package.json
+
 ## 4.0.5
 
 ### Patch Changes
