@@ -15,8 +15,7 @@
     "dev": "dotenv -- turbo dev --env-mode",
     "cs": "changeset",
     "csv": "changeset version",
-    "csp": "changeset publish",
-    "prepublishOnly": "pnpm clean:dist && pnpm build && pnpm type-check && pnpm test"
+    "csp": "pnpm clean:dist && pnpm build && pnpm type-check && pnpm test && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.9",
