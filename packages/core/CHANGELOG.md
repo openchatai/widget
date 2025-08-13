@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.5
+
+### Patch Changes
+
+- bump up version
+
 ## 4.0.4
 
 ### Patch Changes
