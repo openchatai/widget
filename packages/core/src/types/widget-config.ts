@@ -309,7 +309,9 @@ export interface WidgetConfig {
   advancedInitialMessages?: Array<{
     message: string;
 
-    /** Whether it stays at the top of chat after the user sends their first message. */
+    /** 
+     * If `true`, the message will be persisted in the database and will stay in the chat after the user sends their first message.
+     */
     persistent?: boolean;
   }>;
 

@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.10
+
+### Patch Changes
+
+- persist initial messages in db
+
 ## 4.0.9
 
 ### Patch Changes

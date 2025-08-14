@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.10
+
+### Patch Changes
+
+- persist initial messages in db
+- Updated dependencies
+  - @opencx/widget-core@4.0.10
+
 ## 4.0.9
 
 ### Patch Changes

@@ -107,13 +107,37 @@ export class MessageCtx {
       /* ------------------------------------------------------ */
       /*     Optimistically add message to rendered messages    */
       /* ------------------------------------------------------ */
+      const currentMessages = this.state.get().messages;
+      const shouldInsertInitialMessages =
+        !this.sessionCtx.sessionState.get().session?.id &&
+        currentMessages.length === 0 &&
+        this.config.advancedInitialMessages?.some((m) => m.persistent);
+      const insertableInitialMessages = shouldInsertInitialMessages
+        ? (this.config.advancedInitialMessages || [])
+            .filter((m) => m.persistent)
+            .map(
+              (m) =>
+                ({
+                  id: genUuid(),
+                  component: 'bot_message',
+                  type: 'FROM_BOT',
+                  timestamp: new Date().toISOString(),
+                  data: {
+                    message: m.message,
+                  },
+                }) satisfies BotMessageType,
+            )
+        : [];
       const userMessage = this.toUserMessage(
         input.content.trim(),
         input.attachments || undefined,
       );
-      const currentMessages = this.state.get().messages;
       this.state.setPartial({
-        messages: [...currentMessages, userMessage],
+        messages: [
+          ...insertableInitialMessages,
+          ...currentMessages,
+          userMessage,
+        ],
       });
 
       /* ------------------------------------------------------ */
@@ -153,6 +177,12 @@ export class MessageCtx {
           },
           language: this.config.language,
           exit_mode_prompt: input.exitModePrompt,
+          initial_messages: shouldInsertInitialMessages
+            ? insertableInitialMessages.map((m) => ({
+                uuid: m.id,
+                content: m.data.message,
+              }))
+            : undefined,
         },
         this.sendMessageAbortController.signal,
       );

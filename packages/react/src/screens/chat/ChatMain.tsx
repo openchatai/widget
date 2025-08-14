@@ -104,7 +104,7 @@ export function ChatMain() {
       className="max-h-full scroll-smooth relative flex-1 py-2 px-4 flex flex-col gap-2 overflow-auto"
     >
       <ChatBannerItems />
-      {advancedInitialMessages.length > 0 && (
+      {messages.length === 0 && advancedInitialMessages.length > 0 && (
         <BotOrAgentMessageGroup
           messages={advancedInitialMessages.map(
             ({ message }, index) =>
