@@ -148,6 +148,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/backend/widget/v2/upload/v2': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['uploadFileV2'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/backend/widget/v2/chat/vote': {
     parameters: {
       query?: never;
@@ -190,6 +206,22 @@ export interface paths {
     get?: never;
     put?: never;
     post: operations['createUnverifiedContact'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/backend/widget/v2/action/execute': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['executeAction'];
     delete?: never;
     options?: never;
     head?: never;
@@ -246,6 +278,30 @@ export interface components {
       fileName: string;
       fileUrl: string;
     };
+    WidgetActionFormSubmissionInputDto: {
+      sessionId: string;
+      formMessageId: string;
+      actionId: string;
+      request: {
+        queryParams?: {
+          [key: string]: string;
+        };
+        pathParams?: {
+          [key: string]: string;
+        };
+        bodyParams?: {
+          [key: string]: unknown;
+        };
+        headers?: {
+          [key: string]: string;
+        };
+      };
+    };
+    WidgetActionFormSubmissionOutputDto: {
+      action: {
+        response?: unknown;
+      };
+    };
     WidgetConfigDto: {
       sessionsPollingIntervalSeconds: number;
       sessionPollingIntervalSeconds: number;
@@ -301,6 +357,18 @@ export interface components {
             actionName: string;
             args?: unknown;
             result?: unknown;
+            action: {
+              name: string;
+              id: string;
+              openapi?: {
+                openapi_spec_id?: string;
+                operation_spec?: unknown;
+                operation_id?: string;
+                operation_method?: string;
+              };
+              metadata?: unknown;
+              required_form_submission?: boolean;
+            };
           }[]
         | null;
       attachments?:
@@ -398,6 +466,12 @@ export interface components {
       } | null;
       /** @description If there is an active mode, it will be exited and the prompt will be given to the AI for a customized response */
       exit_mode_prompt?: string;
+      /** @description A prompt to be given to the AI for a customized response, should be used after an action form is submitted */
+      action_form_submitted_prompt?: string;
+      initial_messages?: {
+        uuid: string;
+        content: string;
+      }[];
     };
     WidgetSendMessageOutputDto:
       | {
@@ -435,6 +509,18 @@ export interface components {
               content?: string;
             };
             mightSolveUserIssue: boolean;
+          };
+          formSubmission?: {
+            name: string;
+            id: string;
+            openapi?: {
+              openapi_spec_id?: string;
+              operation_spec?: unknown;
+              operation_id?: string;
+              operation_method?: string;
+            };
+            metadata?: unknown;
+            required_form_submission?: boolean;
           };
           sessionIsHandedOff?: boolean;
           /** @description WidgetSession */
@@ -524,6 +610,18 @@ export interface components {
               actionName: string;
               args?: unknown;
               result?: unknown;
+              action: {
+                name: string;
+                id: string;
+                openapi?: {
+                  openapi_spec_id?: string;
+                  operation_spec?: unknown;
+                  operation_id?: string;
+                  operation_method?: string;
+                };
+                metadata?: unknown;
+                required_form_submission?: boolean;
+              };
             }[]
           | null;
         attachments?:
@@ -871,6 +969,39 @@ export interface operations {
       };
     };
   };
+  uploadFileV2: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description The file to upload */
+    requestBody: {
+      content: {
+        'multipart/form-data': components['schemas']['FileUploadDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UploadWidgetFileResponseDto'];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
   voteMessage: {
     parameters: {
       query?: never;
@@ -956,6 +1087,38 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['WidgetContactTokenResponseDto'];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  executeAction: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WidgetActionFormSubmissionInputDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WidgetActionFormSubmissionOutputDto'];
         };
       };
       /** @description Internal Server Error */
