@@ -1,13 +1,8 @@
 import type { MessageAttachmentType } from '@opencx/widget-core';
 import React from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from './lib/dialog';
 import { cn } from './lib/utils/cn';
 import { Wobble } from './lib/wobble';
+import { Dialoger, DialogerContent } from './Dialoger';
 
 type Props = {
   attachment: MessageAttachmentType;
@@ -72,31 +67,29 @@ export function AttachmentPreview({ attachment }: Props) {
   }
 
   return (
-    <Dialog>
-      <Wobble>
-        <DialogTrigger>
-          <div className="size-fit border shrink-0 rounded-2xl overflow-hidden">
-            {isImage && (
-              <img src={url} className="object-cover size-16" alt={name} />
-            )}
-          </div>
-        </DialogTrigger>
-      </Wobble>
-
-      <DialogContent
-        // This suppresses the stupid `DialogDescription is required` warning
-        aria-describedby={undefined}
+    <Dialoger
+      trigger={
+        <div>
+          <Wobble>
+            <div className="size-fit border shrink-0 rounded-2xl overflow-hidden">
+              {isImage && (
+                <img src={url} className="object-cover size-16" alt={name} />
+              )}
+            </div>
+          </Wobble>
+        </div>
+      }
+    >
+      <DialogerContent
         className="size-full max-w-full rounded-3xl flex items-center justify-center bg-transparent border-none gap-0"
         withClose
       >
-        <DialogTitle className="sr-only">Image preview</DialogTitle>
-
         {isImage && (
           <div className="size-fit shrink-0 rounded-2xl overflow-hidden max-h-full">
             <img src={url} className="object-cover size-auto" alt={name} />
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </DialogerContent>
+    </Dialoger>
   );
 }

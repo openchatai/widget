@@ -19,17 +19,17 @@ import { useIsSmallScreen } from '../hooks/useIsSmallScreen';
 import { useSetWidgetSizeFn } from '../hooks/useSetWidgetSize';
 import { useTheme } from '../hooks/useTheme';
 import { dc } from '../utils/data-component';
-import { Button } from './lib/button';
 import {
-  Dialog,
-  DialogBody,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from './lib/dialog';
+  Dialoger,
+  DialogerBody,
+  DialogerContent,
+  DialogerDescription,
+  DialogerFooter,
+  DialogerHeader,
+  DialogerTitle,
+  useDialoger,
+} from './Dialoger';
+import { Button } from './lib/button';
 import { DynamicIcon } from './lib/DynamicIcon';
 import { MotionDiv } from './lib/MotionDiv';
 import { Skeleton } from './lib/skeleton';
@@ -196,7 +196,7 @@ function Header__Buttons__Item__ResolveSession({
 }: {
   button: SafeExtract<HeaderButtonU, { functionality: 'resolve-session' }>;
 }) {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { close: closeDialog } = useDialoger();
   const { widgetCtx } = useWidget();
   const { setIsOpen } = useWidgetTrigger();
   const { resolveSession, sessionState } = useSessions();
@@ -223,7 +223,7 @@ function Header__Buttons__Item__ResolveSession({
 
   const handleResolve = async () => {
     const { success, error } = await resolveSession();
-    setIsDialogOpen(false);
+    closeDialog();
     if (!success) return console.error(error);
 
     switch (onResolved) {
@@ -273,7 +273,9 @@ function Header__Buttons__Item__ResolveSession({
           break;
         case 'reset-chat-and-close-widget':
           setIsOpen(false);
-          widgetCtx.resetChat();
+          setTimeout(() => {
+            widgetCtx.resetChat();
+          }, 200);
           break;
         default:
           isExhaustive(
@@ -290,8 +292,8 @@ function Header__Buttons__Item__ResolveSession({
   // TODO: add translations for fallbacks
   if (button.confirmation?.type === 'modal' && !isResolved && !isNoSession) {
     return (
-      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogTrigger asChild>
+      <Dialoger
+        trigger={
           <Button
             variant="ghost"
             size="fit"
@@ -300,23 +302,24 @@ function Header__Buttons__Item__ResolveSession({
           >
             <DynamicIcon name={button.icon} />
           </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>
+        }
+      >
+        <DialogerContent>
+          <DialogerHeader>
+            <DialogerTitle>
               {button.confirmation.title || 'Close conversation'}
-            </DialogTitle>
-          </DialogHeader>
-          <DialogBody>
-            <DialogDescription>
+            </DialogerTitle>
+          </DialogerHeader>
+          <DialogerBody>
+            <DialogerDescription>
               {button.confirmation.description ||
                 'Are you sure you want to close this conversation?'}
-            </DialogDescription>
-          </DialogBody>
-          <DialogFooter>
+            </DialogerDescription>
+          </DialogerBody>
+          <DialogerFooter>
             <Button
               variant="secondary"
-              onClick={() => setIsDialogOpen(false)}
+              onClick={closeDialog}
               disabled={sessionState.isResolvingSession}
             >
               {button.confirmation.cancelButtonText || 'No'}
@@ -328,9 +331,9 @@ function Header__Buttons__Item__ResolveSession({
             >
               {button.confirmation.confirmButtonText || 'Yes'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </DialogerFooter>
+        </DialogerContent>
+      </Dialoger>
     );
   }
 

@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.9
+
+### Patch Changes
+
+- fix portal and dialogs
+- Updated dependencies
+  - @opencx/widget-core@4.0.9
+  - @opencx/widget-react-headless@4.0.9
+
 ## 4.0.8
 
 ### Patch Changes

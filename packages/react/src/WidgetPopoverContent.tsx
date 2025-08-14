@@ -14,6 +14,7 @@ import { useTheme } from './hooks/useTheme';
 import { RootScreen } from './screens';
 import { useTranslation } from './hooks/useTranslation';
 import { version } from '../package.json';
+import { DialogerProvider } from './components/Dialoger';
 
 const initialContent = `<!DOCTYPE html>
 <html>
@@ -95,24 +96,27 @@ export function WidgetContent() {
         }}
       >
         {cssOverrides && <style>{cssOverrides}</style>}
-        <TooltipProvider
-          delayDuration={200}
-          // this is important, because without it, the tooltip remains even after moving the mouse away from trigger
-          disableHoverableContent
+        <div
+          style={{
+            ...cssVars,
+            zIndex: theme.widgetContentContainer.zIndex,
+          }}
+          data-version={version}
+          className={cn(
+            'antialiased font-sans size-full overflow-hidden relative text-secondary-foreground isolate',
+          )}
+          dir={dir}
         >
-          <div
-            style={{
-              ...cssVars,
-            }}
-            data-version={version}
-            className={cn(
-              'antialiased font-sans size-full overflow-hidden relative text-secondary-foreground',
-            )}
-            dir={dir}
+          <TooltipProvider
+            delayDuration={200}
+            // this is important, because without it, the tooltip remains even after moving the mouse away from trigger
+            disableHoverableContent
           >
-            <RootScreen />
-          </div>
-        </TooltipProvider>
+            <DialogerProvider>
+              <RootScreen />
+            </DialogerProvider>
+          </TooltipProvider>
+        </div>
       </IFrame>
     </motion.div>
   );

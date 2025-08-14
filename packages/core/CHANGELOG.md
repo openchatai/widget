@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.9
+
+### Patch Changes
+
+- fix portal and dialogs
+
 ## 4.0.8
 
 ### Patch Changes
