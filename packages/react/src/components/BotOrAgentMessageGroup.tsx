@@ -10,6 +10,7 @@ import { BotOrAgentMessage } from './BotOrAgentMessage';
 import { Tooltippy } from './lib/tooltip';
 import { cn } from './lib/utils/cn';
 import { SuggestedReplyButton } from './SuggestedReplyButton';
+import { GroupTimestamp } from './GroupTimestamp';
 
 export function BotOrAgentMessageGroup({
   messages,
@@ -33,7 +34,7 @@ export function BotOrAgentMessageGroup({
         />
       </Tooltippy>
 
-      <div className={cn('flex-1 flex flex-col gap-2')}>
+      <div className={cn('flex-1 flex flex-col gap-1')}>
         <div
           {...dc('chat/agent_msg_group/avatar_and_msgs/root')}
           className={cn('flex items-end gap-2')}
@@ -57,6 +58,7 @@ export function BotOrAgentMessageGroup({
                 {...message}
               />
             ))}
+            <GroupTimestamp messages={messages} />
           </div>
         </div>
 

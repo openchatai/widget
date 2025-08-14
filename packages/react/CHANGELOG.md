@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.7
+
+### Patch Changes
+
+- add timestamps for message groups
+- Updated dependencies
+  - @opencx/widget-core@4.0.7
+  - @opencx/widget-react-headless@4.0.7
+
 ## 4.0.6
 
 ### Patch Changes

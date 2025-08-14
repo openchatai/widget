@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.7
+
+### Patch Changes
+
+- add timestamps for message groups
+
 ## 4.0.6
 
 ### Patch Changes

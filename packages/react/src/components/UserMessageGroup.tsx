@@ -3,6 +3,7 @@ import React from 'react';
 import { dc } from '../utils/data-component';
 import { cn } from './lib/utils/cn';
 import { UserMessage } from './UserMessage';
+import { GroupTimestamp } from './GroupTimestamp';
 
 export function UserMessageGroup({
   messages,
@@ -23,6 +24,7 @@ export function UserMessageGroup({
           isAloneInGroup={array.length === 1}
         />
       ))}
+      <GroupTimestamp messages={messages} containerClassName="ms-auto" />
     </div>
   );
 }

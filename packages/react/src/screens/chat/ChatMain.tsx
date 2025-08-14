@@ -87,7 +87,7 @@ export function ChatMain() {
             data={{ message }}
             id={message}
             type="FROM_BOT"
-            timestamp={Date.now().toString()}
+            timestamp={null}
             dataComponentNames={{
               messageContainer: 'chat/persistent_initial_msg/root',
               message: 'chat/persistent_initial_msg/msg',
@@ -113,7 +113,7 @@ export function ChatMain() {
                 data: { message },
                 id: `${index}-${message}`,
                 type: 'FROM_BOT',
-                timestamp: Date.now().toString(),
+                timestamp: null,
               }) satisfies BotMessageType,
           )}
           suggestedReplies={
@@ -136,7 +136,7 @@ export function ChatMain() {
                 data: { message: m },
                 id: `${index}-${m}`,
                 type: 'FROM_BOT',
-                timestamp: Date.now().toString(),
+                timestamp: null,
               }) satisfies BotMessageType,
           )}
           suggestedReplies={

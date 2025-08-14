@@ -46,11 +46,13 @@ type ThemeOptions = {
        * number in pixels
        */
       bottom?: number;
+
       /**
        * number in pixels
        * @default if host document direction === "ltr" then 20, otherwise `initial`
        */
       right?: number | 'initial';
+
       /**
        * number in pixels
        * @default if host document direction ===="rtl" then 20, otherwise `initial`
@@ -60,6 +62,7 @@ type ThemeOptions = {
     size?: {
       /** number in pixels */
       button?: number;
+
       /** number in pixels */
       icon?: number;
     };
@@ -69,6 +72,7 @@ type ThemeOptions = {
     offset?: {
       /** number in pixels */
       side?: number;
+
       /** number in pixels */
       align?: number;
     };
@@ -95,6 +99,7 @@ type ThemeOptions = {
     chat?: {
       height?: string;
       width?: string;
+
       /** When the canvas is open */
       withCanvas?: {
         height?: string;
@@ -130,13 +135,16 @@ type HeaderButtonBase = {
 export type HeaderButtonU =
   | (HeaderButtonBase & {
       functionality: 'expand-shrink';
+
       /** if `HeaderButtonBase.icon` is passed, it will override this option  */
       expandIcon?: IconNameU;
+
       /** if `HeaderButtonBase.icon` is passed, it will override this option  */
       shrinkIcon?: IconNameU;
     })
   | (HeaderButtonBase & {
       functionality: 'close-widget';
+
       /**
        * A side effect to be executed when the button is clicked.
        * This will override the default behavior of closing the widget.
@@ -146,6 +154,7 @@ export type HeaderButtonU =
     })
   | (HeaderButtonBase & {
       functionality: 'resolve-session';
+
       /**
        * The side effect after the session is resolved.
        * @default 'stay-in-chat'
@@ -155,6 +164,7 @@ export type HeaderButtonU =
         | 'reset-chat'
         | 'close-widget'
         | 'reset-chat-and-close-widget';
+
       /**
        * Optional confirmation dialog before the session is resolved.
        */
@@ -165,11 +175,13 @@ export type HeaderButtonU =
         confirmButtonText?: string;
         cancelButtonText?: string;
       };
+
       /**
        * The button's behavior before the session is created (before the user sends their first message).
        * @default 'disabled'
        */
       behaviorBeforeSessionCreation?: 'disabled' | 'close-widget';
+
       /**
        * The button's behavior after the session is resolved and the user is still in the same chat session.
        * @default 'disabled'
@@ -202,6 +214,7 @@ export interface WidgetConfig {
    * Can be found in the dashboard in the web widget page.
    */
   token: string;
+
   /**
    * The language of the widget.
    * Translations are available in the default non-headless widget.
@@ -209,10 +222,12 @@ export interface WidgetConfig {
    * @default en
    */
   language?: string;
+
   /**
    * A name and an avatar for the bot.
    */
   bot?: Pick<AgentOrBotType, 'name' | 'avatar'>;
+
   /**
    * Whether the widget is open or not.
    * Can be used to have the widget open by default (useful when embedded in a webview for a mobile app).
@@ -220,11 +235,13 @@ export interface WidgetConfig {
    * @default false
    */
   isOpen?: boolean;
+
   /**
    * Automatically open the widget after N seconds.
    * @default undefined
    */
   openAfterNSeconds?: number;
+
   /**
    * A custom vanilla stylesheet to override the default styles. See {@link OpenCxComponentNameU} for available component names.
    *
@@ -245,11 +262,13 @@ export interface WidgetConfig {
    */
   cssOverrides?: string;
   theme?: ThemeOptions;
+
   /**
    * Disable tooltips for all components.
    * @default false
    */
   disableTooltips?: boolean;
+
   /**
    * Assets URLs to be used in the widget.
    */
@@ -260,18 +279,21 @@ export interface WidgetConfig {
       closeIcon?: string;
     };
   };
+
   /**
    * Initial messages that the contact sees in a new chat session.
    * These messages will disappear once the contact sends their first message.
    * @default - ['Hello, how can I help you?']
    */
   initialMessages?: string[];
+
   /**
    * Similar to `initialMessages`, but these messages will persist at the top of the chat session.
    * Useful if you want to keep a notice or a privacy policy warning.
    * @default undefined
    */
   persistentInitialMessages?: string[];
+
   /**
    * Initial messages that the contact sees in a new chat session.
    * Similar to the `initialMessages` option, but with more control over the messages.
@@ -280,9 +302,11 @@ export interface WidgetConfig {
    */
   advancedInitialMessages?: Array<{
     message: string;
+
     /** Whether it stays at the top of chat after the user sends their first message. */
     persistent?: boolean;
   }>;
+
   /**
    * Suggested initial questions that the contact sees in a new chat session.
    * If a user clicks on one of the suggested questions, the widget will send it as the user's first message.
@@ -290,17 +314,20 @@ export interface WidgetConfig {
    * @example - ['What is my account balance?', 'How do I pay my bill?', 'How do I change my address?']
    */
   initialQuestions?: string[];
+
   /**
    * Where to display the suggested initial questions.
    * @default 'above-chat-input'
    */
   initialQuestionsPosition?: 'above-chat-input' | 'below-initial-messages';
+
   /**
    * If turned on, the widget will have a login-like screen to collect user's name and email.
    * A non-verified contact will be created based on the provided information.
    * @default false
    */
   collectUserData?: boolean;
+
   /**
    * Provide initial values for the `name` and `email` inputs in the welcome screen.
    * For this setting to take effect, `collectUserData` must be set to `true`.
@@ -310,6 +337,7 @@ export interface WidgetConfig {
     name?: string;
     email?: string;
   };
+
   /**
    * Extra data collection fields besides `name` and `email`.
    * For this setting to take effect, `collectUserData` must be set to `true`.
@@ -321,16 +349,19 @@ export interface WidgetConfig {
    * @default undefined
    */
   extraDataCollectionFields?: string[];
+
   /**
    * Verified or non-verified contact data.
    * To know more, check the README
    * @default undefined
    */
   user?: UserConfig;
+
   /**
    * Custom text content to override the defaults in the default widget.
    */
   textContent?: TextContentOptions;
+
   /**
    * Custom header buttons to expand-shrink the size of the widget, close the widget, resolve the session, etc.
    *
@@ -342,10 +373,12 @@ export interface WidgetConfig {
     sessionsScreen?: Array<HeaderButtonU>;
     chatScreen?: Array<HeaderButtonU>;
   };
+
   /**
    * Custom components to be mounted in the canvas if there is an active mode.
    */
   modesComponents?: Array<ModeComponent>;
+
   /**
    * Customize the router behavior.
    */
@@ -355,6 +388,7 @@ export interface WidgetConfig {
      * @default true
      */
     goToChatIfNoSessions?: boolean;
+
     /**
      * If true, only the `welcome` and `chat` screens are visible.
      * The most recent `open` session will be selected.
@@ -365,6 +399,7 @@ export interface WidgetConfig {
      */
     chatScreenOnly?: boolean;
   };
+
   /**
    * By default, the user can have multiple open sessions.
    *
@@ -373,6 +408,7 @@ export interface WidgetConfig {
    * @default false
    */
   oneOpenSessionAllowed?: boolean;
+
   /**
    * The target attribute for all links in the AI or human agents responses.
    *
@@ -383,39 +419,46 @@ export interface WidgetConfig {
    * @default '_top'
    */
   anchorTarget?: '_blank' | '_top';
+
   /**
    * Headers to be added to every Http AI action taken.
    * @default undefined
    */
   headers?: Record<string, string>;
+
   /**
    * Query params to be added to every Http AI action taken.
    * @default undefined
    */
   queryParams?: Record<string, string>;
+
   /**
    * Properties to be added to the `body` of every Http AI action taken.
    * @default undefined
    */
   bodyProperties?: Record<string, JsonValue>;
+
   /**
    * Dynamic context to be sent with each send-message request from the widget.
    * Useful if you want to send data regarding the current page the user is viewing.
    * @default undefined
    */
   context?: Record<string, unknown>;
+
   /**
    * Dynamic custom data to be sent with each contact message.
    * This custom data is intended for human use only; the AI will not see it and it will not affect the AI's response.
    * @default undefined
    */
   messageCustomData?: Record<string, unknown>;
+
   /**
    * Custom data to be added to the session upon creation.
    * This custom data is intended for human use only; the AI will not see it and it will not affect the AI's response.
    * @default undefined
    */
   sessionCustomData?: Record<string, unknown>;
+
   /**
    * If this is set to `true`:
    * 1. The widget content will fill it's parent element.
@@ -427,6 +470,7 @@ export interface WidgetConfig {
    * @default false
    */
   inline?: boolean;
+
   /**
    * This shows when the AI's response might have solved the user's issue.
    * The prompt shows as two buttons: "This was helpful" and "I need more help".
@@ -435,6 +479,14 @@ export interface WidgetConfig {
     /** @default true */
     enabled?: boolean;
   };
+
+  timestamps?: {
+    perMessageGroup?: {
+      /** @default false */
+      enabled?: boolean;
+    }
+  };
+
   /**
    * An apiUrl to override production backend.
    * This is for us to test the widget locally, you don't need to play with this option 😊.

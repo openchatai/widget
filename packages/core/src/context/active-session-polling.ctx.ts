@@ -68,7 +68,7 @@ export class ActiveSessionPollingCtx {
     const messages = this.messageCtx.state.get().messages;
     const lastMessageTimestamp =
       messages.length > 0
-        ? messages[messages.length - 1]?.timestamp
+        ? messages[messages.length - 1]?.timestamp ?? undefined
         : undefined;
 
     const { data } = await this.api.pollSessionAndHistory({

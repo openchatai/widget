@@ -21,7 +21,7 @@ export type UserMessageType = {
   content: string;
   deliveredAt: string | null;
   attachments?: MessageAttachmentType[] | null;
-  timestamp: string;
+  timestamp: string | null;
   user?: {
     name?: string;
     email?: string;
@@ -46,7 +46,7 @@ export type BotMessageType<TActionData = unknown> = {
       data: TActionData;
     } | null;
   };
-  timestamp: string;
+  timestamp: string | null;
   original?: MessageDto;
   agent?: AgentOrBotType;
   attachments?: MessageAttachmentType[];
@@ -61,7 +61,7 @@ export type AgentMessageType = {
     variant?: 'default' | 'error';
     action?: undefined;
   };
-  timestamp?: string;
+  timestamp: string | null;
   original?: MessageDto;
   agent?: AgentOrBotType;
   attachments?: MessageAttachmentType[];
