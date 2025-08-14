@@ -1,13 +1,10 @@
 import type { OpenCxComponentNameU } from '@opencx/widget-core';
 import type { WidgetComponentProps } from '@opencx/widget-react-headless';
-import { useConfig } from '@opencx/widget-react-headless';
 import React from 'react';
-import rehypeRaw from 'rehype-raw';
-import remarkGfm from 'remark-gfm';
 import { dc } from '../../utils/data-component.js';
 import { AttachmentPreview } from '../AttachmentPreview.js';
 import { cn } from '../lib/utils/cn.js';
-import { MemoizedReactMarkdown } from '../markdown.js';
+import { RichText } from '../RichText.js';
 
 export function BotOrAgentResponse({
   data,
@@ -32,7 +29,6 @@ export function BotOrAgentResponse({
     message?: string;
   };
 }) {
-  const { anchorTarget } = useConfig();
   const { message, variant = 'default' } = data;
 
   if (variant === 'error') {
@@ -85,24 +81,9 @@ export function BotOrAgentResponse({
             classNames?.message,
           )}
         >
-          <MemoizedReactMarkdown
-            data-type={type}
-            data-id={id}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
-            components={{
-              a: ({ children, ...props }) => {
-                return (
-                  <a target={anchorTarget ?? '_top'} {...props}>
-                    {children}
-                  </a>
-                );
-              },
-            }}
-            // Do not pass className directly to ReactMarkdown component because that will create a container div wrapping the rich text
-          >
+          <RichText messageType={type} messageId={id}>
             {message}
-          </MemoizedReactMarkdown>
+          </RichText>
         </div>
       )}
     </div>

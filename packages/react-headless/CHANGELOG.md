@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.8
+
+### Patch Changes
+
+- add WidgetConfig.chatBannerItems
+- Updated dependencies
+  - @opencx/widget-core@4.0.8
+
 ## 4.0.7
 
 ### Patch Changes

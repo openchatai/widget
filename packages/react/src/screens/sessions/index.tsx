@@ -20,7 +20,7 @@ import { LoadingSpinner } from '../../components/lib/LoadingSpinner';
 import { MotionDiv } from '../../components/lib/MotionDiv';
 import { Skeleton } from '../../components/lib/skeleton';
 import { cn } from '../../components/lib/utils/cn';
-import { MemoizedReactMarkdown } from '../../components/markdown';
+import { MemoizedReactMarkdown } from '../../components/MemoizedReactMarkdown';
 import { PoweredByOpen } from '../../components/PoweredByOpen';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useSetWidgetSize } from '../../hooks/useSetWidgetSize';

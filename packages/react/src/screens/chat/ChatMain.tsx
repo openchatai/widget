@@ -11,8 +11,7 @@ import {
 } from '@opencx/widget-react-headless';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
-import { BotOrAgentResponse } from '../../components/custom-components/BotOrAgentTextResponse.component';
-import { cn } from '../../components/lib/utils/cn';
+import { RichText } from '../../components/RichText';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { dc } from '../../utils/data-component';
 import {
@@ -21,6 +20,33 @@ import {
   isBotMessageGroup,
   isUserMessageGroup,
 } from '../../utils/group-messages-by-type';
+
+function ChatBannerItems() {
+  const {
+    messagesState: { messages },
+  } = useMessages();
+  const { chatBannerItems } = useConfig();
+
+  if (!chatBannerItems?.length) return null;
+  if (
+    messages.length > 0 &&
+    chatBannerItems.every((item) => !item.persistent)
+  ) {
+    return null;
+  }
+
+  return (
+    <div className="w-full text-center text-xs">
+      {chatBannerItems.map(({ message, persistent }, index) =>
+        messages.length > 0 && !persistent ? null : (
+          <div key={`${message}-${index}`}>
+            <RichText>{message}</RichText>
+          </div>
+        ),
+      )}
+    </div>
+  );
+}
 
 export function ChatMain() {
   const {
@@ -35,8 +61,6 @@ export function ChatMain() {
     () => groupMessagesByType(messages),
     [messages],
   );
-
-  const persistentInitialMessages = config.persistentInitialMessages || [];
 
   const advancedInitialMessages = (() => {
     if (!messages.length) return config.advancedInitialMessages || [];
@@ -79,31 +103,7 @@ export function ChatMain() {
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 py-2 px-4 flex flex-col gap-2 overflow-auto"
     >
-      <div {...dc('chat/persistent_initial_msgs/root')}>
-        {persistentInitialMessages.map((message, index, array) => (
-          <BotOrAgentResponse
-            key={`${message}-${index}`}
-            component="bot_message"
-            data={{ message }}
-            id={message}
-            type="FROM_BOT"
-            timestamp={null}
-            dataComponentNames={{
-              messageContainer: 'chat/persistent_initial_msg/root',
-              message: 'chat/persistent_initial_msg/msg',
-            }}
-            classNames={{
-              messageContainer: cn(
-                'w-full flex flex-col items-center text-center',
-              ),
-              message: 'w-full bg-transparent border-none shadow-none text-xs',
-            }}
-            isFirstInGroup={index === 0}
-            isLastInGroup={index === array.length - 1}
-            isAloneInGroup={array.length === 1}
-          />
-        ))}
-      </div>
+      <ChatBannerItems />
       {advancedInitialMessages.length > 0 && (
         <BotOrAgentMessageGroup
           messages={advancedInitialMessages.map(

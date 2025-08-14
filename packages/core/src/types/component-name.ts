@@ -32,10 +32,6 @@ export type OpenCxComponentNameU =
   | 'chat/agent_msg_group/suggestions'
   | 'chat/agent_msg/root'
   | 'chat/agent_msg/msg'
-  /* ------------- Persistent Initial Messages ------------ */
-  | 'chat/persistent_initial_msgs/root'
-  | 'chat/persistent_initial_msg/root'
-  | 'chat/persistent_initial_msg/msg'
   /* -------------------- Chat Message -------------------- */
   | 'chat/user_msg_group/root'
   | 'chat/user_msg_group/avatar/root'

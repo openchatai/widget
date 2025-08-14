@@ -281,18 +281,24 @@ export interface WidgetConfig {
   };
 
   /**
+   * Messages or simple components to be shown first thing in the chat.
+   * Useful for privacy policies or announcements.
+   * @default undefined
+   */
+  chatBannerItems?: Array<{
+    /** Text or html as a string */
+    message: string;
+
+    /** Whether it stays at the top of chat after the user sends their first message. */
+    persistent?: boolean;
+  }>;
+
+  /**
    * Initial messages that the contact sees in a new chat session.
    * These messages will disappear once the contact sends their first message.
    * @default - ['Hello, how can I help you?']
    */
   initialMessages?: string[];
-
-  /**
-   * Similar to `initialMessages`, but these messages will persist at the top of the chat session.
-   * Useful if you want to keep a notice or a privacy policy warning.
-   * @default undefined
-   */
-  persistentInitialMessages?: string[];
 
   /**
    * Initial messages that the contact sees in a new chat session.
@@ -484,7 +490,7 @@ export interface WidgetConfig {
     perMessageGroup?: {
       /** @default false */
       enabled?: boolean;
-    }
+    };
   };
 
   /**
