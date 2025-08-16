@@ -188,7 +188,7 @@ export class ApiCaller {
 
       const { baseUrl } = this.constructClientOptions(this.userToken);
 
-      const path = '/backend/widget/v2/upload' satisfies Endpoint;
+      const path = '/backend/widget/v2/upload/v2' satisfies Endpoint;
       const uploadUrl = `${baseUrl}${path}`;
       xhr.open('POST', uploadUrl);
 

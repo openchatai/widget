@@ -148,6 +148,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/backend/widget/v2/upload/v2': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['uploadFileV2'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/backend/widget/v2/chat/vote': {
     parameters: {
       query?: never;
@@ -200,6 +216,1098 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    AcceptEditedLearningDraftDto: {
+      question?: string | null;
+      answer?: string | null;
+    };
+    AccountDetailsDto: {
+      data: {
+        accountDetails: {
+          accountNumber: string;
+          accountHolder: string;
+          /** @enum {string} */
+          accountType:
+            | 'Salary'
+            | 'Savings'
+            | 'Credit'
+            | 'Investment'
+            | 'Checking';
+          branch: string;
+          status: string;
+        };
+        balance: {
+          currentBalance: number;
+          availableBalance: number;
+          currency: string;
+          overdraftLimit: number;
+        };
+      }[];
+    };
+    Action: {
+      id: string;
+      bot_id: string;
+      name: string;
+      description: string | null;
+      api_endpoint: string | null;
+      request_type: string | null;
+      operation_id: string | null;
+      payload: {
+        [key: string]: unknown;
+      } | null;
+      status: string | null;
+      pinned: boolean;
+      /** @default [] */
+      tags: string[];
+      execute_after: string[] | null;
+      require_form_submission: boolean | null;
+      enabled_on_channel: {
+        channels: (
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice'
+        )[];
+      };
+      created_at: string;
+      updated_at: string;
+      deleted_at: string | null;
+      openapi_spec_id: string | null;
+    };
+    ActionTestRequestDTO: {
+      url: string;
+      /** @enum {string} */
+      method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+      pathParams?: {
+        [key: string]: string;
+      };
+      queryParams?: {
+        [key: string]: string;
+      };
+      headers?: {
+        [key: string]: string;
+      };
+      body?: {
+        [key: string]: string;
+      };
+    };
+    ActionTestResponseDTO: {
+      statusCode: number;
+      data?: unknown;
+      headers: {
+        [key: string]: string;
+      };
+    };
+    AllContactsFilter: {
+      /** @enum {string} */
+      type: 'all_contacts';
+    };
+    ApolloMatchResponseDto: {
+      person: {
+        id?: string | null;
+        first_name?: string | null;
+        last_name?: string | null;
+        name?: string | null;
+        linkedin_url?: string | null;
+        title?: string | null;
+        email_status?: string | null;
+        photo_url?: string | null;
+        twitter_url?: string | null;
+        github_url?: string | null;
+        facebook_url?: string | null;
+        extrapolated_email_confidence?: number | null;
+        headline?: string | null;
+        email?: string | null;
+        organization_id?: string | null;
+        employment_history: {
+          _id?: string | null;
+          created_at?: string | null;
+          current: boolean;
+          degree?: string | null;
+          description?: string | null;
+          emails?: string[] | null;
+          end_date?: string | null;
+          grade_level?: string | null;
+          kind?: string | null;
+          major?: string | null;
+          organization_id?: string | null;
+          organization_name?: string | null;
+          raw_address?: string | null;
+          start_date?: string | null;
+          title?: string | null;
+          updated_at?: string | null;
+          id?: string | null;
+          key?: string | null;
+        }[];
+        state?: string | null;
+        city?: string | null;
+        country?: string | null;
+        organization?: {
+          id?: string | null;
+          name?: string | null;
+          website_url?: string | null;
+          blog_url?: string | null;
+          angellist_url?: string | null;
+          linkedin_url?: string | null;
+          twitter_url?: string | null;
+          facebook_url?: string | null;
+          primary_phone?: {
+            number?: string | null;
+            source?: string | null;
+            sanitized_number?: string | null;
+          } | null;
+          languages?: string[] | null;
+          alexa_ranking?: number | null;
+          phone?: string | null;
+          linkedin_uid?: string | null;
+          founded_year?: number | null;
+          publicly_traded_symbol?: string | null;
+          publicly_traded_exchange?: string | null;
+          logo_url?: string | null;
+          crunchbase_url?: string | null;
+          primary_domain?: string | null;
+          sanitized_phone?: string | null;
+          industry?: string | null;
+          keywords?: string[] | null;
+          estimated_num_employees?: number | null;
+          industries?: string[] | null;
+          secondary_industries?: string[] | null;
+          snippets_loaded?: boolean | null;
+          industry_tag_id?: string | null;
+          industry_tag_hash?: {
+            [key: string]: string;
+          } | null;
+          retail_location_count?: number | null;
+          raw_address?: string | null;
+          street_address?: string | null;
+          city?: string | null;
+          state?: string | null;
+          postal_code?: string | null;
+          country?: string | null;
+          owned_by_organization_id?: string | null;
+          suborganizations?: unknown[] | null;
+          num_suborganizations?: number | null;
+          seo_description?: string | null;
+          short_description?: string | null;
+          annual_revenue_printed?: string | null;
+          annual_revenue?: number | null;
+          total_funding?: number | null;
+          total_funding_printed?: string | null;
+          latest_funding_round_date?: string | null;
+          latest_funding_stage?: string | null;
+          funding_events?:
+            | {
+                id?: string | null;
+                date?: string | null;
+                news_url?: string | null;
+                type?: string | null;
+                investors?: string | null;
+                amount?: string | null;
+                currency?: string | null;
+              }[]
+            | null;
+          technology_names?: string[] | null;
+          current_technologies?:
+            | {
+                uid?: string | null;
+                name?: string | null;
+                category?: string | null;
+              }[]
+            | null;
+          org_chart_root_people_ids?: string[] | null;
+          org_chart_sector?: string | null;
+          org_chart_removed?: boolean | null;
+          org_chart_show_department_filter?: boolean | null;
+        } | null;
+        is_likely_to_engage?: boolean | null;
+        phone_numbers?:
+          | {
+              raw_number?: string | null;
+              sanitized_number?: string | null;
+              type?: string | null;
+              position: number;
+              status?: string | null;
+              dnc_status?: string | null;
+              dnc_other_info?: string | null;
+              dialer_flags?: string | null;
+            }[]
+          | null;
+        intent_strength?: number | null;
+        show_intent?: boolean | null;
+        revealed_for_current_team?: boolean | null;
+        departments?: string[] | null;
+        subdepartments?: string[] | null;
+        functions?: string[] | null;
+        seniority?: string | null;
+      };
+    } | null;
+    AssignInsightDto: {
+      /** Format: uuid */
+      groupId: string;
+    };
+    AuditLogsResponseDto: {
+      data: {
+        id: string;
+        org_id: string;
+        actor_id: number | null;
+        /** @enum {string} */
+        actor_type: 'api' | 'system' | 'user';
+        actor_email: string | null;
+        actor_name: string | null;
+        entity_type: string;
+        entity_id: string;
+        event_type: string;
+        /** @enum {string} */
+        event_category:
+          | 'access'
+          | 'agent_availability'
+          | 'communication'
+          | 'configuration'
+          | 'data'
+          | 'security';
+        changes: {
+          before?: {
+            [key: string]: unknown;
+          };
+          after?: {
+            [key: string]: unknown;
+          };
+        } | null;
+        metadata: {
+          [key: string]: unknown;
+        } | null;
+        created_at: string;
+        ip_address: string | null;
+        user_agent: string | null;
+      }[];
+      pagination: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    };
+    AutopilotSettingsDto: {
+      phone: components['schemas']['ChannelConfigSchema'];
+      email: components['schemas']['ChannelConfigSchema'];
+      web: components['schemas']['ChannelConfigSchema'];
+      slack: components['schemas']['ChannelConfigSchema'];
+      sms: components['schemas']['ChannelConfigSchema'];
+      whatsapp: components['schemas']['ChannelConfigSchema'];
+    };
+    AvailableSourcesDto: {
+      /** @enum {string} */
+      type:
+        | 'notion'
+        | 'zendesk_support'
+        | 'confluence'
+        | 'shopify'
+        | 'gitbook'
+        | 'intercom';
+    };
+    BroadcastNotificationDto: {
+      /** @enum {string} */
+      affected_entity_type: 'chat_session' | 'chatbot' | 'other' | 'user';
+      affected_entity_id: string | null;
+      entity_id: string;
+      /** @enum {string} */
+      notification_type: 'other' | 'created' | 'deleted' | 'updated';
+      message: string | null;
+    };
+    CancelTransactionRequestDto: {
+      transactionId: string;
+      cancellationReason: string;
+    };
+    CancelTransactionResponseDto: {
+      success: boolean;
+      message: string;
+      data?: {
+        transactionId: string;
+        status: string;
+        refundAmount: number;
+        refundCurrency: string;
+        refundMethod: string;
+        estimatedRefundTime: string;
+      };
+    };
+    ChangeVocInsightCategoryDto: {
+      categoryId: string;
+    };
+    ChannelConfigSchema: {
+      /** @default false */
+      assist_mode_enabled: boolean;
+      /** @default 100 */
+      autopilot_coverage_percentage: number;
+      /** @default true */
+      autopilot_enabled: boolean;
+      /** @default false */
+      respond_only_with_potential_answers: boolean;
+      /** @default false */
+      assist_mode_should_take_actions: boolean;
+      /** @default [] */
+      assist_mode_do_not_assist_on_these_topics: string[];
+      /** @default [] */
+      assist_mode_allow_autopilot_on_these_topics: string[];
+      /** @default false */
+      assist_mode_allow_autopilot_on_the_first_message_only: boolean;
+      /**
+       * @default en
+       * @enum {string|null}
+       */
+      assist_mode_auto_learn_suggestions_language:
+        | 'en'
+        | 'es'
+        | 'fr'
+        | 'de'
+        | 'it'
+        | 'ja'
+        | 'ko'
+        | 'pt'
+        | 'ru'
+        | 'zh'
+        | 'nl'
+        | 'ar'
+        | 'hi'
+        | 'bn'
+        | 'ur'
+        | 'tr'
+        | 'pl'
+        | 'uk'
+        | 'vi'
+        | 'th'
+        | 'id'
+        | 'ms'
+        | 'fil'
+        | 'sv'
+        | 'da'
+        | 'fi'
+        | 'no'
+        | 'hu'
+        | 'cs'
+        | 'el'
+        | 'he'
+        | 'ro'
+        | 'bg'
+        | 'hr'
+        | 'sr'
+        | 'sk'
+        | 'sl'
+        | 'et'
+        | 'lv'
+        | 'lt'
+        | 'fa'
+        | 'af'
+        | 'sw'
+        | 'am'
+        | 'hy'
+        | 'az'
+        | 'eu'
+        | 'be'
+        | 'ca'
+        | 'eo'
+        | 'gl'
+        | 'ka'
+        | 'kk'
+        | 'km'
+        | 'lo'
+        | 'mk'
+        | 'mn'
+        | 'my'
+        | 'ne'
+        | 'si'
+        | 'sq'
+        | 'ta'
+        | 'te'
+        | 'tl'
+        | 'uz'
+        | null;
+    };
+    ChatAgentModeContent: {
+      title: string | null;
+      description: string | null;
+      pages: components['schemas']['ChatAgentModePage'][];
+    } | null;
+    ChatAgentModeDto: {
+      id: string;
+      org_id: string;
+      name: string;
+      slug: string | null;
+      enabled: boolean;
+      in_mode_instructions: string | null;
+      on_entry_instructions: string | null;
+      pre_entry_instructions: string | null;
+      content: components['schemas']['ChatAgentModeContent'];
+      created_at: string;
+      updated_at: string;
+    };
+    ChatAgentModeFormField:
+      | {
+          /** @enum {string} */
+          type: 'input';
+          name: string;
+          label: string | null;
+          placeholder: string | null;
+        }
+      | {
+          /** @enum {string} */
+          type: 'select';
+          /** @enum {string} */
+          selection?: 'multiple' | 'single';
+          name: string;
+          label: string | null;
+          options: string[];
+        };
+    ChatAgentModePage: {
+      /** @enum {string} */
+      type: 'form';
+      form: components['schemas']['ChatAgentModeFormField'][];
+    };
+    ChatHistory: {
+      id: number;
+      uuid: string;
+      chatbot_id?: string | null;
+      session_id: string;
+      from_user?: boolean | null;
+      message?: string | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+      debug_json?: string | null;
+      api_called?: boolean | null;
+      knowledgebase_called?: boolean | null;
+      /** @enum {string} */
+      type:
+        | 'agent_comment'
+        | 'agent_joined'
+        | 'agent_message'
+        | 'agent_reopened_session'
+        | 'agent_took_session_from_ai'
+        | 'ai_assumed_the_session_resolved'
+        | 'ai_decided_to_resolve_the_issue'
+        | 'email_draft_message'
+        | 'handoff'
+        | 'handoff_to_salesforce_miaw'
+        | 'handoff_to_zendesk'
+        | 'message'
+        | 'state_checkpoint'
+        | 'user_confirmed_the_session_resolved';
+      extra_params?: {
+        [key: string]: unknown;
+      } | null;
+      agent_id?: number | null;
+      agent_name?: string | null;
+      agent_avatar?: string | null;
+      handoff_happened_during_office_hours?: boolean | null;
+      sender_display_name?: string | null;
+      plan_executed?: boolean | null;
+      contact_id?: string | null;
+      contact_name?: string | null;
+      contact_avatar_url?: string | null;
+      /** @enum {string|null} */
+      contact_source?:
+        | 'form'
+        | 'hubspot'
+        | 'intercom'
+        | 'pipedream'
+        | 'salesforce'
+        | 'slack'
+        | null;
+      contact_slack_data?: string | null;
+      attachments?:
+        | {
+            id: string;
+            name: string;
+            size: number;
+            type: string;
+            url: string;
+          }[]
+        | null;
+      external_message_id?: string | null;
+    };
+    ChatSessionDto: {
+      id: string;
+      status: number;
+      status_name?: string;
+      /** @enum {string} */
+      channel:
+        | 'web'
+        | 'email'
+        | 'phone_voice'
+        | 'slack'
+        | 'sms'
+        | 'whatsapp'
+        | 'api'
+        | 'web_voice';
+      assignee_id: number | null;
+      summary: string | null;
+      classification: string | null;
+      contact_id: string | null;
+      copilot_id: string;
+      email: string | null;
+      email_thread_id: string | null;
+      group_id: string | null;
+      is_notification_enabled: number;
+      verified: number | null;
+      short_token: string | null;
+      last_seen_at: string | null;
+      is_online: number;
+      /** @enum {string|null} */
+      ai_closure_type: 'assumed_resolved' | 'handed_off' | 'resolved' | null;
+      /** @enum {string|null} */
+      ai_billing_type: 'hard' | 'light' | null;
+      language: string | null;
+      last_message: string | null;
+      last_message_at: string | null;
+      meta: {
+        title?: string;
+        whatsappToNumber?: string;
+        recordingUrl?: string;
+        /** @enum {string|null} */
+        title_generation_type?: 'user' | 'system' | null;
+        summary?: string;
+        phoneNumber?: string;
+        /** @enum {string|null} */
+        callStatus?: 'sent' | 'finished' | 'missed' | null;
+      } | null;
+      mobileNumber: string | null;
+      queryOrgId: string | null;
+      created_at: string;
+      updated_at: string;
+      handed_off_at: string | null;
+      first_human_message_at: string | null;
+      /** @enum {string|null} */
+      fallback_channel: 'email' | 'sms' | null;
+      /** @enum {string|null} */
+      sentiment: 'angry' | 'happy' | 'neutral' | null;
+      ticket_number: number;
+      ai_phone_call_sid: string | null;
+      ai_phone_call_recording_url: string | null;
+      slack_channel_id: string | null;
+      slack_thread_ts: string | null;
+      slack_channel_name: string | null;
+      custom_data: {
+        [key: string]: string;
+      } | null;
+      editable_custom_data: {
+        [key: string]: string;
+      } | null;
+      zendesk_ticket_id: number | null;
+      hubspot_ticket_id: string | null;
+      hubspot_conversation_id: string | null;
+      intercom_conversation_id: string | null;
+      gorgias_ticket_id: string | null;
+      is_assist_mode: boolean;
+      last_read_at_by_agent_ids: {
+        [key: string]: string | null;
+      };
+      mode_id: string | null;
+      flex_conversation_sid: string | null;
+      latest_state_checkpoint_payload: {
+        [key: string]: unknown;
+      } | null;
+      salesforce_case_id: string | null;
+    };
+    ChatbotDto: {
+      id: string;
+      user_id: number;
+      auto_select_user_on_handoff: boolean;
+      autopilot_settings: {
+        phone: components['schemas']['ChannelConfigSchema'];
+        email: components['schemas']['ChannelConfigSchema'];
+        web: components['schemas']['ChannelConfigSchema'];
+        slack: components['schemas']['ChannelConfigSchema'];
+        sms: components['schemas']['ChannelConfigSchema'];
+        whatsapp: components['schemas']['ChannelConfigSchema'];
+      } | null;
+      autopilot_unapproved_themes: string | null;
+      email: string | null;
+      enable_routing_groups: boolean;
+      enhanced_privacy: boolean;
+      global_variables: string | null;
+      guard_rails_instructions: string | null;
+      handoff_phone_number: string | null;
+      is_premade_demo_template: boolean;
+      language: string | null;
+      name: string;
+      office_hours: unknown & {
+        monday?: {
+          from: string;
+          to: string;
+        };
+        tuesday?: {
+          from: string;
+          to: string;
+        };
+        wednesday?: {
+          from: string;
+          to: string;
+        };
+        thursday?: {
+          from: string;
+          to: string;
+        };
+        friday?: {
+          from: string;
+          to: string;
+        };
+        saturday?: {
+          from: string;
+          to: string;
+        };
+        sunday?: {
+          from: string;
+          to: string;
+        };
+        Everyday?: {
+          from: string;
+          to: string;
+        };
+        WeekDays?: {
+          from: string;
+          to: string;
+        };
+      };
+      office_hours_timezone: string | null;
+      prompt_message: string;
+      smart_sync: boolean;
+      status: string;
+      summary_prompt: string;
+      svix_webhook_application_id: string | null;
+      swagger_url: string | null;
+      token: string;
+      type: string | null;
+      svix_webhook_endpoint_id: string | null;
+      website: string | null;
+      handoff_tool_description: string | null;
+      enable_auto_tagging: boolean;
+      enable_realtime_auto_tagging_tool: boolean;
+      enable_auto_tagging_ticketing_system: boolean;
+      airbyte_workspace_id: string | null;
+      /** @enum {string|null} */
+      ticketing_system:
+        | 'dynamics365'
+        | 'freshdesk'
+        | 'gorgias'
+        | 'hubspot'
+        | 'intercom'
+        | 'open'
+        | 'salesforce'
+        | 'twilio_flex'
+        | 'zendesk'
+        | 'zendesk_v2'
+        | null;
+      neon_project_id: string | null;
+      enable_http_action_default_headers: boolean;
+      use_openapi_action_search: boolean;
+      http_action_contact_auth_endpoint: string | null;
+      forked_from_org_id: string | null;
+      created_at: string | null;
+      updated_at: string | null;
+      deleted_at: string | null;
+    };
+    CloseAccountRequestDto: {
+      reason: string;
+      /** Format: email */
+      confirmEmail: string;
+    };
+    CloseAccountResponseDto: {
+      success: boolean;
+      message: string;
+      data?: {
+        accountId: string;
+        closureDate: string;
+        confirmationNumber: string;
+        refundAmount?: number;
+        refundCurrency?: string;
+        estimatedRefundTime?: string;
+      };
+    };
+    ComputeTriggerWidgetsDto: {
+      workflowId: string;
+      workflowVersionId: number;
+      triggerType: string;
+    };
+    ComputeWidgetsDto: {
+      actionType: string;
+      input?: unknown;
+    };
+    ConfluenceSourceDto: {
+      domain_name: string;
+      email: string;
+      api_token: string;
+    };
+    ContactDto: {
+      id: string;
+      copilot_id: string;
+      email: string | null;
+      name: string | null;
+      language: string | null;
+      non_verified_name: string | null;
+      phone_number: string | null;
+      custom_data: {
+        [key: string]: string;
+      } | null;
+      non_verified_custom_data: {
+        [key: string]: string;
+      } | null;
+      apollo_enrichment_data: components['schemas']['ApolloMatchResponseDto'];
+      created_at: string;
+      updated_at: string;
+      company_id: string | null;
+      unsubscribed_at: string | null;
+      avatar_url: string | null;
+      /** @enum {string|null} */
+      source:
+        | 'form'
+        | 'hubspot'
+        | 'intercom'
+        | 'pipedream'
+        | 'salesforce'
+        | 'slack'
+        | null;
+      source_id: string | null;
+      source_original_payload?: unknown;
+      slack_data: {
+        user_id: string;
+        team_id: string;
+        title?: string;
+        timezone?: string;
+        locale?: string;
+        workspace_name: string;
+        workspace_icon?: string;
+        workspace_domain?: string;
+        is_admin: boolean;
+        is_owner: boolean;
+        last_updated: number;
+      } | null;
+      action_http_overrides: {
+        queryParams?: {
+          [key: string]: string;
+        };
+        pathParams?: {
+          [key: string]: string;
+        };
+        bodyParams?: {
+          [key: string]: unknown;
+        };
+        headers?: {
+          [key: string]: string;
+        };
+      } | null;
+      chat_context: string | null;
+      intercom_user_id: string | null;
+      zendesk_external_id: string | null;
+    };
+    ContactsAffectedBySequenceFilter: {
+      /** @enum {string} */
+      type: 'contacts_affected_by_sequence';
+      sequence_id: string;
+    };
+    ContactsAttributesFilter: {
+      /** @enum {string} */
+      type: 'contacts_attributes_in';
+      attributes?: {
+        [key: string]: string;
+      }[];
+    };
+    ContactsCreatedAtFilter: {
+      /** @enum {string} */
+      type: 'contacts_created_at_between';
+      /**
+       * DateTime
+       * Format: date-time
+       * @description ISO 8601 date-time string
+       */
+      after?: string | null;
+      /**
+       * DateTime
+       * Format: date-time
+       * @description ISO 8601 date-time string
+       */
+      before?: string | null;
+    };
+    ContactsEmailDomainNameFilter: {
+      /** @enum {string} */
+      type: 'contacts_email_domain_name_in';
+      domain_name_in: string[];
+    };
+    ContactsEmailFilter: {
+      /** @enum {string} */
+      type: 'contacts_email_in';
+      email_in: string[];
+    };
+    ContactsFilter:
+      | components['schemas']['AllContactsFilter']
+      | components['schemas']['ContactsIdsFilter']
+      | components['schemas']['ContactsCreatedAtFilter']
+      | components['schemas']['ContactsEmailDomainNameFilter']
+      | components['schemas']['ContactsAffectedBySequenceFilter']
+      | components['schemas']['ContactsNameFilter']
+      | components['schemas']['ContactsPhoneNumberFilter']
+      | components['schemas']['ContactsEmailFilter']
+      | components['schemas']['ContactsAttributesFilter']
+      | components['schemas']['ContactsSessionsAttributesFilter']
+      | components['schemas']['LastContactedAtFilter']
+      | components['schemas']['LastContactedAtWithHandoffFilter'];
+    ContactsIdsFilter: {
+      /** @enum {string} */
+      type: 'contact_id_in';
+      contact_ids: string[];
+    };
+    ContactsNameFilter: {
+      /** @enum {string} */
+      type: 'contacts_name_in';
+      name_in: string[];
+    };
+    ContactsPhoneNumberFilter: {
+      /** @enum {string} */
+      type: 'contacts_phone_number_in';
+      phone_number_in: string[];
+    };
+    ContactsSessionsAttributesFilter: {
+      /** @enum {string} */
+      type: 'contacts_sessions_attributes_in';
+      attributes?: {
+        [key: string]: string;
+      }[];
+    };
+    CrawlJobDto: {
+      id: string;
+      org_id: string;
+      url: string;
+      /** @enum {string} */
+      status: 'cancelled' | 'completed' | 'failed' | 'scraping';
+      created_at: string;
+      updated_at: string;
+      completed_at: string | null;
+      completed_pages: number | null;
+      error_message: string | null;
+      total_pages: number | null;
+    };
+    CrawlStatusDto: {
+      success: boolean;
+      /** @enum {string} */
+      status: 'cancelled' | 'completed' | 'failed' | 'scraping';
+    };
+    CreateActionDto: {
+      name: string;
+      api_endpoint: string;
+      request_type: string;
+      description?: string;
+      enabled_on_channel?: {
+        channels: (
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice'
+        )[];
+      };
+      payload: {
+        [key: string]: unknown;
+      };
+      bot_id: string;
+      operation_id?: string;
+      /** @default false */
+      pinned: boolean;
+    };
+    CreateAirbyteConnectionInputDto: {
+      source:
+        | {
+            /** @enum {string} */
+            type: 'notion';
+          }
+        | {
+            /** @enum {string} */
+            type: 'zendesk_support';
+            subdomain: string;
+            email: string;
+            api_token: string;
+          }
+        | {
+            /** @enum {string} */
+            type: 'confluence';
+            domain_name: string;
+            email: string;
+            api_token: string;
+          }
+        | {
+            /** @enum {string} */
+            type: 'shopify';
+            /** @description The name of your store, e.g. "my-store" from my-store.myshopify.com */
+            shop: string;
+            /** @description The API access token for your Shopify store */
+            access_token: string;
+          }
+        | {
+            /** @enum {string} */
+            type: 'gitbook';
+            /** @description Personal access token for authenticating with the GitBook API. */
+            access_token: string;
+            /** @description The ID of the GitBook space to sync. */
+            space_id: string;
+          }
+        | {
+            /** @enum {string} */
+            type: 'intercom';
+            /** @description Personal access token for authenticating with the Intercom API. */
+            access_token: string;
+            /** @description The date to start syncing data from, in YYYY-MM-DDTHH:mm:ssZ format */
+            start_date: string;
+          };
+    };
+    CreateApiKeyOutputDto: {
+      apiKey: string;
+      apiKeyId: string;
+    };
+    CreateArticleDto: {
+      /** Format: uuid */
+      category_id: string;
+      title: string;
+      content?: string;
+      author_id?: number;
+      is_public?: boolean;
+    };
+    CreateCategoryDto: {
+      /** Format: uuid */
+      help_center_id: string;
+      name: string;
+      description?: string;
+      icon?: string;
+    };
+    CreateChatAgentModeDto: {
+      name: string;
+      enabled?: boolean;
+      slug?: string;
+      content?: components['schemas']['ChatAgentModeContent'];
+      in_mode_instructions?: string;
+      on_entry_instructions?: string;
+      pre_entry_instructions?: string;
+    };
+    CreateChatSessionNoteDto: {
+      note: string;
+      attachments?: {
+        id: string;
+        name: string;
+        size: number;
+        type: string;
+        url: string;
+      }[];
+    };
+    CreateCheckoutUrlResponse: {
+      checkout_url: string;
+    };
+    CreateCustomTrainingDTO: {
+      title: string;
+      body: string;
+      category: string;
+      /** @enum {string} */
+      type?: 'BEHAVIORAL' | 'SCENARIO_SPECIFIC';
+      tags?: string[];
+      is_draft?: boolean;
+    };
+    CreateEvalInputDto: {
+      /** Format: uuid */
+      sessionId: string;
+      httpParameterOverrides: {
+        queryParams?: {
+          [key: string]: string;
+        };
+        pathParams?: {
+          [key: string]: string;
+        };
+        headers?: {
+          [key: string]: string;
+        };
+      };
+      assertionPrompt: string;
+    };
+    CreateEvalOutputDto: {
+      /** Format: uuid */
+      evalId: string;
+    };
+    CreateFilterDto: {
+      /**
+       * ContactsCompositeFilter
+       * @description A combination of contact filters. All filters within `and` arrays must apply to a contact in order for the contact to be included. On the other hand, only one of the filters within the `or` array must apply for the contact to be included. If no filter is provided, all contacts will be included.
+       */
+      filter: {
+        or: {
+          and: components['schemas']['ContactsFilter'][];
+        }[];
+      } | null;
+      name: string;
+    };
+    CreateHelpCenterDto: {
+      name: string;
+      description?: string;
+      domain?: string;
+    };
+    CreatePhoneAgentDto: {
+      /** @description The name of the AI phone agent */
+      name: string;
+      /**
+       * @default inbound
+       * @enum {string}
+       */
+      type: 'inbound' | 'outbound';
+      /** @description The language the AI phone agent should mainly speak in */
+      language?: string | null;
+      /** @description The accent the AI phone agent should mainly speak in */
+      accent?: string | null;
+      /** @description The phone number of the human agent to hand off the call to */
+      handoff_phone_number?: string | null;
+      /**
+       * @description The speed of the AI phone agent
+       * @default 1
+       */
+      speed: number | null;
+      /**
+       * @description Whether the agent can be interrupted or not
+       * @default true
+       */
+      interruptible: boolean;
+      /** @description A list of action ids the AI phone agent has access to. A `null` value means all actions. An empty list means no actions */
+      actionIds?: string[] | null;
+      /** @description A list of instructions */
+      instructions?: string[] | null;
+      /** @description A list of fields to collect data about */
+      data_collection_fields?: string[] | null;
+      /** @description The webhook url to send the collected data to */
+      data_collection_webhook_url?: string | null;
+      /**
+       * @description The AI model of the agent. This cannot be changed after creation
+       * @default oppie-vox
+       * @enum {string}
+       */
+      model: 'oppie-vox' | 'oppie-vox-turbo' | 'oppie-vox-2';
+      /** @description The first message the AI phone agent should say */
+      first_message?: string | null;
+      /** @description The voice id */
+      voice_id?: string | null;
+      flow?: unknown;
+      /** @description Whether the AI phone agent should use the organization's knowledgebase */
+      use_org_knowledgebase?: boolean | null;
+      /** @description Whether the AI phone agent should be in manual mode */
+      manual_mode?: boolean | null;
+      /** @description The custom LLM to use for the AI phone agent */
+      custom_llm?: string | null;
+    };
+    CreateShopifyConnectionDto: {
+      org_id: string;
+      shopify_domain: string;
+      private_access_token: string;
+    };
+    CreateTemplateDto: {
+      body: string;
+      name: string;
+      subject: string;
+    };
     CreateUnverifiedContactDto: {
       email?: string;
       non_verified_name?: string;
@@ -207,14 +1315,1761 @@ export interface components {
         [key: string]: string | number | boolean;
       };
     };
+    CreateVocInsightCategoryDto: {
+      name: string;
+      description: string | null;
+    };
     CreateWidgetSessionDto: {
       customData?: {
         [key: string]: string | number | boolean | unknown | unknown;
       };
     };
+    CustomTrainingDto: {
+      id: string;
+      organization_id: string;
+      question: string;
+      answer: string;
+      category: string;
+      /** @default false */
+      is_draft: boolean;
+      accepted_by: number | null;
+      /** @description Draft payload with structured data */
+      draft_payload?: unknown;
+      learned_from_session_id: string | null;
+      /** @enum {string} */
+      type: 'BEHAVIORAL' | 'SCENARIO_SPECIFIC';
+      tags: string[];
+      created_at: string;
+      updated_at: string;
+    };
+    DeepContactViewDto: {
+      contact: {
+        id: string;
+        copilot_id: string;
+        email: string | null;
+        name: string | null;
+        language: string | null;
+        non_verified_name: string | null;
+        phone_number: string | null;
+        custom_data: {
+          [key: string]: string;
+        } | null;
+        non_verified_custom_data: {
+          [key: string]: string;
+        } | null;
+        apollo_enrichment_data: components['schemas']['ApolloMatchResponseDto'];
+        created_at: string;
+        updated_at: string;
+        company_id: string | null;
+        unsubscribed_at: string | null;
+        avatar_url: string | null;
+        /** @enum {string|null} */
+        source:
+          | 'form'
+          | 'hubspot'
+          | 'intercom'
+          | 'pipedream'
+          | 'salesforce'
+          | 'slack'
+          | null;
+        source_id: string | null;
+        source_original_payload?: unknown;
+        slack_data: {
+          user_id: string;
+          team_id: string;
+          title?: string;
+          timezone?: string;
+          locale?: string;
+          workspace_name: string;
+          workspace_icon?: string;
+          workspace_domain?: string;
+          is_admin: boolean;
+          is_owner: boolean;
+          last_updated: number;
+        } | null;
+        action_http_overrides: {
+          queryParams?: {
+            [key: string]: string;
+          };
+          pathParams?: {
+            [key: string]: string;
+          };
+          bodyParams?: {
+            [key: string]: unknown;
+          };
+          headers?: {
+            [key: string]: string;
+          };
+        } | null;
+        chat_context: string | null;
+        intercom_user_id: string | null;
+        zendesk_external_id: string | null;
+      };
+      company: {
+        id: string;
+        name: string | null;
+        domain: string | null;
+        logo_url: string | null;
+        website_url: string | null;
+        country: string | null;
+        enriched_at: string | null;
+      } | null;
+      voc_insights: {
+        /** Format: uuid */
+        id: string;
+        org_id: string;
+        /** Format: uuid */
+        group_id: string | null;
+        type: string;
+        content: string;
+        /** @enum {string} */
+        sentiment: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+        category: string | null;
+        user_story: string | null;
+        occurrence_count: number;
+        is_resolved: number;
+        resolved_at: string | null;
+        resolved_by: number | null;
+        is_snoozed: number;
+        snoozed_at: string | null;
+        snoozed_by: number | null;
+        created_at: string;
+        updated_at: string;
+        last_seen_at: string | null;
+        deep_research: string | null;
+        generating_deep_research: number;
+      }[];
+      sessions: {
+        id: string;
+        status: number;
+        status_name?: string;
+        /** @enum {string} */
+        channel:
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice';
+        assignee_id: number | null;
+        summary: string | null;
+        classification: string | null;
+        contact_id: string | null;
+        copilot_id: string;
+        email: string | null;
+        email_thread_id: string | null;
+        group_id: string | null;
+        is_notification_enabled: number;
+        verified: number | null;
+        short_token: string | null;
+        last_seen_at: string | null;
+        is_online: number;
+        /** @enum {string|null} */
+        ai_closure_type: 'assumed_resolved' | 'handed_off' | 'resolved' | null;
+        /** @enum {string|null} */
+        ai_billing_type: 'hard' | 'light' | null;
+        language: string | null;
+        last_message: string | null;
+        last_message_at: string | null;
+        meta: {
+          title?: string;
+          whatsappToNumber?: string;
+          recordingUrl?: string;
+          /** @enum {string|null} */
+          title_generation_type?: 'user' | 'system' | null;
+          summary?: string;
+          phoneNumber?: string;
+          /** @enum {string|null} */
+          callStatus?: 'sent' | 'finished' | 'missed' | null;
+        } | null;
+        mobileNumber: string | null;
+        queryOrgId: string | null;
+        created_at: string;
+        updated_at: string;
+        handed_off_at: string | null;
+        first_human_message_at: string | null;
+        /** @enum {string|null} */
+        fallback_channel: 'email' | 'sms' | null;
+        /** @enum {string|null} */
+        sentiment: 'angry' | 'happy' | 'neutral' | null;
+        ticket_number: number;
+        ai_phone_call_sid: string | null;
+        ai_phone_call_recording_url: string | null;
+        slack_channel_id: string | null;
+        slack_thread_ts: string | null;
+        slack_channel_name: string | null;
+        custom_data: {
+          [key: string]: string;
+        } | null;
+        editable_custom_data: {
+          [key: string]: string;
+        } | null;
+        zendesk_ticket_id: number | null;
+        hubspot_ticket_id: string | null;
+        hubspot_conversation_id: string | null;
+        intercom_conversation_id: string | null;
+        gorgias_ticket_id: string | null;
+        is_assist_mode: boolean;
+        last_read_at_by_agent_ids: {
+          [key: string]: string | null;
+        };
+        mode_id: string | null;
+        flex_conversation_sid: string | null;
+        latest_state_checkpoint_payload: {
+          [key: string]: unknown;
+        } | null;
+        salesforce_case_id: string | null;
+      }[];
+      metrics: {
+        total_sessions: number;
+        handoff_sessions: number;
+        handoff_rate: number;
+        sentiment_metrics: {
+          happy: number;
+          neutral: number;
+          angry: number;
+          happy_rate: number;
+          angry_rate: number;
+          no_sentiment: number;
+        };
+      };
+    };
+    DeleteKnowledgebaseItemsInputDto: {
+      id: string;
+    }[];
+    DirectHandoffSettingsResponseDto: {
+      /** @description Whether handoff is enabled */
+      handoff_enabled: boolean;
+      /** @description Enable handoff when user shows frustration */
+      handoff_when_user_gets_frustrated: boolean;
+      /** @description Enable handoff for unproductive conversations */
+      handoff_if_conversation_is_going_nowhere: boolean;
+      /** @description Enable handoff on explicit human request */
+      handoff_on_explicit_request_for_human: boolean;
+      /** @description Require clear problem statement before handoff */
+      must_extract_clear_problem_statement: boolean;
+      /** @description Number of messages before showing reply buttons */
+      show_reply_buttons_after_messages_count: number;
+    };
+    DisconnectWhatsAppOAuthResponseDto: {
+      success: boolean;
+    };
+    DoesEmailExistInOurDatabaseRequestDto: {
+      email: string;
+    };
+    EmailChannel: {
+      id: string;
+      email: string;
+      organization_id: string | null;
+      /** @enum {string} */
+      connection_status: 'connected' | 'failed' | 'pending';
+      sender_name: string | null;
+      sender_signature: string | null;
+      created_at: string | null;
+      updated_at: string | null;
+    };
+    EmailTemplateDto: {
+      id: string;
+      actor_id: number;
+      body: string;
+      created_at: string;
+      name: string;
+      org_id: string;
+      subject: string;
+      updated_at: string;
+      payload: {
+        $schema?: string;
+        $id?: string;
+        title?: string;
+        description?: string;
+        type?: string;
+        definitions: {
+          [key: string]: {
+            type: string;
+            properties: {
+              [key: string]: {
+                type: string;
+                description?: string;
+                title?: string;
+                additionalProperties?: boolean;
+              };
+            };
+            required: string[];
+            description?: string;
+            title?: string;
+            additionalProperties?: boolean;
+          };
+        };
+        properties: {
+          [key: string]: {
+            type: string;
+            description?: string;
+            title?: string;
+            additionalProperties?: boolean;
+          };
+        };
+        required?: string[];
+        additionalProperties?: boolean;
+      };
+    };
+    EmailTemplateInsertDto: {
+      body: string;
+      name: string;
+      subject: string;
+    };
+    EvalRunOutputDto: {
+      items: ({
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        batch_id: string;
+        created_at: string;
+        /** Format: uuid */
+        eval_id: string;
+        openai_messages?: unknown;
+        /** Format: uuid */
+        org_id: string;
+        /** @enum {string} */
+        status: 'failed' | 'in_progress' | 'successful';
+      } & {
+        assertion_prompt: string;
+      })[];
+    };
+    ExportRecommendationSessionsResponseDto: {
+      data: {
+        id: string;
+        /** @enum {string} */
+        status: 'OPEN' | 'CLOSED_RESOLVED' | 'CLOSED_UNRESOLVED';
+        /** @enum {string} */
+        channel:
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice';
+        createdAt: string;
+        lastMessageAt: string;
+        /** @enum {string|null} */
+        aiBillingType: 'hard' | 'light' | null;
+        /** @enum {string|null} */
+        aiClosureType: 'assumed_resolved' | 'handed_off' | 'resolved' | null;
+        summary: string | null;
+        contact: {
+          name: string | null;
+          email: string | null;
+          phoneNumber: string | null;
+        };
+        /** @enum {string|null} */
+        sentiment: 'angry' | 'happy' | 'neutral' | null;
+        language: string | null;
+      }[];
+      total: number;
+      offset: number;
+    };
+    ExportSessionsDto: {
+      start_date?: string;
+      end_date?: string;
+      status?: number;
+      /** @enum {string} */
+      channel?:
+        | 'web'
+        | 'email'
+        | 'phone_voice'
+        | 'slack'
+        | 'sms'
+        | 'whatsapp'
+        | 'api'
+        | 'web_voice';
+      /** @enum {string} */
+      ai_closure_type?: 'assumed_resolved' | 'handed_off' | 'resolved';
+      /** @enum {string} */
+      ai_billing_type?: 'hard' | 'light';
+      /** @enum {string} */
+      sentiment?: 'angry' | 'happy' | 'neutral';
+      /** @default 0 */
+      offset: number;
+      /** @default false */
+      withHistory: boolean;
+    };
+    ExportSessionsQueryDto: {
+      sessionIds: string[];
+      /** @default 0 */
+      offset: number | null;
+    };
+    ExportSessionsResponseDto: {
+      data: {
+        id: string;
+        /** @enum {string} */
+        status: 'OPEN' | 'CLOSED_RESOLVED' | 'CLOSED_UNRESOLVED';
+        /** @enum {string} */
+        channel:
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice';
+        createdAt: string;
+        lastMessageAt: string;
+        /** @enum {string|null} */
+        aiBillingType: 'hard' | 'light' | null;
+        /** @enum {string|null} */
+        aiClosureType: 'assumed_resolved' | 'handed_off' | 'resolved' | null;
+        title: string | null;
+        contact: {
+          name: string | null;
+          email: string | null;
+          phoneNumber: string | null;
+        };
+        externalClassification: string | null;
+        /** @enum {string|null} */
+        sentiment: 'angry' | 'happy' | 'neutral' | null;
+        language: string | null;
+        zendeskTicketId: string | null;
+        intercomConversationId: string | null;
+        history: string;
+      }[];
+      total: number;
+      offset: number;
+    };
+    ExportVocSessionsQueryDto: {
+      sessionIds: string[];
+      /** @default 0 */
+      offset: number | null;
+    };
+    ExportVocSessionsResponseDto: {
+      data: {
+        id: string;
+        /** @enum {string} */
+        status: 'OPEN' | 'CLOSED_RESOLVED' | 'CLOSED_UNRESOLVED';
+        /** @enum {string} */
+        channel:
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice';
+        createdAt: string;
+        lastMessageAt: string;
+        /** @enum {string|null} */
+        aiBillingType: 'hard' | 'light' | null;
+        /** @enum {string|null} */
+        aiClosureType: 'assumed_resolved' | 'handed_off' | 'resolved' | null;
+        summary: string | null;
+        contact: {
+          name: string | null;
+          email: string | null;
+          phoneNumber: string | null;
+        };
+        /** @enum {string|null} */
+        sentiment: 'angry' | 'happy' | 'neutral' | null;
+        language: string | null;
+      }[];
+      total: number;
+      offset: number;
+    };
     FileUploadDto: {
       /** Format: binary */
       file: string;
+    };
+    FilteredSessionsDto: {
+      data: {
+        id: string;
+        status: number;
+        status_name?: string;
+        /** @enum {string} */
+        channel:
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice';
+        assignee_id: number | null;
+        summary: string | null;
+        classification: string | null;
+        contact_id: string | null;
+        copilot_id: string;
+        email: string | null;
+        email_thread_id: string | null;
+        group_id: string | null;
+        is_notification_enabled: number;
+        verified: number | null;
+        short_token: string | null;
+        last_seen_at: string | null;
+        is_online: number;
+        /** @enum {string|null} */
+        ai_closure_type: 'assumed_resolved' | 'handed_off' | 'resolved' | null;
+        /** @enum {string|null} */
+        ai_billing_type: 'hard' | 'light' | null;
+        language: string | null;
+        last_message: string | null;
+        last_message_at: string | null;
+        meta: {
+          title?: string;
+          whatsappToNumber?: string;
+          recordingUrl?: string;
+          /** @enum {string|null} */
+          title_generation_type?: 'user' | 'system' | null;
+          summary?: string;
+          phoneNumber?: string;
+          /** @enum {string|null} */
+          callStatus?: 'sent' | 'finished' | 'missed' | null;
+        } | null;
+        mobileNumber: string | null;
+        queryOrgId: string | null;
+        created_at: string;
+        updated_at: string;
+        handed_off_at: string | null;
+        first_human_message_at: string | null;
+        /** @enum {string|null} */
+        fallback_channel: 'email' | 'sms' | null;
+        /** @enum {string|null} */
+        sentiment: 'angry' | 'happy' | 'neutral' | null;
+        ticket_number: number;
+        ai_phone_call_sid: string | null;
+        ai_phone_call_recording_url: string | null;
+        slack_channel_id: string | null;
+        slack_thread_ts: string | null;
+        slack_channel_name: string | null;
+        custom_data: {
+          [key: string]: string;
+        } | null;
+        editable_custom_data: {
+          [key: string]: string;
+        } | null;
+        zendesk_ticket_id: number | null;
+        hubspot_ticket_id: string | null;
+        hubspot_conversation_id: string | null;
+        intercom_conversation_id: string | null;
+        gorgias_ticket_id: string | null;
+        is_assist_mode: boolean;
+        last_read_at_by_agent_ids: {
+          [key: string]: string | null;
+        };
+        mode_id: string | null;
+        flex_conversation_sid: string | null;
+        latest_state_checkpoint_payload: {
+          [key: string]: unknown;
+        } | null;
+        salesforce_case_id: string | null;
+      }[];
+      total: number;
+      page: number;
+      limit: number;
+      is_next: boolean;
+      is_back: boolean;
+      total_pages: number;
+      ids: string[];
+    };
+    FilteredWhatsAppErrorLogsDto: {
+      data: {
+        id: string;
+        org_id: string;
+        /** @enum {string} */
+        source: 'api' | 'webhook';
+        waba_id: string;
+        phone_number_id: string;
+        recipient_phone: string;
+        whatsapp_message_id: string | null;
+        error_title: string;
+        error_details: string;
+        created_at: string;
+        raw?: unknown;
+      }[];
+      error_titles: {
+        count: number;
+        error_title: string;
+      }[];
+      total: number;
+      page: number;
+      limit: number;
+      is_next: boolean;
+      is_back: boolean;
+      total_pages: number;
+    };
+    GenerateArticleDTO: {
+      articleId: string;
+      articleTitle: string;
+      articleContent: string;
+      categoryId: string;
+      categoryTitle: string;
+      categoryHelpcenter?: string;
+      newCategoryCreated: boolean;
+      categories: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        help_center_id: string;
+        name: string;
+        icon: string | null;
+        slug: string;
+        description: string | null;
+        created_at: string;
+        updated_at: string;
+      }[];
+      helpcenters: {
+        id: string;
+        organization_id: string;
+        name: string;
+        description: string | null;
+        domain: string | null;
+        logo_url: string | null;
+        primary_color: string | null;
+        created_at: string;
+        updated_at: string;
+      }[];
+    };
+    GenerateScenarioResponseDto: {
+      title: string;
+    };
+    GenericResponseDto: {
+      data?: {
+        success: boolean;
+      };
+      error?: {
+        code: string;
+        status: number;
+        message: string;
+      };
+    };
+    GetAllSequenceRunsDto: {
+      total_count: number;
+      runs: {
+        canceled_at: string | null;
+        created_at: string;
+        ended_at: string | null;
+        id: string;
+        sequence_id: string;
+      }[];
+    };
+    GetApiKeysOutputDto: {
+      api_keys: {
+        id: string;
+        name: string;
+        created_at: string;
+      }[];
+    };
+    GetAvailableSourcesOutputDto: {
+      data: {
+        /** @enum {string} */
+        type:
+          | 'notion'
+          | 'zendesk_support'
+          | 'confluence'
+          | 'shopify'
+          | 'gitbook'
+          | 'intercom';
+      }[];
+    };
+    GetConnectionStatusOutputDto: {
+      /** @enum {string} */
+      status: 'active' | 'inactive' | 'unknown';
+    };
+    GetConnectionSyncJobsOutputDto: {
+      data: {
+        jobId: number;
+        status: string;
+        jobType: string;
+        startTime: number;
+        connectionId: string;
+        lastUpdatedAt: number;
+        duration: number;
+        bytesSynced: number;
+        rowsSynced: number;
+      }[];
+    };
+    GetConnectionsOutputDto: {
+      /** @enum {string} */
+      sourceType:
+        | 'notion'
+        | 'zendesk_support'
+        | 'confluence'
+        | 'shopify'
+        | 'gitbook'
+        | 'intercom';
+      /** @enum {string} */
+      status: 'active' | 'inactive';
+      configurations?: unknown;
+    }[];
+    GetContactsAvailableChannelsOutputDto: {
+      contacts_count: number;
+      contacts_with_email_count: number;
+      contacts_with_phone_count: number;
+      contacts_with_phone_and_email_count: number;
+    };
+    GetContactsInputDto: {
+      /**
+       * ContactsCompositeFilter
+       * @description A combination of contact filters. All filters within `and` arrays must apply to a contact in order for the contact to be included. On the other hand, only one of the filters within the `or` array must apply for the contact to be included. If no filter is provided, all contacts will be included.
+       */
+      filter?: {
+        or: {
+          and: components['schemas']['ContactsFilter'][];
+        }[];
+      } | null;
+      sort?: {
+        /** @enum {string} */
+        field: 'created_at' | 'updated_at' | 'name' | 'email' | 'phone_number';
+        /** @enum {string} */
+        order: 'asc' | 'desc';
+      };
+    };
+    GetCrawlsDto: {
+      data: {
+        id: string;
+        org_id: string;
+        url: string;
+        /** @enum {string} */
+        status: 'cancelled' | 'completed' | 'failed' | 'scraping';
+        created_at: string;
+        updated_at: string;
+        completed_at: string | null;
+        completed_pages: number | null;
+        error_message: string | null;
+        total_pages: number | null;
+      }[];
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+    GetEvalBatchesOutputDto: {
+      items: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        org_id: string;
+        created_at: string;
+        /** @enum {string} */
+        status: 'completed' | 'failed' | 'in_progress';
+      }[];
+      total_count: number;
+      total_pages: number;
+      current_page: number;
+      success_rate?: number;
+    };
+    GetEvalDefinitionsOutputDto: {
+      items: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        org_id: string;
+        /** Format: uuid */
+        reference_session_id: string;
+        assertion_prompt: string;
+        http_action_parameter_overrides: {
+          queryParams?: {
+            [key: string]: string;
+          };
+          pathParams?: {
+            [key: string]: string;
+          };
+          bodyParams?: {
+            [key: string]: unknown;
+          };
+          headers?: {
+            [key: string]: string;
+          };
+        };
+        created_at: string;
+        deleted_at: string | null;
+      }[];
+      total_count: number;
+      total_pages: number;
+      current_page: number;
+    };
+    GetEvalsSettingsOutputDto: {
+      httpActionParameterOverrides: {
+        queryParams?: {
+          [key: string]: string;
+        };
+        pathParams?: {
+          [key: string]: string;
+        };
+        bodyParams?: {
+          [key: string]: unknown;
+        };
+        headers?: {
+          [key: string]: string;
+        };
+      };
+      created_at: string;
+      updated_at: string;
+    };
+    GetFilteredSessionsDto: {
+      filters: {
+        date?: {
+          from?: string;
+          to?: string;
+        };
+        channels?: (
+          | 'web'
+          | 'email'
+          | 'phone_voice'
+          | 'slack'
+          | 'sms'
+          | 'whatsapp'
+          | 'api'
+          | 'web_voice'
+        )[];
+        status?: number[];
+        aiClosure?: ('assumed_resolved' | 'handed_off' | 'resolved')[];
+        sentiment?: ('angry' | 'happy' | 'neutral')[];
+        billing?: ('hard' | 'light')[];
+        search?: string;
+        assignees?: number[];
+        teamsIds?: string[];
+        consumerDomains?: string[];
+        consumerCompanies?: string[];
+        contactIds?: string[];
+        ticketNumber?: number;
+        language?: string[];
+        /** @description A list of objects with key-value pairs to filter by. Relationship is OR between objects, and AND between the values in each object */
+        customData?: {
+          [key: string]: string;
+        }[];
+        /** @description A list of objects with key-value pairs to filter by. Relationship is OR between objects, and AND between the values in each object */
+        contactCustomData?: {
+          [key: string]: string;
+        }[];
+        zendeskTicketId?: number;
+        hubspotTicketId?: string;
+        intercomConversationId?: string;
+      };
+      ordering: {
+        /** @enum {string} */
+        field?:
+          | 'last_message_at'
+          | 'created_at'
+          | 'updated_at'
+          | 'assignee_id'
+          | 'status'
+          | 'channel'
+          | 'summary';
+        /** @enum {string} */
+        direction?: 'asc' | 'desc';
+      };
+      pagination: {
+        page: number;
+        limit: number;
+      };
+    };
+    GetFilteredWhatsAppErrorLogsDto: {
+      filters: {
+        created_at?: {
+          from?: string;
+          to?: string;
+        };
+        waba_id?: string[];
+        phone_number_id?: string[];
+        recipient_phone?: string[];
+        whatsapp_message_id?: string[];
+        error_title?: string[];
+        error_details?: string[];
+      };
+      ordering: {
+        /** @enum {string} */
+        direction?: 'asc' | 'desc';
+      };
+      pagination: {
+        page: number;
+        limit: number;
+      };
+    };
+    GetFiltersOutputDto: {
+      filters: {
+        id: string;
+        name: string;
+        filter: string;
+      }[];
+    };
+    GetInsightsQueryDto: {
+      /** @enum {string} */
+      type?:
+        | 'action_pattern'
+        | 'knowledge_gap'
+        | 'performance_issue'
+        | 'topic_coverage';
+      /**
+       * @default all
+       * @enum {string}
+       */
+      status: 'open' | 'resolved' | 'all' | 'snoozed';
+      /**
+       * @default last_seen_at
+       * @enum {string}
+       */
+      sortBy: 'created_at' | 'last_seen_at' | 'sessions_count';
+      /**
+       * @default desc
+       * @enum {string}
+       */
+      sortOrder: 'asc' | 'desc';
+      /** @default 1 */
+      page: number;
+      /** @default 20 */
+      limit: number;
+      fromDate?: string | null;
+      toDate?: string | null;
+      minSessions?: number;
+      /** Format: uuid */
+      groupId?: string;
+      language?: string;
+      customData?: {
+        [key: string]: string;
+      }[];
+      contactCustomData?: {
+        [key: string]: string;
+      }[];
+    };
+    GetInsightsResponseDto: {
+      data: {
+        /** Format: uuid */
+        id: string;
+        org_id: string;
+        group_id: string | null;
+        /** @enum {string} */
+        type:
+          | 'action_pattern'
+          | 'knowledge_gap'
+          | 'performance_issue'
+          | 'topic_coverage';
+        key: string;
+        action_name: string | null;
+        action_debug_info?: unknown;
+        action_result?: unknown;
+        action_parameters?: unknown;
+        metadata?: unknown;
+        sessions_count: number;
+        created_at: string;
+        updated_at: string;
+        last_seen_at: string | null;
+        deleted_at: string | null;
+        is_resolved: number;
+        resolved_at: string | null;
+        resolved_by: number | null;
+        resolved_by_name: string | null;
+        resolved_by_avatar_url: string | null;
+        is_snoozed: number;
+        snoozed_at: string | null;
+        snoozed_by: number | null;
+        jira_issue_key: string | null;
+        jira_issue_id: string | null;
+        jira_issue_url: string | null;
+        user_story: string | null;
+        /** @enum {string|null} */
+        report_status:
+          | 'analyzing_batch_1'
+          | 'analyzing_batch_2'
+          | 'analyzing_batch_3'
+          | 'analyzing_batch_4'
+          | 'article_fetched'
+          | 'completed'
+          | 'failed'
+          | 'fetching_article'
+          | 'generating_report'
+          | 'loading_sessions'
+          | 'not_started'
+          | null;
+        report_error: string | null;
+        report_progress?: unknown;
+      }[];
+      total: number;
+      page: number;
+      totalPages: number;
+    };
+    GetIntegrationTokenOutputDto: {
+      token: string;
+    };
+    GetKnowledgebaseItemsInputDto: {
+      limit: number;
+      page: number;
+      search?: string;
+      /** @enum {string} */
+      visibility?: 'internal' | 'public';
+      /** @enum {string} */
+      sourceType?: 'custom_training' | 'integration' | 'website';
+    };
+    GetOauthSecretIdOutputDto: {
+      exists: boolean;
+    };
+    GetUserSessionRequestDto: {
+      email: string;
+      orgId?: string;
+    };
+    GetVocInsightQueryDto: {
+      type?: string;
+      /**
+       * @default new
+       * @enum {string}
+       */
+      status:
+        | 'new'
+        | 'reviewed'
+        | 'archived'
+        | 'all'
+        | 'handed_off'
+        | 'snoozed';
+      /** @enum {string} */
+      sentiment?: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+      /**
+       * @default occurrence_count
+       * @enum {string}
+       */
+      sortBy: 'created_at' | 'updated_at' | 'occurrence_count';
+      /**
+       * @default desc
+       * @enum {string}
+       */
+      sortOrder: 'asc' | 'desc';
+      /** @default 1 */
+      page: number;
+      /** @default 20 */
+      limit: number;
+      fromDate?: string | null;
+      toDate?: string | null;
+      /** Format: uuid */
+      groupId?: string;
+      minSessions?: number | null;
+      language?: string;
+      customData?: {
+        [key: string]: string;
+      }[];
+      contactCustomData?: {
+        [key: string]: string;
+      }[];
+      search?: string;
+    };
+    GetVocQueryDto: {
+      type?: string;
+      /**
+       * @default new
+       * @enum {string}
+       */
+      status:
+        | 'new'
+        | 'reviewed'
+        | 'archived'
+        | 'all'
+        | 'handed_off'
+        | 'snoozed';
+      /** @enum {string} */
+      sentiment?: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+      /**
+       * @default occurrence_count
+       * @enum {string}
+       */
+      sortBy: 'created_at' | 'updated_at' | 'occurrence_count';
+      /**
+       * @default desc
+       * @enum {string}
+       */
+      sortOrder: 'asc' | 'desc';
+      /** @default 1 */
+      page: number;
+      /** @default 20 */
+      limit: number;
+      fromDate?: string | null;
+      toDate?: string | null;
+      /** Format: uuid */
+      groupId?: string;
+      minSessions?: number | null;
+      language?: string;
+      customData?: {
+        [key: string]: string;
+      }[];
+      contactCustomData?: {
+        [key: string]: string;
+      }[];
+      search?: string;
+    };
+    GetVocResponseDto: {
+      data: {
+        /** Format: uuid */
+        id: string;
+        org_id: string;
+        /** Format: uuid */
+        group_id: string | null;
+        type: string;
+        content: string;
+        /** @enum {string} */
+        sentiment: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+        category: string | null;
+        user_story: string | null;
+        occurrence_count: number;
+        is_resolved: number;
+        resolved_at: string | null;
+        resolved_by: number | null;
+        is_snoozed: number;
+        snoozed_at: string | null;
+        snoozed_by: number | null;
+        created_at: string;
+        updated_at: string;
+        last_seen_at: string | null;
+        deep_research: string | null;
+        generating_deep_research: number;
+      }[];
+      total: number;
+      page: number;
+      totalPages: number;
+    };
+    GetWorkflowStepsAndBlockRunsDto: (
+      | components['schemas']['WorkflowStepRun']
+      | components['schemas']['WorkflowRunBlockRun']
+    )[];
+    GetZendeskWebhookUrlDto: {
+      webhookUrl: string;
+    };
+    GitBookSourceDto: {
+      /** @description Personal access token for authenticating with the GitBook API. */
+      access_token: string;
+      /** @description The ID of the GitBook space to sync. */
+      space_id: string;
+    };
+    HandoffReportResDto: {
+      totalHandoffs: number;
+      byGroup: {
+        groupId: string | null;
+        groupName: string;
+        count: number;
+      }[];
+      byLanguage: {
+        language: string | null;
+        count: number;
+      }[];
+      aiRecommendations: {
+        total: number;
+        byType: {
+          /** @enum {string} */
+          type:
+            | 'action_pattern'
+            | 'knowledge_gap'
+            | 'performance_issue'
+            | 'topic_coverage';
+          groupId: string | null;
+          groupName: string;
+          count: number;
+        }[];
+      };
+    };
+    HandoffSettingsResponseDto: {
+      /** @description Current handoff level (0: Disabled, 1: Least Strict, 2: Moderate, 3: Most Strict) */
+      level: number;
+      /** @description Whether handoff is allowed outside office hours */
+      handoff_outside_office_hours: boolean;
+      /** @description Custom message shown when handoff is requested outside office hours */
+      outside_office_hours_response: string | null;
+      /** @description The language code for handoff summary (e.g. "en", "fr") */
+      handoff_summary_language: string | null;
+      /** @description Whether to use the session language for handoff summary */
+      handoff_summary_based_on_session_language: boolean;
+    };
+    HelpCenterArticleDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      category_id: string;
+      title: string;
+      content: string | null;
+      slug: string;
+      author_id: number | null;
+      is_public: boolean;
+      created_at: string;
+      updated_at: string;
+    };
+    HelpCenterCategoriesAndArticlesDto: {
+      categories: {
+        /** Format: uuid */
+        id: string;
+        name: string;
+        icon: string | null;
+        slug: string;
+        description: string | null;
+        created_at: string;
+        updated_at: string;
+      }[];
+      articles: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        category_id: string;
+        title: string;
+        slug: string;
+        author_id: number | null;
+        is_public: boolean;
+        created_at: string;
+        updated_at: string;
+      }[];
+    };
+    HelpCenterCategoryDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      help_center_id: string;
+      name: string;
+      icon: string | null;
+      slug: string;
+      description: string | null;
+      created_at: string;
+      updated_at: string;
+    };
+    HelpCenterDto: {
+      id: string;
+      organization_id: string;
+      name: string;
+      description: string | null;
+      domain: string | null;
+      logo_url: string | null;
+      primary_color: string | null;
+      created_at: string;
+      updated_at: string;
+    };
+    HelpCenterRelevantArticleDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      category_id: string;
+      title: string;
+      content: string | null;
+      slug: string;
+      author_id: number | null;
+      is_public: boolean;
+      created_at: string;
+      updated_at: string;
+      score: number;
+    };
+    HelpCenterRelevantArticlesWithSummaryDto: {
+      summary: string;
+      articles: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        category_id: string;
+        title: string;
+        content: string | null;
+        slug: string;
+        author_id: number | null;
+        is_public: boolean;
+        created_at: string;
+        updated_at: string;
+        score: number;
+      }[];
+    };
+    HelpCenterWithOrgNameDto: {
+      id: string;
+      organization_id: string;
+      name: string;
+      description: string | null;
+      domain: string | null;
+      logo_url: string | null;
+      primary_color: string | null;
+      created_at: string;
+      updated_at: string;
+      organization_name: string | null;
+    };
+    InitialQuestion: {
+      id: number;
+      chatbot_id: string;
+      question: string;
+    };
+    InitiateOauthOutputDto: {
+      concent_url: string;
+    };
+    InsightDetailsDto: {
+      insight: {
+        /** Format: uuid */
+        id: string;
+        org_id: string;
+        group_id: string | null;
+        /** @enum {string} */
+        type:
+          | 'action_pattern'
+          | 'knowledge_gap'
+          | 'performance_issue'
+          | 'topic_coverage';
+        key: string;
+        action_name: string | null;
+        action_debug_info?: unknown;
+        action_result?: unknown;
+        action_parameters?: unknown;
+        metadata?: unknown;
+        sessions_count: number;
+        created_at: string;
+        updated_at: string;
+        last_seen_at: string | null;
+        deleted_at: string | null;
+        is_resolved: number;
+        resolved_at: string | null;
+        resolved_by: number | null;
+        resolved_by_name: string | null;
+        resolved_by_avatar_url: string | null;
+        is_snoozed: number;
+        snoozed_at: string | null;
+        snoozed_by: number | null;
+        jira_issue_key: string | null;
+        jira_issue_id: string | null;
+        jira_issue_url: string | null;
+        user_story: string | null;
+        /** @enum {string|null} */
+        report_status:
+          | 'analyzing_batch_1'
+          | 'analyzing_batch_2'
+          | 'analyzing_batch_3'
+          | 'analyzing_batch_4'
+          | 'article_fetched'
+          | 'completed'
+          | 'failed'
+          | 'fetching_article'
+          | 'generating_report'
+          | 'loading_sessions'
+          | 'not_started'
+          | null;
+        report_error: string | null;
+        report_progress?: unknown;
+      };
+      session_ids: string[];
+      stats: {
+        total_sessions: number;
+        frequency_last_30_days: {
+          day: string;
+          frequency: number;
+        }[];
+      };
+    };
+    IntercomSourceDto: {
+      /** @description Personal access token for authenticating with the Intercom API. */
+      access_token: string;
+      /** @description The date to start syncing data from, in YYYY-MM-DDTHH:mm:ssZ format */
+      start_date: string;
+    };
+    Invitation: {
+      id: number;
+      organization_id: string;
+      email: string;
+      token: string;
+      expire_date: string;
+      created_at: string;
+      updated_at: string;
+      skills: string[];
+    };
+    JsonSchemaDto: {
+      $schema?: string;
+      $id?: string;
+      title?: string;
+      description?: string;
+      type?: string;
+      definitions: {
+        [key: string]: {
+          type: string;
+          properties: {
+            [key: string]: {
+              type: string;
+              description?: string;
+              title?: string;
+              additionalProperties?: boolean;
+            };
+          };
+          required: string[];
+          description?: string;
+          title?: string;
+          additionalProperties?: boolean;
+        };
+      };
+      properties: {
+        [key: string]: {
+          type: string;
+          description?: string;
+          title?: string;
+          additionalProperties?: boolean;
+        };
+      };
+      required?: string[];
+      additionalProperties?: boolean;
+    };
+    JwtUserDto: {
+      id: number;
+      email: string;
+      org_id?: string;
+      name?: string;
+      access_token?: string;
+      avatar_url?: string;
+    };
+    KnowledgebaseItemDto: {
+      id: string;
+      content: string;
+      created_at: string;
+      custom_properties: {
+        [key: string]: unknown;
+      };
+      deleted_at: string | null;
+      metadata: {
+        [key: string]: unknown;
+      };
+      source_id: string;
+      title: string;
+      updated_at: string;
+      /** @enum {string} */
+      visibility: 'internal' | 'public';
+      source_record_id: string | null;
+      source_record_json: {
+        [key: string]: unknown;
+      } | null;
+      source_table_name: string | null;
+      source_url: string | null;
+      org_id: string;
+      /** @enum {string} */
+      source_type: 'custom_training' | 'integration' | 'website';
+    };
+    KnowledgebaseItemPaginationResponseDto: {
+      items: {
+        id: string;
+        title: string;
+        /** @enum {string} */
+        visibility: 'internal' | 'public';
+        /** @enum {string} */
+        source_type: 'custom_training' | 'integration' | 'website';
+      }[];
+      pagination: {
+        current_page: number;
+        total_pages: number;
+        total_items: number;
+        items_per_page: number;
+        has_next_page: boolean;
+        has_previous_page: boolean;
+      };
+    };
+    LanguageOfficeHoursDto: {
+      /** @enum {string} */
+      language:
+        | 'el'
+        | 'de'
+        | 'fr'
+        | 'it'
+        | 'es'
+        | 'pt'
+        | 'nl'
+        | 'da'
+        | 'sv'
+        | 'no'
+        | 'fi'
+        | 'pl'
+        | 'cs'
+        | 'sk'
+        | 'hu'
+        | 'ro'
+        | 'bg'
+        | 'hr'
+        | 'sr'
+        | 'uk'
+        | 'ru'
+        | 'tr'
+        | 'en'
+        | 'zh'
+        | 'ja'
+        | 'ko'
+        | 'hi'
+        | 'id'
+        | 'ms'
+        | 'th'
+        | 'vi'
+        | 'tl'
+        | 'ar'
+        | 'he'
+        | 'fa'
+        | 'af'
+        | 'sw';
+      officeHours: {
+        monday?: {
+          from: string;
+          to: string;
+        };
+        tuesday?: {
+          from: string;
+          to: string;
+        };
+        wednesday?: {
+          from: string;
+          to: string;
+        };
+        thursday?: {
+          from: string;
+          to: string;
+        };
+        friday?: {
+          from: string;
+          to: string;
+        };
+        saturday?: {
+          from: string;
+          to: string;
+        };
+        sunday?: {
+          from: string;
+          to: string;
+        };
+        Everyday?: {
+          from: string;
+          to: string;
+        };
+        WeekDays?: {
+          from: string;
+          to: string;
+        };
+      };
+      /** @default America/New_York */
+      timezone: string;
+    };
+    LastContactedAtFilter: {
+      /** @enum {string} */
+      type: 'last_contacted_at_between';
+      /**
+       * DateTime
+       * Format: date-time
+       * @description ISO 8601 date-time string
+       */
+      after?: string | null;
+      /**
+       * DateTime
+       * Format: date-time
+       * @description ISO 8601 date-time string
+       */
+      before?: string | null;
+    };
+    LastContactedAtWithHandoffFilter: {
+      /** @enum {string} */
+      type: 'last_contacted_at_with_handoff_between';
+      /**
+       * DateTime
+       * Format: date-time
+       * @description ISO 8601 date-time string
+       */
+      after?: string | null;
+      /**
+       * DateTime
+       * Format: date-time
+       * @description ISO 8601 date-time string
+       */
+      before?: string | null;
+    };
+    ListCompaniesOutputDto: {
+      name: string | null;
+      created_at: string;
+      updated_at: string;
+      id: string;
+      apollo_enrichment_data?: unknown;
+      country: string | null;
+      domain: string | null;
+      enriched_at: string | null;
+      logo_url: string | null;
+      website_url: string | null;
+      /** @enum {string|null} */
+      source: 'form' | 'hubspot' | 'pipedream' | 'salesforce' | null;
+      source_id: string | null;
+      source_original_payload?: unknown;
+      custom_data?: unknown;
+    };
+    ListContactsOutputDto: {
+      contacts: {
+        id: string;
+        copilot_id: string;
+        email: string | null;
+        name: string | null;
+        language: string | null;
+        non_verified_name: string | null;
+        phone_number: string | null;
+        custom_data: {
+          [key: string]: string;
+        } | null;
+        non_verified_custom_data: {
+          [key: string]: string;
+        } | null;
+        apollo_enrichment_data: components['schemas']['ApolloMatchResponseDto'];
+        created_at: string;
+        updated_at: string;
+        company_id: string | null;
+        unsubscribed_at: string | null;
+        avatar_url: string | null;
+        /** @enum {string|null} */
+        source:
+          | 'form'
+          | 'hubspot'
+          | 'intercom'
+          | 'pipedream'
+          | 'salesforce'
+          | 'slack'
+          | null;
+        source_id: string | null;
+        source_original_payload?: unknown;
+        slack_data: {
+          user_id: string;
+          team_id: string;
+          title?: string;
+          timezone?: string;
+          locale?: string;
+          workspace_name: string;
+          workspace_icon?: string;
+          workspace_domain?: string;
+          is_admin: boolean;
+          is_owner: boolean;
+          last_updated: number;
+        } | null;
+        action_http_overrides: {
+          queryParams?: {
+            [key: string]: string;
+          };
+          pathParams?: {
+            [key: string]: string;
+          };
+          bodyParams?: {
+            [key: string]: unknown;
+          };
+          headers?: {
+            [key: string]: string;
+          };
+        } | null;
+        chat_context: string | null;
+        intercom_user_id: string | null;
+        zendesk_external_id: string | null;
+      }[];
+      total_count: number;
+      total_pages: number;
+    };
+    ListOrgForksResponseDto: {
+      forks: {
+        name: string;
+        fork_org_id: string;
+        last_reset_at: string;
+      }[];
+    };
+    LoadDynamicFieldResponseDto: {
+      metadata: {
+        [key: string]: unknown;
+      };
+      items: {
+        item: {
+          title: string;
+          description?: string;
+          image?: string;
+        };
+        value: string;
+      }[];
+    };
+    MakeOutboundCallDto: {
+      orgId: string;
+      phoneAgentId: string;
+      contact:
+        | {
+            id: string;
+          }
+        | {
+            phoneNumber: string;
+          };
+    };
+    MarkSessionsAsReadUnreadInputDto: {
+      /** @enum {string} */
+      markAs: 'read' | 'unread';
+      sessionIds: string[];
+    };
+    MarkSessionsAsReadUnreadOutputDto: {
+      sessions: {
+        id: string;
+        last_read_at_by_agent_ids: {
+          [key: string]: string | null;
+        };
+      }[];
+    };
+    NotificationDto: {
+      affected_entity_id: string | null;
+      id: number;
+      entity_id: string;
+      /** @enum {string} */
+      notification_type: 'other' | 'created' | 'deleted' | 'updated';
+      message: string | null;
+      read_at: string | null;
+      created_at: string;
+      target_user_id: number;
+      /** @enum {string} */
+      affected_entity_type: 'chat_session' | 'chatbot' | 'other' | 'user';
+      organization_id: string | null;
+    };
+    NotionSourceDto: Record<string, never>;
+    OfficeHoursDto: {
+      monday?: {
+        from: string;
+        to: string;
+      };
+      tuesday?: {
+        from: string;
+        to: string;
+      };
+      wednesday?: {
+        from: string;
+        to: string;
+      };
+      thursday?: {
+        from: string;
+        to: string;
+      };
+      friday?: {
+        from: string;
+        to: string;
+      };
+      saturday?: {
+        from: string;
+        to: string;
+      };
+      sunday?: {
+        from: string;
+        to: string;
+      };
+      Everyday?: {
+        from: string;
+        to: string;
+      };
+      WeekDays?: {
+        from: string;
+        to: string;
+      };
+    };
+    OpenAICompatCompletionRequestDto: {
+      model: string;
+      messages: {
+        /** @enum {string} */
+        role: 'system' | 'user' | 'assistant';
+        content: string;
+      }[];
+      temperature?: number;
+      max_tokens?: number;
+      stream?: boolean;
+      elevenlabs_extra_body?: {
+        [key: string]: unknown;
+      };
+    };
+    OpenAICompatGetTokenInputDto: {
+      org_id: string;
+      session_id?: string;
+      phone_agent_id?: string;
+    };
+    OrganizationTagDefinitionDto: {
+      org_id: string;
+      tag_name: string;
+      description: string | null;
+      exclude_from_auto_tagging: boolean;
+      created_at: string;
+      updated_at: string;
     };
     /** @description Paginated response. */
     PaginatedWidgetSessionsDto: {
@@ -242,9 +3097,1657 @@ export interface components {
       /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
       next: string | null;
     };
+    PartialUpdateKnowledgebaseItemDto: {
+      id: string;
+      title?: string;
+      /** @enum {string} */
+      visibility?: 'internal' | 'public';
+    }[];
+    PatchSequenceInputDto: {
+      /** Format: uuid */
+      sequence_id: string;
+      sequence: components['schemas']['PatchSequenceInputSequence'];
+    };
+    PatchSequenceInputSequence: {
+      name?: string;
+      custom_id?: string | null;
+      /**
+       * ContactsCompositeFilter
+       * @description A combination of contact filters. All filters within `and` arrays must apply to a contact in order for the contact to be included. On the other hand, only one of the filters within the `or` array must apply for the contact to be included. If no filter is provided, all contacts will be included.
+       */
+      filter?: {
+        or: {
+          and: components['schemas']['ContactsFilter'][];
+        }[];
+      } | null;
+      steps?: {
+        action:
+          | {
+              /** @enum {string} */
+              type: 'send_emails';
+              data: {
+                from_email: string;
+                email_subject: string;
+                email_body: string;
+                email_sender_name: string;
+                email_is_transactional: boolean;
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'make_phone_calls';
+              data: {
+                aiPhoneAgentId: string;
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'send_sms_messages';
+              data: {
+                message: string;
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'send_whatsapp_messages';
+              data: {
+                phone_number_id: string;
+                template: {
+                  name: string;
+                  language: string;
+                  parameters: components['schemas']['WhatsAppTemplateMappingDto'];
+                };
+              };
+            };
+        delay_in_minutes?: number;
+      }[];
+      is_continuous?: boolean;
+    };
+    PermissionsGetDto: {
+      permissions: (
+        | 'ADMIN'
+        | 'INBOX'
+        | 'CONTACTS'
+        | 'OUTBOUND_SEQUENCES'
+        | 'WEB_CHANNEL'
+        | 'EMAIL_CHANNEL'
+        | 'WHATSAPP_CHANNEL'
+        | 'SMS_CHANNEL'
+        | 'SLACK_CHANNEL'
+        | 'PHONE_CHANNEL'
+        | 'AI_ACTIONS'
+        | 'AI_KNOWLEDGE_BASE'
+        | 'REPORTS'
+        | 'HELP_CENTER'
+        | 'WORKFLOWS'
+        | 'SETTINGS'
+      )[];
+    };
+    PermissionsUpdateDto: {
+      permissions: (
+        | 'ADMIN'
+        | 'INBOX'
+        | 'CONTACTS'
+        | 'OUTBOUND_SEQUENCES'
+        | 'WEB_CHANNEL'
+        | 'EMAIL_CHANNEL'
+        | 'WHATSAPP_CHANNEL'
+        | 'SMS_CHANNEL'
+        | 'SLACK_CHANNEL'
+        | 'PHONE_CHANNEL'
+        | 'AI_ACTIONS'
+        | 'AI_KNOWLEDGE_BASE'
+        | 'REPORTS'
+        | 'HELP_CENTER'
+        | 'WORKFLOWS'
+        | 'SETTINGS'
+      )[];
+      member_id: number;
+    };
+    PhoneAgentDto: {
+      id: string;
+      org_id: string;
+      phone_number: string | null;
+      name: string | null;
+      /** @enum {string} */
+      type: 'inbound' | 'outbound';
+      language: string | null;
+      accent: string | null;
+      handoff_phone_number: string | null;
+      speed: number | null;
+      interruptible: boolean;
+      actionIds: string[] | null;
+      instructions: string[] | null;
+      data_collection_fields: string[] | null;
+      data_collection_webhook_url: string | null;
+      /** @enum {string} */
+      model: 'oppie-vox' | 'oppie-vox-turbo' | 'oppie-vox-2';
+      voice_id: string | null;
+      first_message: string | null;
+      created_at: string;
+      updated_at: string;
+      provider_external_id: string | null;
+      flow?: unknown;
+      manual_mode: boolean;
+      custom_llm: string | null;
+      use_org_knowledgebase: boolean;
+    };
+    PhoneAgentVoiceDto: {
+      voice_id: string;
+      name: string;
+      labels: {
+        accent: string | null;
+        description: string | null;
+        age: string | null;
+        gender: string | null;
+        use_case: string | null;
+        language: string | null;
+      };
+      description: string | null;
+      preview_url: string | null;
+    };
+    RemoveOrgTagDto: {
+      tag_name: string;
+      org_id: string;
+    };
+    RerunWorkflowRunResponseDto: {
+      success: boolean;
+      result?: {
+        [key: string]: {
+          [key: string]: unknown;
+        };
+      };
+      error?: string;
+      newRunId?: string;
+    };
+    ResolutionsReportResDto: {
+      resolutions: {
+        day: string;
+        resolved: number;
+        assumedResolved: number;
+        handedOff: number;
+        inProgress: number;
+      }[];
+      handoffSentiments: {
+        day: string;
+        happy: number;
+        angry: number;
+        neutral: number;
+        inProgress: number;
+      }[];
+    };
+    ResourceViewersOutputDto: {
+      id: number;
+      name: string;
+      meta?: unknown;
+      uuid: string | null;
+      avatar_url: string | null;
+    };
+    ResumeWorkflowRunResponseDto: {
+      success: boolean;
+      result?: {
+        [key: string]: {
+          [key: string]: unknown;
+        };
+      };
+      error?: string;
+    };
+    RunSyncInputDto: {
+      /** @enum {string} */
+      sourceType:
+        | 'notion'
+        | 'zendesk_support'
+        | 'confluence'
+        | 'shopify'
+        | 'gitbook'
+        | 'intercom';
+    };
+    SearchByInsightDto: {
+      description: string;
+      /**
+       * ContactsCompositeFilter
+       * @description A combination of contact filters. All filters within `and` arrays must apply to a contact in order for the contact to be included. On the other hand, only one of the filters within the `or` array must apply for the contact to be included. If no filter is provided, all contacts will be included.
+       */
+      filter?: {
+        or: {
+          and: components['schemas']['ContactsFilter'][];
+        }[];
+      } | null;
+      sort?: {
+        /** @enum {string} */
+        field: 'created_at' | 'updated_at' | 'name' | 'email' | 'phone_number';
+        /** @enum {string} */
+        order: 'asc' | 'desc';
+      };
+    };
+    SearchConsumersByInsightOutputDto: {
+      contacts: {
+        id: string;
+        copilot_id: string;
+        email: string | null;
+        name: string | null;
+        language: string | null;
+        non_verified_name: string | null;
+        phone_number: string | null;
+        custom_data: {
+          [key: string]: string;
+        } | null;
+        non_verified_custom_data: {
+          [key: string]: string;
+        } | null;
+        apollo_enrichment_data: components['schemas']['ApolloMatchResponseDto'];
+        created_at: string;
+        updated_at: string;
+        company_id: string | null;
+        unsubscribed_at: string | null;
+        avatar_url: string | null;
+        /** @enum {string|null} */
+        source:
+          | 'form'
+          | 'hubspot'
+          | 'intercom'
+          | 'pipedream'
+          | 'salesforce'
+          | 'slack'
+          | null;
+        source_id: string | null;
+        source_original_payload?: unknown;
+        slack_data: {
+          user_id: string;
+          team_id: string;
+          title?: string;
+          timezone?: string;
+          locale?: string;
+          workspace_name: string;
+          workspace_icon?: string;
+          workspace_domain?: string;
+          is_admin: boolean;
+          is_owner: boolean;
+          last_updated: number;
+        } | null;
+        action_http_overrides: {
+          queryParams?: {
+            [key: string]: string;
+          };
+          pathParams?: {
+            [key: string]: string;
+          };
+          bodyParams?: {
+            [key: string]: unknown;
+          };
+          headers?: {
+            [key: string]: string;
+          };
+        } | null;
+        chat_context: string | null;
+        intercom_user_id: string | null;
+        zendesk_external_id: string | null;
+      }[];
+      total_count: number;
+      total_pages: number;
+      filter: {
+        name: string[] | null;
+        domain: string[] | null;
+        date: {
+          from: string | null;
+          to: string | null;
+        } | null;
+      } | null;
+    };
+    SearchOutputDto: {
+      contacts: {
+        id: string;
+        org_id: string;
+        name?: string | null;
+        non_verified_name?: string | null;
+        email?: string | null;
+        phone?: string | null;
+        custom_data?: string | null;
+        non_verified_custom_data?: string | null;
+        apollo_enrichment_data?: string | null;
+        company_id?: string | null;
+      }[];
+      companies: {
+        id: string;
+        name?: string | null;
+        domain?: string | null;
+        custom_data?: string | null;
+        apollo_enrichment_data?: string | null;
+      }[];
+      chatHistories: {
+        id: number;
+        uuid: string;
+        org_id: string;
+        session_id: string;
+        from_user: boolean;
+        message: string | null;
+      }[];
+    };
+    SelectPaginatedWorkflowRunsDto: {
+      runs: {
+        id: string;
+        org_id: string;
+        workflow_id: number;
+        /** @enum {string|null} */
+        status:
+          | 'canceled'
+          | 'completed'
+          | 'failed'
+          | 'idle'
+          | 'in_progress'
+          | null;
+        duration_in_seconds: number | null;
+        run_ended_at: string | null;
+        run_started_at: string | null;
+        trigger_payload?: unknown;
+        /**
+         * @description The cause of the workflow run. Can be "manual", "automatic", or "scheduled"
+         * @enum {string}
+         */
+        trigger_cause: 'automatic' | 'manual' | 'scheduled';
+        canceled_at: string | null;
+        canceled_by: number | null;
+        created_at: string;
+        triggered_by: number | null;
+        run_result?: unknown;
+      }[];
+      totalItems: number;
+      totalPages: number;
+      hasNextPage: boolean;
+    };
+    SelectPaginatedWorkflowRunsPaginatorDto: {
+      page: number;
+      limit: number;
+      status:
+        | ('canceled' | 'completed' | 'failed' | 'idle' | 'in_progress')[]
+        | null;
+      trigger_cause: ('automatic' | 'manual' | 'scheduled')[] | null;
+    };
+    SelectWorkflowDto: {
+      created_at: string;
+      id: number;
+      is_active: boolean | null;
+      name: string;
+      org_id: string;
+      trigger_type: string;
+      version_number: number;
+      workflow_id: string;
+      workflow_blocks: unknown[];
+      forked_from_id: number | null;
+      cloned_from_id: number | null;
+      cloned_from_workflow_id: string | null;
+      trigger_configuration?: unknown;
+      created_by: number | null;
+      deleted_at: string | null;
+      deleted_by: number | null;
+      description: string | null;
+      workflow_editor_state?: unknown;
+      notification_settings: components['schemas']['WorkflowNotificationSettingsDto'];
+    };
+    SelectWorkflowRunDto: {
+      id: string;
+      org_id: string;
+      workflow_id: number;
+      /** @enum {string|null} */
+      status:
+        | 'canceled'
+        | 'completed'
+        | 'failed'
+        | 'idle'
+        | 'in_progress'
+        | null;
+      duration_in_seconds: number | null;
+      run_ended_at: string | null;
+      run_started_at: string | null;
+      trigger_payload?: unknown;
+      /**
+       * @description The cause of the workflow run. Can be "manual", "automatic", or "scheduled"
+       * @enum {string}
+       */
+      trigger_cause: 'automatic' | 'manual' | 'scheduled';
+      canceled_at: string | null;
+      canceled_by: number | null;
+      created_at: string;
+      triggered_by: number | null;
+      run_result?: unknown;
+    };
+    SelectWorkflowRunStepDto: {
+      created_at: string;
+      id: number;
+      step_id: string;
+      workflow_run_id: string;
+      result?: unknown;
+      step_input?: unknown;
+      /** @enum {string} */
+      status:
+        | 'canceled'
+        | 'completed'
+        | 'failed'
+        | 'idle'
+        | 'in_progress'
+        | 'skipped';
+      started_at: string | null;
+      ended_at: string | null;
+      workflow_id: string;
+      duration_in_milliseconds: number | null;
+      context?: unknown;
+      wrapper_block_id: string | null;
+      wrapper_block_run_id: number | null;
+    };
+    SelectWorkflowWithUserDataDto: components['schemas']['WorkflowDto'] & {
+      created_by_user: {
+        avatar_url: string | null;
+        name: string;
+      } | null;
+      deleted_by_user: {
+        avatar_url: string | null;
+        name: string;
+      } | null;
+    };
+    SequenceDto: {
+      id: string;
+      name: string;
+      org_id: string;
+      custom_id: string | null;
+      /**
+       * ContactsCompositeFilter
+       * @description A combination of contact filters. All filters within `and` arrays must apply to a contact in order for the contact to be included. On the other hand, only one of the filters within the `or` array must apply for the contact to be included. If no filter is provided, all contacts will be included.
+       */
+      filter: {
+        or: {
+          and: components['schemas']['ContactsFilter'][];
+        }[];
+      } | null;
+      steps: components['schemas']['SequenceStep'][];
+      is_continuous: boolean;
+      started_at: string | null;
+      canceled_at: string | null;
+      ended_at: string | null;
+      status: components['schemas']['SequenceStatus'];
+    };
+    SequenceInput: {
+      name: string;
+      custom_id: string | null;
+      /**
+       * ContactsCompositeFilter
+       * @description A combination of contact filters. All filters within `and` arrays must apply to a contact in order for the contact to be included. On the other hand, only one of the filters within the `or` array must apply for the contact to be included. If no filter is provided, all contacts will be included.
+       */
+      filter: {
+        or: {
+          and: components['schemas']['ContactsFilter'][];
+        }[];
+      } | null;
+      steps: {
+        action:
+          | {
+              /** @enum {string} */
+              type: 'send_emails';
+              data: {
+                from_email: string;
+                email_subject: string;
+                email_body: string;
+                email_sender_name: string;
+                email_is_transactional: boolean;
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'make_phone_calls';
+              data: {
+                aiPhoneAgentId: string;
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'send_sms_messages';
+              data: {
+                message: string;
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'send_whatsapp_messages';
+              data: {
+                phone_number_id: string;
+                template: {
+                  name: string;
+                  language: string;
+                  parameters: components['schemas']['WhatsAppTemplateMappingDto'];
+                };
+              };
+            };
+        delay_in_minutes?: number;
+      }[];
+      is_continuous: boolean;
+    };
+    /** @enum {string|null} */
+    SequenceStatus: 'pending' | 'complete' | 'canceled' | 'active' | null;
+    SequenceStep: {
+      action:
+        | {
+            /** @enum {string} */
+            type: 'send_emails';
+            data: {
+              from_email: string;
+              email_subject: string;
+              email_body: string;
+              email_sender_name: string;
+              email_is_transactional: boolean;
+            };
+          }
+        | {
+            /** @enum {string} */
+            type: 'make_phone_calls';
+            data: {
+              aiPhoneAgentId: string;
+            };
+          }
+        | {
+            /** @enum {string} */
+            type: 'send_sms_messages';
+            data: {
+              message: string;
+            };
+          }
+        | {
+            /** @enum {string} */
+            type: 'send_whatsapp_messages';
+            data: {
+              phone_number_id: string;
+              template: {
+                name: string;
+                language: string;
+                parameters: components['schemas']['WhatsAppTemplateMappingDto'];
+              };
+            };
+          };
+      delay_in_minutes?: number;
+      started_at?: string;
+      ended_at?: string;
+    };
+    ShopifyActionsSettingsDto: {
+      id: string;
+      org_id: string;
+      get_shop_details_action_enabled: boolean;
+      get_order_details_action_enabled: boolean;
+      search_products_action_enabled: boolean;
+      created_at: string;
+      updated_at: string;
+    };
+    ShopifyConnectionDto: {
+      id: string;
+      org_id: string;
+      shopify_domain: string;
+      private_access_token: string;
+      created_at: string;
+      updated_at: string;
+    };
+    ShopifyGetContactMetadataDto: {
+      metadata: {
+        shopDomain: string;
+        customer: {
+          id: string;
+          amountSpent?: {
+            amount?: string | null;
+            currencyCode?: string | null;
+          } | null;
+          createdAt?: string | null;
+          displayName?: string | null;
+          email?: string | null;
+          image?: {
+            url?: string | null;
+          } | null;
+          lifetimeDuration?: string | null;
+          locale?: string | null;
+          numberOfOrders?: string | null;
+          phone?: string | null;
+          statistics?: {
+            predictedSpendTier?: string | null;
+          } | null;
+          tags?: string[] | null;
+          updatedAt?: string | null;
+          note?: string | null;
+        } | null;
+        orders: {
+          id: string;
+          name: string;
+          email?: string | null;
+          /** @enum {string|null} */
+          returnStatus?:
+            | 'INSPECTION_COMPLETE'
+            | 'IN_PROGRESS'
+            | 'NO_RETURN'
+            | 'RETURNED'
+            | 'RETURN_FAILED'
+            | 'RETURN_REQUESTED'
+            | null;
+          /** @enum {string|null} */
+          displayFinancialStatus?:
+            | 'AUTHORIZED'
+            | 'EXPIRED'
+            | 'PAID'
+            | 'PARTIALLY_PAID'
+            | 'PARTIALLY_REFUNDED'
+            | 'PENDING'
+            | 'REFUNDED'
+            | 'VOIDED'
+            | null;
+          /** @enum {string|null} */
+          displayFulfillmentStatus?:
+            | 'FULFILLED'
+            | 'IN_PROGRESS'
+            | 'ON_HOLD'
+            | 'OPEN'
+            | 'PARTIALLY_FULFILLED'
+            | 'PENDING_FULFILLMENT'
+            | 'RESTOCKED'
+            | 'SCHEDULED'
+            | 'UNFULFILLED'
+            | null;
+          createdAt?: string | null;
+          cancelledAt?: string | null;
+          note?: string | null;
+          netPaymentSet?: {
+            shopMoney: {
+              amount?: string | null;
+              currencyCode?: string | null;
+            };
+          } | null;
+          totalPriceSet?: {
+            shopMoney: {
+              amount?: string | null;
+              currencyCode?: string | null;
+            };
+          } | null;
+          totalReceivedSet?: {
+            shopMoney: {
+              amount?: string | null;
+              currencyCode?: string | null;
+            };
+          } | null;
+          totalRefundedSet?: {
+            shopMoney: {
+              amount?: string | null;
+              currencyCode?: string | null;
+            };
+          } | null;
+          fulfillments: {
+            id: string;
+            name?: string | null;
+            /** @enum {string} */
+            status:
+              | 'CANCELLED'
+              | 'ERROR'
+              | 'FAILURE'
+              | 'OPEN'
+              | 'PENDING'
+              | 'SUCCESS';
+            createdAt?: string | null;
+            deliveredAt?: string | null;
+            estimatedDeliveryAt?: string | null;
+            service?: {
+              serviceName?: string | null;
+              handle?: string | null;
+            } | null;
+            trackingInfo: ({
+              company?: string | null;
+              number?: string | null;
+              url?: string | null;
+            } | null)[];
+          }[];
+        }[];
+      }[];
+    };
+    ShopifySourceDto: {
+      /** @description The name of your store, e.g. "my-store" from my-store.myshopify.com */
+      shop: string;
+      /** @description The API access token for your Shopify store */
+      access_token: string;
+    };
+    SpendingSummaryDto: {
+      spending: {
+        amount: number;
+        currency: string;
+      }[];
+    };
+    StartOneOffSequenceOutputDto: {
+      data?: {
+        success: boolean;
+      };
+      error?: {
+        /** @enum {string} */
+        code:
+          | 'sequence_not_found'
+          | 'one_off_sequence_is_canceled'
+          | 'sequence_already_started';
+        status: 400 | 404;
+        message: string;
+      };
+    };
+    StorageUploadFileResponseDto: {
+      id: string;
+      file_name: string;
+      file_path: string;
+      file_type: string;
+      file_size: number;
+      checksum: string | null;
+      content_type: string | null;
+      uploaded_at: string | null;
+    };
+    SubmitFormDto: {
+      /** @description The form ID generated by the form trigger */
+      formId: string;
+      /** @description The form data to submit */
+      formData: {
+        [key: string]: unknown;
+      };
+    };
+    SubmitFormResponseDto: {
+      success: boolean;
+      message: string;
+      formId?: string;
+    };
+    TestUserLoginInputDto: {
+      email: string;
+      password: string;
+    };
+    TicketingSystemResponse: {
+      /** @enum {string} */
+      ticketing_system:
+        | 'dynamics365'
+        | 'freshdesk'
+        | 'gorgias'
+        | 'hubspot'
+        | 'intercom'
+        | 'open'
+        | 'salesforce'
+        | 'twilio_flex'
+        | 'zendesk'
+        | 'zendesk_v2';
+    };
+    TrainingFiltersResponseDto: {
+      /** @description Filtered training results */
+      trainings: {
+        id: string;
+        organization_id: string;
+        question: string;
+        answer: string;
+        category: string;
+        /** @default false */
+        is_draft: boolean;
+        accepted_by: number | null;
+        /** @description Draft payload with structured data */
+        draft_payload?: unknown;
+        learned_from_session_id: string | null;
+        /** @enum {string} */
+        type: 'BEHAVIORAL' | 'SCENARIO_SPECIFIC';
+        tags: string[];
+        created_at: string;
+        updated_at: string;
+      }[];
+      /** @description Total number of trainings matching filters */
+      total_count: number;
+      /** @description Available categories (if requested) */
+      categories?: string[];
+      /** @description Whether there are more results available */
+      has_more: boolean;
+    };
+    TransactionLookupDto: {
+      success: boolean;
+      data: {
+        transactionId: string;
+        referenceNumber: string;
+        /** @enum {string} */
+        status: 'PENDING' | 'COMPLETED' | 'CANCELLED' | 'EXPIRED';
+        sendAmount: number;
+        receiveAmount: number;
+        currency: {
+          send: string;
+          receive: string;
+        };
+        sender: {
+          firstName: string;
+          lastName: string;
+          phoneNumber: string;
+          address: {
+            street: string;
+            city: string;
+            state: string;
+            country: string;
+            zipCode: string;
+          };
+        };
+        receiver: {
+          firstName: string;
+          lastName: string;
+          phoneNumber?: string;
+          address: {
+            city: string;
+            state?: string;
+            country: string;
+          };
+        };
+        fees: {
+          transferFee: number;
+          exchangeRate: number;
+        };
+        timestamps: {
+          created: string;
+          lastUpdated: string;
+          estimatedAvailability?: string;
+        };
+      };
+    };
+    TransactionsSummaryDto: {
+      total: {
+        in: number;
+        out: number;
+        currency: string;
+      };
+      data: {
+        transactionId: string;
+        date: string;
+        amount: number;
+        description: string;
+        /** @enum {string} */
+        type: 'Debit' | 'Credit';
+        otherParty: {
+          name: string;
+          /** @enum {string} */
+          type:
+            | 'Bank'
+            | 'Restaurant'
+            | 'Gas Station'
+            | 'Supermarket'
+            | 'Pharmacy'
+            | 'Retail'
+            | 'Other';
+        };
+      }[];
+    };
+    TransportedKnowledgebaseItem: {
+      id: string;
+      title: string;
+      /** @enum {string} */
+      visibility: 'internal' | 'public';
+      /** @enum {string} */
+      source_type: 'custom_training' | 'integration' | 'website';
+    };
+    UpdateArticleDto: {
+      category_id?: string;
+      title?: string;
+      content?: string;
+      author_id?: number;
+      is_public?: boolean;
+    };
+    UpdateCategoryDto: {
+      name?: string;
+      description?: string;
+      icon?: string;
+    };
+    UpdateChatAgentModeRequestDto: {
+      name?: string;
+      enabled?: boolean;
+      slug?: string | null;
+      content?: components['schemas']['ChatAgentModeContent'];
+      in_mode_instructions?: string | null;
+      on_entry_instructions?: string | null;
+      pre_entry_instructions?: string | null;
+    };
+    UpdateCopilotDto: {
+      user_id?: number;
+      auto_select_user_on_handoff?: boolean;
+      autopilot_settings?: {
+        phone: components['schemas']['ChannelConfigSchema'];
+        email: components['schemas']['ChannelConfigSchema'];
+        web: components['schemas']['ChannelConfigSchema'];
+        slack: components['schemas']['ChannelConfigSchema'];
+        sms: components['schemas']['ChannelConfigSchema'];
+        whatsapp: components['schemas']['ChannelConfigSchema'];
+      } | null;
+      autopilot_unapproved_themes?: string | null;
+      email?: string | null;
+      enable_routing_groups?: boolean;
+      enhanced_privacy?: boolean;
+      global_variables?: string | null;
+      guard_rails_instructions?: string | null;
+      handoff_phone_number?: string | null;
+      is_premade_demo_template?: boolean;
+      language?: string | null;
+      name?: string;
+      office_hours?: unknown & {
+        monday?: {
+          from: string;
+          to: string;
+        };
+        tuesday?: {
+          from: string;
+          to: string;
+        };
+        wednesday?: {
+          from: string;
+          to: string;
+        };
+        thursday?: {
+          from: string;
+          to: string;
+        };
+        friday?: {
+          from: string;
+          to: string;
+        };
+        saturday?: {
+          from: string;
+          to: string;
+        };
+        sunday?: {
+          from: string;
+          to: string;
+        };
+        Everyday?: {
+          from: string;
+          to: string;
+        };
+        WeekDays?: {
+          from: string;
+          to: string;
+        };
+      };
+      office_hours_timezone?: string | null;
+      prompt_message?: string;
+      smart_sync?: boolean;
+      status?: string;
+      summary_prompt?: string;
+      svix_webhook_application_id?: string | null;
+      swagger_url?: string | null;
+      token?: string;
+      type?: string | null;
+      svix_webhook_endpoint_id?: string | null;
+      website?: string | null;
+      handoff_tool_description?: string | null;
+      enable_auto_tagging?: boolean;
+      enable_realtime_auto_tagging_tool?: boolean;
+      enable_auto_tagging_ticketing_system?: boolean;
+      airbyte_workspace_id?: string | null;
+      /** @enum {string|null} */
+      ticketing_system?:
+        | 'dynamics365'
+        | 'freshdesk'
+        | 'gorgias'
+        | 'hubspot'
+        | 'intercom'
+        | 'open'
+        | 'salesforce'
+        | 'twilio_flex'
+        | 'zendesk'
+        | 'zendesk_v2'
+        | null;
+      neon_project_id?: string | null;
+      http_action_contact_auth_endpoint?: string | null;
+      forked_from_org_id?: string | null;
+      created_at?: string | null;
+      updated_at?: string | null;
+      deleted_at?: string | null;
+    };
+    UpdateDirectHandoffSettingsInputDto: {
+      /** @description Whether handoff is enabled */
+      handoff_enabled: boolean;
+      /** @description Enable handoff when user shows frustration */
+      handoff_when_user_gets_frustrated: boolean;
+      /** @description Enable handoff for unproductive conversations */
+      handoff_if_conversation_is_going_nowhere: boolean;
+      /** @description Enable handoff on explicit human request */
+      handoff_on_explicit_request_for_human: boolean;
+      /** @description Require clear problem statement before handoff */
+      must_extract_clear_problem_statement: boolean;
+      /** @description Number of messages before showing reply buttons */
+      show_reply_buttons_after_messages_count?: number;
+    };
+    UpdateGlobalVariablesDto: {
+      [key: string]: string;
+    };
+    UpdateHandoffSettingsInputDto: {
+      /** @description The handoff strictness level */
+      level: number;
+      /** @description Whether to allow handoff outside office hours */
+      handoff_outside_office_hours: boolean;
+      /** @description Custom message to show when handoff is requested outside office hours */
+      outside_office_hours_response: string | null;
+      /** @description The language code for handoff summary (e.g. "en", "fr") */
+      handoff_summary_language: string | null;
+      /** @description Whether to use the session language for handoff summary */
+      handoff_summary_based_on_session_language: boolean;
+    };
+    UpdateHandoffSettingsResponseDto: {
+      /** @description Whether the update was successful */
+      success: boolean;
+    };
+    UpdateHelpCenterDto: {
+      name?: string;
+      description?: string;
+      domain?: string;
+      logo_url?: string;
+      primary_color?: string;
+    };
+    UpdateKnowledgebaseItemResult: {
+      id: string;
+    };
+    UpdateNamesRequestDto: {
+      firstName: string;
+      middleName?: string;
+      lastName: string;
+    };
+    UpdateNamesResponseDto: {
+      success: boolean;
+      message: string;
+      data?: {
+        userId: string;
+        firstName: string;
+        middleName?: string;
+        lastName: string;
+        lastUpdated: string;
+      };
+    };
+    UpdatePhoneAgentDto: {
+      name?: string;
+      /** @enum {string} */
+      type?: 'inbound' | 'outbound';
+      /** @description The language the AI phone agent should mainly speak in */
+      language?: string | null;
+      /** @description The accent the AI phone agent should mainly speak in */
+      accent?: string | null;
+      /** @description The phone number of the human agent to hand off the call to */
+      handoff_phone_number?: string | null;
+      /**
+       * @description The speed of the AI phone agent
+       * @default 1
+       */
+      speed: number | null;
+      /** @description Whether the agent can be interrupted or not */
+      interruptible?: boolean;
+      /** @description A list of action ids the AI phone agent has access to. A `null` value means all actions. An empty list means no actions */
+      actionIds?: string[] | null;
+      /** @description A list of instructions */
+      instructions?: string[] | null;
+      /** @description A list of fields to collect data about */
+      data_collection_fields?: string[] | null;
+      /** @description The webhook url to send the collected data to */
+      data_collection_webhook_url?: string | null;
+      /** @description The voice id */
+      voice_id?: string | null;
+      /** @description The first message the AI phone agent should say */
+      first_message?: string | null;
+      flow?: unknown;
+      /** @description Whether the AI phone agent should use the organization's knowledgebase (enabling it will increase the latency of the agent) */
+      use_org_knowledgebase?: boolean | null;
+      /** @description Whether the AI phone agent should be in manual mode */
+      manual_mode?: boolean | null;
+      /** @description The custom LLM to use for the AI phone agent */
+      custom_llm?: string | null;
+    };
+    UpdatePhoneNumberDto: {
+      /** @description The verified phone number to use */
+      phoneNumber: string;
+    };
+    UpdateSessionCustomDataDto: {
+      editable_custom_data: {
+        [key: string]: string;
+      };
+    };
+    UpdateShopifyActionsSettingsDto: {
+      get_shop_details_action_enabled?: boolean;
+      get_order_details_action_enabled?: boolean;
+      search_products_action_enabled?: boolean;
+    };
+    UpdateSmsSettingsDto: {
+      /** @description The phone number to send SMS from in E.164 format */
+      fromNumber: string;
+      /** @description Whether the SMS channel is enabled */
+      enabled?: boolean;
+    };
+    UpdateStatusRequest: {
+      draft: boolean;
+    };
+    UpdateStatusResponse: {
+      is_draft: boolean;
+    };
+    UpdateVocInsightClusteringInstructionsDto: {
+      instructions: string;
+    };
+    UpdateWhatsAppPhoneSettingsDto: {
+      isEnabled?: boolean;
+    };
+    UpdateWorkflowMetaDto: {
+      is_active?: boolean | null;
+      name?: string;
+      org_id?: string;
+      workflow_blocks?: unknown[];
+      trigger_configuration?: unknown;
+      description?: string | null;
+      workflow_editor_state?: unknown;
+      notification_settings?: components['schemas']['WorkflowNotificationSettingsDto'];
+    };
     UploadWidgetFileResponseDto: {
       fileName: string;
       fileUrl: string;
+    };
+    UpsertEvalsSettingsInputDto: {
+      httpActionParameterOverrides: {
+        queryParams?: {
+          [key: string]: string;
+        };
+        pathParams?: {
+          [key: string]: string;
+        };
+        bodyParams?: {
+          [key: string]: unknown;
+        };
+        headers?: {
+          [key: string]: string;
+        };
+      };
+    };
+    UpsertOrgTagDto: {
+      tag_name: string;
+      org_id: string;
+      exclude_from_auto_tagging?: boolean;
+    };
+    UpsertSequenceInputDto: {
+      /** Format: uuid */
+      sequence_id?: string;
+      sequence: components['schemas']['SequenceInput'];
+    };
+    UpsertSequenceOutputDto: {
+      /** Format: uuid */
+      id: string;
+    };
+    UpsertWorkflowDto: {
+      name: string;
+      org_id: string;
+      trigger_type: string;
+      workflow_id?: string;
+      is_active: boolean | null;
+      workflow_blocks: unknown[];
+      trigger_configuration?: unknown;
+      description: string | null;
+      workflow_editor_state?: unknown;
+      notification_settings: components['schemas']['WorkflowNotificationSettingsDto'];
+      id?: number;
+    };
+    UserDto: {
+      id: number;
+      uuid?: string | null;
+      name: string;
+      email: string;
+      email_verified_at?: string | null;
+      remember_token?: string | null;
+      created_at: string;
+      updated_at: string;
+      token?: string | null;
+      meta?:
+        | (unknown & {
+            skills?: string[] | null;
+            spoken_languages?: string[] | null;
+          })
+        | unknown;
+      /** Format: uri */
+      avatar_url?: string | null;
+      stripe_customer_id?: string | null;
+      is_online: boolean;
+      last_active_at?: string | null;
+      /** @enum {string|null} */
+      preferred_language: 'ar' | 'en' | null;
+    };
+    UserStateResponseDto: {
+      user: {
+        is_pro: boolean;
+      };
+    };
+    UserWithPermissionsDto: {
+      id: number;
+      uuid?: string | null;
+      name: string;
+      email: string;
+      email_verified_at?: string | null;
+      remember_token?: string | null;
+      created_at: string;
+      updated_at: string;
+      token?: string | null;
+      meta?:
+        | (unknown & {
+            skills?: string[] | null;
+            spoken_languages?: string[] | null;
+          })
+        | unknown;
+      /** Format: uri */
+      avatar_url?: string | null;
+      stripe_customer_id?: string | null;
+      is_online: boolean;
+      last_active_at?: string | null;
+      permissions?:
+        | (
+            | 'ADMIN'
+            | 'INBOX'
+            | 'CONTACTS'
+            | 'OUTBOUND_SEQUENCES'
+            | 'WEB_CHANNEL'
+            | 'EMAIL_CHANNEL'
+            | 'WHATSAPP_CHANNEL'
+            | 'SMS_CHANNEL'
+            | 'SLACK_CHANNEL'
+            | 'PHONE_CHANNEL'
+            | 'AI_ACTIONS'
+            | 'AI_KNOWLEDGE_BASE'
+            | 'REPORTS'
+            | 'HELP_CENTER'
+            | 'WORKFLOWS'
+            | 'SETTINGS'
+          )[]
+        | null;
+    };
+    VerificationResponseDto: {
+      /** @description Status message about the verification process */
+      message: string;
+      /** @description The validation code for debugging purposes */
+      validationCode: string;
+    };
+    VerifiedPhoneNumberDto: {
+      /** Format: uuid */
+      id: string;
+      phone_number: string;
+      /** @enum {string} */
+      status: 'failed' | 'pending' | 'verified';
+      created_at: string;
+      verified_at: string | null;
+    };
+    VerifyPhoneNumberDto: {
+      /** @description The phone number to verify in E.164 format (+{country_code}{number}) */
+      phoneNumber: string;
+      /** @description A friendly name for the phone number (max 64 characters) */
+      friendlyName?: string;
+    };
+    VocInsightCategoryDto: {
+      /** Format: uuid */
+      id: string;
+      name: string;
+      description: string | null;
+    };
+    VocInsightResponse: {
+      /** Format: uuid */
+      id: string;
+      org_id: string;
+      /** Format: uuid */
+      group_id: string | null;
+      type: string;
+      content: string;
+      /** @enum {string} */
+      sentiment: 'POSITIVE' | 'NEGATIVE' | 'NEUTRAL';
+      category: string | null;
+      user_story: string | null;
+      occurrence_count: number;
+      is_resolved: number;
+      resolved_at: string | null;
+      resolved_by: number | null;
+      is_snoozed: number;
+      snoozed_at: string | null;
+      snoozed_by: number | null;
+      created_at: string;
+      updated_at: string;
+      last_seen_at: string | null;
+      deep_research: string | null;
+      generating_deep_research: number;
+      sessions: string[];
+    };
+    VocInsightStatsDto: {
+      total: number;
+      feedback: number;
+      bugs: number;
+      features: number;
+    };
+    VocSettingsDto: {
+      alerts_enabled: boolean;
+      occurrence_threshold: number | null;
+      time_window_minutes: number | null;
+      notification_method: string | null;
+      emails: string[];
+      slack_webhook_url: string | null;
+    };
+    WabasPhoneNumbersDto: {
+      phones: {
+        id: string;
+        verified_name: string;
+        code_verification_status: string;
+        display_phone_number: string;
+        quality_rating: string;
+        platform_type: string;
+        throughput: {
+          level: string;
+        };
+        webhook_configuration: {
+          /** @description Registered webhook URL, for example: https://api.open.cx/backend/whatsapp/webhook */
+          application: string;
+        };
+        waba_id: string;
+        waba_name: string;
+      }[];
+    };
+    WhatsAppOAuthUrlDto: {
+      /** @description The OAuth authorization URL to redirect the user to */
+      url: string;
+    };
+    WhatsAppRegisterPhoneResDto: {
+      success?: boolean;
+      error?: {
+        [key: string]: string;
+      };
+    };
+    WhatsAppReplyWindowDeadlineResponseDto: {
+      deadlineUTC: string;
+    };
+    WhatsAppSendDirectTemplateDto: {
+      sessionId: string;
+      templateId: string;
+      phoneNumberId: string;
+      variables: string[];
+      contactId: string;
+    };
+    WhatsAppSendDirectTemplateResponseDto: {
+      whatsapp_message_id: string;
+      opencx_message_id: string;
+      opencx_session_id: string;
+    };
+    WhatsAppSettingsAndPhonesDto: {
+      settings: {
+        id: string;
+        org_id: string;
+        access_token: string;
+        created_at: string;
+        updated_at: string;
+      };
+      wabas: {
+        wabaId: string;
+        phones: {
+          id: string;
+          isEnabled: boolean;
+        }[];
+      }[];
+    };
+    WhatsAppSubToWebhooksResDto: {
+      success?: boolean;
+      error?: {
+        [key: string]: string;
+      };
+    };
+    WhatsAppSubscribedAppsDto: {
+      isSubscribed: boolean;
+      subscribedApps: {
+        id: string;
+        name: string;
+        link: string;
+      }[];
+    };
+    WhatsAppTemplateDto: {
+      id: string;
+      name: string;
+      /** @enum {string} */
+      status: 'APPROVED' | 'REJECTED' | 'PENDING';
+      /** @enum {string} */
+      category: 'UTILITY' | 'MARKETING' | 'AUTHENTICATION';
+      /** @enum {string} */
+      parameter_format: 'NAMED' | 'POSITIONAL';
+      language: string;
+      components?:
+        | (
+            | {
+                /** @enum {string} */
+                type: 'HEADER';
+                /** @enum {string} */
+                format: 'TEXT';
+                /** @description 60 chars max */
+                text: string;
+                example?:
+                  | {
+                      header_text: string[];
+                    }
+                  | {
+                      header_text_named_params: {
+                        param_name: string;
+                        example: string;
+                      }[];
+                    };
+              }
+            | {
+                /** @enum {string} */
+                type: 'HEADER';
+                /**
+                 * @description
+                 *       /**
+                 *        * IMAGE: JPG | PNG
+                 *        * DOCUMENT: PDF
+                 *        * VIDEO: MP4
+                 *        *\/
+                 *
+                 * @enum {string}
+                 */
+                format: 'IMAGE' | 'DOCUMENT' | 'VIDEO';
+                example?: {
+                  /** @description
+                   *         /**
+                   *          * A handle for the media uploaded through the Resumable Upload API
+                   *          * https://developers.facebook.com/docs/graph-api/guides/upload
+                   *          *\/
+                   *          */
+                  header_handle: string;
+                };
+              }
+            | {
+                /** @enum {string} */
+                type: 'HEADER';
+                /** @enum {string} */
+                format: 'LOCATION';
+              }
+            | {
+                /** @enum {string} */
+                type: 'BODY';
+                /** @description 1024 chars max, or 32768 if `body` is the only component in the template */
+                text: string;
+                example?:
+                  | {
+                      /** @description Yes, this is an array of arrays, but only the first array is used, just like `header_text` */
+                      body_text: string[][];
+                    }
+                  | {
+                      body_text_named_params: {
+                        param_name: string;
+                        example: string;
+                      }[];
+                    };
+              }
+            | {
+                /** @enum {string} */
+                type: 'FOOTER';
+                /** @description 60 chars max */
+                text: string;
+              }
+            | {
+                /**
+                 * @description
+                 *       /**
+                 *        * Templates are limited to 10 quick reply buttons. If using quick reply buttons with other buttons,
+                 *        * buttons must be organized into two groups: quick reply buttons and non-quick reply buttons.
+                 *        * If grouped incorrectly, the API will return an error indicating an invalid combination.
+                 *        *
+                 *        * Examples of valid groupings:
+                 *        * - Quick Reply, Quick Reply
+                 *        * - Quick Reply, Quick Reply, URL, Phone
+                 *        * - URL, Phone, Quick Reply, Quick Reply
+                 *        *
+                 *        * Examples of invalid groupings:
+                 *        * - Quick Reply, URL, Quick Reply
+                 *        * - URL, Quick Reply, URL
+                 *        *\/
+                 *
+                 * @enum {string}
+                 */
+                type: 'BUTTONS';
+                buttons: (
+                  | {
+                      /** @enum {string} */
+                      type: 'QUICK_REPLY';
+                      /** @description 25 chars max */
+                      text: string;
+                    }
+                  | {
+                      /** @enum {string} */
+                      type: 'URL';
+                      text: string;
+                      /** @description 2000 chars max */
+                      url: string;
+                      example?: string[];
+                    }
+                  | {
+                      /** @enum {string} */
+                      type: 'PHONE_NUMBER';
+                      /** @description 25 chars max */
+                      text: string;
+                      /** @description 20 chars max */
+                      phone_number: string;
+                    }
+                  | {
+                      /** @enum {string} */
+                      type: 'COPY_CODE';
+                      /** @description 15 chars max */
+                      example: string;
+                    }
+                  | {
+                      /** @enum {string} */
+                      type: 'FLOW';
+                      /** @description 25 chars max */
+                      text: string;
+                      /** @enum {string} */
+                      icon: 'DOCUMENT' | 'PROMOTION' | 'REVIEW';
+                      flow_id?: string;
+                      flow_name?: string;
+                      flow_json?: {
+                        [key: string]: unknown;
+                      };
+                      /** @enum {string} */
+                      flow_action: 'data_exchange' | 'navigate';
+                      navigate_screen?: string;
+                    }
+                  | {
+                      /** @enum {string} */
+                      type: 'MPM';
+                      example: string;
+                    }
+                )[];
+              }
+          )[]
+        | null;
+    };
+    WhatsAppTemplateMappingDto: {
+      header?: {
+        /** @enum {string} */
+        type: 'header';
+        parameters: (
+          | {
+              /** @enum {string} */
+              type: 'text';
+              text: components['schemas']['WhatsAppTemplateVariableDto'];
+              /** @description Required if parameters are named */
+              parameter_name?: string;
+            }
+          | {
+              /**
+               * @description JPEG, JPG, PNG
+               * @enum {string}
+               */
+              type: 'image';
+              image: {
+                link: components['schemas']['WhatsAppTemplateVariableDto'];
+              };
+            }
+          | {
+              /**
+               * @description MP4
+               * @enum {string}
+               */
+              type: 'video';
+              video: {
+                link: components['schemas']['WhatsAppTemplateVariableDto'];
+              };
+            }
+          | {
+              /**
+               * @description PDF
+               * @enum {string}
+               */
+              type: 'document';
+              document: {
+                link: components['schemas']['WhatsAppTemplateVariableDto'];
+              };
+            }
+          | {
+              /** @enum {string} */
+              type: 'location';
+              location: {
+                latitude: components['schemas']['WhatsAppTemplateVariableDto'];
+                longitude: components['schemas']['WhatsAppTemplateVariableDto'];
+                name: components['schemas']['WhatsAppTemplateVariableDto'];
+                address: components['schemas']['WhatsAppTemplateVariableDto'];
+              };
+            }
+        )[];
+      };
+      body?: {
+        /** @enum {string} */
+        type: 'body';
+        parameters: {
+          /** @enum {string} */
+          type: 'text';
+          text: components['schemas']['WhatsAppTemplateVariableDto'];
+          /** @description Required if parameters are named */
+          parameter_name?: string;
+        }[];
+      };
+      buttons?: {
+        /** @enum {string} */
+        type: 'button';
+        /** @enum {string} */
+        index: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+        /** @enum {string} */
+        sub_type: 'url';
+        parameters: {
+          /** @enum {string} */
+          type: 'text';
+          text: components['schemas']['WhatsAppTemplateVariableDto'];
+        }[];
+      }[];
+    };
+    WhatsAppTemplateVariableDto:
+      | {
+          /** @enum {string} */
+          type: 'GLOBAL_DYNAMIC';
+          /** @enum {string} */
+          ref: 'CONTACT_NAME' | 'CONTACT_EMAIL' | 'CONTACT_NUMBER';
+          fallback: string;
+        }
+      | {
+          /** @enum {string} */
+          type: 'DYNAMIC';
+          ref: string;
+          fallback: string;
+        }
+      | {
+          /** @enum {string} */
+          type: 'CONSTANT';
+          value: string;
+        };
+    WhatsAppTemplatesDto: {
+      data: {
+        wabaId: string;
+        templates: components['schemas']['WhatsAppTemplateDto'][];
+      }[];
     };
     WidgetConfigDto: {
       sessionsPollingIntervalSeconds: number;
@@ -569,6 +5072,190 @@ export interface components {
       messagePublicId: string | null;
       success: boolean;
     };
+    WorkflowActionMetadata: {
+      displayName: string;
+      description: string;
+      tags: string[];
+      iconName: string;
+      category: string;
+      keywords: string[];
+      documentation: string;
+      /** @enum {string} */
+      actionType: 'Terminal' | 'NonTerminal';
+      /** @enum {string} */
+      $kind: 'Action';
+      type: string;
+      inputShape?: unknown;
+      outputShape?: unknown;
+      mappings?: unknown;
+      canTest: boolean;
+      hasWidgets: boolean;
+      supportedTriggerTypes:
+        | {
+            triggerTypes: string[];
+          }
+        | {
+            /** @enum {boolean} */
+            all: true;
+          }
+        | {
+            /** @enum {boolean} */
+            none: true;
+          };
+      $mappings?: {
+        from: {
+          /** @enum {string} */
+          source: 'input';
+          fieldPath: string;
+        };
+        to: {
+          /** @enum {string} */
+          destination: 'input' | 'output';
+          fieldPath: string;
+        };
+      }[];
+    };
+    WorkflowBlockRun: {
+      id: number;
+      block_id: string;
+      created_at: string;
+      duration_in_milliseconds: number | null;
+      ended_at: string | null;
+      started_at: string | null;
+      workflow_run_id: string;
+      previous_block_run_id: number | null;
+      /** @enum {string} */
+      status:
+        | 'canceled'
+        | 'completed'
+        | 'failed'
+        | 'idle'
+        | 'in_progress'
+        | 'skipped';
+      result?: unknown;
+      branch: string;
+    };
+    WorkflowDefinitionsDto: {
+      actions: components['schemas']['WorkflowActionMetadata'][];
+      triggers: components['schemas']['WorkflowTriggerMetadata'][];
+      constants: {
+        /** @enum {string} */
+        MANUAL_TRIGGER_TYPE: 'manual-trigger';
+      };
+      extraVariablesMetadata: unknown[];
+    };
+    WorkflowDto: {
+      created_at: string;
+      id: number;
+      is_active: boolean | null;
+      name: string;
+      org_id: string;
+      trigger_type: string;
+      version_number: number;
+      workflow_id: string;
+      workflow_blocks: unknown[];
+      forked_from_id: number | null;
+      cloned_from_id: number | null;
+      cloned_from_workflow_id: string | null;
+      trigger_configuration?: unknown;
+      created_by: number | null;
+      deleted_at: string | null;
+      deleted_by: number | null;
+      description: string | null;
+      workflow_editor_state?: unknown;
+      notification_settings: components['schemas']['WorkflowNotificationSettingsDto'];
+    };
+    WorkflowNotificationSettingsDto: {
+      enabled: boolean;
+      webhooks: (
+        | components['schemas']['WorkflowNotificationSuccessWebhookDto']
+        | (components['schemas']['WorkflowNotificationSuccessWebhookDto'] & {
+            /** @enum {string} */
+            type?: 'failure';
+            url?: string;
+          })
+      )[];
+    } | null;
+    WorkflowNotificationSuccessWebhookDto: {
+      /** @enum {string} */
+      type: 'success';
+      url: string;
+    };
+    WorkflowRunBlockRun: {
+      block: components['schemas']['WorkflowBlockRun'];
+      steps: components['schemas']['WorkflowStepRun'][];
+    };
+    WorkflowRunLog: {
+      /** @enum {string} */
+      type: 'success' | 'failure' | 'info';
+      log?: unknown;
+      stepId?: string;
+      stepType?: string;
+      timestamp: number;
+      blockId?: string | null;
+      blockBranch?: string | null;
+      stepResult?: unknown;
+    };
+    WorkflowRunLogsDto: {
+      id: string;
+      created_at: string | null;
+      workflow_run_id: string;
+      logs: components['schemas']['WorkflowRunLog'][] | null;
+    };
+    WorkflowStepRun: {
+      created_at: string;
+      id: number;
+      step_id: string;
+      workflow_run_id: string;
+      result?: unknown;
+      step_input?: unknown;
+      /** @enum {string} */
+      status:
+        | 'canceled'
+        | 'completed'
+        | 'failed'
+        | 'idle'
+        | 'in_progress'
+        | 'skipped';
+      started_at: string | null;
+      ended_at: string | null;
+      workflow_id: string;
+      duration_in_milliseconds: number | null;
+      context?: unknown;
+      wrapper_block_id: string | null;
+      wrapper_block_run_id: number | null;
+    };
+    WorkflowTriggerMetadata: {
+      /** @enum {string} */
+      $kind: 'Trigger';
+      type: string;
+      payloadDef?: unknown;
+      configurationDef?: unknown;
+      mappings?:
+        | {
+            from: {
+              /** @enum {string} */
+              source: 'configuration';
+              fieldPath: string;
+            };
+            to: {
+              /** @enum {string} */
+              destination: 'payload' | 'configuration';
+              fieldPath: string;
+            };
+          }[]
+        | null;
+      description: string;
+      iconName: string;
+      title: string;
+      /** @enum {string} */
+      env: 'development' | 'production';
+    };
+    ZendeskSupportSourceDto: {
+      subdomain: string;
+      email: string;
+      api_token: string;
+    };
     ErrorDto: {
       statusCode?: number;
       message?: string;
@@ -839,6 +5526,39 @@ export interface operations {
     };
   };
   uploadFile: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description The file to upload */
+    requestBody: {
+      content: {
+        'multipart/form-data': components['schemas']['FileUploadDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UploadWidgetFileResponseDto'];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  uploadFileV2: {
     parameters: {
       query?: never;
       header?: never;
