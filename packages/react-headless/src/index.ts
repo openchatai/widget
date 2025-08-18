@@ -20,3 +20,4 @@ export {
   WidgetTriggerProvider,
 } from './hooks/useWidgetTrigger';
 export { useModes } from './hooks/useModes';
+export { useCsat } from './hooks/useCsat';

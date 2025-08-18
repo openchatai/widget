@@ -225,4 +225,8 @@ export class ApiCaller {
       body,
     });
   };
+
+  submitCsat = async (body: Dto['WidgetSubmitCsatInputDto']) => {
+    return await this.client.POST('/backend/widget/v2/submit-csat', { body });
+  };
 }

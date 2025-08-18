@@ -1,4 +1,4 @@
-import type { UserMessageType } from '@opencx/widget-core';
+import type { WidgetUserMessage } from '@opencx/widget-core';
 import React from 'react';
 import { dc } from '../utils/data-component';
 import { cn } from './lib/utils/cn';
@@ -8,7 +8,7 @@ import { GroupTimestamp } from './GroupTimestamp';
 export function UserMessageGroup({
   messages,
 }: {
-  messages: UserMessageType[];
+  messages: WidgetUserMessage[];
 }) {
   return (
     <div

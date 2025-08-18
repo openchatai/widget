@@ -1,13 +1,15 @@
 import React from 'react';
 import type {
-  AgentMessageType,
-  BotMessageType,
+  WidgetAgentMessage,
+  WidgetAiMessage,
   WidgetComponentKey,
+  WidgetSystemMessageU,
 } from '@opencx/widget-core';
 
 export type WidgetComponentProps<TData = unknown> =
-  | BotMessageType<TData>
-  | AgentMessageType;
+  | WidgetAiMessage<TData>
+  | WidgetAgentMessage
+  | WidgetSystemMessageU;
 
 export type WidgetComponentType = {
   key: WidgetComponentKey;

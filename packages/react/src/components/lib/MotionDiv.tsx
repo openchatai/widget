@@ -4,7 +4,7 @@ import { type ComponentProps, forwardRef } from 'react';
 
 type MotionProps = ComponentProps<typeof motion.div>;
 type AnimationDirection = 'right' | 'left' | 'up' | 'down';
-type MotionDivProps = MotionProps & {
+export type MotionDivProps = MotionProps & {
   fadeIn?: AnimationDirection;
   distance?: number;
   snapExit?: boolean;

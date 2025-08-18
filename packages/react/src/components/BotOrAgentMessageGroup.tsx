@@ -1,7 +1,7 @@
 import {
-  type AgentMessageType,
+  type WidgetAgentMessage,
   type AgentOrBotType,
-  type BotMessageType,
+  type WidgetAiMessage,
 } from '@opencx/widget-core';
 import React from 'react';
 import { dc } from '../utils/data-component';
@@ -17,7 +17,7 @@ export function BotOrAgentMessageGroup({
   agent,
   suggestedReplies,
 }: {
-  messages: BotMessageType[] | AgentMessageType[];
+  messages: WidgetAiMessage[] | WidgetAgentMessage[];
   agent: AgentOrBotType | undefined;
   suggestedReplies?: string[];
 }) {

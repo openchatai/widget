@@ -1,4 +1,4 @@
-import type { UserMessageType } from '@opencx/widget-core';
+import type { WidgetUserMessage } from '@opencx/widget-core';
 import React from 'react';
 import { dc } from '../utils/data-component';
 import { AttachmentPreview } from './AttachmentPreview';
@@ -10,7 +10,7 @@ export function UserMessage({
   isLastInGroup,
   isAloneInGroup,
 }: {
-  message: UserMessageType;
+  message: WidgetUserMessage;
   isFirstInGroup: boolean;
   isLastInGroup: boolean;
   isAloneInGroup: boolean;

@@ -15,9 +15,9 @@ export type WidgetComponentKey = StringOrLiteral<LiteralWidgetComponentKey>;
 /* ------------------------------------------------------ */
 /*                      Message types                     */
 /* ------------------------------------------------------ */
-export type UserMessageType = {
+export type WidgetUserMessage = {
   id: string;
-  type: 'FROM_USER';
+  type: 'USER';
   content: string;
   deliveredAt: string | null;
   attachments?: MessageAttachmentType[] | null;
@@ -31,9 +31,9 @@ export type UserMessageType = {
   };
 };
 
-export type BotMessageType<TActionData = unknown> = {
+export type WidgetAiMessage<TActionData = unknown> = {
   id: string;
-  type: 'FROM_BOT';
+  type: 'AI';
   /**
    * The type is a bot_message literal string or other strings that correspond to the UI responses from AI action calls
    */
@@ -47,14 +47,13 @@ export type BotMessageType<TActionData = unknown> = {
     } | null;
   };
   timestamp: string | null;
-  original?: MessageDto;
   agent?: AgentOrBotType;
   attachments?: MessageAttachmentType[];
 };
 
-export type AgentMessageType = {
+export type WidgetAgentMessage = {
   id: string;
-  type: 'FROM_AGENT';
+  type: 'AGENT';
   component: SafeExtract<LiteralWidgetComponentKey, 'agent_message'>;
   data: {
     message: string;
@@ -62,12 +61,53 @@ export type AgentMessageType = {
     action?: undefined;
   };
   timestamp: string | null;
-  original?: MessageDto;
   agent?: AgentOrBotType;
   attachments?: MessageAttachmentType[];
 };
 
+export type WidgetSystemMessage__StateCheckpoint = {
+  id: string;
+  type: 'SYSTEM';
+  subtype: 'state_checkpoint';
+  timestamp: string | null;
+  attachments?: undefined;
+  data: {
+    payload: unknown;
+  };
+};
+export type WidgetSystemMessage__CsatRequested = {
+  id: string;
+  type: 'SYSTEM';
+  subtype: 'csat_requested';
+  timestamp: string | null;
+  attachments?: undefined;
+  data: {
+    payload?: undefined;
+  };
+};
+export type WidgetSystemMessage__CsatSubmitted = {
+  id: string;
+  type: 'SYSTEM';
+  subtype: 'csat_submitted';
+  timestamp: string | null;
+  attachments?: undefined;
+  data: {
+    payload: {
+      score: number | null | undefined;
+      feedback: string | null | undefined;
+    };
+  };
+};
+export type WidgetSystemMessageU =
+  | WidgetSystemMessage__StateCheckpoint
+  | WidgetSystemMessage__CsatRequested
+  | WidgetSystemMessage__CsatSubmitted;
+
 /* ------------------------------------------------------ */
 /*                          Union                         */
 /* ------------------------------------------------------ */
-export type MessageType = UserMessageType | BotMessageType | AgentMessageType;
+export type WidgetMessageU =
+  | WidgetUserMessage
+  | WidgetAiMessage
+  | WidgetAgentMessage
+  | WidgetSystemMessageU;

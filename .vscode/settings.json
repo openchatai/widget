@@ -1,5 +1,5 @@
 {
   "editor.formatOnSave": true,
-  "cSpell.words": ["Baskervville", "orangered"],
+  "cSpell.words": ["Baskervville", "Convs", "orangered"],
   "typescript.tsdk": "node_modules/typescript/lib"
 }

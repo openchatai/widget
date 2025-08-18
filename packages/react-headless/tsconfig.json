@@ -1,6 +1,4 @@
 {
   "extends": "@opencx/tsconfig/tsconfig.base.json",
-  "compilerOptions": {
-    "resolveJsonModule": true
-  }
+  "exclude": ["node_modules", "dist"]
 }

@@ -11,7 +11,7 @@ export function useIsAwaitingBotReply() {
     messagesState.messages.length > 0
       ? messagesState.messages[messagesState.messages.length - 1]
       : null;
-  const isLastMessageAUserMessage = lastMessage?.type === 'FROM_USER';
+  const isLastMessageAUserMessage = lastMessage?.type === 'USER';
 
   const isAwaitingBotReply =
     (isSessionAssignedToAI || sessionState.isCreatingSession) &&

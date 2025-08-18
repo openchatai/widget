@@ -4,6 +4,7 @@ import type { ExternalStorage } from '../types/external-storage';
 import type { WidgetConfig } from '../types/widget-config';
 import { ActiveSessionPollingCtx } from './active-session-polling.ctx';
 import { ContactCtx } from './contact.ctx';
+import { CsatCtx } from './csat.ctx';
 import { MessageCtx } from './message.ctx';
 import { RouterCtx } from './router.ctx';
 import { SessionCtx } from './session.ctx';
@@ -16,6 +17,7 @@ export class WidgetCtx {
   public contactCtx: ContactCtx;
   public sessionCtx: SessionCtx;
   public messageCtx: MessageCtx;
+  public csatCtx: CsatCtx;
   public routerCtx: RouterCtx;
   public storageCtx?: StorageCtx;
   public modes: ModeDto[] = [];
@@ -65,6 +67,13 @@ export class WidgetCtx {
       api: this.api,
       sessionCtx: this.sessionCtx,
       contactCtx: this.contactCtx,
+    });
+
+    this.csatCtx = new CsatCtx({
+      config: this.config,
+      api: this.api,
+      sessionCtx: this.sessionCtx,
+      messageCtx: this.messageCtx,
     });
 
     this.activeSessionPollingCtx = new ActiveSessionPollingCtx({

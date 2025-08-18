@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.11
+
+### Patch Changes
+
+- add csat survey
+- Updated dependencies
+  - @opencx/widget-react-headless@4.0.11
+  - @opencx/widget-core@4.0.11
+
 ## 4.0.10
 
 ### Patch Changes

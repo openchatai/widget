@@ -1,6 +1,7 @@
 import { type SendMessageDto } from '@opencx/widget-core';
 import {
   useConfig,
+  useCsat,
   useIsAwaitingBotReply,
   useMessages,
   useSessions,
@@ -25,9 +26,11 @@ import {
 } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { CsatSurvey } from '../../components/CsatSurvey';
 import { MightSolveUserIssueSuggestedReplies } from '../../components/MightSolveUserIssueSuggestedReplies';
 import { SuggestedReplyButton } from '../../components/SuggestedReplyButton';
 import { MotionDiv } from '../../components/lib/MotionDiv';
+import { MotionDiv__VerticalReveal } from '../../components/lib/MotionDiv__VerticalReveal';
 import { Button } from '../../components/lib/button';
 import { Tooltippy } from '../../components/lib/tooltip';
 import { cn } from '../../components/lib/utils/cn';
@@ -344,7 +347,7 @@ function ChatInput() {
   );
 }
 
-function SessionClosedSection() {
+function NewConvOrBackToConvsButton() {
   const { widgetCtx } = useWidget();
   const { router } = useConfig();
   const { canCreateNewSession } = useSessions();
@@ -352,27 +355,51 @@ function SessionClosedSection() {
   const { t } = useTranslation();
 
   return (
-    <div className="p-2">
-      <div className="p-2 bg-muted rounded-3xl space-y-2">
-        <div className="ps-2 flex items-center gap-1">
-          <CircleCheckIcon className="size-4 text-emerald-600" />
-          <h2 className="text-sm font-medium">{t('session-closed-lead')}</h2>
-        </div>
+    <>
+      {canCreateNewSession || !!router?.chatScreenOnly ? (
+        <Button onClick={widgetCtx.resetChat} className="rounded-2xl w-full">
+          {t('new-conversation')}
+        </Button>
+      ) : (
+        <Button onClick={toSessionsScreen} className="rounded-2xl w-full">
+          {t('back-to-conversations')}
+        </Button>
+      )}
+    </>
+  );
+}
 
-        <div>
-          {canCreateNewSession || !!router?.chatScreenOnly ? (
-            <Button
-              onClick={widgetCtx.resetChat}
-              className="rounded-2xl w-full"
-            >
-              {t('new-conversation')}
-            </Button>
+function SessionClosedSection() {
+  const { t } = useTranslation();
+  const { isCsatRequested, isCsatSubmitted } = useCsat();
+
+  return (
+    <div className="p-2">
+      <div className="p-2 bg-muted rounded-3xl">
+        <AnimatePresence mode="wait">
+          {isCsatRequested || isCsatSubmitted ? (
+            <MotionDiv__VerticalReveal key="csat">
+              <CsatSurvey />
+              <AnimatePresence mode="wait">
+                {isCsatSubmitted && (
+                  <MotionDiv__VerticalReveal key="new-conv-or-back-to-convs-button">
+                    <NewConvOrBackToConvsButton />
+                  </MotionDiv__VerticalReveal>
+                )}
+              </AnimatePresence>
+            </MotionDiv__VerticalReveal>
           ) : (
-            <Button onClick={toSessionsScreen} className="rounded-2xl w-full">
-              {t('back-to-conversations')}
-            </Button>
+            <MotionDiv__VerticalReveal key="session-closed">
+              <div className="ps-2 flex items-center gap-1 pb-2">
+                <CircleCheckIcon className="size-4 text-emerald-600" />
+                <h2 className="text-sm font-medium">
+                  {t('session-closed-lead')}
+                </h2>
+              </div>
+              <NewConvOrBackToConvsButton />
+            </MotionDiv__VerticalReveal>
           )}
-        </div>
+        </AnimatePresence>
       </div>
     </div>
   );
@@ -391,27 +418,11 @@ export function ChatFooter() {
       <div>
         <AnimatePresence mode="wait">
           {sessionState.session && !sessionState.session?.isOpened ? (
-            <MotionDiv
-              key="session-closed"
-              className="overflow-hidden"
-              overrides={{
-                initial: { height: 0 },
-                animate: { height: 'auto' },
-                exit: { height: 0 },
-              }}
-            >
+            <MotionDiv__VerticalReveal key="session-closed">
               <SessionClosedSection />
-            </MotionDiv>
+            </MotionDiv__VerticalReveal>
           ) : (
-            <MotionDiv
-              key="chat-input"
-              className="overflow-hidden"
-              overrides={{
-                initial: { height: 0 },
-                animate: { height: 'auto' },
-                exit: { height: 0 },
-              }}
-            >
+            <MotionDiv__VerticalReveal key="chat-input">
               {messagesState.lastAIResMightSolveUserIssue &&
                 thisWasHelpfulOrNot?.enabled !== false && (
                   <MightSolveUserIssueSuggestedReplies />
@@ -431,7 +442,7 @@ export function ChatFooter() {
                 )}
 
               <ChatInput />
-            </MotionDiv>
+            </MotionDiv__VerticalReveal>
           )}
         </AnimatePresence>
       </div>

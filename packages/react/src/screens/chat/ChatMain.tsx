@@ -1,5 +1,4 @@
 import {
-  type BotMessageType,
   type LiteralWidgetComponentKey,
   type SafeExtract,
 } from '@opencx/widget-core';
@@ -11,7 +10,6 @@ import {
 } from '@opencx/widget-react-headless';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
-import { RichText } from '../../components/RichText';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { dc } from '../../utils/data-component';
 import {
@@ -20,33 +18,9 @@ import {
   isBotMessageGroup,
   isUserMessageGroup,
 } from '../../utils/group-messages-by-type';
-
-function ChatBannerItems() {
-  const {
-    messagesState: { messages },
-  } = useMessages();
-  const { chatBannerItems } = useConfig();
-
-  if (!chatBannerItems?.length) return null;
-  if (
-    messages.length > 0 &&
-    chatBannerItems.every((item) => !item.persistent)
-  ) {
-    return null;
-  }
-
-  return (
-    <div className="w-full text-center text-xs">
-      {chatBannerItems.map(({ message, persistent }, index) =>
-        messages.length > 0 && !persistent ? null : (
-          <div key={`${message}-${index}`}>
-            <RichText>{message}</RichText>
-          </div>
-        ),
-      )}
-    </div>
-  );
-}
+import { AdvancedInitialMessages } from './AdvancedInitialMessages';
+import { ChatBannerItems } from './ChatBannerItems';
+import { InitialMessages } from './InitialMessages';
 
 export function ChatMain() {
   const {
@@ -55,25 +29,11 @@ export function ChatMain() {
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();
   const config = useConfig();
-  const { initialQuestions, initialQuestionsPosition } = config;
 
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
     [messages],
   );
-
-  const advancedInitialMessages = (() => {
-    if (!messages.length) return config.advancedInitialMessages || [];
-    return config.advancedInitialMessages?.filter((m) => !!m.persistent) || [];
-  })();
-
-  const initialMessages = (() => {
-    if (advancedInitialMessages.length) return [];
-    if (messages.length) return [];
-    // TODO translate default welcome message
-    if (!config.initialMessages?.length) return ['Hello, how can I help you?'];
-    return config.initialMessages;
-  })();
 
   const LoadingComponent = componentStore.getComponent(
     'loading' satisfies SafeExtract<LiteralWidgetComponentKey, 'loading'>,
@@ -98,57 +58,14 @@ export function ChatMain() {
 
   return (
     <div
-      // Do not add `dir` attribute here... contact messages are always on the right, bot and agent are always on the left for all languages
       {...dc('chat/msgs/root')}
       ref={messagesContainerRef}
       className="max-h-full scroll-smooth relative flex-1 py-2 px-4 flex flex-col gap-2 overflow-auto"
     >
       <ChatBannerItems />
-      {messages.length === 0 && advancedInitialMessages.length > 0 && (
-        <BotOrAgentMessageGroup
-          messages={advancedInitialMessages.map(
-            ({ message }, index) =>
-              ({
-                component: 'bot_message',
-                data: { message },
-                id: `${index}-${message}`,
-                type: 'FROM_BOT',
-                timestamp: null,
-              }) satisfies BotMessageType,
-          )}
-          suggestedReplies={
-            messages.length === 0 &&
-            initialQuestionsPosition === 'below-initial-messages'
-              ? initialQuestions
-              : undefined
-          }
-          agent={
-            config.bot ? { ...config.bot, isAi: true, id: null } : undefined
-          }
-        />
-      )}
-      {messages.length === 0 && initialMessages.length > 0 && (
-        <BotOrAgentMessageGroup
-          messages={initialMessages.map(
-            (m, index) =>
-              ({
-                component: 'bot_message',
-                data: { message: m },
-                id: `${index}-${m}`,
-                type: 'FROM_BOT',
-                timestamp: null,
-              }) satisfies BotMessageType,
-          )}
-          suggestedReplies={
-            initialQuestionsPosition === 'below-initial-messages'
-              ? initialQuestions
-              : undefined
-          }
-          agent={
-            config.bot ? { ...config.bot, isAi: true, id: null } : undefined
-          }
-        />
-      )}
+      <AdvancedInitialMessages />
+      <InitialMessages />
+
       {groupedMessages.map((group) => {
         const type = group?.[0]?.type;
         const firstIdInGroup = group[0]?.id;

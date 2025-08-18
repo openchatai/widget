@@ -10,7 +10,7 @@ export type LoadingComponentProps = {
   agent: AgentOrBotType | undefined;
 };
 
-export function BotLoadingComponent({ agent }: LoadingComponentProps) {
+export function LoadingDefaultComponent({ agent }: LoadingComponentProps) {
   return (
     <AnimatePresence>
       <MotionDiv

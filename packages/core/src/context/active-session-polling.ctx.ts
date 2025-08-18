@@ -1,7 +1,11 @@
 import type { ApiCaller } from '../api/api-caller';
-import type { MessageType } from '../types/messages';
 import type { ActionCallDto, MessageDto } from '../types/dtos';
+import {
+  type WidgetMessageU,
+  type WidgetSystemMessageU,
+} from '../types/messages';
 import type { WidgetConfig } from '../types/widget-config';
+import { isExhaustive } from '../utils/is-exhaustive';
 import { Poller } from '../utils/Poller';
 import { runCatching } from '../utils/run-catching';
 import type { MessageCtx } from './message.ctx';
@@ -68,7 +72,7 @@ export class ActiveSessionPollingCtx {
     const messages = this.messageCtx.state.get().messages;
     const lastMessageTimestamp =
       messages.length > 0
-        ? messages[messages.length - 1]?.timestamp ?? undefined
+        ? (messages[messages.length - 1]?.timestamp ?? undefined)
         : undefined;
 
     const { data } = await this.api.pollSessionAndHistory({
@@ -87,6 +91,7 @@ export class ActiveSessionPollingCtx {
       const prevMessages = this.messageCtx.state.get().messages;
       const newMessages = data.history
         .map(this.mapHistoryToMessage)
+        .filter((msg): msg is WidgetMessageU => msg !== null)
         .filter(
           (newMsg) =>
             !prevMessages.some((existingMsg) => existingMsg.id === newMsg.id),
@@ -101,7 +106,7 @@ export class ActiveSessionPollingCtx {
     }
   };
 
-  mapHistoryToMessage = (history: MessageDto): MessageType => {
+  mapHistoryToMessage = (history: MessageDto): WidgetMessageU | null => {
     const commonFields = {
       id: history.publicId,
       timestamp: history.sentAt || '',
@@ -111,7 +116,7 @@ export class ActiveSessionPollingCtx {
     if (history.sender.kind === 'user') {
       return {
         ...commonFields,
-        type: 'FROM_USER',
+        type: 'USER',
         content: history.content.text || '',
         deliveredAt: history.sentAt || '',
       };
@@ -120,7 +125,7 @@ export class ActiveSessionPollingCtx {
     if (history.sender.kind === 'agent') {
       return {
         ...commonFields,
-        type: 'FROM_AGENT',
+        type: 'AGENT',
         component: 'agent_message',
         data: {
           message: history.content.text || '',
@@ -134,31 +139,91 @@ export class ActiveSessionPollingCtx {
       };
     }
 
-    const action =
-      history.actionCalls && history.actionCalls.length > 0
-        ? history.actionCalls[history.actionCalls.length - 1]
-        : undefined;
+    if (history.sender.kind === 'ai') {
+      const action =
+        history.actionCalls && history.actionCalls.length > 0
+          ? history.actionCalls[history.actionCalls.length - 1]
+          : undefined;
 
-    return {
-      ...commonFields,
-      type: 'FROM_BOT',
-      component: 'bot_message',
-      agent: {
-        id: null,
-        name: this.config.bot?.name || '',
-        isAi: true,
-        avatar: this.config.bot?.avatar || '',
-      },
-      data: {
-        message: history.content.text || '',
-        action: action
-          ? {
-              name: action.actionName,
-              data: this.extractActionResult(action),
-            }
-          : undefined,
-      },
-    };
+      return {
+        ...commonFields,
+        type: 'AI',
+        component: 'bot_message',
+        agent: {
+          id: null,
+          name: this.config.bot?.name || '',
+          isAi: true,
+          avatar: this.config.bot?.avatar || '',
+        },
+        data: {
+          message: history.content.text || '',
+          action: action
+            ? {
+                name: action.actionName,
+                data: this.extractActionResult(action),
+              }
+            : undefined,
+        },
+      };
+    }
+
+    if (history.sender.kind === 'system') {
+      const message = this.constructSystemMessage(history);
+      if (message === null) return null;
+
+      return { ...message };
+    }
+
+    return null;
+  };
+
+  constructSystemMessage = (
+    history: MessageDto,
+  ): WidgetSystemMessageU | null => {
+    if (!history || !history.systemMessagePayload) return null;
+    switch (history.systemMessagePayload.type) {
+      case 'state_checkpoint':
+        return {
+          id: history.publicId,
+          type: 'SYSTEM',
+          subtype: 'state_checkpoint',
+          data: { payload: history.systemMessagePayload.payload },
+          timestamp: history.sentAt || '',
+          attachments: undefined,
+        };
+      case 'csat_requested':
+        return {
+          id: history.publicId,
+          type: 'SYSTEM',
+          subtype: 'csat_requested',
+          data: { payload: undefined },
+          timestamp: history.sentAt || '',
+          attachments: undefined,
+        };
+      case 'csat_submitted':
+        return {
+          id: history.publicId,
+          type: 'SYSTEM',
+          subtype: 'csat_submitted',
+          data: {
+            payload: {
+              score: history.systemMessagePayload.payload.score ?? undefined,
+              feedback:
+                history.systemMessagePayload.payload.feedback ?? undefined,
+            },
+          },
+          timestamp: history.sentAt || '',
+          attachments: undefined,
+        };
+      case 'none':
+        return null;
+      default:
+        isExhaustive(
+          history.systemMessagePayload,
+          this.constructSystemMessage.name,
+        );
+        return null;
+    }
   };
 
   extractActionResult = (action: ActionCallDto) => {

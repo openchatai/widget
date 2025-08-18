@@ -1,6 +1,9 @@
-import { useWidget, type WidgetComponentProps } from '@opencx/widget-react-headless';
+import {
+  useWidget,
+  type WidgetComponentProps,
+} from '@opencx/widget-react-headless';
 import React from 'react';
-import { BotOrAgentResponse } from './custom-components/BotOrAgentTextResponse.component';
+import { BotOrAgentMessageDefaultComponent } from './custom-components/BotOrAgentMessageDefaultComponent';
 
 export function BotOrAgentMessage({
   isFirstInGroup,
@@ -13,6 +16,7 @@ export function BotOrAgentMessage({
   isAloneInGroup: boolean;
 }) {
   const { componentStore } = useWidget();
+  if (props.type !== 'AGENT' && props.type !== 'AI') return null;
 
   // Try to use custom components first
   if (props.data.action) {
@@ -35,7 +39,7 @@ export function BotOrAgentMessage({
   if (!Component) {
     // Fallback... just in case
     return (
-      <BotOrAgentResponse
+      <BotOrAgentMessageDefaultComponent
         {...props}
         isFirstInGroup={isFirstInGroup}
         isLastInGroup={isLastInGroup}

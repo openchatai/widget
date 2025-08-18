@@ -11,9 +11,9 @@ import {
   WidgetTriggerProvider,
   type WidgetComponentType,
 } from '@opencx/widget-react-headless';
-import { BotOrAgentResponse } from './components/custom-components/BotOrAgentTextResponse.component';
-import { FallbackComponent } from './components/custom-components/Fallback.component';
-import { BotLoadingComponent } from './components/custom-components/Loading.component';
+import { BotOrAgentMessageDefaultComponent } from './components/custom-components/BotOrAgentMessageDefaultComponent';
+import { FallbackDefaultComponent } from './components/custom-components/FallbackDefaultComponent';
+import { LoadingDefaultComponent } from './components/custom-components/LoadingDefaultComponent';
 import { WidgetContent, WidgetPopoverContent } from './WidgetPopoverContent';
 import { WidgetPopoverTrigger } from './WidgetPopoverTrigger';
 import { WidgetPopoverAnchor } from './WidgetPopoverAnchor';
@@ -33,19 +33,19 @@ function WidgetPopoverTriggerAndContent() {
 const defaultComponents: WidgetComponentType[] = [
   {
     key: 'loading' satisfies LiteralWidgetComponentKey,
-    component: BotLoadingComponent,
+    component: LoadingDefaultComponent,
   },
   {
     key: 'fallback' satisfies LiteralWidgetComponentKey,
-    component: FallbackComponent,
+    component: FallbackDefaultComponent,
   },
   {
     key: 'bot_message' satisfies LiteralWidgetComponentKey,
-    component: BotOrAgentResponse,
+    component: BotOrAgentMessageDefaultComponent,
   },
   {
     key: 'agent_message' satisfies LiteralWidgetComponentKey,
-    component: BotOrAgentResponse,
+    component: BotOrAgentMessageDefaultComponent,
   },
 ];
 

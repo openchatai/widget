@@ -1,13 +1,16 @@
-import type {
-  AgentMessageType,
-  BotMessageType,
-  MessageType,
-  UserMessageType,
+import {
+  type WidgetAgentMessage,
+  type WidgetAiMessage,
+  type WidgetMessageU,
+  type WidgetSystemMessageU,
+  type WidgetUserMessage,
 } from '@opencx/widget-core';
 
-export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
-  const result: MessageType[][] = [];
-  let currentGroup: MessageType[] | null = null;
+export function groupMessagesByType(
+  messages: WidgetMessageU[],
+): WidgetMessageU[][] {
+  const result: WidgetMessageU[][] = [];
+  let currentGroup: WidgetMessageU[] | null = null;
 
   messages.forEach((message) => {
     // Start a new group if the type changes
@@ -15,15 +18,18 @@ export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
       currentGroup = [];
       result.push(currentGroup);
     }
+
     // Start a new group if the agent changes
     if (
-      currentGroup[0]?.type === 'FROM_AGENT' &&
-      message.type === 'FROM_AGENT' &&
-      message.agent?.id !== currentGroup[0].agent?.id
+      currentGroup[0]?.type === 'AGENT' &&
+      message.type === 'AGENT' &&
+      (message.agent?.id !== currentGroup[0].agent?.id ||
+        message.agent?.name !== currentGroup[0].agent?.name)
     ) {
       currentGroup = [];
       result.push(currentGroup);
     }
+
     currentGroup.push(message);
   });
 
@@ -31,19 +37,25 @@ export function groupMessagesByType(messages: MessageType[]): MessageType[][] {
 }
 
 export function isUserMessageGroup(
-  messages: MessageType[],
-): messages is UserMessageType[] {
-  return messages?.[0]?.type === 'FROM_USER';
+  messages: WidgetMessageU[],
+): messages is WidgetUserMessage[] {
+  return messages?.[0]?.type === 'USER';
 }
 
 export function isBotMessageGroup(
-  messages: MessageType[],
-): messages is BotMessageType[] {
-  return messages?.[0]?.type === 'FROM_BOT';
+  messages: WidgetMessageU[],
+): messages is WidgetAiMessage[] {
+  return messages?.[0]?.type === 'AI';
 }
 
 export function isAgentMessageGroup(
-  messages: MessageType[],
-): messages is AgentMessageType[] {
-  return messages?.[0]?.type === 'FROM_AGENT';
+  messages: WidgetMessageU[],
+): messages is WidgetAgentMessage[] {
+  return messages?.[0]?.type === 'AGENT';
+}
+
+export function isSystemMessageGroup(
+  messages: WidgetMessageU[],
+): messages is WidgetSystemMessageU[] {
+  return messages?.[0]?.type === 'SYSTEM';
 }

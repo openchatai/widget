@@ -228,10 +228,28 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/backend/widget/v2/submit-csat': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['submitCsat'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** @enum {string} */
+    AssigneeKindEnum: 'human' | 'ai' | 'none';
     CreateUnverifiedContactDto: {
       email?: string;
       non_verified_name?: string;
@@ -248,6 +266,24 @@ export interface components {
       /** Format: binary */
       file: string;
     };
+    /** @enum {string} */
+    MessageTypeEnum:
+      | 'agent_comment'
+      | 'agent_joined'
+      | 'agent_message'
+      | 'agent_reopened_session'
+      | 'agent_took_session_from_ai'
+      | 'ai_assumed_the_session_resolved'
+      | 'ai_decided_to_resolve_the_issue'
+      | 'csat_requested'
+      | 'csat_submitted'
+      | 'email_draft_message'
+      | 'handoff'
+      | 'handoff_to_salesforce_miaw'
+      | 'handoff_to_zendesk'
+      | 'message'
+      | 'state_checkpoint'
+      | 'user_confirmed_the_session_resolved';
     /** @description Paginated response. */
     PaginatedWidgetSessionsDto: {
       items: {
@@ -258,8 +294,7 @@ export interface components {
         isHandedOff: boolean;
         isOpened: boolean;
         assignee: {
-          /** @enum {string} */
-          kind: 'human' | 'ai' | 'none' | 'unknown';
+          kind: components['schemas']['AssigneeKindEnum'];
           name: string | null;
           avatarUrl: string | null;
         };
@@ -274,6 +309,34 @@ export interface components {
       /** @description The `cursor` for the request to get the next set of items. Null if there is no more data. */
       next: string | null;
     };
+    /** @enum {string} */
+    SenderTypeEnum: 'user' | 'agent' | 'ai' | 'system' | 'unknown';
+    SystemMessagePayload:
+      | {
+          /** @enum {string} */
+          type: 'state_checkpoint';
+          payload: {
+            [key: string]: unknown;
+          } | null;
+        }
+      | {
+          /** @enum {string} */
+          type: 'csat_requested';
+          payload?: unknown;
+        }
+      | {
+          /** @enum {string} */
+          type: 'csat_submitted';
+          payload: {
+            score?: number | null;
+            feedback?: string | null;
+          };
+        }
+      | {
+          /** @enum {string} */
+          type: 'none';
+          payload?: unknown;
+        };
     UploadWidgetFileResponseDto: {
       fileName: string;
       fileUrl: string;
@@ -326,28 +389,12 @@ export interface components {
     };
     WidgetHistoryDto: {
       publicId: string;
-      /** @enum {string} */
-      type:
-        | 'agent_comment'
-        | 'agent_joined'
-        | 'agent_message'
-        | 'agent_reopened_session'
-        | 'agent_took_session_from_ai'
-        | 'ai_assumed_the_session_resolved'
-        | 'ai_decided_to_resolve_the_issue'
-        | 'email_draft_message'
-        | 'handoff'
-        | 'handoff_to_salesforce_miaw'
-        | 'handoff_to_zendesk'
-        | 'message'
-        | 'state_checkpoint'
-        | 'user_confirmed_the_session_resolved';
+      type: components['schemas']['MessageTypeEnum'];
       content: {
         text?: string | null;
       };
       sender: {
-        /** @enum {string} */
-        kind: 'user' | 'agent' | 'ai' | 'none' | 'unknown';
+        kind: components['schemas']['SenderTypeEnum'];
         name?: string | null;
         avatar?: string | null;
       };
@@ -380,6 +427,7 @@ export interface components {
             url: string;
           }[]
         | null;
+      systemMessagePayload: components['schemas']['SystemMessagePayload'];
     };
     WidgetPreludeDto: {
       initialQuestions: string[];
@@ -532,8 +580,7 @@ export interface components {
             isHandedOff: boolean;
             isOpened: boolean;
             assignee: {
-              /** @enum {string} */
-              kind: 'human' | 'ai' | 'none' | 'unknown';
+              kind: components['schemas']['AssigneeKindEnum'];
               name: string | null;
               avatarUrl: string | null;
             };
@@ -564,8 +611,7 @@ export interface components {
         isHandedOff: boolean;
         isOpened: boolean;
         assignee: {
-          /** @enum {string} */
-          kind: 'human' | 'ai' | 'none' | 'unknown';
+          kind: components['schemas']['AssigneeKindEnum'];
           name: string | null;
           avatarUrl: string | null;
         };
@@ -579,28 +625,12 @@ export interface components {
       };
       history: {
         publicId: string;
-        /** @enum {string} */
-        type:
-          | 'agent_comment'
-          | 'agent_joined'
-          | 'agent_message'
-          | 'agent_reopened_session'
-          | 'agent_took_session_from_ai'
-          | 'ai_assumed_the_session_resolved'
-          | 'ai_decided_to_resolve_the_issue'
-          | 'email_draft_message'
-          | 'handoff'
-          | 'handoff_to_salesforce_miaw'
-          | 'handoff_to_zendesk'
-          | 'message'
-          | 'state_checkpoint'
-          | 'user_confirmed_the_session_resolved';
+        type: components['schemas']['MessageTypeEnum'];
         content: {
           text?: string | null;
         };
         sender: {
-          /** @enum {string} */
-          kind: 'user' | 'agent' | 'ai' | 'none' | 'unknown';
+          kind: components['schemas']['SenderTypeEnum'];
           name?: string | null;
           avatar?: string | null;
         };
@@ -633,6 +663,7 @@ export interface components {
               url: string;
             }[]
           | null;
+        systemMessagePayload: components['schemas']['SystemMessagePayload'];
       }[];
     };
     /** @description WidgetSession */
@@ -644,8 +675,7 @@ export interface components {
       isHandedOff: boolean;
       isOpened: boolean;
       assignee: {
-        /** @enum {string} */
-        kind: 'human' | 'ai' | 'none' | 'unknown';
+        kind: components['schemas']['AssigneeKindEnum'];
         name: string | null;
         avatarUrl: string | null;
       };
@@ -656,6 +686,15 @@ export interface components {
       latestStateCheckpointPayload: {
         [key: string]: unknown;
       } | null;
+    };
+    WidgetSubmitCsatInputDto: {
+      session_id: string;
+      score: number;
+      feedback?: string;
+      system_message_uuid?: string;
+    };
+    WidgetSubmitCsatOutputDto: {
+      success: boolean;
     };
     WidgetVoteDto: {
       /** @enum {string} */
@@ -1119,6 +1158,38 @@ export interface operations {
         };
         content: {
           'application/json': components['schemas']['WidgetActionFormSubmissionOutputDto'];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  submitCsat: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['WidgetSubmitCsatInputDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['WidgetSubmitCsatOutputDto'];
         };
       };
       /** @description Internal Server Error */

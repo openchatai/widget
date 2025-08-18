@@ -6,7 +6,7 @@ import { AttachmentPreview } from '../AttachmentPreview.js';
 import { cn } from '../lib/utils/cn.js';
 import { RichText } from '../RichText.js';
 
-export function BotOrAgentResponse({
+export function BotOrAgentMessageDefaultComponent({
   data,
   id,
   type,
@@ -29,6 +29,8 @@ export function BotOrAgentResponse({
     message?: string;
   };
 }) {
+  if (type !== 'AI' && type !== 'AGENT') return null;
+
   const { message, variant = 'default' } = data;
 
   if (variant === 'error') {

@@ -1,8 +1,8 @@
 import React from 'react';
 import type {
-  BotMessageType,
-  AgentMessageType,
-  UserMessageType,
+  WidgetAiMessage,
+  WidgetAgentMessage,
+  WidgetUserMessage,
 } from '@opencx/widget-core';
 import { useConfig } from '@opencx/widget-react-headless';
 import { cn } from './lib/utils/cn';
@@ -12,7 +12,7 @@ export function GroupTimestamp({
   className,
   containerClassName,
 }: {
-  messages: BotMessageType[] | AgentMessageType[] | UserMessageType[];
+  messages: WidgetAiMessage[] | WidgetAgentMessage[] | WidgetUserMessage[];
   className?: string;
   containerClassName?: string;
 }) {

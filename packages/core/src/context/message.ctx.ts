@@ -1,9 +1,9 @@
 import { ApiCaller } from '../api/api-caller';
 import type { WidgetConfig } from '../types/widget-config';
-import type {
-  BotMessageType,
-  MessageType,
-  UserMessageType,
+import {
+  type WidgetAiMessage,
+  type WidgetMessageU,
+  type WidgetUserMessage,
 } from '../types/messages';
 import type {
   MessageAttachmentType,
@@ -16,7 +16,7 @@ import { SessionCtx } from './session.ctx';
 import type { ContactCtx } from './contact.ctx';
 
 type MessageCtxState = {
-  messages: MessageType[];
+  messages: WidgetMessageU[];
   isSendingMessage: boolean;
   lastAIResMightSolveUserIssue: boolean;
   isInitialFetchLoading: boolean;
@@ -90,7 +90,7 @@ export class MessageCtx {
       if (
         (isAssignedToAI && isSending) ||
         // If last message is from user, then bot response did not arrive yet
-        (isAssignedToAI && lastMessage?.type === 'FROM_USER')
+        (isAssignedToAI && lastMessage?.type === 'USER')
       ) {
         console.warn('Cannot send messages while awaiting AI response');
         return;
@@ -120,12 +120,12 @@ export class MessageCtx {
                 ({
                   id: genUuid(),
                   component: 'bot_message',
-                  type: 'FROM_BOT',
+                  type: 'AI',
                   timestamp: new Date().toISOString(),
                   data: {
                     message: m.message,
                   },
-                }) satisfies BotMessageType,
+                }) satisfies WidgetAiMessage,
             )
         : [];
       const userMessage = this.toUserMessage(
@@ -236,7 +236,7 @@ export class MessageCtx {
   private toUserMessage = (
     content: string,
     attachments?: MessageAttachmentType[],
-  ): UserMessageType => {
+  ): WidgetUserMessage => {
     const messageContent = (() => {
       const extraCollectedData = this.contactCtx.state.get().extraCollectedData;
       // Prepend extra collected data if this is the first message in the session
@@ -257,7 +257,7 @@ export class MessageCtx {
 
     return {
       id: genUuid(),
-      type: 'FROM_USER',
+      type: 'USER',
       content: messageContent,
       deliveredAt: new Date().toISOString(),
       attachments,
@@ -267,10 +267,10 @@ export class MessageCtx {
 
   private toBotMessage = (
     response: SendMessageOutputDto,
-  ): BotMessageType | null => {
+  ): WidgetAiMessage | null => {
     if (response.success && response.autopilotResponse) {
       return {
-        type: 'FROM_BOT',
+        type: 'AI',
         id: response.autopilotResponse.id || genUuid(),
         timestamp: new Date().toISOString(),
         component: 'bot_message',
@@ -297,9 +297,9 @@ export class MessageCtx {
     return null;
   };
 
-  private toBotErrorMessage = (message: string): BotMessageType => {
+  private toBotErrorMessage = (message: string): WidgetAiMessage => {
     return {
-      type: 'FROM_BOT',
+      type: 'AI',
       id: genUuid(),
       timestamp: new Date().toISOString(),
       component: 'TEXT',

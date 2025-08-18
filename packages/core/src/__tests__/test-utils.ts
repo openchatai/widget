@@ -182,6 +182,17 @@ export const TestUtils = {
             },
           });
       },
+      submitCsat(target, returnValue) {
+        target.prototype.submitCsat = vi
+          .fn(target.prototype.submitCsat)
+          .mockResolvedValue({
+            response: new Response(),
+            data: {
+              success: true,
+              ...returnValue?.data,
+            },
+          });
+      },
     } satisfies {
       [K in keyof ApiCaller]: (
         target: typeof ApiCaller,
