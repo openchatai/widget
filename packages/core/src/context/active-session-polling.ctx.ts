@@ -19,6 +19,7 @@ export class ActiveSessionPollingCtx {
   private sessionPollingIntervalSeconds: number;
 
   private poller = new Poller();
+  private fetchSessionAndFullHistoryAbortController = new AbortController();
 
   constructor({
     api,
@@ -46,18 +47,49 @@ export class ActiveSessionPollingCtx {
     this.sessionCtx.sessionState.subscribe(({ session }) => {
       if (session?.id) {
         this.poller.startPolling(async (abortSignal) => {
-          this.hackAndSlash(session.id, abortSignal);
+          this.fetchSessionAndHistory({ sessionId: session.id, abortSignal });
         }, this.sessionPollingIntervalSeconds * 1000);
       } else {
         this.poller.reset();
       }
     });
+
+    /**
+     * When session is closed... fetch the whole history... because of some race conditions that might happen.
+     *
+     * example:
+     * - the csat_requested system message is sometimes inserted in db before the AI's response, but the AI's response might sometimes arrive before the polling's response, which makes the `lastMessageTimestamp` greater than the csat_requested system message's timestamp... so it's never polled in that case
+     */
+    this.sessionCtx.sessionState.subscribe(({ session }) => {
+      if (session?.id && !session.isOpened) {
+        try {
+          this.fetchSessionAndFullHistoryAbortController =
+            new AbortController();
+          this.fetchSessionAndHistory({
+            sessionId: session.id,
+            abortSignal: this.fetchSessionAndFullHistoryAbortController.signal,
+            fetchFullHistory: true,
+          });
+        } catch (error) {
+          if (!this.fetchSessionAndFullHistoryAbortController.signal.aborted) {
+            console.error('Failed to fetch session and full history:', error);
+          }
+        }
+      } else {
+        this.fetchSessionAndFullHistoryAbortController.abort();
+      }
+    });
   };
 
-  private hackAndSlash = async (
-    sessionId: string,
-    abortSignal: AbortSignal,
-  ): Promise<void> => {
+  fetchSessionAndHistory = async ({
+    sessionId,
+    abortSignal,
+    fetchFullHistory = false,
+  }: {
+    sessionId: string;
+    abortSignal: AbortSignal;
+    fetchFullHistory?: boolean;
+  }): Promise<void> => {
     /**
      * This is a bit of an implicit contract... there are two cases here
      * 1. If there are no messages in state, it means the user selected a previous session from the sessions screen and got routed to the chat,
@@ -78,7 +110,7 @@ export class ActiveSessionPollingCtx {
     const { data } = await this.api.pollSessionAndHistory({
       sessionId,
       abortSignal,
-      lastMessageTimestamp,
+      lastMessageTimestamp: fetchFullHistory ? undefined : lastMessageTimestamp,
     });
 
     if (data?.session) {

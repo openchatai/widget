@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.12
+
+### Patch Changes
+
+- fix fetching csat requested system message
+- Updated dependencies
+  - @opencx/widget-core@4.0.12
+  - @opencx/widget-react-headless@4.0.12
+
 ## 4.0.11
 
 ### Patch Changes
