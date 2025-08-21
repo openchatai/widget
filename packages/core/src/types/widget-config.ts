@@ -309,7 +309,7 @@ export interface WidgetConfig {
   advancedInitialMessages?: Array<{
     message: string;
 
-    /** 
+    /**
      * If `true`, the message will be persisted in the database and will stay in the chat after the user sends their first message.
      */
     persistent?: boolean;
@@ -386,6 +386,15 @@ export interface WidgetConfig {
    * Custom components to be mounted in the canvas if there is an active mode.
    */
   modesComponents?: Array<ModeComponent>;
+
+  /**
+   * Custom components to be shown in certain sc
+   */
+  specialComponents?: {
+    onSessionResolved?: (props: {
+      react: typeof React;
+    }) => ReturnType<typeof React.createElement>;
+  };
 
   /**
    * Customize the router behavior.

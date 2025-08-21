@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.13
+
+### Patch Changes
+
+- add `WidgetConfig.specialComponents`
+
 ## 4.0.12
 
 ### Patch Changes

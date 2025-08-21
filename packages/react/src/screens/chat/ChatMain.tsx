@@ -6,6 +6,7 @@ import {
   useConfig,
   useIsAwaitingBotReply,
   useMessages,
+  useSessions,
   useWidget,
 } from '@opencx/widget-react-headless';
 import React, { useEffect, useMemo, useRef } from 'react';
@@ -91,6 +92,22 @@ export function ChatMain() {
       {isAwaitingBotReply && LoadingComponent && (
         <LoadingComponent agent={config.bot} />
       )}
+
+      <SessionResolvedComponent />
     </div>
   );
+}
+
+function SessionResolvedComponent() {
+  const {
+    sessionState: { session },
+  } = useSessions();
+  const { specialComponents } = useConfig();
+
+  if (session?.isOpened) return null;
+
+  const Component = specialComponents?.onSessionResolved;
+  if (!Component) return null;
+
+  return <Component react={React} />;
 }
