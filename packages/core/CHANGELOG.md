@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.14
+
+### Patch Changes
+
+- fix special component when session is resolved
+
 ## 4.0.13
 
 ### Patch Changes

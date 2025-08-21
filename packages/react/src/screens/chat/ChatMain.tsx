@@ -104,7 +104,7 @@ function SessionResolvedComponent() {
   } = useSessions();
   const { specialComponents } = useConfig();
 
-  if (session?.isOpened) return null;
+  if (session?.isOpened || !session) return null;
 
   const Component = specialComponents?.onSessionResolved;
   if (!Component) return null;

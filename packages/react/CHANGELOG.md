@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.14
+
+### Patch Changes
+
+- fix special component when session is resolved
+- Updated dependencies
+  - @opencx/widget-core@4.0.14
+  - @opencx/widget-react-headless@4.0.14
+
 ## 4.0.13
 
 ### Patch Changes
