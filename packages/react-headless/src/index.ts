@@ -10,7 +10,6 @@ export { useContact } from './hooks/useContact';
 export { useDocumentDir } from './hooks/useDocumentDir';
 export { useIsAwaitingBotReply } from './hooks/useIsAwaitingBotReply';
 export { useMessages } from './hooks/useMessages';
-export { usePreludeData } from './hooks/usePreludeData';
 export { usePrimitiveState } from './hooks/usePrimitiveState';
 export { useSessions } from './hooks/useSessions';
 export { useWidgetRouter } from './hooks/useWidgetRouter';

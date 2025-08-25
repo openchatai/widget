@@ -64,12 +64,6 @@ export class ApiCaller {
     });
   };
 
-  widgetPrelude = async () => {
-    return await this.client.GET('/backend/widget/v2/prelude', {
-      params: { header: { 'X-Bot-Token': this.config.token } },
-    });
-  };
-
   sendMessage = async (body: SendMessageDto, abortSignal?: AbortSignal) => {
     return await this.client.POST('/backend/widget/v2/chat/send', {
       body,

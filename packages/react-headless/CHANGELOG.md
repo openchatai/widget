@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.15
+
+### Patch Changes
+
+- remove dependency on `prelude` endpoint
+- Updated dependencies
+  - @opencx/widget-core@4.0.15
+
 ## 4.0.14
 
 ### Patch Changes

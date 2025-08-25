@@ -98,27 +98,16 @@ export const TestUtils = {
           },
         });
       },
-      widgetPrelude(target, returnValue) {
-        target.prototype.widgetPrelude = vi
-          .fn(target.prototype.widgetPrelude)
-          .mockResolvedValue({
-            response: new Response(),
-            data: {
-              aiEnabled: true,
-              initialQuestions: [],
-              officeHours: {},
-              officeHoursTimezone: null,
-              organizationName: 'some-org-name',
-              ...returnValue?.data,
-            },
-          });
-      },
       getExternalWidgetConfig(target, returnValue) {
         target.prototype.getExternalWidgetConfig = vi
           .fn(target.prototype.getExternalWidgetConfig)
           .mockResolvedValue({
             response: new Response(),
             data: {
+              org: {
+                id: genUuid(),
+                name: 'some-org-name',
+              },
               sessionsPollingIntervalSeconds: 60,
               sessionPollingIntervalSeconds: 10,
               modes: [],

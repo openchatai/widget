@@ -6,7 +6,6 @@ import {
 } from '@opencx/widget-core';
 import {
   useConfig,
-  usePreludeData,
   useSessions,
   useWidget,
   useWidgetRouter,
@@ -31,12 +30,10 @@ import {
 } from './Dialoger';
 import { Button } from './lib/button';
 import { DynamicIcon } from './lib/DynamicIcon';
-import { MotionDiv } from './lib/MotionDiv';
-import { Skeleton } from './lib/skeleton';
 import { cn } from './lib/utils/cn';
 
 function useGetHeaderTitle() {
-  const { data } = usePreludeData();
+  const { widgetCtx: { org } } = useWidget();
   const {
     routerState: { screen },
   } = useWidgetRouter();
@@ -56,7 +53,7 @@ function useGetHeaderTitle() {
     }
   })();
 
-  return override ?? data?.data?.organizationName ?? 'Chat';
+  return override ?? org.name ?? 'Chat';
 }
 
 function useGetHeaderDataComponentProp(
@@ -405,8 +402,6 @@ export function Header() {
   const {
     routerState: { screen },
   } = useWidgetRouter();
-  const { isLoading } = usePreludeData();
-
   const dataComponentProp = useGetHeaderDataComponentProp(screen);
   const title = useGetHeaderTitle();
 
@@ -420,17 +415,7 @@ export function Header() {
             screen === 'sessions' && 'ps-2',
           )}
         >
-          <AnimatePresence mode="wait">
-            {isLoading ? (
-              <MotionDiv key="skeleton" snapExit>
-                <Skeleton className="h-5 w-1/2" />
-              </MotionDiv>
-            ) : (
-              <MotionDiv key="organization-name">
-                <h2 className="font-semibold">{title}</h2>
-              </MotionDiv>
-            )}
-          </AnimatePresence>
+          <h2 className="font-semibold">{title}</h2>
         </div>
         <Header__Buttons />
       </div>

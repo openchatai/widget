@@ -1,7 +1,7 @@
 import {
   useConfig,
   useContact,
-  usePreludeData,
+  useWidget,
   useWidgetTrigger,
 } from '@opencx/widget-react-headless';
 import { SendHorizontal, XIcon } from 'lucide-react';
@@ -25,13 +25,13 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
+  const { widgetCtx: { org } } = useWidget();
   const { setIsOpen } = useWidgetTrigger();
   const { createUnverifiedContact } = useContact();
   const { isSmallScreen } = useIsSmallScreen();
   const config = useConfig();
   const { theme } = useTheme();
   const { t } = useTranslation();
-  const { data: preludeData } = usePreludeData();
   const { observedElementRef } = useWidgetContentHeight();
 
   useSetWidgetSize({
@@ -111,7 +111,7 @@ export function WelcomeScreen() {
               />
             ) : (
               <h2 className="font-bold text-sm">
-                {preludeData?.data?.organizationName}
+                {org.name}
               </h2>
             )}
           </div>

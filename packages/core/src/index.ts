@@ -15,7 +15,7 @@ export type {
 export type {
   MessageAttachmentType,
   MessageDto,
-  PreludeDto,
+
   SendMessageDto,
   SendMessageOutputDto,
   ResolveSessionDto,

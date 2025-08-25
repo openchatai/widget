@@ -22,6 +22,10 @@ export class WidgetCtx {
   public storageCtx?: StorageCtx;
   public modes: ModeDto[] = [];
 
+  public org: {
+    id: string;
+    name: string;
+  };
   private static pollingIntervalsSeconds: {
     session: number;
     sessions: number;
@@ -32,10 +36,15 @@ export class WidgetCtx {
     config,
     storage,
     modes,
+    org,
   }: {
     config: WidgetConfig;
     storage?: ExternalStorage;
     modes: ModeDto[];
+    org: {
+      id: string;
+      name: string;
+    };
   }) {
     if (!WidgetCtx.pollingIntervalsSeconds) {
       throw Error(
@@ -44,6 +53,7 @@ export class WidgetCtx {
     }
 
     this.config = config;
+    this.org = org;
     this.api = new ApiCaller({ config });
     this.storageCtx = storage ? new StorageCtx({ storage, config }) : undefined;
     this.modes = modes;
@@ -103,6 +113,10 @@ export class WidgetCtx {
       config,
     }).getExternalWidgetConfig();
 
+    if (!externalConfig.data) {
+      throw new Error('Failed to fetch widget config');
+    }
+
     this.pollingIntervalsSeconds = {
       session: externalConfig.data?.sessionPollingIntervalSeconds || 10,
       sessions: externalConfig.data?.sessionsPollingIntervalSeconds || 60,
@@ -112,6 +126,10 @@ export class WidgetCtx {
       config,
       storage,
       modes: externalConfig.data?.modes || [],
+      org: {
+        id: externalConfig.data.org.id,
+        name: externalConfig.data.org.name,
+      },
     });
   };
 

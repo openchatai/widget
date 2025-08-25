@@ -1,5 +1,5 @@
 import { isExhaustive } from '@opencx/widget-core';
-import { usePreludeData, useWidgetRouter } from '@opencx/widget-react-headless';
+import { useWidgetRouter } from '@opencx/widget-react-headless';
 import { AnimatePresence } from 'framer-motion';
 import React from 'react';
 import { MotionDiv } from '../components/lib/MotionDiv';
@@ -8,9 +8,6 @@ import { SessionsScreen } from './sessions';
 import { WelcomeScreen } from './welcome';
 
 export function RootScreen() {
-  // Call the prelude ASAP so it's cached for all screens
-  usePreludeData();
-
   const {
     routerState: { screen },
   } = useWidgetRouter();

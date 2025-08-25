@@ -366,6 +366,10 @@ export interface components {
       };
     };
     WidgetConfigDto: {
+      org: {
+        id: string;
+        name: string;
+      };
       sessionsPollingIntervalSeconds: number;
       sessionPollingIntervalSeconds: number;
       modes: {

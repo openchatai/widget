@@ -10,7 +10,6 @@ export type ResolveSessionDto = Dto['WidgetResolveSessionInputDto'];
 
 export type SessionDto = Dto['WidgetSessionDto'];
 export type MessageDto = Dto['WidgetHistoryDto'];
-export type PreludeDto = Dto['WidgetPreludeDto'];
 export type MessageAttachmentType = NonNullable<
   Dto['WidgetHistoryDto']['attachments']
 >[number];

@@ -7,7 +7,11 @@ import React, {
   useState,
 } from 'react';
 import { version } from '../package.json';
-import { type ExternalStorage, type WidgetConfig, WidgetCtx } from '@opencx/widget-core';
+import {
+  type ExternalStorage,
+  type WidgetConfig,
+  WidgetCtx,
+} from '@opencx/widget-core';
 import { ComponentRegistry } from './ComponentRegistry';
 import type { WidgetComponentType } from './types/components';
 
@@ -56,7 +60,9 @@ export function WidgetProvider({
     if (didInitialize.current) return;
     didInitialize.current = true;
 
-    WidgetCtx.initialize({ config, storage }).then(setWidgetCtx);
+    WidgetCtx.initialize({ config, storage })
+      .then(setWidgetCtx)
+      .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

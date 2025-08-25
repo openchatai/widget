@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.15
+
+### Patch Changes
+
+- remove dependency on `prelude` endpoint
+
 ## 4.0.14
 
 ### Patch Changes
