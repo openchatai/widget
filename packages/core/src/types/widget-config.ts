@@ -6,7 +6,7 @@ import type { AgentOrBotType } from './agent-or-bot';
 import type { OpenCxComponentNameU } from './component-name';
 import type { IconNameU } from './icons';
 import type { JsonValue } from './json-value';
-import type { ModeDto } from './dtos';
+import type { ModeDto, SessionDto } from './dtos';
 import type { SessionCtx } from '../context/session.ctx';
 import type { MessageCtx } from '../context/message.ctx';
 
@@ -208,6 +208,16 @@ export type ModeComponent = {
   ) => ReturnType<typeof React.createElement>;
 };
 
+export type SpecialComponentProps = {
+  react: typeof React;
+  session: SessionDto | null;
+  org: { id: string; name: string };
+  config: WidgetConfig;
+};
+export type SpecialComponent = (
+  props: SpecialComponentProps,
+) => ReturnType<typeof React.createElement>;
+
 export interface WidgetConfig {
   /**
    * Your organization's widget token.
@@ -391,9 +401,7 @@ export interface WidgetConfig {
    * Custom components to be shown in certain sc
    */
   specialComponents?: {
-    onSessionResolved?: (props: {
-      react: typeof React;
-    }) => ReturnType<typeof React.createElement>;
+    onSessionResolved?: SpecialComponent;
   };
 
   /**

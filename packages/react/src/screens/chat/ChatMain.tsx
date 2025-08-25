@@ -6,11 +6,11 @@ import {
   useConfig,
   useIsAwaitingBotReply,
   useMessages,
-  useSessions,
   useWidget,
 } from '@opencx/widget-react-headless';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
+import { SessionResolvedComponent } from '../../components/special-components/SessionResolvedComponent';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { dc } from '../../utils/data-component';
 import {
@@ -96,18 +96,4 @@ export function ChatMain() {
       <SessionResolvedComponent />
     </div>
   );
-}
-
-function SessionResolvedComponent() {
-  const {
-    sessionState: { session },
-  } = useSessions();
-  const { specialComponents } = useConfig();
-
-  if (session?.isOpened || !session) return null;
-
-  const Component = specialComponents?.onSessionResolved;
-  if (!Component) return null;
-
-  return <Component react={React} />;
 }

@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.16
+
+### Patch Changes
+
+- enrich props for special components
+
 ## 4.0.15
 
 ### Patch Changes

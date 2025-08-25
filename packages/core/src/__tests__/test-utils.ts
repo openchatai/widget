@@ -13,6 +13,7 @@ export const TestUtils = {
             response: new Response(),
             data: {
               id: genUuid(),
+              ticketNumber: 1,
               assignee: { kind: 'ai', name: null, avatarUrl: null },
               channel: '',
               createdAt: new Date().toISOString(),
@@ -123,6 +124,7 @@ export const TestUtils = {
             data: {
               session: {
                 id: genUuid(),
+                ticketNumber: 1,
                 assignee: { kind: 'ai', name: null, avatarUrl: null },
                 channel: '',
                 createdAt: new Date().toISOString(),
@@ -146,6 +148,7 @@ export const TestUtils = {
             response: new Response(),
             data: {
               id: genUuid(),
+              ticketNumber: 1,
               assignee: { kind: 'ai', name: null, avatarUrl: null },
               channel: '',
               createdAt: new Date().toISOString(),

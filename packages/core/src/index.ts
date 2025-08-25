@@ -30,6 +30,8 @@ export type {
   HeaderButtonU,
   ModeComponent,
   ModeComponentProps,
+  SpecialComponent,
+  SpecialComponentProps,
 } from './types/widget-config';
 export type { ExternalStorage } from './types/external-storage';
 export type { OpenCxComponentNameU } from './types/component-name';

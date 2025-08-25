@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.16
+
+### Patch Changes
+
+- enrich props for special components
+- Updated dependencies
+  - @opencx/widget-core@4.0.16
+  - @opencx/widget-react-headless@4.0.16
+
 ## 4.0.15
 
 ### Patch Changes

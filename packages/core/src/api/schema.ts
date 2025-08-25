@@ -289,6 +289,7 @@ export interface components {
       items: {
         /** Format: uuid */
         id: string;
+        ticketNumber: number;
         createdAt: string;
         updatedAt: string;
         isHandedOff: boolean;
@@ -579,6 +580,7 @@ export interface components {
           session?: {
             /** Format: uuid */
             id: string;
+            ticketNumber: number;
             createdAt: string;
             updatedAt: string;
             isHandedOff: boolean;
@@ -610,6 +612,7 @@ export interface components {
       session: {
         /** Format: uuid */
         id: string;
+        ticketNumber: number;
         createdAt: string;
         updatedAt: string;
         isHandedOff: boolean;
@@ -674,6 +677,7 @@ export interface components {
     WidgetSessionDto: {
       /** Format: uuid */
       id: string;
+      ticketNumber: number;
       createdAt: string;
       updatedAt: string;
       isHandedOff: boolean;
