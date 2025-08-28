@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget-react",
   "private": false,
-  "version": "4.0.16",
+  "version": "4.0.17",
   "type": "module",
   "repository": {
     "type": "git",
@@ -9,11 +9,9 @@
   },
   "scripts": {
     "clean": "rm -rf node_modules dist .turbo",
-    "clean:dist": "rm -rf dist dist-embed .turbo",
+    "clean:dist": "rm -rf dist .turbo",
     "dev": "vite --host",
-    "build:lib": "vite build -c vite.config.ts",
-    "build:embed": "vite build -c vite.embed.config.ts",
-    "build": "pnpm build:lib && pnpm build:embed",
+    "build": "vite build -c vite.config.ts",
     "test": "vitest run",
     "cs": "changeset",
     "csv": "changeset version",
@@ -23,8 +21,7 @@
     "format": "prettier --write ."
   },
   "files": [
-    "dist",
-    "dist-embed"
+    "dist"
   ],
   "exports": {
     ".": {

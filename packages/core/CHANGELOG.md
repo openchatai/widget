@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.17
+
+### Patch Changes
+
+- publish embed under `@opencx/widget` just like it was before
+
 ## 4.0.16
 
 ### Patch Changes

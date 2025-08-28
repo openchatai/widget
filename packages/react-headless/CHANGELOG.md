@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.17
+
+### Patch Changes
+
+- publish embed under `@opencx/widget` just like it was before
+- Updated dependencies
+  - @opencx/widget-core@4.0.17
+
 ## 4.0.16
 
 ### Patch Changes
