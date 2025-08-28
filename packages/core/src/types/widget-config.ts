@@ -383,7 +383,7 @@ export interface WidgetConfig {
   /**
    * Custom header buttons to expand-shrink the size of the widget, close the widget, resolve the session, etc.
    *
-   * Note that using this options will remove the default `close-widget` button on small screens.
+   * Note that using this option will remove the default `close-widget` button on small screens.
    *
    * @default close-widget button on small screens
    */
