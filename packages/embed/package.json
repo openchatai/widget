@@ -10,7 +10,6 @@
   "scripts": {
     "clean": "rm -rf node_modules dist-embed .turbo",
     "clean:dist": "rm -rf dist-embed .turbo",
-    "dev": "vite --host",
     "build": "vite build -c vite.config.ts",
     "test": "vitest run",
     "cs": "changeset",
