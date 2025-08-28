@@ -209,8 +209,8 @@ export class SessionCtx {
       payload,
     });
 
-    if (data) return { data } as const;
+    if (data?.success) return { success: true } as const;
 
-    return { success: false, error } as const;
+    return { success: false } as const;
   };
 }
