@@ -290,7 +290,7 @@ function ChatInput() {
                 handleSubmit();
               }
             }}
-            placeholder={t('write-a-message')}
+            placeholder={t('write_a_message_placeholder')}
           />
         </div>
         <div className="gap-2 flex justify-between">
@@ -358,11 +358,11 @@ function NewConvOrBackToConvsButton() {
     <>
       {canCreateNewSession || !!router?.chatScreenOnly ? (
         <Button onClick={widgetCtx.resetChat} className="rounded-2xl w-full">
-          {t('new-conversation')}
+          {t('new_conversation')}
         </Button>
       ) : (
         <Button onClick={toSessionsScreen} className="rounded-2xl w-full">
-          {t('back-to-conversations')}
+          {t('back_to_conversations')}
         </Button>
       )}
     </>
@@ -393,7 +393,7 @@ function SessionClosedSection() {
               <div className="ps-2 flex items-center gap-1 pb-2">
                 <CircleCheckIcon className="size-4 text-emerald-600" />
                 <h2 className="text-sm font-medium">
-                  {t('session-closed-lead')}
+                  {t('your_issue_has_been_resolved')}
                 </h2>
               </div>
               <NewConvOrBackToConvsButton />

@@ -5,10 +5,7 @@ import { dc } from '../utils/data-component';
 
 export function MightSolveUserIssueSuggestedReplies() {
   const { t } = useTranslation();
-  const options = [
-    t('i-need-more-help'),
-    t('this-was-helpful'),
-  ];
+  const options = [t('i_need_more_help'), t('this_was_helpful')];
 
   return (
     <div

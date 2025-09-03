@@ -4,8 +4,8 @@ import {
   getTranslation,
   isSupportedLanguage,
   type Language,
-} from '../translation';
-import type { TranslationKeysU } from '../translation/translation.types';
+  type TranslationKeyU,
+} from '@opencx/widget-core';
 
 export function useTranslation() {
   const { dir: hostDocumentDir } = useDocumentDir();
@@ -16,7 +16,7 @@ export function useTranslation() {
       ? config.language
       : 'en';
     return {
-      t: (key: TranslationKeysU) => getTranslation(key, language),
+      t: (key: TranslationKeyU) => getTranslation(key, language, config.translationOverrides),
       language: language,
       dir: language === 'ar' ? 'rtl' : 'ltr',
       hostDocumentDir,

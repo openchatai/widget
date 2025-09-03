@@ -9,6 +9,7 @@ import type { JsonValue } from './json-value';
 import type { ModeDto, SessionDto } from './dtos';
 import type { SessionCtx } from '../context/session.ctx';
 import type { MessageCtx } from '../context/message.ctx';
+import type { Language, TranslationInterface } from '../translation';
 
 type UserBaseConfig =
   | {
@@ -228,10 +229,13 @@ export interface WidgetConfig {
   /**
    * The language of the widget.
    * Translations are available in the default non-headless widget.
-   * Check available translations in `packages/react/src/translation`
    * @default en
    */
-  language?: string;
+  language?: Language;
+
+  translationOverrides?: {
+    [key in Language]?: Partial<TranslationInterface>;
+  };
 
   /**
    * A name and an avatar for the bot.

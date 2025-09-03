@@ -25,7 +25,9 @@ const schema = z.object({
 });
 
 export function WelcomeScreen() {
-  const { widgetCtx: { org } } = useWidget();
+  const {
+    widgetCtx: { org },
+  } = useWidget();
   const { setIsOpen } = useWidgetTrigger();
   const { createUnverifiedContact } = useContact();
   const { isSmallScreen } = useIsSmallScreen();
@@ -110,19 +112,18 @@ export function WelcomeScreen() {
                 className="h-8 w-auto object-contain"
               />
             ) : (
-              <h2 className="font-bold text-sm">
-                {org.name}
-              </h2>
+              <h2 className="font-bold text-sm">{org.name}</h2>
             )}
           </div>
           <div className="space-y-2">
             <h1 className="text-[1.75rem] font-semibold tracking-tight leading-none">
-              {config.textContent?.welcomeScreen?.title || t('welcome-title')}
+              {config.textContent?.welcomeScreen?.title ||
+                t('welcome_screen_title')}
             </h1>
 
             <p className="text-sm">
               {config.textContent?.welcomeScreen?.description ||
-                t('welcome-description')}
+                t('welcome_screen_description')}
             </p>
           </div>
         </div>
@@ -140,7 +141,7 @@ export function WelcomeScreen() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              placeholder={t('your-name')}
+              placeholder={t('your_name_placeholder')}
               name="name"
             />
             <Input
@@ -148,7 +149,7 @@ export function WelcomeScreen() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               type="email"
-              placeholder={t('your-email')}
+              placeholder={t('your_email_placeholder')}
               name="email"
             />
             {extraDataFields.map((field) => (
@@ -170,7 +171,9 @@ export function WelcomeScreen() {
               className="w-full"
               size="lg"
             >
-              {handleSubmitState.loading ? t('starting-chat') : t('start-chat')}
+              {handleSubmitState.loading
+                ? t('start_chat_button_loading')
+                : t('start_chat_button')}
               <SendHorizontal className="size-4 rtl:-scale-100" />
             </Button>
           </form>

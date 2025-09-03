@@ -15,7 +15,6 @@ export type {
 export type {
   MessageAttachmentType,
   MessageDto,
-
   SendMessageDto,
   SendMessageOutputDto,
   ResolveSessionDto,
@@ -46,3 +45,11 @@ export type { CsatCtx } from './context/csat.ctx';
 
 export { PrimitiveState } from './utils/PrimitiveState';
 export { isExhaustive } from './utils/is-exhaustive';
+
+export {
+  type Language,
+  type TranslationInterface,
+  type TranslationKeyU,
+  getTranslation,
+  isSupportedLanguage,
+} from './translation';

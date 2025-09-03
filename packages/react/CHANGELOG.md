@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.18
+
+### Patch Changes
+
+- overridable translations
+- Updated dependencies
+  - @opencx/widget-core@4.0.18
+  - @opencx/widget-react-headless@4.0.18
+
 ## 4.0.17
 
 ### Patch Changes

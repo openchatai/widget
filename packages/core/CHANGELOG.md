@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.18
+
+### Patch Changes
+
+- overridable translations
+
 ## 4.0.17
 
 ### Patch Changes

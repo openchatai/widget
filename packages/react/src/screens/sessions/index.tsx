@@ -155,7 +155,7 @@ function SessionsList() {
                       delay={0.2}
                       snapExit
                     >
-                      <SectionTitle>{t('closed-conversations')}</SectionTitle>
+                      <SectionTitle>{t('closed_conversations')}</SectionTitle>
                       {closedSessions.map((s) => (
                         <SessionCard
                           key={s.id}
@@ -176,7 +176,7 @@ function SessionsList() {
                       className="w-full"
                       onClick={() => toChatScreen()}
                     >
-                      {t('new-conversation')}
+                      {t('new_conversation')}
                     </Button>
                   </div>
                 )}
@@ -185,7 +185,7 @@ function SessionsList() {
               <div className="flex-1 flex flex-col gap-2 items-center">
                 <div className="flex-1 flex items-center justify-center">
                   <p className="text-muted-foreground">
-                    {t('no-conversations-yet')}
+                    {t('no_conversations_yet')}
                   </p>
                 </div>
                 <Button
@@ -195,7 +195,7 @@ function SessionsList() {
                   className="w-full"
                   onClick={() => toChatScreen()}
                 >
-                  {t('new-conversation')}
+                  {t('new_conversation')}
                 </Button>
               </div>
             )}
