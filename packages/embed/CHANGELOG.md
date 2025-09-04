@@ -1,5 +1,14 @@
 # @opencx/widget
 
+## 4.0.19
+
+### Patch Changes
+
+- add WidgetConfig.chatFooterItems
+- Updated dependencies
+  - @opencx/widget-react@4.0.19
+  - @opencx/widget-core@4.0.19
+
 ## 4.0.18
 
 ### Patch Changes

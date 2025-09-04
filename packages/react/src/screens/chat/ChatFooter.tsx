@@ -37,6 +37,7 @@ import { cn } from '../../components/lib/utils/cn';
 import { useIsSmallScreen } from '../../hooks/useIsSmallScreen';
 import { useTranslation } from '../../hooks/useTranslation';
 import { dc } from '../../utils/data-component';
+import { ChatFooterItems } from './ChatFooterItems';
 
 function FileDisplay({
   file: { status, file, error },
@@ -415,37 +416,37 @@ export function ChatFooter() {
 
   return (
     <footer>
-      <div>
-        <AnimatePresence mode="wait">
-          {sessionState.session && !sessionState.session?.isOpened ? (
-            <MotionDiv__VerticalReveal key="session-closed">
-              <SessionClosedSection />
-            </MotionDiv__VerticalReveal>
-          ) : (
-            <MotionDiv__VerticalReveal key="chat-input">
-              {messagesState.lastAIResMightSolveUserIssue &&
-                thisWasHelpfulOrNot?.enabled !== false && (
-                  <MightSolveUserIssueSuggestedReplies />
-                )}
+      <AnimatePresence mode="wait">
+        {sessionState.session && !sessionState.session?.isOpened ? (
+          <MotionDiv__VerticalReveal key="session-closed">
+            <SessionClosedSection />
+            <ChatFooterItems />
+          </MotionDiv__VerticalReveal>
+        ) : (
+          <MotionDiv__VerticalReveal key="chat-input">
+            {messagesState.lastAIResMightSolveUserIssue &&
+              thisWasHelpfulOrNot?.enabled !== false && (
+                <MightSolveUserIssueSuggestedReplies />
+              )}
 
-              {noMessages &&
-                initialQuestions &&
-                initialQuestionsPosition !== 'below-initial-messages' && (
-                  <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
-                    {initialQuestions?.map((iq, index) => (
-                      <SuggestedReplyButton
-                        key={`${iq}-${index}`}
-                        suggestion={iq}
-                      />
-                    ))}
-                  </div>
-                )}
+            {noMessages &&
+              initialQuestions &&
+              initialQuestionsPosition !== 'below-initial-messages' && (
+                <div className="flex items-center flex-row justify-end gap-2 flex-wrap px-2">
+                  {initialQuestions?.map((iq, index) => (
+                    <SuggestedReplyButton
+                      key={`${iq}-${index}`}
+                      suggestion={iq}
+                    />
+                  ))}
+                </div>
+              )}
 
-              <ChatInput />
-            </MotionDiv__VerticalReveal>
-          )}
-        </AnimatePresence>
-      </div>
+            <ChatInput />
+            <ChatFooterItems />
+          </MotionDiv__VerticalReveal>
+        )}
+      </AnimatePresence>
     </footer>
   );
 }

@@ -24,7 +24,7 @@ export function RichText({
       components={{
         a: ({ children, ...props }) => {
           return (
-            <a target={anchorTarget ?? '_top'} {...props}>
+            <a target={props.target || anchorTarget || '_top'} {...props}>
               {children}
             </a>
           );

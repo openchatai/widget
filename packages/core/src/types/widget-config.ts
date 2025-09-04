@@ -344,6 +344,27 @@ export interface WidgetConfig {
   initialQuestionsPosition?: 'above-chat-input' | 'below-initial-messages';
 
   /**
+   * Disclaimers or simple components to be shown at the bottom of the chat below the input box.
+   * @default undefined
+   */
+  chatFooterItems?: Array<{
+    /** Text or html as a string */
+    message: string;
+
+    /**
+     * Whether to show the item when the session is open.
+     * @default true
+     */
+    showWhenSessionIsOpen?: boolean;
+
+    /**
+     * Whether to show the item when the session is resolved.
+     * @default true
+     */
+    showWhenSessionIsResolved?: boolean;
+  }>;
+
+  /**
    * If turned on, the widget will have a login-like screen to collect user's name and email.
    * A non-verified contact will be created based on the provided information.
    * @default false
