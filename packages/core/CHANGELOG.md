@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.20
+
+### Patch Changes
+
+- add chatBottomComponents
+
 ## 4.0.19
 
 ### Patch Changes

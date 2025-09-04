@@ -22,6 +22,7 @@ import {
 import { AdvancedInitialMessages } from './AdvancedInitialMessages';
 import { ChatBannerItems } from './ChatBannerItems';
 import { InitialMessages } from './InitialMessages';
+import { ChatBottomComponents } from '../../components/special-components/ChatBottomComponents';
 
 export function ChatMain() {
   const {
@@ -93,6 +94,7 @@ export function ChatMain() {
         <LoadingComponent agent={config.bot} />
       )}
 
+      <ChatBottomComponents />
       <SessionResolvedComponent />
     </div>
   );

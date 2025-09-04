@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.20
+
+### Patch Changes
+
+- add chatBottomComponents
+- Updated dependencies
+  - @opencx/widget-core@4.0.20
+  - @opencx/widget-react-headless@4.0.20
+
 ## 4.0.19
 
 ### Patch Changes

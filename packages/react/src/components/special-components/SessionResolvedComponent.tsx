@@ -1,25 +1,13 @@
-import {
-  useSessions,
-  useConfig,
-  useWidget,
-} from '@opencx/widget-react-headless';
 import React from 'react';
+import { useSpecialComponentProps } from '../../hooks/useSpecialComponentProps';
 
 export function SessionResolvedComponent() {
-  const {
-    widgetCtx: { org },
-  } = useWidget();
-  const {
-    sessionState: { session },
-  } = useSessions();
-  const config = useConfig();
+  const { props } = useSpecialComponentProps();
 
-  if (session?.isOpened || !session) return null;
+  if (props.session?.isOpened || !props.session) return null;
 
-  const Component = config.specialComponents?.onSessionResolved;
+  const Component = props.config.specialComponents?.onSessionResolved;
   if (!Component) return null;
 
-  return (
-    <Component react={React} session={session} config={config} org={org} />
-  );
+  return <Component {...props} />;
 }

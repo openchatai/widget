@@ -10,6 +10,7 @@ import type { ModeDto, SessionDto } from './dtos';
 import type { SessionCtx } from '../context/session.ctx';
 import type { MessageCtx } from '../context/message.ctx';
 import type { Language, TranslationInterface } from '../translation';
+import type { WidgetMessageU } from './messages';
 
 type UserBaseConfig =
   | {
@@ -211,13 +212,14 @@ export type ModeComponent = {
 
 export type SpecialComponentProps = {
   react: typeof React;
-  session: SessionDto | null;
   org: { id: string; name: string };
   config: WidgetConfig;
+  session: SessionDto | null;
+  messages: WidgetMessageU[];
 };
 export type SpecialComponent = (
   props: SpecialComponentProps,
-) => ReturnType<typeof React.createElement>;
+) => ReturnType<typeof React.createElement> | null;
 
 export interface WidgetConfig {
   /**
@@ -426,7 +428,22 @@ export interface WidgetConfig {
    * Custom components to be shown in certain sc
    */
   specialComponents?: {
+    /**
+     * A component that shows at the bottom of the chat when the session is resolved and no longer open
+     * Useful for CSAT surveys
+     * @default undefined
+     */
     onSessionResolved?: SpecialComponent;
+
+    /**
+     * Custom components to be shown in the chat bottom section
+     * @default undefined
+     */
+    chatBottomComponents?: Array<{
+      /** Unique key per component */
+      key: string;
+      component: SpecialComponent;
+    }>;
   };
 
   /**
