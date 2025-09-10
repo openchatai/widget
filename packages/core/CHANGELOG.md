@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.21
+
+### Patch Changes
+
+- do not hardcode non verified name as anonymous
+
 ## 4.0.20
 
 ### Patch Changes

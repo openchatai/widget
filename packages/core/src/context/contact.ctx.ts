@@ -107,7 +107,7 @@ export class ContactCtx {
      */
     await this.createUnverifiedContact({
       email: this.config.user?.data?.email,
-      non_verified_name: this.config.user?.data?.name || 'Anonymous',
+      non_verified_name: this.config.user?.data?.name,
       non_verified_custom_data: this.config.user?.data?.customData,
     });
   };

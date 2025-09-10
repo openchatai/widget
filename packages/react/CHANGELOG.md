@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.21
+
+### Patch Changes
+
+- do not hardcode non verified name as anonymous
+- Updated dependencies
+  - @opencx/widget-core@4.0.21
+  - @opencx/widget-react-headless@4.0.21
+
 ## 4.0.20
 
 ### Patch Changes
