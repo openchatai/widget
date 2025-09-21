@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.22
+
+### Patch Changes
+
+- remove incompatible regex with safari<16
+
 ## 4.0.21
 
 ### Patch Changes

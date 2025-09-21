@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.22
+
+### Patch Changes
+
+- remove incompatible regex with safari<16
+- Updated dependencies
+  - @opencx/widget-core@4.0.22
+
 ## 4.0.21
 
 ### Patch Changes
