@@ -524,6 +524,7 @@ export interface WidgetConfig {
    * This custom data is intended for human use only; the AI will not see it and it will not affect the AI's response.
    * @default undefined
    */
+  // TODO: properly type this instead of unknown... the server expects a `string | number | boolean | null`
   sessionCustomData?: Record<string, unknown>;
 
   /**
