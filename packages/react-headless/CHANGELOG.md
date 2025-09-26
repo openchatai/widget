@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.25
+
+### Patch Changes
+
+- add translations for Danish, Finnish, Italian, Norwegian, Romanian and Swedish
+- Updated dependencies
+  - @opencx/widget-core@4.0.25
+
 ## 4.0.24
 
 ### Patch Changes

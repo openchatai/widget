@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.25
+
+### Patch Changes
+
+- add translations for Danish, Finnish, Italian, Norwegian, Romanian and Swedish
+
 ## 4.0.24
 
 ### Patch Changes
