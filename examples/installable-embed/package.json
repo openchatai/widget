@@ -1,0 +1,15 @@
+{
+  "name": "react-18",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@opencx/widget": "^4.0.23"
+  }
+}
