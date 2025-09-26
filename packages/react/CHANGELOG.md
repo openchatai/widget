@@ -1,5 +1,16 @@
 # @opencx/widget-react
 
+## 4.0.24
+
+### Patch Changes
+
+- make @opencx/widget dep free
+- eb2b209: cleanup @opencx/widget deps
+- Updated dependencies
+- Updated dependencies [eb2b209]
+  - @opencx/widget-core@4.0.24
+  - @opencx/widget-react-headless@4.0.24
+
 ## 4.0.24-prerelease.0
 
 ### Patch Changes

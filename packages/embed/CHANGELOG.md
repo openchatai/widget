@@ -1,5 +1,12 @@
 # @opencx/widget
 
+## 4.0.24
+
+### Patch Changes
+
+- make @opencx/widget dep free
+- eb2b209: cleanup @opencx/widget deps
+
 ## 4.0.24-prerelease.0
 
 ### Patch Changes

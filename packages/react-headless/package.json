@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget-react-headless",
   "private": false,
-  "version": "4.0.24-prerelease.0",
+  "version": "4.0.24",
   "type": "module",
   "repository": {
     "type": "git",
