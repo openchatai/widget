@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget",
   "private": false,
-  "version": "4.0.23",
+  "version": "4.0.24-prerelease.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -12,9 +12,6 @@
     "clean:dist": "rm -rf dist-embed .turbo",
     "build": "vite build -c vite.config.ts",
     "test": "vitest run",
-    "cs": "changeset",
-    "csv": "changeset version",
-    "csp": "changeset publish",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write ."
@@ -22,18 +19,14 @@
   "files": [
     "dist-embed"
   ],
-  "dependencies": {
+  "devDependencies": {
+    "@opencx/eslint-config": "workspace:*",
+    "@opencx/tsconfig": "workspace:*",
     "@opencx/widget-core": "workspace:*",
-    "@opencx/widget-react": "workspace:*"
-  },
-  "peerDependencies": {
+    "@opencx/widget-react": "workspace:*",
     "@types/react": ">=18 <20",
     "@types/react-dom": ">=18 <20",
     "react": ">=18 <20",
     "react-dom": ">=18 <20"
-  },
-  "devDependencies": {
-    "@opencx/eslint-config": "workspace:*",
-    "@opencx/tsconfig": "workspace:*"
   }
 }

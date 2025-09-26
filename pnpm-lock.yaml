@@ -86,7 +86,13 @@ importers:
         version: 7.8.0(typescript@5.9.2)
 
   packages/embed:
-    dependencies:
+    devDependencies:
+      '@opencx/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@opencx/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
       '@opencx/widget-core':
         specifier: workspace:*
         version: link:../core
@@ -105,13 +111,6 @@ importers:
       react-dom:
         specifier: '>=18 <20'
         version: 19.1.1(react@19.1.1)
-    devDependencies:
-      '@opencx/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@opencx/tsconfig':
-        specifier: workspace:*
-        version: link:../tsconfig
 
   packages/eslint-config:
     devDependencies:

@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget-core",
   "private": false,
-  "version": "4.0.23",
+  "version": "4.0.24-prerelease.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -13,9 +13,6 @@
     "build": "vite build",
     "gen:sdk": "pnpm dlx openapi-typescript http://localhost:8080/widget-api-yaml -o ./src/api/schema.ts && prettier --write ./src/api/schema.ts",
     "test": "vitest run",
-    "cs": "changeset",
-    "csv": "changeset version",
-    "csp": "changeset publish",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write ."

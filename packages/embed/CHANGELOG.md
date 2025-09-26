@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.24-prerelease.0
+
+### Patch Changes
+
+- cleanup @opencx/widget deps
+
 ## 4.0.23
 
 ### Patch Changes

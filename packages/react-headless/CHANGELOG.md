@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.24-prerelease.0
+
+### Patch Changes
+
+- cleanup @opencx/widget deps
+- Updated dependencies
+  - @opencx/widget-core@4.0.24-prerelease.0
+
 ## 4.0.23
 
 ### Patch Changes

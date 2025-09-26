@@ -13,9 +13,11 @@
     "test": "turbo test",
     "dev:prepare": "dotenv -- turbo dev:prepare --env-mode",
     "dev": "dotenv -- turbo dev --env-mode",
+    "cs:pre": "changeset pre enter prerelease",
     "cs": "changeset",
     "csv": "changeset version",
-    "csp": "pnpm clean:dist && pnpm build && pnpm type-check && pnpm test && changeset publish"
+    "csp": "pnpm clean:dist && pnpm build && pnpm type-check && pnpm test && changeset publish",
+    "cs:pre:exit": "changeset pre exit"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.9",

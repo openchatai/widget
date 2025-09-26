@@ -1,7 +1,7 @@
 {
   "name": "@opencx/widget-react-headless",
   "private": false,
-  "version": "4.0.23",
+  "version": "4.0.24-prerelease.0",
   "type": "module",
   "repository": {
     "type": "git",
@@ -12,9 +12,6 @@
     "clean:dist": "rm -rf dist .turbo",
     "build": "vite build",
     "test": "vitest run",
-    "cs": "changeset",
-    "csv": "changeset version",
-    "csp": "changeset publish",
     "type-check": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write ."
