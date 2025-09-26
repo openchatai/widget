@@ -1,6 +1,6 @@
 import type { TranslationInterface } from '.';
 
-export const arLanguage: TranslationInterface = {
+export const ArabicLanguage: TranslationInterface = {
   write_a_message_placeholder: 'اكتب رسالة...',
   your_issue_has_been_resolved: 'تم حل مشكلتك!',
   new_conversation: 'محادثة جديدة',

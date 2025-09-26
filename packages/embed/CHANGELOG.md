@@ -1,5 +1,14 @@
 # @opencx/widget
 
+## 4.0.23
+
+### Patch Changes
+
+- Add polish translations
+- Updated dependencies
+  - @opencx/widget-core@4.0.23
+  - @opencx/widget-react@4.0.23
+
 ## 4.0.22
 
 ### Patch Changes

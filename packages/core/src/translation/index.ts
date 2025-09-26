@@ -1,22 +1,24 @@
-import { arLanguage } from './ar';
-import { deLanguage } from './de';
-import { enLanguage } from './en';
-import { frLanguage } from './fr';
-import { nlLanguage } from './nl';
-import { ptLanguage } from './pt';
-import { esLanguage } from './es';
-import { trLanguage } from './tr';
 import type { WidgetConfig } from '../types/widget-config';
+import { ArabicLanguage } from './ar';
+import { GermanLanguage } from './de';
+import { EnglishLanguage } from './en';
+import { SpanishLanguage } from './es';
+import { FrenchLanguage } from './fr';
+import { DutchLanguage } from './nl';
+import { PolishLanguage } from './pl';
+import { PortugueseLanguage } from './pt';
+import { TurkishLanguage } from './tr';
 
 const languages = {
-  en: enLanguage,
-  ar: arLanguage,
-  nl: nlLanguage,
-  fr: frLanguage,
-  de: deLanguage,
-  pt: ptLanguage,
-  es: esLanguage,
-  tr: trLanguage,
+  en: EnglishLanguage,
+  ar: ArabicLanguage,
+  nl: DutchLanguage,
+  fr: FrenchLanguage,
+  de: GermanLanguage,
+  pt: PortugueseLanguage,
+  es: SpanishLanguage,
+  tr: TurkishLanguage,
+  pl: PolishLanguage,
 } as const;
 
 export const LANGUAGES = Object.keys(languages) as (keyof typeof languages)[];

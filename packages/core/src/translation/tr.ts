@@ -1,6 +1,6 @@
 import type { TranslationInterface } from '.';
 
-export const trLanguage: TranslationInterface = {
+export const TurkishLanguage: TranslationInterface = {
   write_a_message_placeholder: 'Bir mesaj yazın...',
   your_issue_has_been_resolved: 'Sorununuz çözüldü!',
   new_conversation: 'Yeni konuşma',
