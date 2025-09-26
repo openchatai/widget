@@ -10,6 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@opencx/widget": "^4.0.23"
+    "@opencx/widget": "^4.0.24"
   }
 }
