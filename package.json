@@ -5,19 +5,23 @@
   "type": "module",
   "packageManager": "pnpm@10.12.1",
   "scripts": {
+    "/* ------------------------ SETUP ----------------------- */": "",
+    "gen:sdk": "pnpm -F @opencx/widget-core gen:sdk",
     "clean": "turbo clean && rm -rf node_modules .turbo",
     "clean:dist": "turbo clean:dist && rm -rf .turbo",
-    "gen:sdk": "pnpm -F @opencx/widget-core gen:sdk",
     "build": "turbo build",
     "type-check": "turbo type-check",
     "test": "turbo test",
+    "/* --------------------- DEVELOPMENT -------------------- */": "",
     "dev:prepare": "dotenv -- turbo dev:prepare --env-mode",
     "dev": "dotenv -- turbo dev --env-mode",
+    "/* --------------------- PUBLISHING --------------------- */": "",
+    "x": "pnpm clean:dist && pnpm build && pnpm type-check && pnpm test",
     "cs:pre": "changeset pre enter prerelease",
+    "cs:pre:exit": "changeset pre exit",
     "cs": "changeset",
     "csv": "changeset version",
-    "csp": "pnpm clean:dist && pnpm build && pnpm type-check && pnpm test && changeset publish",
-    "cs:pre:exit": "changeset pre exit"
+    "csp": "pnpm x && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.9",
