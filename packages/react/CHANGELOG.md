@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.27
+
+### Patch Changes
+
+- fix loading state when awaiting bot reply
+- Updated dependencies
+  - @opencx/widget-react-headless@4.0.27
+  - @opencx/widget-core@4.0.27
+
 ## 4.0.26
 
 ### Patch Changes

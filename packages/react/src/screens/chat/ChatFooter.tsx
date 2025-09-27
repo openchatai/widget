@@ -309,7 +309,7 @@ function ChatInput() {
               )}
             >
               <AnimatePresence mode="wait">
-                {isHandedOff ? (
+                {isHandedOff && !isAwaitingBotReply ? (
                   <MotionDiv key="paper-clip">
                     <PaperclipIcon className="size-4" />
                   </MotionDiv>

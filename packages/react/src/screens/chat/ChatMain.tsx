@@ -68,7 +68,7 @@ export function ChatMain() {
       <AdvancedInitialMessages />
       <InitialMessages />
 
-      {groupedMessages.map((group) => {
+      {groupedMessages.map((group, i) => {
         const type = group?.[0]?.type;
         const firstIdInGroup = group[0]?.id;
         if (!type || !firstIdInGroup) return null;
@@ -77,7 +77,22 @@ export function ChatMain() {
           return <UserMessageGroup key={firstIdInGroup} messages={group} />;
         }
 
-        if (isBotMessageGroup(group) || isAgentMessageGroup(group)) {
+        if (isBotMessageGroup(group)) {
+          const isLastGroup = i === groupedMessages.length - 1;
+          // Do not render any AI messages (most likely came from polling) while waiting for the sendMessage HTTP request to finish
+          if (isAwaitingBotReply && isLastGroup) return null;
+
+          const agent = group[0]?.agent;
+          return (
+            <BotOrAgentMessageGroup
+              key={firstIdInGroup}
+              messages={group}
+              agent={agent}
+            />
+          );
+        }
+
+        if (isAgentMessageGroup(group)) {
           const agent = group[0]?.agent;
           return (
             <BotOrAgentMessageGroup

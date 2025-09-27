@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useMessages } from './useMessages';
 import { useSessions } from './useSessions';
 
@@ -7,15 +8,19 @@ export function useIsAwaitingBotReply() {
 
   const isSessionAssignedToAI = sessionState.session?.assignee.kind === 'ai';
   // This check is useful in cases where the user might navigate in and out of a chat, and `isSendingMessage` is reset back to its default value
-  const lastMessage =
-    messagesState.messages.length > 0
-      ? messagesState.messages[messagesState.messages.length - 1]
-      : null;
-  const isLastMessageAUserMessage = lastMessage?.type === 'USER';
+  const isLastMessageAUserMessage =
+    messagesState.messages?.at(-1)?.type === 'USER';
 
-  const isAwaitingBotReply =
-    (isSessionAssignedToAI || sessionState.isCreatingSession) &&
-    (messagesState.isSendingMessage || isLastMessageAUserMessage);
+  const isAwaitingBotReply = (() => {
+    if (messagesState.isSendingMessageToAI) return true;
+    if (
+      (isSessionAssignedToAI || sessionState.isCreatingSession) &&
+      (messagesState.isSendingMessage || isLastMessageAUserMessage)
+    ) {
+      return true;
+    }
+    return false;
+  })();
 
   return { isAwaitingBotReply };
 }

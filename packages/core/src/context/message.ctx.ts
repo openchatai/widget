@@ -17,7 +17,9 @@ import type { ContactCtx } from './contact.ctx';
 
 type MessageCtxState = {
   messages: WidgetMessageU[];
+  /** Regardless of assignee */
   isSendingMessage: boolean;
+  isSendingMessageToAI: boolean;
   lastAIResMightSolveUserIssue: boolean;
   isInitialFetchLoading: boolean;
 };
@@ -31,6 +33,7 @@ export class MessageCtx {
   public state = new PrimitiveState<MessageCtxState>({
     messages: [],
     isSendingMessage: false,
+    isSendingMessageToAI: false,
     lastAIResMightSolveUserIssue: false,
     isInitialFetchLoading: false,
   });
@@ -81,14 +84,13 @@ export class MessageCtx {
       /* ------------------------------------------------------ */
       /*        Prevent sending while waiting for AI res        */
       /* ------------------------------------------------------ */
-      const isSending = this.state.get().isSendingMessage;
-      const isAssignedToAI =
-        this.sessionCtx.sessionState.get().session?.assignee.kind === 'ai';
-      const _messages = this.state.get().messages;
-      const lastMessage =
-        _messages.length > 0 ? _messages[_messages.length - 1] : undefined;
+      const session = this.sessionCtx.sessionState.get().session;
+      const assignee = session?.assignee.kind;
+      const isAssignedToAI = assignee === 'ai';
+      const isSendingToAI = this.state.get().isSendingMessageToAI;
+      const lastMessage = this.state.get().messages.at(-1);
       if (
-        (isAssignedToAI && isSending) ||
+        isSendingToAI ||
         // If last message is from user, then bot response did not arrive yet
         (isAssignedToAI && lastMessage?.type === 'USER')
       ) {
@@ -96,14 +98,15 @@ export class MessageCtx {
         return;
       }
 
+      /* ------------------------------------------------------ */
+      /*                          Start                         */
+      /* ------------------------------------------------------ */
       this.sendMessageAbortController = new AbortController();
-
-      /* ------------------------------------------------------ */
-      /*      Clear last AI response might solve user issue     */
-      /* ------------------------------------------------------ */
-      this.state.setPartial({ lastAIResMightSolveUserIssue: false });
-
-      this.state.setPartial({ isSendingMessage: true });
+      this.state.setPartial({
+        lastAIResMightSolveUserIssue: false,
+        isSendingMessage: true,
+        isSendingMessageToAI: !!isAssignedToAI || !session,
+      });
       /* ------------------------------------------------------ */
       /*     Optimistically add message to rendered messages    */
       /* ------------------------------------------------------ */
@@ -229,7 +232,10 @@ export class MessageCtx {
         console.error('Failed to send message:', error);
       }
     } finally {
-      this.state.setPartial({ isSendingMessage: false });
+      this.state.setPartial({
+        isSendingMessage: false,
+        isSendingMessageToAI: false,
+      });
     }
   };
 
