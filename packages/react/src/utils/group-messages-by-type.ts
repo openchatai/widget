@@ -13,18 +13,14 @@ export function groupMessagesByType(
   let currentGroup: WidgetMessageU[] | null = null;
 
   messages.forEach((message) => {
-    // Start a new group if the type changes
-    if (!currentGroup || currentGroup[0]?.type !== message.type) {
-      currentGroup = [];
-      result.push(currentGroup);
-    }
-
-    // Start a new group if the agent changes
     if (
-      currentGroup[0]?.type === 'AGENT' &&
-      message.type === 'AGENT' &&
-      (message.agent?.id !== currentGroup[0].agent?.id ||
-        message.agent?.name !== currentGroup[0].agent?.name)
+      // Start a new group if the type changes
+      currentGroup?.[0]?.type !== message.type ||
+      // Start a new group if the agent changes
+      (currentGroup[0]?.type === 'AGENT' &&
+        message.type === 'AGENT' &&
+        (message.agent?.id !== currentGroup[0].agent?.id ||
+          message.agent?.name !== currentGroup[0].agent?.name))
     ) {
       currentGroup = [];
       result.push(currentGroup);
