@@ -259,7 +259,7 @@ export interface components {
     };
     CreateWidgetSessionDto: {
       customData?: {
-        [key: string]: string | number | boolean | unknown | unknown;
+        [key: string]: string | number | boolean;
       };
     };
     FileUploadDto: {
@@ -420,6 +420,7 @@ export interface components {
               };
               metadata?: unknown;
               required_form_submission?: boolean;
+              is_handoff_like?: boolean;
             };
           }[]
         | null;
@@ -533,7 +534,8 @@ export interface components {
           code?:
             | string
             | 'session_assigned_to_human_agent'
-            | 'response_cancelled';
+            | 'response_cancelled'
+            | 'skipping_unuseful_response';
           autopilotResponse?: {
             /** @enum {string} */
             type: 'text';
@@ -574,6 +576,7 @@ export interface components {
             };
             metadata?: unknown;
             required_form_submission?: boolean;
+            is_handoff_like?: boolean;
           };
           sessionIsHandedOff?: boolean;
           /** @description WidgetSession */
@@ -658,6 +661,7 @@ export interface components {
                 };
                 metadata?: unknown;
                 required_form_submission?: boolean;
+                is_handoff_like?: boolean;
               };
             }[]
           | null;
