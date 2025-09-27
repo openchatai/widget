@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.26
+
+### Patch Changes
+
+- enhance parsing sessionCustomData
+
 ## 4.0.25
 
 ### Patch Changes

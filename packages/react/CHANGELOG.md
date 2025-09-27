@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.26
+
+### Patch Changes
+
+- enhance parsing sessionCustomData
+- Updated dependencies
+  - @opencx/widget-core@4.0.26
+  - @opencx/widget-react-headless@4.0.26
+
 ## 4.0.25
 
 ### Patch Changes
