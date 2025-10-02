@@ -220,7 +220,7 @@ export class MessageCtx {
         }
       } else {
         const errorMessage = this.toBotErrorMessage(
-          data?.error?.message || 'Unknown error occurred',
+          data?.error?.message || 'Something went wrong. Please refresh the page or try again.',
         );
         const currentMessages = this.state.get().messages;
         this.state.setPartial({
@@ -308,7 +308,7 @@ export class MessageCtx {
       type: 'AI',
       id: genUuid(),
       timestamp: new Date().toISOString(),
-      component: 'TEXT',
+      component: 'bot_message',
       data: {
         message,
         variant: 'error',

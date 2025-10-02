@@ -33,16 +33,6 @@ export function BotOrAgentMessageDefaultComponent({
 
   const { message, variant = 'default' } = data;
 
-  if (variant === 'error') {
-    return (
-      <div>
-        <div className="flex flex-row flex-wrap items-center justify-start">
-          <div className="leading-snug text-sm text-destructive">{message}</div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       {...dc(dataComponentNames?.messageContainer ?? 'chat/agent_msg/root')}
@@ -65,6 +55,7 @@ export function BotOrAgentMessageDefaultComponent({
           data-first={isFirstInGroup}
           data-last={isLastInGroup}
           data-alone={isAloneInGroup}
+          data-variant={variant}
           className={cn(
             'transition-all',
             'w-fit py-3 px-4 rounded-3xl bg-secondary text-secondary-foreground',
@@ -72,6 +63,8 @@ export function BotOrAgentMessageDefaultComponent({
             'break-words [word-break:break-word]', // `[word-break:break-word]` is deprecated but works in the browser, while `break-words` which is `[overflow-wrap: break-word]` does not work
             // No need to add "whitespace-pre-wrap" in the agent or bot message because it is markup and content appear on separate lines as expected
             // Adding "whitespace-pre-wrap" will result in unnecessarily huge line breaks
+
+            variant === 'error' && 'bg-destructive/15 text-destructive',
 
             // We're using the booleans directly here, not the data attributes, to make any external styling more specific than this
             isFirstInGroup && !isAloneInGroup && 'rounded-bl-md',

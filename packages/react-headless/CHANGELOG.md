@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.28
+
+### Patch Changes
+
+- handle unexpected AI errors more gracefully
+- Updated dependencies
+  - @opencx/widget-core@4.0.28
+
 ## 4.0.27
 
 ### Patch Changes
