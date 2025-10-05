@@ -57,7 +57,7 @@ type ThemeOptions = {
 
       /**
        * number in pixels
-       * @default if host document direction ===="rtl" then 20, otherwise `initial`
+       * @default if host document direction === "rtl" then 20, otherwise `initial`
        */
       left?: number | 'initial';
     };
