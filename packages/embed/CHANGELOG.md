@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.29
+
+### Patch Changes
+
+- fix avatar url for bot persistable initial messages
+
 ## 4.0.28
 
 ### Patch Changes

@@ -128,6 +128,7 @@ export class MessageCtx {
                   data: {
                     message: m.message,
                   },
+                  agent: this.config.bot ? { ...this.config.bot, isAi: true, id: null } : undefined,
                 }) satisfies WidgetAiMessage,
             )
         : [];

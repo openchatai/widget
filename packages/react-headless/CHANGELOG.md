@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.29
+
+### Patch Changes
+
+- fix avatar url for bot persistable initial messages
+- Updated dependencies
+  - @opencx/widget-core@4.0.29
+
 ## 4.0.28
 
 ### Patch Changes
