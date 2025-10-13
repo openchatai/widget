@@ -31,9 +31,12 @@ import {
 import { Button } from './lib/button';
 import { DynamicIcon } from './lib/DynamicIcon';
 import { cn } from './lib/utils/cn';
+import { HeaderBottomComponent } from './special-components/HeaderBottomComponent';
 
 function useGetHeaderTitle() {
-  const { widgetCtx: { org } } = useWidget();
+  const {
+    widgetCtx: { org },
+  } = useWidget();
   const {
     routerState: { screen },
   } = useWidgetRouter();
@@ -419,6 +422,7 @@ export function Header() {
         </div>
         <Header__Buttons />
       </div>
+      <HeaderBottomComponent />
     </header>
   );
 }

@@ -4,6 +4,7 @@ import {
   useConfig,
   useWidget,
   useMessages,
+  useWidgetRouter,
 } from '@opencx/widget-react-headless';
 import React from 'react';
 
@@ -18,6 +19,9 @@ export function useSpecialComponentProps(): { props: SpecialComponentProps } {
   const {
     messagesState: { messages },
   } = useMessages();
+  const {
+    routerState: { screen },
+  } = useWidgetRouter();
 
   return {
     props: {
@@ -26,6 +30,7 @@ export function useSpecialComponentProps(): { props: SpecialComponentProps } {
       session,
       config,
       messages,
+      currentScreen: screen,
     },
   };
 }

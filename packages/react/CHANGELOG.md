@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.30
+
+### Patch Changes
+
+- add `WidgetConfig.specialComponents.headerBottom`
+- Updated dependencies
+  - @opencx/widget-core@4.0.30
+  - @opencx/widget-react-headless@4.0.30
+
 ## 4.0.29
 
 ### Patch Changes

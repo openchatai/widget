@@ -11,6 +11,7 @@ import type { SessionCtx } from '../context/session.ctx';
 import type { MessageCtx } from '../context/message.ctx';
 import type { Language, TranslationInterface } from '../translation';
 import type { WidgetMessageU } from './messages';
+import type { ScreenU } from '../context/router.ctx';
 
 type UserBaseConfig =
   | {
@@ -216,6 +217,7 @@ export type SpecialComponentProps = {
   config: WidgetConfig;
   session: SessionDto | null;
   messages: WidgetMessageU[];
+  currentScreen: ScreenU;
 };
 export type SpecialComponent = (
   props: SpecialComponentProps,
@@ -434,6 +436,12 @@ export interface WidgetConfig {
      * @default undefined
      */
     onSessionResolved?: SpecialComponent;
+
+    /**
+     * A component that shows in the chat header
+     * @default undefined
+     */
+    headerBottom?: SpecialComponent;
 
     /**
      * Custom components to be shown in the chat bottom section

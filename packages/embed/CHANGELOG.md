@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.30
+
+### Patch Changes
+
+- add `WidgetConfig.specialComponents.headerBottom`
+
 ## 4.0.29
 
 ### Patch Changes
