@@ -16,21 +16,21 @@ import { SwedishLanguage } from './sv';
 import { TurkishLanguage } from './tr';
 
 const languages = {
-  en: EnglishLanguage,
   ar: ArabicLanguage,
-  nl: DutchLanguage,
-  fr: FrenchLanguage,
-  de: GermanLanguage,
-  pt: PortugueseLanguage,
-  es: SpanishLanguage,
-  tr: TurkishLanguage,
-  pl: PolishLanguage,
-  fi: FinnishLanguage,
-  it: ItalianLanguage,
-  no: NorwegianLanguage,
-  ro: RomanianLanguage,
   da: DanishLanguage,
+  de: GermanLanguage,
+  en: EnglishLanguage,
+  es: SpanishLanguage,
+  fi: FinnishLanguage,
+  fr: FrenchLanguage,
+  it: ItalianLanguage,
+  nl: DutchLanguage,
+  no: NorwegianLanguage,
+  pl: PolishLanguage,
+  pt: PortugueseLanguage,
+  ro: RomanianLanguage,
   sv: SwedishLanguage,
+  tr: TurkishLanguage,
 } as const;
 
 export const LANGUAGES = Object.keys(languages) as (keyof typeof languages)[];
