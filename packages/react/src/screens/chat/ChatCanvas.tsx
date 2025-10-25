@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useMessages, useModes, useSessions } from '@opencx/widget-react-headless';
+import { useComponentContext } from '../../hooks/useComponentContext';
 
 export function ChatCanvas() {
+  const props = useComponentContext();
   const { activeMode, Component } = useModes();
   const { sendMessage } = useMessages();
   const { createStateCheckpoint } = useSessions();
@@ -23,7 +25,7 @@ export function ChatCanvas() {
 
   return (
     <Component
-      react={React}
+      {...props}
       mode={activeMode}
       createStateCheckpoint={createStateCheckpoint}
       sendMessage={handleSendMessage}

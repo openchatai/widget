@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSpecialComponentProps } from '../../hooks/useSpecialComponentProps';
+import { useComponentContext } from '../../hooks/useComponentContext';
 
 export function HeaderBottomComponent() {
-  const { props } = useSpecialComponentProps();
+  const props = useComponentContext();
   const Component = props.config.specialComponents?.headerBottom;
 
   if (!Component) return null;

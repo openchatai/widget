@@ -196,8 +196,16 @@ export type HeaderButtonU =
         | 'reset-chat-and-close-widget';
     });
 
-export type ModeComponentProps = {
+export type ComponentContext = {
   react: typeof React;
+  org: { id: string; name: string };
+  config: WidgetConfig;
+  session: SessionDto | null;
+  messages: WidgetMessageU[];
+  currentScreen: ScreenU;
+};
+
+export type ModeComponentProps = ComponentContext & {
   mode: ModeDto;
   createStateCheckpoint: SessionCtx['createStateCheckpoint'];
   sendMessage: MessageCtx['sendMessage'];
@@ -211,14 +219,7 @@ export type ModeComponent = {
   ) => ReturnType<typeof React.createElement>;
 };
 
-export type SpecialComponentProps = {
-  react: typeof React;
-  org: { id: string; name: string };
-  config: WidgetConfig;
-  session: SessionDto | null;
-  messages: WidgetMessageU[];
-  currentScreen: ScreenU;
-};
+export type SpecialComponentProps = ComponentContext & {};
 export type SpecialComponent = (
   props: SpecialComponentProps,
 ) => ReturnType<typeof React.createElement> | null;

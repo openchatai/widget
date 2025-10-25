@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSpecialComponentProps } from '../../hooks/useSpecialComponentProps';
+import { useComponentContext } from '../../hooks/useComponentContext';
 
 export function SessionResolvedComponent() {
-  const { props } = useSpecialComponentProps();
+  const props = useComponentContext();
 
   if (props.session?.isOpened || !props.session) return null;
 

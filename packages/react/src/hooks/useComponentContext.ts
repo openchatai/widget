@@ -1,4 +1,4 @@
-import type { SpecialComponentProps } from '@opencx/widget-core';
+import type { ComponentContext } from '@opencx/widget-core';
 import {
   useSessions,
   useConfig,
@@ -8,7 +8,7 @@ import {
 } from '@opencx/widget-react-headless';
 import React from 'react';
 
-export function useSpecialComponentProps(): { props: SpecialComponentProps } {
+export function useComponentContext(): ComponentContext {
   const {
     widgetCtx: { org },
   } = useWidget();
@@ -24,13 +24,11 @@ export function useSpecialComponentProps(): { props: SpecialComponentProps } {
   } = useWidgetRouter();
 
   return {
-    props: {
-      react: React,
-      org,
-      session,
-      config,
-      messages,
-      currentScreen: screen,
-    },
+    react: React,
+    org,
+    session,
+    config,
+    messages,
+    currentScreen: screen,
   };
 }

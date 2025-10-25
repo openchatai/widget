@@ -1,8 +1,8 @@
 import React from 'react';
-import { useSpecialComponentProps } from '../../hooks/useSpecialComponentProps';
+import { useComponentContext } from '../../hooks/useComponentContext';
 
 export function ChatBottomComponents() {
-  const { props } = useSpecialComponentProps();
+  const props = useComponentContext();
   const components = props.config.specialComponents?.chatBottomComponents;
 
   if (!components) return null;

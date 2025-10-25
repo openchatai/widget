@@ -27,6 +27,7 @@ export type {
 export type {
   WidgetConfig,
   HeaderButtonU,
+  ComponentContext,
   ModeComponent,
   ModeComponentProps,
   SpecialComponent,
