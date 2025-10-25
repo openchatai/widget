@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { AgentOrBotType } from './agent-or-bot';
+import type { Agent } from './agent';
 
 // The type is imported so the `@link` in the jsdoc works
 // eslint-disable-next-line unused-imports/no-unused-imports
@@ -245,7 +245,7 @@ export interface WidgetConfig {
   /**
    * A name and an avatar for the bot.
    */
-  bot?: Pick<AgentOrBotType, 'name' | 'avatar'>;
+  bot?: Pick<Agent, 'name' | 'avatar'>;
 
   /**
    * Whether the widget is open or not.

@@ -1,6 +1,6 @@
 import type { MessageAttachmentType, MessageDto } from './dtos';
 import type { SafeExtract, StringOrLiteral } from './helpers';
-import type { AgentOrBotType } from './agent-or-bot';
+import type { Agent } from './agent';
 
 /* ------------------------------------------------------ */
 /*                 Component-related types                */
@@ -47,7 +47,7 @@ export type WidgetAiMessage<TActionData = unknown> = {
     } | null;
   };
   timestamp: string | null;
-  agent?: AgentOrBotType;
+  agent?: Agent;
   attachments?: MessageAttachmentType[];
 };
 
@@ -61,7 +61,7 @@ export type WidgetAgentMessage = {
     action?: undefined;
   };
   timestamp: string | null;
-  agent?: AgentOrBotType;
+  agent?: Agent;
   attachments?: MessageAttachmentType[];
 };
 

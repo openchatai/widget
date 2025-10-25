@@ -3,9 +3,9 @@ import {
   type WidgetComponentProps,
 } from '@opencx/widget-react-headless';
 import React from 'react';
-import { BotOrAgentMessageDefaultComponent } from './custom-components/BotOrAgentMessageDefaultComponent';
+import { AgentMessageDefaultComponent } from './custom-components/AgentMessageDefaultComponent';
 
-export function BotOrAgentMessage({
+export function AgentMessage({
   isFirstInGroup,
   isLastInGroup,
   isAloneInGroup,
@@ -39,7 +39,7 @@ export function BotOrAgentMessage({
   if (!Component) {
     // Fallback... just in case
     return (
-      <BotOrAgentMessageDefaultComponent
+      <AgentMessageDefaultComponent
         {...props}
         isFirstInGroup={isFirstInGroup}
         isLastInGroup={isLastInGroup}

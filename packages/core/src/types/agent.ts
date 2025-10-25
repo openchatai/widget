@@ -1,4 +1,4 @@
-export type AgentOrBotType = {
+export type Agent = {
   isAi: boolean;
   id: string | null;
   name: string;

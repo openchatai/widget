@@ -11,7 +11,7 @@ import {
   WidgetTriggerProvider,
   type WidgetComponentType,
 } from '@opencx/widget-react-headless';
-import { BotOrAgentMessageDefaultComponent } from './components/custom-components/BotOrAgentMessageDefaultComponent';
+import { AgentMessageDefaultComponent } from './components/custom-components/AgentMessageDefaultComponent';
 import { FallbackDefaultComponent } from './components/custom-components/FallbackDefaultComponent';
 import { LoadingDefaultComponent } from './components/custom-components/LoadingDefaultComponent';
 import { WidgetContent, WidgetPopoverContent } from './WidgetPopoverContent';
@@ -41,11 +41,11 @@ const defaultComponents: WidgetComponentType[] = [
   },
   {
     key: 'bot_message' satisfies LiteralWidgetComponentKey,
-    component: BotOrAgentMessageDefaultComponent,
+    component: AgentMessageDefaultComponent,
   },
   {
     key: 'agent_message' satisfies LiteralWidgetComponentKey,
-    component: BotOrAgentMessageDefaultComponent,
+    component: AgentMessageDefaultComponent,
   },
 ];
 

@@ -6,7 +6,7 @@ import { AttachmentPreview } from '../AttachmentPreview.js';
 import { cn } from '../lib/utils/cn.js';
 import { RichText } from '../RichText.js';
 
-export function BotOrAgentMessageDefaultComponent({
+export function AgentMessageDefaultComponent({
   data,
   id,
   type,

@@ -1,7 +1,7 @@
 import React from 'react';
 import type { WidgetAiMessage } from '@opencx/widget-core';
 import { useMessages, useConfig } from '@opencx/widget-react-headless';
-import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
+import { AgentMessageGroup } from '../../components/AgentMessageGroup';
 
 export function AdvancedInitialMessages() {
   const {
@@ -18,7 +18,7 @@ export function AdvancedInitialMessages() {
   return (
     <>
       {messages.length === 0 && advancedInitialMessages.length > 0 && (
-        <BotOrAgentMessageGroup
+        <AgentMessageGroup
           messages={advancedInitialMessages.map(
             ({ message }, index) =>
               ({

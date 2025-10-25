@@ -1,24 +1,24 @@
 import {
   type WidgetAgentMessage,
-  type AgentOrBotType,
+  type Agent,
   type WidgetAiMessage,
 } from '@opencx/widget-core';
 import React from 'react';
 import { dc } from '../utils/data-component';
-import { AgentOrBotAvatar } from './AgentOrBotAvatar';
-import { BotOrAgentMessage } from './BotOrAgentMessage';
+import { AgentAvatar } from './AgentAvatar';
+import { AgentMessage } from './AgentMessage';
 import { Tooltippy } from './lib/tooltip';
 import { cn } from './lib/utils/cn';
 import { SuggestedReplyButton } from './SuggestedReplyButton';
 import { GroupTimestamp } from './GroupTimestamp';
 
-export function BotOrAgentMessageGroup({
+export function AgentMessageGroup({
   messages,
   agent,
   suggestedReplies,
 }: {
   messages: WidgetAiMessage[] | WidgetAgentMessage[];
-  agent: AgentOrBotType | undefined;
+  agent: Agent | undefined;
   suggestedReplies?: string[];
 }) {
   return (
@@ -27,7 +27,7 @@ export function BotOrAgentMessageGroup({
       className={cn('flex items-end gap-2')}
     >
       <Tooltippy content={agent?.name} side="right" align="end">
-        <AgentOrBotAvatar
+        <AgentAvatar
           {...dc('chat/agent_msg_group/root/avatar')}
           agent={agent}
           className="hidden"
@@ -40,7 +40,7 @@ export function BotOrAgentMessageGroup({
           className={cn('flex items-end gap-2')}
         >
           <Tooltippy content={agent?.name} side="right" align="end">
-            <AgentOrBotAvatar
+            <AgentAvatar
               {...dc('chat/agent_msg_group/avatar_and_msgs/avatar')}
               agent={agent}
             />
@@ -50,7 +50,7 @@ export function BotOrAgentMessageGroup({
             className={cn('flex-1 flex flex-col gap-1')}
           >
             {messages.map((message, index, array) => (
-              <BotOrAgentMessage
+              <AgentMessage
                 key={message.id}
                 isFirstInGroup={index === 0}
                 isLastInGroup={index === array.length - 1}

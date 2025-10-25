@@ -9,7 +9,7 @@ import {
   useWidget,
 } from '@opencx/widget-react-headless';
 import React, { useEffect, useMemo, useRef } from 'react';
-import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
+import { AgentMessageGroup } from '../../components/AgentMessageGroup';
 import { SessionResolvedComponent } from '../../components/custom-components/SessionResolvedComponent';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { dc } from '../../utils/data-component';
@@ -84,7 +84,7 @@ export function ChatMain() {
 
           const agent = group[0]?.agent;
           return (
-            <BotOrAgentMessageGroup
+            <AgentMessageGroup
               key={firstIdInGroup}
               messages={group}
               agent={agent}
@@ -95,7 +95,7 @@ export function ChatMain() {
         if (isAgentMessageGroup(group)) {
           const agent = group[0]?.agent;
           return (
-            <BotOrAgentMessageGroup
+            <AgentMessageGroup
               key={firstIdInGroup}
               messages={group}
               agent={agent}

@@ -1,4 +1,4 @@
-export type { AgentOrBotType } from './types/agent-or-bot';
+export type { Agent } from './types/agent';
 export type { SafeExtract, SafeOmit, StringOrLiteral } from './types/helpers';
 export type {
   LiteralWidgetComponentKey,

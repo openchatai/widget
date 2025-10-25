@@ -1,13 +1,13 @@
-import { type AgentOrBotType } from '@opencx/widget-core';
+import { type Agent } from '@opencx/widget-core';
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import { dc } from '../../utils/data-component';
-import { AgentOrBotAvatar } from '../AgentOrBotAvatar';
+import { AgentAvatar } from '../AgentAvatar';
 import { MotionDiv } from '../lib/MotionDiv';
 import { cn } from '../lib/utils/cn';
 
 export type LoadingComponentProps = {
-  agent: AgentOrBotType | undefined;
+  agent: Agent | undefined;
 };
 
 export function LoadingDefaultComponent({ agent }: LoadingComponentProps) {
@@ -17,7 +17,7 @@ export function LoadingDefaultComponent({ agent }: LoadingComponentProps) {
         {...dc('chat/bot_loading/root')}
         className="flex flex-row items-end w-full gap-2 animate-pulse"
       >
-        <AgentOrBotAvatar agent={agent} />
+        <AgentAvatar agent={agent} />
         <div
           {...dc('chat/bot_loading/bouncing_dots_container')}
           className={cn(

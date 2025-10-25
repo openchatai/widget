@@ -1,13 +1,13 @@
-import type { AgentOrBotType } from '@opencx/widget-core';
+import type { Agent } from '@opencx/widget-core';
 import React from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from './lib/avatar';
 import type { AvatarProps } from '@radix-ui/react-avatar';
 
-export function AgentOrBotAvatar({
+export function AgentAvatar({
   agent,
   ...props
 }: AvatarProps & {
-  agent: AgentOrBotType | undefined;
+  agent: Agent | undefined;
 }) {
   return (
     <Avatar {...props}>
