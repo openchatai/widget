@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.34
+
+### Patch Changes
+
+- add `humanAgent.avatarUrl`
+
 ## 4.0.33
 
 ### Patch Changes

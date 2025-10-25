@@ -164,6 +164,8 @@ export class ActiveSessionPollingCtx {
         },
         agent: {
           name: history.sender.name || '',
+          // Do not set avatarUrl from config here... let it be taken from the config at render time
+          // Only set avatar url from the backend's response
           avatarUrl: history.sender.avatar || null,
           avatar: history.sender.avatar || null,
           id: null,
@@ -186,7 +188,7 @@ export class ActiveSessionPollingCtx {
           id: null,
           name: this.config.bot?.name || '',
           isAi: true,
-          // Do not set avatarUrl here... let it be taken from the config at render time
+          // Do not set avatarUrl from config here... let it be taken from the config at render time
           avatarUrl: null,
           avatar: null,
         },

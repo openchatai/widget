@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.34
+
+### Patch Changes
+
+- add `humanAgent.avatarUrl`
+- Updated dependencies
+  - @opencx/widget-core@4.0.34
+  - @opencx/widget-react-headless@4.0.34
+
 ## 4.0.33
 
 ### Patch Changes

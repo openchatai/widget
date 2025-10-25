@@ -30,7 +30,7 @@ export function ChatMain() {
   } = useMessages();
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();
-  const { bot } = useConfig();
+  const { bot, humanAgent } = useConfig();
 
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
@@ -98,7 +98,22 @@ export function ChatMain() {
             <AgentMessageGroup
               key={firstIdInGroup}
               messages={group}
-              agent={agent}
+              agent={
+                agent
+                  ? {
+                      ...agent,
+                      avatarUrl:
+                        humanAgent?.avatarUrl || agent.avatarUrl || null,
+                    }
+                  : humanAgent
+                    ? {
+                        isAi: false,
+                        id: null,
+                        name: '',
+                        avatarUrl: humanAgent.avatarUrl || null,
+                      }
+                    : undefined
+              }
             />
           );
         }

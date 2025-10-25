@@ -42,7 +42,7 @@ function SessionCard({
   session: SessionDto;
   className?: string;
 }) {
-  const { bot } = useConfig();
+  const { bot, humanAgent } = useConfig();
   const { toChatScreen } = useWidgetRouter();
 
   const assigneeName =
@@ -51,7 +51,7 @@ function SessionCard({
       : bot?.name || 'AI Support Agent';
   const assigneeAvatarUrl =
     session.assignee.kind === 'human'
-      ? session.assignee.avatarUrl || ''
+      ? humanAgent?.avatarUrl || session.assignee.avatarUrl || ''
       : bot?.avatarUrl || bot?.avatar || '';
 
   return (

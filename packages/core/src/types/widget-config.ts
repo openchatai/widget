@@ -252,6 +252,10 @@ export interface WidgetConfig {
     /** @deprecated Use `avatarUrl` instead */
     | 'avatar'
   >;
+  /**
+   * Unified options for all human agents.
+   */
+  humanAgent?: Pick<Agent, 'avatarUrl'>;
 
   /**
    * Whether the widget is open or not.
