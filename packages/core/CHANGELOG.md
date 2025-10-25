@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.31
+
+### Patch Changes
+
+- Rename `specialComponents` to `customComponents`
+
 ## 4.0.30
 
 ### Patch Changes

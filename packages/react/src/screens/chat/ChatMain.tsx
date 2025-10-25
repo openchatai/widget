@@ -10,7 +10,7 @@ import {
 } from '@opencx/widget-react-headless';
 import React, { useEffect, useMemo, useRef } from 'react';
 import { BotOrAgentMessageGroup } from '../../components/BotOrAgentMessageGroup';
-import { SessionResolvedComponent } from '../../components/special-components/SessionResolvedComponent';
+import { SessionResolvedComponent } from '../../components/custom-components/SessionResolvedComponent';
 import { UserMessageGroup } from '../../components/UserMessageGroup';
 import { dc } from '../../utils/data-component';
 import {
@@ -22,7 +22,7 @@ import {
 import { AdvancedInitialMessages } from './AdvancedInitialMessages';
 import { ChatBannerItems } from './ChatBannerItems';
 import { InitialMessages } from './InitialMessages';
-import { ChatBottomComponents } from '../../components/special-components/ChatBottomComponents';
+import { ChatBottomComponents } from '../../components/custom-components/ChatBottomComponents';
 
 export function ChatMain() {
   const {

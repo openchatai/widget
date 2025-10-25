@@ -11,6 +11,7 @@
     "clean:dist": "turbo clean:dist && rm -rf .turbo",
     "build": "turbo build",
     "type-check": "turbo type-check",
+    "check": "pnpm build && pnpm type-check",
     "test": "turbo test",
     "/* --------------------- DEVELOPMENT -------------------- */": "",
     "dev:prepare": "dotenv -- turbo dev:prepare --env-mode",

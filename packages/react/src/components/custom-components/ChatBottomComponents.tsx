@@ -3,7 +3,7 @@ import { useComponentContext } from '../../hooks/useComponentContext';
 
 export function ChatBottomComponents() {
   const props = useComponentContext();
-  const components = props.config.specialComponents?.chatBottomComponents;
+  const components = props.config.customComponents?.chatBottomComponents;
 
   if (!components) return null;
 

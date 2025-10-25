@@ -1,12 +1,10 @@
 import React from 'react';
 import { useComponentContext } from '../../hooks/useComponentContext';
 
-export function SessionResolvedComponent() {
+export function HeaderBottomComponent() {
   const props = useComponentContext();
+  const Component = props.config.customComponents?.headerBottom;
 
-  if (props.session?.isOpened || !props.session) return null;
-
-  const Component = props.config.specialComponents?.onSessionResolved;
   if (!Component) return null;
 
   return <Component {...props} />;

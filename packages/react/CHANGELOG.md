@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.31
+
+### Patch Changes
+
+- Rename `specialComponents` to `customComponents`
+- Updated dependencies
+  - @opencx/widget-core@4.0.31
+  - @opencx/widget-react-headless@4.0.31
+
 ## 4.0.30
 
 ### Patch Changes

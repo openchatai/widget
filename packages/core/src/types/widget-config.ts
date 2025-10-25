@@ -219,9 +219,9 @@ export type ModeComponent = {
   ) => ReturnType<typeof React.createElement>;
 };
 
-export type SpecialComponentProps = ComponentContext & {};
-export type SpecialComponent = (
-  props: SpecialComponentProps,
+export type CustomComponentProps = ComponentContext & {};
+export type CustomComponent = (
+  props: CustomComponentProps,
 ) => ReturnType<typeof React.createElement> | null;
 
 export interface WidgetConfig {
@@ -430,19 +430,19 @@ export interface WidgetConfig {
   /**
    * Custom components to be shown in certain sc
    */
-  specialComponents?: {
+  customComponents?: {
     /**
      * A component that shows at the bottom of the chat when the session is resolved and no longer open
      * Useful for CSAT surveys
      * @default undefined
      */
-    onSessionResolved?: SpecialComponent;
+    onSessionResolved?: CustomComponent;
 
     /**
      * A component that shows in the chat header
      * @default undefined
      */
-    headerBottom?: SpecialComponent;
+    headerBottom?: CustomComponent;
 
     /**
      * Custom components to be shown in the chat bottom section
@@ -451,7 +451,7 @@ export interface WidgetConfig {
     chatBottomComponents?: Array<{
       /** Unique key per component */
       key: string;
-      component: SpecialComponent;
+      component: CustomComponent;
     }>;
   };
 

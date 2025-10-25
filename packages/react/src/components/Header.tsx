@@ -31,7 +31,7 @@ import {
 import { Button } from './lib/button';
 import { DynamicIcon } from './lib/DynamicIcon';
 import { cn } from './lib/utils/cn';
-import { HeaderBottomComponent } from './special-components/HeaderBottomComponent';
+import { HeaderBottomComponent } from './custom-components/HeaderBottomComponent';
 
 function useGetHeaderTitle() {
   const {
