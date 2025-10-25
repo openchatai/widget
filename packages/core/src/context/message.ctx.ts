@@ -285,7 +285,9 @@ export class MessageCtx {
           ? {
               name: this.config.bot.name || '',
               isAi: true,
-              avatar: this.config.bot.avatar || '',
+              // Do not set avatarUrl here... let it be taken from the config at render time
+              avatarUrl: null,
+              avatar: null,
               id: null,
             }
           : undefined,

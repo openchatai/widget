@@ -245,7 +245,13 @@ export interface WidgetConfig {
   /**
    * A name and an avatar for the bot.
    */
-  bot?: Pick<Agent, 'name' | 'avatar'>;
+  bot?: Pick<
+    Agent,
+    | 'name'
+    | 'avatarUrl'
+    /** @deprecated Use `avatarUrl` instead */
+    | 'avatar'
+  >;
 
   /**
    * Whether the widget is open or not.

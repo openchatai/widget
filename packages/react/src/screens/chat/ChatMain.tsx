@@ -30,7 +30,7 @@ export function ChatMain() {
   } = useMessages();
   const { isAwaitingBotReply } = useIsAwaitingBotReply();
   const { componentStore } = useWidget();
-  const config = useConfig();
+  const { bot } = useConfig();
 
   const groupedMessages = useMemo(
     () => groupMessagesByType(messages),
@@ -87,7 +87,7 @@ export function ChatMain() {
             <AgentMessageGroup
               key={firstIdInGroup}
               messages={group}
-              agent={agent}
+              agent={bot ? { ...bot, isAi: true, id: null } : undefined}
             />
           );
         }
@@ -106,7 +106,7 @@ export function ChatMain() {
         return null;
       })}
       {isAwaitingBotReply && LoadingComponent && (
-        <LoadingComponent agent={config.bot} />
+        <LoadingComponent agent={bot} />
       )}
 
       <ChatBottomComponents />

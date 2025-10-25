@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.33
+
+### Patch Changes
+
+- introduce `bot.avatarUrl` and deprecate `bot.avatar`
+- Updated dependencies
+  - @opencx/widget-core@4.0.33
+  - @opencx/widget-react-headless@4.0.33
+
 ## 4.0.32
 
 ### Patch Changes

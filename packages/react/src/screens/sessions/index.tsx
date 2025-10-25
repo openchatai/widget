@@ -52,7 +52,7 @@ function SessionCard({
   const assigneeAvatarUrl =
     session.assignee.kind === 'human'
       ? session.assignee.avatarUrl || ''
-      : bot?.avatar || '';
+      : bot?.avatarUrl || bot?.avatar || '';
 
   return (
     <Button

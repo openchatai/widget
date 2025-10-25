@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.33
+
+### Patch Changes
+
+- introduce `bot.avatarUrl` and deprecate `bot.avatar`
+
 ## 4.0.32
 
 ### Patch Changes

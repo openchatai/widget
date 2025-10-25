@@ -11,7 +11,7 @@ export function AgentAvatar({
 }) {
   return (
     <Avatar {...props}>
-      <AvatarImage src={agent?.avatar ?? ''} alt="Agent Icon" />
+      <AvatarImage src={agent?.avatarUrl || agent?.avatar || ''} alt="Agent Icon" />
       {agent?.name && (
         <AvatarFallback>
           {agent?.name?.slice(0, 1)?.toUpperCase()}
