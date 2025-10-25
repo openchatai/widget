@@ -439,7 +439,14 @@ export interface WidgetConfig {
     onSessionResolved?: CustomComponent;
 
     /**
-     * A component that shows in the chat header
+     * A component that replaces the header title.
+     * Overrides `textContent.sessionsScreen.headerTitle` and `textContent.chatScreen.headerTitle`
+     *
+     * @default undefined
+     */
+    headerTitle?: CustomComponent;
+    /**
+     * A component that shows in the chat header below the title
      * @default undefined
      */
     headerBottom?: CustomComponent;

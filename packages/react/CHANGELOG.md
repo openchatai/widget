@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.32
+
+### Patch Changes
+
+- add `headerTitle` custom component
+- Updated dependencies
+  - @opencx/widget-core@4.0.32
+  - @opencx/widget-react-headless@4.0.32
+
 ## 4.0.31
 
 ### Patch Changes

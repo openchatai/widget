@@ -32,6 +32,7 @@ import { Button } from './lib/button';
 import { DynamicIcon } from './lib/DynamicIcon';
 import { cn } from './lib/utils/cn';
 import { HeaderBottomComponent } from './custom-components/HeaderBottomComponent';
+import { HeaderTitleComponent } from './custom-components/HeaderTitleComponent';
 
 function useGetHeaderTitle() {
   const {
@@ -418,7 +419,9 @@ export function Header() {
             screen === 'sessions' && 'ps-2',
           )}
         >
-          <h2 className="font-semibold">{title}</h2>
+          <HeaderTitleComponent
+            fallback={<h2 className="font-semibold">{title}</h2>}
+          />
         </div>
         <Header__Buttons />
       </div>

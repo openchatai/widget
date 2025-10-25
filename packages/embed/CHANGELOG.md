@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.32
+
+### Patch Changes
+
+- add `headerTitle` custom component
+
 ## 4.0.31
 
 ### Patch Changes
