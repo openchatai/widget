@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.35
+
+### Patch Changes
+
+- remove unused fonts
+
 ## 4.0.34
 
 ### Patch Changes

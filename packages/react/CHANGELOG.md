@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.35
+
+### Patch Changes
+
+- remove unused fonts
+- Updated dependencies
+  - @opencx/widget-core@4.0.35
+  - @opencx/widget-react-headless@4.0.35
+
 ## 4.0.34
 
 ### Patch Changes

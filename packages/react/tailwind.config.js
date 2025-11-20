@@ -37,9 +37,6 @@ export default {
         ring: 'hsl(var(--opencx-ring))',
       },
     },
-    fontFamily: {
-      inter: ['Inter', 'Rubik', 'serif', 'sans-serif'],
-    },
   },
   plugins: [animate, typography],
 };
