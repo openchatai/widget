@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.36
+
+### Patch Changes
+
+- satisfiy the accessibility police
+- Updated dependencies
+  - @opencx/widget-core@4.0.36
+  - @opencx/widget-react-headless@4.0.36
+
 ## 4.0.35
 
 ### Patch Changes

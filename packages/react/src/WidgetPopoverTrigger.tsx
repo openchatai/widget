@@ -38,6 +38,7 @@ function WidgetPopoverTrigger() {
   return (
     <IFrame
       initialContent={initialContent}
+      title="OpenCX Live Chat Trigger"
       style={{
         height: `calc(${theme.widgetTrigger.size.button}px + ${WOBBLE_MAX_MOVEMENT_PIXELS.x * 2}px)`,
         width: `calc(${theme.widgetTrigger.size.button}px + ${WOBBLE_MAX_MOVEMENT_PIXELS.y * 2}px)`,

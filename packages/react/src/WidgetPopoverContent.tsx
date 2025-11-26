@@ -135,6 +135,8 @@ export function WidgetPopoverContent() {
       }}
       side="top"
       align="end"
+      aria-modal="false"
+      aria-label="Support chat"
       sideOffset={theme.widgetContentContainer.offset.side}
       alignOffset={theme.widgetContentContainer.offset.align}
       avoidCollisions={false}

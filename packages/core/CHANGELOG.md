@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.36
+
+### Patch Changes
+
+- satisfiy the accessibility police
+
 ## 4.0.35
 
 ### Patch Changes
