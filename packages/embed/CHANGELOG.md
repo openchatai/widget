@@ -1,5 +1,11 @@
 # @opencx/widget
 
+## 4.0.37
+
+### Patch Changes
+
+- add `humanAgent.name` override
+
 ## 4.0.36
 
 ### Patch Changes

@@ -102,6 +102,7 @@ export function ChatMain() {
                 agent
                   ? {
                       ...agent,
+                      name: humanAgent?.name || agent.name || '',
                       avatarUrl:
                         humanAgent?.avatarUrl || agent.avatarUrl || null,
                     }
@@ -109,7 +110,7 @@ export function ChatMain() {
                     ? {
                         isAi: false,
                         id: null,
-                        name: '',
+                        name: humanAgent.name || '',
                         avatarUrl: humanAgent.avatarUrl || null,
                       }
                     : undefined

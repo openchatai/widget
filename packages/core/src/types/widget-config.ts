@@ -255,7 +255,7 @@ export interface WidgetConfig {
   /**
    * Unified options for all human agents.
    */
-  humanAgent?: Pick<Agent, 'avatarUrl'>;
+  humanAgent?: Partial<Pick<Agent, 'name' | 'avatarUrl'>>;
 
   /**
    * Whether the widget is open or not.

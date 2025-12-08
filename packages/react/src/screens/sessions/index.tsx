@@ -47,7 +47,7 @@ function SessionCard({
 
   const assigneeName =
     session.assignee.kind === 'human'
-      ? session.assignee.name || 'Support Agent'
+      ? humanAgent?.name || session.assignee.name || 'Support Agent'
       : bot?.name || 'AI Support Agent';
   const assigneeAvatarUrl =
     session.assignee.kind === 'human'

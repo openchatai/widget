@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.37
+
+### Patch Changes
+
+- add `humanAgent.name` override
+- Updated dependencies
+  - @opencx/widget-core@4.0.37
+  - @opencx/widget-react-headless@4.0.37
+
 ## 4.0.36
 
 ### Patch Changes
