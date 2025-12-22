@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.38
+
+### Patch Changes
+
+- add Greek and Russian translations
+
 ## 4.0.37
 
 ### Patch Changes

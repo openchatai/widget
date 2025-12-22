@@ -1,6 +1,7 @@
 import type { WidgetConfig } from '../types/widget-config';
 import { ArabicLanguage } from './ar';
 import { DanishLanguage } from './da';
+import { GreekLanguage } from './el';
 import { GermanLanguage } from './de';
 import { EnglishLanguage } from './en';
 import { SpanishLanguage } from './es';
@@ -13,12 +14,14 @@ import { PolishLanguage } from './pl';
 import { PortugueseLanguage } from './pt';
 import { RomanianLanguage } from './ro';
 import { SwedishLanguage } from './sv';
+import { RussianLanguage } from './ru';
 import { TurkishLanguage } from './tr';
 
 const languages = {
   ar: ArabicLanguage,
   da: DanishLanguage,
   de: GermanLanguage,
+  el: GreekLanguage,
   en: EnglishLanguage,
   es: SpanishLanguage,
   fi: FinnishLanguage,
@@ -29,6 +32,7 @@ const languages = {
   pl: PolishLanguage,
   pt: PortugueseLanguage,
   ro: RomanianLanguage,
+  ru: RussianLanguage,
   sv: SwedishLanguage,
   tr: TurkishLanguage,
 } as const;

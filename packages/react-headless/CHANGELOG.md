@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.38
+
+### Patch Changes
+
+- add Greek and Russian translations
+- Updated dependencies
+  - @opencx/widget-core@4.0.38
+
 ## 4.0.37
 
 ### Patch Changes
