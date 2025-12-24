@@ -1,5 +1,7 @@
 import type { WidgetConfig } from '../types/widget-config';
 import { ArabicLanguage } from './ar';
+import { BulgarianLanguage } from './bg';
+import { CzechLanguage } from './cs';
 import { DanishLanguage } from './da';
 import { GreekLanguage } from './el';
 import { GermanLanguage } from './de';
@@ -15,10 +17,14 @@ import { PortugueseLanguage } from './pt';
 import { RomanianLanguage } from './ro';
 import { SwedishLanguage } from './sv';
 import { RussianLanguage } from './ru';
+import { ThaiLanguage } from './th';
 import { TurkishLanguage } from './tr';
+import { VietnameseLanguage } from './vi';
 
 const languages = {
   ar: ArabicLanguage,
+  bg: BulgarianLanguage,
+  cs: CzechLanguage,
   da: DanishLanguage,
   de: GermanLanguage,
   el: GreekLanguage,
@@ -34,7 +40,9 @@ const languages = {
   ro: RomanianLanguage,
   ru: RussianLanguage,
   sv: SwedishLanguage,
+  th: ThaiLanguage,
   tr: TurkishLanguage,
+  vi: VietnameseLanguage,
 } as const;
 
 export const LANGUAGES = Object.keys(languages) as (keyof typeof languages)[];

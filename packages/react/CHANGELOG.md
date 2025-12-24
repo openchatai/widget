@@ -1,5 +1,14 @@
 # @opencx/widget-react
 
+## 4.0.39
+
+### Patch Changes
+
+- add Bulgarian, Czech, Thai, and Vietnamese language translations
+- Updated dependencies
+  - @opencx/widget-core@4.0.39
+  - @opencx/widget-react-headless@4.0.39
+
 ## 4.0.38
 
 ### Patch Changes

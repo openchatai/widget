@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.39
+
+### Patch Changes
+
+- add Bulgarian, Czech, Thai, and Vietnamese language translations
+
 ## 4.0.38
 
 ### Patch Changes
