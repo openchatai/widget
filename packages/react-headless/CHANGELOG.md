@@ -1,5 +1,13 @@
 # @opencx/widget-react-headless
 
+## 4.0.40
+
+### Patch Changes
+
+- add message::after custom component
+- Updated dependencies
+  - @opencx/widget-core@4.0.40
+
 ## 4.0.39
 
 ### Patch Changes

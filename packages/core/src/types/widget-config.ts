@@ -470,6 +470,12 @@ export interface WidgetConfig {
       key: string;
       component: CustomComponent;
     }>;
+
+    'message::after'?: (
+      props: CustomComponentProps & {
+        currentMessage: WidgetMessageU;
+      },
+    ) => ReturnType<typeof React.createElement> | null;
   };
 
   /**

@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.40
+
+### Patch Changes
+
+- add message::after custom component
+
 ## 4.0.39
 
 ### Patch Changes
