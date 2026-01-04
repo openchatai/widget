@@ -32,3 +32,5 @@ app.dev.tsx
 dev
 
 tsconfig.tsbuildinfo
+
+.npmrc
