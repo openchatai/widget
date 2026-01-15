@@ -1,5 +1,6 @@
 import type { WidgetConfig } from '../types/widget-config';
 import { ArabicLanguage } from './ar';
+import { BengaliLanguage } from './bn';
 import { BulgarianLanguage } from './bg';
 import { CzechLanguage } from './cs';
 import { DanishLanguage } from './da';
@@ -7,9 +8,13 @@ import { GreekLanguage } from './el';
 import { GermanLanguage } from './de';
 import { EnglishLanguage } from './en';
 import { SpanishLanguage } from './es';
+import { FilipinoLanguage } from './fil';
 import { FinnishLanguage } from './fi';
 import { FrenchLanguage } from './fr';
+import { HindiLanguage } from './hi';
 import { ItalianLanguage } from './it';
+import { JapaneseLanguage } from './ja';
+import { KoreanLanguage } from './ko';
 import { DutchLanguage } from './nl';
 import { NorwegianLanguage } from './no';
 import { PolishLanguage } from './pl';
@@ -19,10 +24,13 @@ import { SwedishLanguage } from './sv';
 import { RussianLanguage } from './ru';
 import { ThaiLanguage } from './th';
 import { TurkishLanguage } from './tr';
+import { UrduLanguage } from './ur';
 import { VietnameseLanguage } from './vi';
+import { ChineseSimplifiedLanguage } from './zh-cn';
 
 const languages = {
   ar: ArabicLanguage,
+  bn: BengaliLanguage,
   bg: BulgarianLanguage,
   cs: CzechLanguage,
   da: DanishLanguage,
@@ -31,8 +39,12 @@ const languages = {
   en: EnglishLanguage,
   es: SpanishLanguage,
   fi: FinnishLanguage,
+  fil: FilipinoLanguage,
   fr: FrenchLanguage,
+  hi: HindiLanguage,
   it: ItalianLanguage,
+  ja: JapaneseLanguage,
+  ko: KoreanLanguage,
   nl: DutchLanguage,
   no: NorwegianLanguage,
   pl: PolishLanguage,
@@ -42,7 +54,9 @@ const languages = {
   sv: SwedishLanguage,
   th: ThaiLanguage,
   tr: TurkishLanguage,
+  ur: UrduLanguage,
   vi: VietnameseLanguage,
+  'zh-cn': ChineseSimplifiedLanguage,
 } as const;
 
 export const LANGUAGES = Object.keys(languages) as (keyof typeof languages)[];
