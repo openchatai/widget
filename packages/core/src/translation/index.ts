@@ -27,6 +27,11 @@ import { TurkishLanguage } from './tr';
 import { UrduLanguage } from './ur';
 import { VietnameseLanguage } from './vi';
 import { ChineseSimplifiedLanguage } from './zh-cn';
+import { CroatianLanguage } from './hr';
+import { EstonianLanguage } from './et';
+import { LatvianLanguage } from './lv';
+import { LuxembourgishLanguage } from './lb';
+import { MalteseLanguage } from './mt';
 
 const languages = {
   ar: ArabicLanguage,
@@ -38,13 +43,18 @@ const languages = {
   el: GreekLanguage,
   en: EnglishLanguage,
   es: SpanishLanguage,
+  et: EstonianLanguage,
   fi: FinnishLanguage,
   fil: FilipinoLanguage,
   fr: FrenchLanguage,
   hi: HindiLanguage,
+  hr: CroatianLanguage,
   it: ItalianLanguage,
   ja: JapaneseLanguage,
   ko: KoreanLanguage,
+  lb: LuxembourgishLanguage,
+  lv: LatvianLanguage,
+  mt: MalteseLanguage,
   nl: DutchLanguage,
   no: NorwegianLanguage,
   pl: PolishLanguage,

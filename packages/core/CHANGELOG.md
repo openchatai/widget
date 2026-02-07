@@ -1,5 +1,11 @@
 # @opencx/widget-core
 
+## 4.0.42
+
+### Patch Changes
+
+- add Croatian, Estonian, Latvian, Luxembourgish, and Maltese language translations
+
 ## 4.0.41
 
 ### Patch Changes
